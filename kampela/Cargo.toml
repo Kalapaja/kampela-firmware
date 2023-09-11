@@ -37,7 +37,7 @@ kampela-ui = { path = "../kampela-ui" , default-features = false }
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
-kampela-common = {path = "../../common", default-features = false}
+kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-features = false}
 
 #p256 = {version = "0.12.0", default-features = false, features = ["ecdsa", "pkcs8"]}
 #sha2 = {version = "0.10.6", default-features = false}
