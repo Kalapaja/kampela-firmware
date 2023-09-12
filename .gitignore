@@ -1,0 +1,7 @@
+# Rust
+# Siltti compiled code
+**/target/
+# firmware build
+# rustfmt
+**/*.rs.bk
+
