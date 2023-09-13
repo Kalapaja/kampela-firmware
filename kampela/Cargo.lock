@@ -48,7 +48,7 @@ dependencies = [
  "embedded-text",
  "frame-metadata",
  "hex",
- "kampela-common",
+ "kampela-common 0.1.0 (git+https://github.com/Kalapaja/kampela-common?rev=c7219c738932f98c3de52b80d1475c6a2f7f0bee)",
  "kampela-system",
  "kampela-ui",
  "lazy_static",
@@ -796,6 +796,15 @@ checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
 [[package]]
 name = "kampela-common"
 version = "0.1.0"
+source = "git+https://github.com/Kalapaja/kampela-common?rev=c7219c738932f98c3de52b80d1475c6a2f7f0bee#c7219c738932f98c3de52b80d1475c6a2f7f0bee"
+dependencies = [
+ "parity-scale-codec",
+ "sp-core 7.0.0",
+]
+
+[[package]]
+name = "kampela-common"
+version = "0.1.0"
 source = "git+https://github.com/Kalapaja/kampela-common#4ee627b73d8894ced9676aca11a59391965a1d81"
 dependencies = [
  "parity-scale-codec",
@@ -1165,7 +1174,7 @@ version = "0.1.0"
 dependencies = [
  "bitvec",
  "hmac",
- "kampela-common",
+ "kampela-common 0.1.0 (git+https://github.com/Kalapaja/kampela-common)",
  "p256",
  "pbkdf2",
  "sha2 0.10.7",
@@ -1919,7 +1928,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "substrate_parser"
 version = "0.4.0"
-source = "git+https://github.com/Alzymologist/substrate-parser#075829715877f23ee18bc5a1ff576bfbc997d3b8"
+source = "git+https://github.com/Alzymologist/substrate-parser?rev=b3b9637287b6045cefe774fc0f44b9ad297e6066#b3b9637287b6045cefe774fc0f44b9ad297e6066"
 dependencies = [
  "base58",
  "bitvec",

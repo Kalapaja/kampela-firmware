@@ -27,7 +27,7 @@ frame-metadata = {version = "16.0.0", default-features = false, features = ["cur
 hex = {version = "0.4.3", default-features = false, features = ["alloc"]}
 parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
 scale-info = {version = "2.9.0", default-features = false}
-substrate_parser = { git = "https://github.com/Alzymologist/substrate-parser", default-features = false, features = ["embed-display"] }
+substrate_parser = { git = "https://github.com/Alzymologist/substrate-parser", default-features = false, features = ["embed-display"], rev = "b3b9637287b6045cefe774fc0f44b9ad297e6066" }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
 
 primitive-types = {version = "0.12.1", default-features = false}
@@ -37,7 +37,7 @@ kampela-ui = { path = "../kampela-ui" , default-features = false }
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
-kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-features = false}
+kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-features = false, rev = "c7219c738932f98c3de52b80d1475c6a2f7f0bee"}
 
 #p256 = {version = "0.12.0", default-features = false, features = ["ecdsa", "pkcs8"]}
 #sha2 = {version = "0.10.6", default-features = false}
