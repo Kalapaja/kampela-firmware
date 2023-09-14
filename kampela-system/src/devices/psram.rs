@@ -211,8 +211,8 @@ use core::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use alloc::{borrow::ToOwned, string::String};
 
 use frame_metadata::v14::ExtrinsicMetadata;
-use parity_scale_codec::{Decode, DecodeAll};
-use substrate_parser::{AddressableBuffer, AsMetadata, ExternalMemory, ResolveType, compacts::find_compact, error::{MetaVersionError, ParserError}};
+use parity_scale_codec::{Decode, DecodeAll, Encode};
+use substrate_parser::{AddressableBuffer, AsMetadata, ExternalMemory, ResolveType, ShortSpecs, compacts::find_compact, error::{MetaVersionError, ParserError}, traits::SpecNameVersion};
 use scale_info::{form::PortableForm, Type};
 
 pub struct ExternalPsram<'a> {
@@ -293,9 +293,21 @@ impl <'a> ResolveType<ExternalPsram<'a>> for MetalRegistry {
 
 #[derive(Debug)]
 pub struct CheckedMetadataMetal {
-    pub chain_version_printed: String,
     pub types: MetalRegistry,
     pub extrinsic: ExtrinsicMetadata<PortableForm>,
+    pub spec_name_version: SpecNameVersion,
+    pub base58prefix: u16,
+    pub decimals: u8,
+    pub unit: String,
+}
+
+#[derive(Debug, Decode, Encode)]
+pub struct CheckedMeadataMetalTail {
+    pub extrinsic: ExtrinsicMetadata<PortableForm>,
+    pub spec_name_version: SpecNameVersion,
+    pub base58prefix: u16,
+    pub decimals: u8,
+    pub unit: String,
 }
 
 impl <'a> AsMetadata<ExternalPsram<'a>> for CheckedMetadataMetal {
@@ -303,8 +315,8 @@ impl <'a> AsMetadata<ExternalPsram<'a>> for CheckedMetadataMetal {
     fn types(&self) -> Self::TypeRegistry {
         self.types.to_owned()
     }
-    fn version_printed(&self) -> Result<String, MetaVersionError> {
-        Ok(self.chain_version_printed.to_owned())
+    fn spec_name_version(&self) -> Result<SpecNameVersion, MetaVersionError> {
+        Ok(self.spec_name_version.to_owned())
     }
     fn extrinsic(&self) -> ExtrinsicMetadata<PortableForm> {
         self.extrinsic.to_owned()
@@ -337,15 +349,7 @@ impl <'a> CheckedMetadataMetal {
         
         let mut position = 0usize;
 
-        // Metadata starts with printed version.
-        let found_compact = find_compact::<u32, PsramAccess, ExternalPsram<'a>>(psram_data, ext_memory, position).map_err(|_| ReceivedMetadataError::Format)?;
-        let str_length = found_compact.compact as usize;
-        let text_start = found_compact.start_next_unit;
-        let into_string = psram_data.read_slice(ext_memory, text_start, str_length).map_err(|_| ReceivedMetadataError::Format)?;
-        let chain_version_printed = String::from_utf8(into_string.to_vec()).map_err(|_| ReceivedMetadataError::Format)?;
-        position = text_start + str_length;
-
-        // Metadata proceeds with types registry, a vec of Type descriptors.
+        // Metadata starts with types registry, a vec of Type descriptors.
         // Search for compact, the number of `PortableType` entries to follow.
         let found_compact = find_compact::<u32, PsramAccess, ExternalPsram<'a>>(psram_data, ext_memory, position).map_err(|_| ReceivedMetadataError::Format)?;
 
@@ -371,15 +375,27 @@ impl <'a> CheckedMetadataMetal {
             registry,
         };
 
-        let extrinsic_data = psram_data.read_slice(ext_memory, position, psram_data.total_len - position).map_err(|_| ReceivedMetadataError::Format)?;
-        let extrinsic = ExtrinsicMetadata::<PortableForm>::decode_all(&mut &extrinsic_data[..]).map_err(|_| ReceivedMetadataError::Format)?;
+        // The rest corresponds to `CheckedMeadataMetalTail`
+
+        let tail_data = psram_data.read_slice(ext_memory, position, psram_data.total_len - position).map_err(|_| ReceivedMetadataError::Format)?;
+        let tail = CheckedMeadataMetalTail::decode_all(&mut &tail_data[..]).map_err(|_| ReceivedMetadataError::Format)?;
 
         Ok(CheckedMetadataMetal{
-            chain_version_printed,
             types,
-            extrinsic,
+            extrinsic: tail.extrinsic,
+            spec_name_version: tail.spec_name_version,
+            base58prefix: tail.base58prefix,
+            decimals: tail.decimals,
+            unit: tail.unit,
         })
+    }
 
+    pub fn to_specs(&self) -> ShortSpecs {
+        ShortSpecs {
+            base58prefix: self.base58prefix,
+            decimals: self.decimals,
+            unit: self.unit.to_owned(),
+        }
     }
 }
 
