@@ -5,7 +5,7 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{format, string::{String, ToString}, vec::Vec};
+use alloc::{format, string::String, vec::Vec};
 use core::{alloc::Layout, panic::PanicInfo};
 use core::ptr::addr_of;
 use cortex_m::asm::delay;
@@ -42,7 +42,7 @@ use cortex_m::interrupt::Mutex;
 //use p256::ecdsa::{signature::{hazmat::PrehashVerifier}, Signature, VerifyingKey};
 //use sha2::Digest;
 //use spki::DecodePublicKey;
-use substrate_parser::{MarkedData, ShortSpecs, compacts::find_compact, parse_transaction};
+use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction};
 use schnorrkel::{
     context::attach_rng,
     keys::Keypair,
@@ -109,13 +109,6 @@ fn main() -> ! {
         static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
         unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
     }
-
-    let westend_specs = ShortSpecs {
-        base58prefix: 42,
-        decimals: 12,
-        name: "westend".to_string(),
-        unit: "WND".to_string(),
-    };
 
     let nfc_buffer: [u16; 4*BUF_QUARTER] = [1; 4*BUF_QUARTER];
     let nfc_transfer_block = NfcXferBlock {
@@ -277,7 +270,7 @@ fn main() -> ! {
                             &checked_metadata_metal,
                             genesis_hash
                         ).unwrap();
-                        let carded = decoded_transaction.card(&westend_specs);
+                        let carded = decoded_transaction.card(&checked_metadata_metal.to_specs(), &checked_metadata_metal.spec_name_version.spec_name);
                         got_transaction = Some((
                             carded.call_result.unwrap().iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
                             carded.extensions.iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
