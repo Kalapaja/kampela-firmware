@@ -15,14 +15,25 @@ pub fn deselect_display(gpio: &mut GPIO_S) {
     display_chip_select_set(gpio);
 }
 
+/// Select flash channel
+pub fn select_flash(gpio: &mut GPIO_S) {
+    flash_chip_select_clear(gpio);
+}
+
+/// Deselect flash channel
+pub fn deselect_flash(gpio: &mut GPIO_S) {
+    flash_chip_select_set(gpio);
+}
+
+
 /// Indicate that command is sent
-pub fn display_select_command(gpio: &mut GPIO_S) {
-    display_data_command_clear(gpio);
+pub fn spi_select_command(gpio: &mut GPIO_S) {
+    spi_data_command_clear(gpio);
 }
 
 /// Indicate that data is sent
-pub fn display_select_data(gpio: &mut GPIO_S) {
-    display_data_command_set(gpio);
+pub fn spi_select_data(gpio: &mut GPIO_S) {
+    spi_data_command_set(gpio);
 }
 
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].

@@ -16,6 +16,7 @@ use parity_scale_codec::Decode;
 use primitive_types::H256;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
+use kampela_system::devices::flash::*;
 
 mod ui;
 use ui::UI;
@@ -101,6 +102,7 @@ fn LDMA() {
 const ALICE_KAMPELA_KEY: &[u8] = &[24, 79, 109, 158, 13, 45, 121, 126, 185, 49, 212, 255, 134, 18, 243, 96, 119, 210, 175, 115, 48, 181, 19, 238, 61, 135, 28, 186, 185, 31, 59, 9, 172, 24, 200, 176, 25, 207, 214, 199, 221, 214, 171, 143, 80, 246, 86, 104, 48, 40, 21, 99, 114, 3, 232, 85, 101, 7, 128, 198, 36, 11, 101, 63, 180, 120, 97, 66, 191, 43, 74, 35, 69, 3, 219, 194, 72, 141, 68, 185, 188, 177, 117, 246, 178, 250, 89, 134, 116, 20, 248, 247, 151, 45, 130, 59];
 const SIGNING_CTX: &[u8] = b"substrate";
 
+
 #[entry]
 fn main() -> ! {
     {
@@ -172,6 +174,17 @@ fn main() -> ! {
     let mut adc = ADC::new();
 
     let mut got_transaction = None;
+
+    in_free(|peripherals| {
+        // Make sure that flash is ok
+        flash_wakeup(peripherals);
+        let fl_id = flash_get_id(peripherals);
+        let fl_len = flash_get_size(peripherals);
+        if (fl_id == 0) || (fl_len == 0) {
+            panic!("Flash error");
+        }
+        flash_sleep(peripherals);
+    });
 
     loop {
         adc.advance(());

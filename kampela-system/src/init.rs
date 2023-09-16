@@ -13,6 +13,7 @@ use crate::peripherals::{
     usart::init_usart,
 };
 use crate::devices::psram::psram_reset;
+use crate::devices::flash::{flash_init,flash_sleep};
 
 /// All peripheral initializations
 pub fn init_peripherals(peripherals: &mut Peripherals, nfc_descriptor_address: *const NfcXferBlock) {
@@ -24,6 +25,10 @@ pub fn init_peripherals(peripherals: &mut Peripherals, nfc_descriptor_address: *
 
     // Setting up USART0, for epaper display and flash memory
     init_usart(peripherals);
+
+    // ...and let flash to sleep
+    flash_init(peripherals);
+    flash_sleep(peripherals);
 
     // Setting up EUSART2 for PSRAM
     init_eusart(peripherals);

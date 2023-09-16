@@ -65,31 +65,20 @@ pub fn display_is_busy() -> Result<bool, FreeError> {
 ///
 /// for critical section
 fn epaper_write_command(peripherals: &mut Peripherals, command_set: &[u8]) {
-    // CS clear corresponds to selected chip, see epaper docs
-
-    deselect_display(&mut peripherals.GPIO_S);
-    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-    
-    display_select_command(&mut peripherals.GPIO_S);
+    spi_select_command(&mut peripherals.GPIO_S);
     for command in command_set.iter() {
         write_to_usart(peripherals, *command);
     }
-    deselect_display(&mut peripherals.GPIO_S);
 }
 
 /// Send data to EPD
 ///
 /// for critical section
 fn epaper_write_data(peripherals: &mut Peripherals, data_set: &[u8]) {
-    deselect_display(&mut peripherals.GPIO_S);
-    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-
-    display_select_data(&mut peripherals.GPIO_S);
+    spi_select_data(&mut peripherals.GPIO_S);
     for data in data_set.iter() {
         write_to_usart(peripherals, *data);
     }
-    deselect_display(&mut peripherals.GPIO_S);
-    //    display_data_command_clear(peripherals);
 }
 
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].
@@ -105,9 +94,6 @@ pub fn display_is_busy_cs(peripherals: &mut Peripherals) -> bool {
 ///
 /// Why these specific numbers for delays?
 pub fn epaper_reset(gpio: &mut GPIO_S) {
-    delay(1000);
-    display_res_clear(gpio);
-    delay(5000);
     display_res_set(gpio);
     delay(10000);
     display_res_clear(gpio);
@@ -118,13 +104,15 @@ pub fn epaper_reset(gpio: &mut GPIO_S) {
 
 /// Last command in drawing protocol; actually starts display action
 pub fn epaper_update(peripherals: &mut Peripherals) {
+    select_display(&mut peripherals.GPIO_S);
     epaper_write_command(peripherals, &[0x12]);
     delay(100000);
     while display_is_busy_cs(peripherals) {}
     epaper_write_command(peripherals, &[0x22]); // from manual, Y: "Display Update Control"
-epaper_write_data(peripherals, &[0xF7]); // ?
+    epaper_write_data(peripherals, &[0xF7]); // ?
     epaper_write_command(peripherals, &[0x20]); // from manual, Y: "Activate Display Update Sequence"
     while display_is_busy_cs(peripherals) {}
+    deselect_display(&mut peripherals.GPIO_S);
 }
 
 /// Partial display update; used to initiate display action when performing fast drawing without
@@ -142,6 +130,8 @@ pub const BUFSIZE: usize = 5808;
 /// Normal drawing protocol, with full screen clearing
 pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
     epaper_reset(&mut peripherals.GPIO_S);
+
+    select_display(&mut peripherals.GPIO_S);
     epaper_write_command(peripherals, &[0x4E]);
     epaper_write_data(peripherals, &[0x00]);
     epaper_write_command(peripherals, &[0x4F]);
@@ -151,11 +141,13 @@ pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; 
     epaper_write_command(peripherals, &[0x26]);
     epaper_write_data(peripherals, &stuff);
     epaper_update(peripherals);
+    deselect_display(&mut peripherals.GPIO_S);
 }
 
 /// Fast and dirty refresh drawing
 pub fn epaper_draw_stuff_quickly(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
     epaper_reset(&mut peripherals.GPIO_S);
+    select_display(&mut peripherals.GPIO_S);
     epaper_write_command(peripherals, &[0x4E]);
     epaper_write_data(peripherals, &[0x00]);
     epaper_write_command(peripherals, &[0x4F]);
@@ -165,14 +157,16 @@ pub fn epaper_draw_stuff_quickly(peripherals: &mut Peripherals, stuff: [u8; BUFS
     epaper_write_command(peripherals, &[0x24]); // from manual, Y: "Write Black and White image to RAM"
     epaper_write_data(peripherals, &stuff);
     epaper_update_part(peripherals);
+    deselect_display(&mut peripherals.GPIO_S);
 }
 
 /// Send EPD to low power state; should be performed when screen is not drawing at all times to
 /// extend component life
 pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
+    select_display(&mut peripherals.GPIO_S);
     epaper_write_command(peripherals, &[0x10]); // from manual, enter deep sleep
     epaper_write_data(peripherals, &[0x01]); // ?
-    delay(100000); // why delay, from where the number?
+    deselect_display(&mut peripherals.GPIO_S);
 }
 
 /// EPD init, also should be performed to wake screen from sleep
@@ -181,7 +175,9 @@ pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
 pub fn epaper_hw_init_cs(peripherals: &mut Peripherals) {
     epaper_reset(&mut peripherals.GPIO_S);
     while display_is_busy_cs(peripherals) {}
+    select_display(&mut peripherals.GPIO_S);
     epaper_write_command(peripherals, &[0x12]);
+    deselect_display(&mut peripherals.GPIO_S);
     delay(10000);
     while display_is_busy_cs(peripherals) {}
 }
@@ -528,7 +524,7 @@ impl <const C: u8> Operation for EPDCommand<C> {
                 in_free(|peripherals| {
                     deselect_display(&mut peripherals.GPIO_S);
                     select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_command(&mut peripherals.GPIO_S);
+                    spi_select_command(&mut peripherals.GPIO_S);
                 });
                 if if_in_free(|peripherals|
                     peripherals.USART0_S.status.read().txbl().bit_is_clear()
@@ -601,7 +597,7 @@ impl <const B: u8> Operation for EPDDataB<B> {
                 in_free(|peripherals| {
                     deselect_display(&mut peripherals.GPIO_S);
                     select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_data(&mut peripherals.GPIO_S);
+                    spi_select_data(&mut peripherals.GPIO_S);
                 });
                 if if_in_free(|peripherals|
                     peripherals.USART0_S.status.read().txbl().bit_is_clear()
@@ -679,9 +675,9 @@ impl <const LEN: usize> Operation for EPDData<LEN> {
         match self.state {
             EPDDataState::Init => {
                 in_free(|peripherals| {
-                    deselect_display(&mut peripherals.GPIO_S);
+                    deselect_display(&mut peripherals.GPIO_S); // not necessary at all
                     select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_data(&mut peripherals.GPIO_S);
+                    spi_select_data(&mut peripherals.GPIO_S);
                 });
                 if if_in_free(|peripherals|
                     peripherals.USART0_S.status.read().txbl().bit_is_clear()
