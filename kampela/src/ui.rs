@@ -17,7 +17,7 @@ use embedded_graphics::prelude::Point;
 
 /// UI handler
 pub struct UI {
-    state: uistate::UIState<Hardware>,
+    pub state: uistate::UIState<Hardware>,
     status: UIStatus,
     update: uistate::UpdateRequest,
 }
@@ -100,9 +100,9 @@ enum UIStatus {
     TouchOperation(Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>),
 }
 
-struct Hardware {
+pub struct Hardware {
     pin: Pincode,
-    entropy: Vec<u8>,
+    pub entropy: Vec<u8>,
     display: FrameBuffer,
     transaction: Option<String>,
     extensions: Option<String>,

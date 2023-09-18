@@ -306,16 +306,18 @@ pub struct NfcReceiver <'a> {
     buffer: &'a [u16; 3*BUF_THIRD],
     collector: NfcCollector,
     state: NfcState,
+    public_memory: [u8; 32],
 }
 
 impl <'a> NfcReceiver<'a> {
 
 
-    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD]) -> Self {
+    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: [u8; 32]) -> Self {
         Self {
             buffer: nfc_buffer,
             collector: NfcCollector::new(),
             state: NfcState::Operational,
+            public_memory: public_memory,
         }
     }
 
@@ -387,7 +389,7 @@ impl <'a> NfcReceiver<'a> {
                         let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
                         let public_key = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
                         // TODO: check address differently
-                        assert!(public_key.starts_with(&[1u8])/* & (public_key[1..] == ALICE_KAMPELA_KEY[64..])*/, "Invalid crypto algorithm requested");
+                        assert!(public_key.starts_with(&[1u8]) & (public_key[1..] == self.public_memory), "Invalid crypto algorithm requested");
                     });
 
                     let mut got_transaction_no_data = None;

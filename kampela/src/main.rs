@@ -14,6 +14,9 @@ use embedded_alloc::Heap;
 use lazy_static::lazy_static;
 use parity_scale_codec::Decode;
 use primitive_types::H256;
+use hmac::Hmac;
+use pbkdf2::pbkdf2;
+use sha2::Sha512;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
 use kampela_system::devices::flash::*;
@@ -34,6 +37,7 @@ use kampela_system::{
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
 };
+use kampela_ui::uistate::Screen;
 
 use core::cell::RefCell;
 use core::ops::DerefMut;
@@ -46,9 +50,13 @@ use cortex_m::interrupt::Mutex;
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked};
 use schnorrkel::{
     context::attach_rng,
+    derive::{ChainCode, Derivation},
     keys::Keypair,
     signing_context,
+    ExpansionMode,
+    MiniSecretKey,
 };
+use sp_core::crypto::DeriveJunction;
 
 lazy_static!{
     #[derive(Debug)]
@@ -159,17 +167,16 @@ fn main() -> ! {
         PERIPHERALS.borrow(cs).replace(Some(peripherals));
     });
 
-    // TODO
-    let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
+    //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
     let mut nfc_collector = NfcCollector::new();
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer);
 
 
     let mut ui = UI::init();
     let mut adc = ADC::new();
-
+    let mut ent = [0u8; 64];
+    
     in_free(|peripherals| {
         // Make sure that flash is ok
         flash_wakeup(peripherals);
@@ -178,10 +185,37 @@ fn main() -> ! {
         if (fl_id == 0) || (fl_len == 0) {
             panic!("Flash error");
         }
+        flash_read(peripherals, 0, &mut ent);
         flash_sleep(peripherals);
     });
 
+    let big_seed = entropy_to_big_seed(&ent);
+
+    let mini_secret_bytes = &big_seed[..32];
+    
+    let pair = MiniSecretKey::from_bytes(mini_secret_bytes)
+            .unwrap()
+            .expand_to_keypair(ExpansionMode::Ed25519);
+            
+    // hard derivation
+    let junction = DeriveJunction::hard("kampela");
+    let pair_derived = pair
+            .hard_derive_mini_secret_key(Some(ChainCode(*junction.inner())), b"")
+            .0
+            .expand_to_keypair(ExpansionMode::Ed25519);
+    
+    let mut nfc = NfcReceiver::new(&nfc_buffer, pair_derived.public.to_bytes());
+
     loop {
+        match ui.state.screen {
+            Screen::End => {
+                in_free(|peripherals| {
+                flash_wakeup(peripherals);
+                flash_write_page(peripherals, 0, &mut ui.state.platform.entropy[..32]);
+                flash_sleep(peripherals);
+            })},
+            _ => (),
+        };
         adc.advance(());     
         let voltage = adc.read();
         ui.advance(adc.read());
@@ -191,9 +225,10 @@ fn main() -> ! {
                 NfcResult::KampelaStop => {},
                 NfcResult::DisplayAddress => {
                     // TODO: implement adress
-                    panic!("Display address!");
-                    let signature_into_qr: [u8; 130] = [0; 130];
-                    ui.handle_rx(String::from("Show address\nPlease, tap...\n"), String::from("Tap once again\n"), signature_into_qr);
+                    let mut stuff = [0u8; 130];
+                    let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
+                    stuff[0..79].copy_from_slice(&line1.as_bytes());
+                    ui.handle_rx(String::from("Show address\nPlease, tap...\n"), String::from("Tap once again\n"), stuff);
                 },
                 NfcResult::Transaction(transaction) => {
                     // TODO: pass transaction
@@ -242,3 +277,14 @@ fn main() -> ! {
     }
 }
 
+pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
+    //check_entropy_length(entropy)?;
+
+    let salt = "mnemonic";
+
+    let mut seed = [0u8; 64];
+
+    pbkdf2::<Hmac<Sha512>>(entropy, salt.as_bytes(), 2048, &mut seed);
+
+    seed
+}
