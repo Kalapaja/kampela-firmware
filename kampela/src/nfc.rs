@@ -2,7 +2,7 @@
 
 use nfca_parser::frame::Frame;
 //use alloc::vec::Vec;
-use alloc::{format, string::String, vec::Vec};
+use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
 
 use kampela_system::{
     PERIPHERALS, in_free, BUF_THIRD, CH_TIM0,
@@ -14,7 +14,7 @@ use efm32pg23_fix::{NVIC,Interrupt};
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, CheckedMetadataMetal, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 // use substrate_parser::compacts::find_compact;
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction};
+use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 use schnorrkel::{
     context::attach_rng,
     keys::Keypair,
@@ -284,14 +284,16 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 
 
 pub struct NfcTransaction {
-    pub call_result: String,
-    pub extensions: String,
-    pub payload: Vec<u8>,
+    pub decoded_transaction: TransactionUnmarkedParsed,
+    pub data_to_sign: Vec<u8>,
+    pub specs: ShortSpecs,
+    pub spec_name: String,
 }
 
 pub enum NfcResult {
     Transaction(NfcTransaction),
     DisplayAddress,
+    KampelaStop,
 }
 
 enum NfcState {
@@ -301,7 +303,7 @@ enum NfcState {
 
 
 pub struct NfcReceiver <'a> {
-    buffer: &'a [u16; 4*BUF_QUARTER],
+    buffer: &'a [u16; 3*BUF_THIRD],
     collector: NfcCollector,
     state: NfcState,
 }
@@ -309,7 +311,7 @@ pub struct NfcReceiver <'a> {
 impl <'a> NfcReceiver<'a> {
 
 
-    pub fn new(nfc_buffer: &'a [u16; 4*BUF_QUARTER]) -> Self {
+    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD]) -> Self {
         Self {
             buffer: nfc_buffer,
             collector: NfcCollector::new(),
@@ -331,12 +333,9 @@ impl <'a> NfcReceiver<'a> {
             });
 
             match first_byte {
-                Some(0) => {
-                    return Some(NfcResult::DisplayAddress);
-                },
+                Some(0) => return Some(NfcResult::KampelaStop),
+                Some(2) => return Some(NfcResult::DisplayAddress),
                 Some(3) => {
-                    // return None;
-                    // panic!("Data to sign");
                     let mut genesis_hash_bytes_option = None;
                     in_free(|peripherals| {
                         let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
@@ -365,41 +364,54 @@ impl <'a> NfcReceiver<'a> {
                     let mut signable_transaction_option = None;
                     in_free(|peripherals| {
                         let mut external_psram = ExternalPsram{peripherals};
-                        let compact_transaction = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-                        let start_address = payload.encoded_data.start_address.try_shift(compact_transaction.start_next_unit).unwrap();
-                        let transaction_encoded = psram_read_at_address(peripherals, start_address, compact_transaction.compact as usize).unwrap();
-                        signable_transaction_option = Some(Vec::<u8>::decode(&mut &transaction_encoded[..]).unwrap());
-                        position = compact_transaction.start_next_unit + compact_transaction.compact as usize;
+                        let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap(); // fix this madness maybe later
+                        position = compact_transaction_1.start_next_unit;
+                        let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+                        position = compact_transaction_2.start_next_unit;
+
+                        let start_address = payload.encoded_data.start_address.try_shift(compact_transaction_2.start_next_unit).unwrap();
+
+                        let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+                        let start_address_to_sign = payload.encoded_data.start_address.try_shift(compact_call.start_next_unit).unwrap();
+                        let total_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit + position;
+
+                        let data_to_sign = psram_read_at_address(peripherals, start_address_to_sign, total_len_to_sign).unwrap();
+
+                        signable_transaction_option = Some(data_to_sign);
+                        position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
                     });
-                    let signable_transaction = signable_transaction_option.unwrap();
+                    let data_to_sign = signable_transaction_option.unwrap();
+
 
                     in_free(|peripherals| {
                         let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
                         let public_key = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
                         // TODO: check address differently
-                        assert!(public_key.starts_with(&[1u8])/* & (public_key[1..] == ALICE_KAMPELA_KEY[64..])*/, "Unknown address.");
+                        assert!(public_key.starts_with(&[1u8])/* & (public_key[1..] == ALICE_KAMPELA_KEY[64..])*/, "Invalid crypto algorithm requested");
                     });
 
-                    let mut res = None;
+                    let mut got_transaction_no_data = None;
                     in_free(|peripherals| {
+                        
                         let mut external_psram = ExternalPsram{peripherals};
-                        let binding = signable_transaction.as_ref();
-                        let marked_data: MarkedData<'_, &[u8], ()> = MarkedData::mark(&binding, &mut ()).unwrap();
-                        let data_to_sign = binding[marked_data.call_start()..].to_vec();
-                        let decoded_transaction = parse_transaction(
-                            &signable_transaction.as_ref(),
+
+                        let decoded_transaction = parse_transaction_unmarked(
+                            &data_to_sign.as_ref(),
                             &mut external_psram,
                             &checked_metadata_metal,
                             genesis_hash
                         ).unwrap();
-                        let carded = decoded_transaction.card(&checked_metadata_metal.to_specs(), &checked_metadata_metal.spec_name_version.spec_name);
-                        res = Some(NfcResult::Transaction(NfcTransaction{
-                            call_result: carded.call_result.unwrap().iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
-                            extensions: carded.extensions.iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
-                            payload: data_to_sign
-                        }));
+
+                        got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));
                     });
-                    return res;
+                    let (decoded_transaction, specs, spec_name) = got_transaction_no_data.unwrap();
+
+                    return Some(NfcResult::Transaction(NfcTransaction{
+                        decoded_transaction,
+                        data_to_sign,
+                        specs,
+                        spec_name,
+                    }));
                 },
                 _ => {
                     self.collector = NfcCollector::new();
