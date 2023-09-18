@@ -45,18 +45,21 @@ pub trait Platform {
 
     /// Set new seed
     fn set_entropy(&mut self, e: &[u8]);
-    
+
     /// Getter for pincode and canvas
     fn entropy_display(&mut self) -> (&Vec<u8>, &mut Self::Display);
 
-    fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]);
+    fn set_transaction(&mut self, transaction: String, extensions: String, signature: Vec<u8>);
+
+    fn set_address(&mut self, addr: Vec<u8>);
+
 
     fn transaction(&mut self) -> Option<(&str, &mut Self::Display)>;
 
     fn extensions(&mut self) -> Option<(&str, &mut Self::Display)>;
 
-    fn signature(&mut self) -> (&[u8; 130], &mut Self::Display);
-   
+    fn signature(&mut self) -> (&Vec<u8>, &mut Self::Display);
+
     //----derivatives----
 
     fn generate_seed_entropy(h: &mut Self::HAL) -> [u8; ENTROPY_LEN] {
@@ -96,7 +99,7 @@ pub trait Platform {
             Ok(())
         }
     }
-    
+
     fn draw_extensions(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
         if let Some((s, d)) = self.extensions() {
             transaction::draw(s, d)
@@ -110,4 +113,3 @@ pub trait Platform {
         qr::draw(s, d)
     }
 }
-

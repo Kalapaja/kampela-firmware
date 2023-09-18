@@ -1,10 +1,21 @@
 //! UI state unit; almost all inerfacing should be done through this "object"
 
 #[cfg(not(feature="std"))]
-use alloc::string::String;
+mod stdwrap {
+    pub use alloc::string::String;
+    pub use alloc::vec::Vec;
+}
+
 
 #[cfg(feature="std")]
-use std::string::String;
+mod stdwrap {
+    pub use std::string::String;
+    pub use std::vec::Vec;
+}
+
+
+
+use stdwrap::*;
 
 use embedded_graphics::{
     prelude::Primitive,
@@ -88,7 +99,7 @@ pub struct UIState<P> where
     P: Platform,
 {
     screen: Screen,
-    platform: P,
+    pub platform: P,
 }
 
 pub enum Screen {
@@ -107,9 +118,16 @@ pub enum Screen {
 impl <P: Platform> UIState<P> {
     pub fn new(platform: P) -> Self {
         UIState {
-            screen: Screen::PinEntry,
+            screen: Screen::OnboardingRestoreOrGenerate,
             platform: platform,
         }
+    }
+
+    pub fn is_end(&mut self) -> bool {
+        if let Screen::End = self.screen {
+            return true;
+        }
+        false
     }
 
     pub fn display(&mut self) -> &mut <P as Platform>::Display {
@@ -161,7 +179,7 @@ impl <P: Platform> UIState<P> {
                 new_screen = res.state;
             },
             Screen::OnboardingBackup => {
-                new_screen = Some(Screen::PinRepeat);
+                new_screen = Some(Screen::End);
                 out.set_slow();
             },
             Screen::PinRepeat => {
@@ -200,17 +218,26 @@ impl <P: Platform> UIState<P> {
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
-    pub fn handle_rx(&mut self, transaction: String, extensions: String, signature: [u8; 130]) -> UpdateRequest
+    pub fn handle_transaction(&mut self, transaction: String, extensions: String, signature: Vec<u8>) -> UpdateRequest
     {
         let mut out = UpdateRequest::new();
         self.platform.set_transaction(transaction, extensions, signature);
-        match self.screen {
-            Screen::OnboardingRestoreOrGenerate => {
-                self.screen = Screen::ShowTransaction;
-                out.set_slow();
-            },
-            _ => {},
-        }
+        // match self.screen {
+            // Screen::OnboardingRestoreOrGenerate => {
+        self.screen = Screen::ShowTransaction;
+        out.set_slow();
+        out
+            // },
+            // _ => {},
+        // }
+        // out
+    }
+
+    pub fn handle_address(&mut self, addr: Vec<u8>) -> UpdateRequest {
+        let mut out = UpdateRequest::new();
+        self.platform.set_address(addr);
+        self.screen = Screen::QR;
+        out.set_slow();
         out
     }
 
@@ -265,4 +292,3 @@ impl <P: Platform> UIState<P> {
         Ok(())
     }
 }
-
