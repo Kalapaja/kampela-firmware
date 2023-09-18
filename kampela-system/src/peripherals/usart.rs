@@ -27,12 +27,12 @@ pub fn deselect_flash(gpio: &mut GPIO_S) {
 
 
 /// Indicate that command is sent
-pub fn spi_select_command(gpio: &mut GPIO_S) {
+pub fn display_select_command(gpio: &mut GPIO_S) {
     spi_data_command_clear(gpio);
 }
 
 /// Indicate that data is sent
-pub fn spi_select_data(gpio: &mut GPIO_S) {
+pub fn display_select_data(gpio: &mut GPIO_S) {
     spi_data_command_set(gpio);
 }
 
