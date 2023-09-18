@@ -4,11 +4,11 @@ use efm32pg23_fix::Peripherals;
 pub const LINK_DESCRIPTORS: u32 = 0b00000111000100000111111111110000;
 pub const CH_TIM0: u8 = 7;
 pub const LINK_1: u32 = 0b00000000000000000000000000010011;
-pub const LINK_2: u32 = 0b11111111111111111111111111010011;
+pub const LINK_2: u32 = 0b11111111111111111111111111100011;
 
 pub const TIMER0_CC0_ICF: u32 = 0x40048074;
 
-pub const BUF_QUARTER: usize = 2048;
+pub const BUF_THIRD: usize = 2048;
 
 #[repr(C)]
 #[derive(Debug)]
@@ -25,7 +25,6 @@ pub struct NfcXferBlock {
     pub block0: NfcXfer,
     pub block1: NfcXfer,
     pub block2: NfcXfer,
-    pub block3: NfcXfer,
 }
 
 /// Set up LDMA for NFC capture

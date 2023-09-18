@@ -19,7 +19,7 @@ pub mod parallel;
 
 use efm32pg23_fix::{CorePeripherals, Peripherals};
 
-pub use peripherals::ldma::{BUF_QUARTER, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock};
+pub use peripherals::ldma::{BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock};
 
 use core::cell::RefCell;
 use core::ops::DerefMut;
