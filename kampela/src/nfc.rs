@@ -321,10 +321,17 @@ impl <'a> NfcReceiver<'a> {
         }
     }
 
+    pub fn is_empty(&self) -> bool {
+        if let NfcCollector::Empty = self.collector {
+            return true;
+        }
+        false
+    }
+
 
     fn process(&mut self) -> Option<NfcResult> {
         turn_nfc_collector_correctly(&mut self.collector, self.buffer);
-        
+
         if let NfcCollector::Done(ref a) = self.collector {
             NVIC::mask(Interrupt::LDMA);
             let payload = process_nfc_payload(a).unwrap();
@@ -394,7 +401,7 @@ impl <'a> NfcReceiver<'a> {
 
                     let mut got_transaction_no_data = None;
                     in_free(|peripherals| {
-                        
+
                         let mut external_psram = ExternalPsram{peripherals};
 
                         let decoded_transaction = parse_transaction_unmarked(
@@ -421,7 +428,7 @@ impl <'a> NfcReceiver<'a> {
             }
         }
         None
-        
+
     }
 
     pub fn advance(&mut self, voltage: i32) -> Option<NfcResult> {

@@ -8,7 +8,7 @@ use lazy_static::lazy_static;
 use kampela_system::{
     if_in_free,
     devices::{se_rng, touch::{Read, LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES}},
-    draw::FrameBuffer, 
+    draw::FrameBuffer,
     parallel::Operation,
 };
 
@@ -55,7 +55,7 @@ impl UI {
                     },
                     Ok(None) => {},
                     Err(e) => panic!("{:?}", e),
-                } 
+                }
             },
         }
     }
@@ -73,7 +73,7 @@ impl UI {
             self.status = UIStatus::DisplayOperation;
             return;
         }
-        
+
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
@@ -82,8 +82,12 @@ impl UI {
         };
     }
 
-    pub fn handle_rx(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
-        self.update = self.state.handle_rx(transaction, extensions, signature);
+    pub fn handle_transaction(&mut self, transaction: String, extensions: String, signature: Vec<u8>) {
+        self.update = self.state.handle_transaction(transaction, extensions, signature);
+    }
+
+    pub fn handle_address(&mut self, addr: Vec<u8>) {
+        self.update = self.state.handle_address(addr);
     }
 }
 
@@ -106,7 +110,7 @@ pub struct Hardware {
     display: FrameBuffer,
     transaction: Option<String>,
     extensions: Option<String>,
-    signature: Option<[u8; 130]>,
+    payload: Option<Vec<u8>>,
 }
 
 impl Hardware {
@@ -121,7 +125,7 @@ impl Hardware {
             display: display,
             transaction: None,
             extensions: None,
-            signature: None,
+            payload: None,
         }
     }
 }
@@ -159,10 +163,14 @@ impl <'a> Platform for Hardware {
         (&self.entropy, &mut self.display)
     }
 
-    fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
+    fn set_transaction(&mut self, transaction: String, extensions: String, signature: Vec<u8>) {
         self.transaction = Some(transaction);
         self.extensions = Some(extensions);
-        self.signature = Some(signature);
+        self.payload = Some(signature);
+    }
+
+    fn set_address(&mut self, addr: Vec<u8>) {
+        self.payload = Some(addr);
     }
 
     fn transaction(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
@@ -181,8 +189,8 @@ impl <'a> Platform for Hardware {
         }
     }
 
-    fn signature(&mut self) -> (&[u8; 130], &mut <Self as Platform>::Display) {
-        if let Some(ref a) = self.signature {
+    fn signature(&mut self) -> (&Vec<u8>, &mut <Self as Platform>::Display) {
+        if let Some(ref a) = self.payload {
             (a, &mut self.display)
         } else {
             panic!("qr generation failed");
@@ -209,7 +217,7 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
 
         let touch_as_point2 = Point2::new(touch.x as f32, touch.y as f32);
         let display_as_point2 = AFFINE_MATRIX.transform_point(&touch_as_point2);
-           
+
         Some(
             Point {
                 x: display_as_point2.coords[0] as i32,
@@ -218,4 +226,3 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         )
     } else { None }
 }
-

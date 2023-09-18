@@ -32,7 +32,7 @@ static HEAP: Heap = Heap::empty();
 use kampela_system::{
     PERIPHERALS, CORE_PERIPHERALS, in_free,
     devices::{power::ADC, psram::{psram_read_at_address, CheckedMetadataMetal, ExternalPsram, PsramAccess}, se_rng::SeRng},
-    draw::burning_tank, 
+    draw::burning_tank,
     init::init_peripherals,
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
@@ -107,8 +107,9 @@ fn LDMA() {
     });
 }
 
-const ALICE_KAMPELA_KEY: &[u8] = &[24, 79, 109, 158, 13, 45, 121, 126, 185, 49, 212, 255, 134, 18, 243, 96, 119, 210, 175, 115, 48, 181, 19, 238, 61, 135, 28, 186, 185, 31, 59, 9, 172, 24, 200, 176, 25, 207, 214, 199, 221, 214, 171, 143, 80, 246, 86, 104, 48, 40, 21, 99, 114, 3, 232, 85, 101, 7, 128, 198, 36, 11, 101, 63, 180, 120, 97, 66, 191, 43, 74, 35, 69, 3, 219, 194, 72, 141, 68, 185, 188, 177, 117, 246, 178, 250, 89, 134, 116, 20, 248, 247, 151, 45, 130, 59];
+// const ALICE_KAMPELA_KEY: &[u8] = &[24, 79, 109, 158, 13, 45, 121, 126, 185, 49, 212, 255, 134, 18, 243, 96, 119, 210, 175, 115, 48, 181, 19, 238, 61, 135, 28, 186, 185, 31, 59, 9, 172, 24, 200, 176, 25, 207, 214, 199, 221, 214, 171, 143, 80, 246, 86, 104, 48, 40, 21, 99, 114, 3, 232, 85, 101, 7, 128, 198, 36, 11, 101, 63, 180, 120, 97, 66, 191, 43, 74, 35, 69, 3, 219, 194, 72, 141, 68, 185, 188, 177, 117, 246, 178, 250, 89, 134, 116, 20, 248, 247, 151, 45, 130, 59];
 const SIGNING_CTX: &[u8] = b"substrate";
+const MAX_EMPTY_CYCLES: u32 = 100000;
 
 
 #[entry]
@@ -122,7 +123,7 @@ fn main() -> ! {
 
 
     let nfc_buffer: [u16; 3*BUF_THIRD] = [1; 3*BUF_THIRD];
-  
+
     let nfc_transfer_block = NfcXferBlock {
         block0: NfcXfer {
             descriptors: LINK_DESCRIPTORS,
@@ -169,14 +170,14 @@ fn main() -> ! {
 
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
-    let mut nfc_collector = NfcCollector::new();
+    // let mut nfc_collector = NfcCollector::new();
 
 
 
     let mut ui = UI::init();
     let mut adc = ADC::new();
     let mut ent = [0u8; 64];
-    
+
     in_free(|peripherals| {
         // Make sure that flash is ok
         flash_wakeup(peripherals);
@@ -192,58 +193,78 @@ fn main() -> ! {
     let big_seed = entropy_to_big_seed(&ent);
 
     let mini_secret_bytes = &big_seed[..32];
-    
+
     let pair = MiniSecretKey::from_bytes(mini_secret_bytes)
             .unwrap()
             .expand_to_keypair(ExpansionMode::Ed25519);
-            
+
     // hard derivation
     let junction = DeriveJunction::hard("kampela");
     let pair_derived = pair
             .hard_derive_mini_secret_key(Some(ChainCode(*junction.inner())), b"")
             .0
             .expand_to_keypair(ExpansionMode::Ed25519);
-    
-    let mut nfc = NfcReceiver::new(&nfc_buffer, pair_derived.public.to_bytes());
 
+    let mut nfc = NfcReceiver::new(&nfc_buffer, pair_derived.public.to_bytes());
+    let mut idle_counter = Some(0);
     loop {
-        match ui.state.screen {
-            Screen::End => {
-                in_free(|peripherals| {
+        if ui.state.is_end() {
+
+            in_free(|peripherals| {
                 flash_wakeup(peripherals);
+                flash_unlock(peripherals);
+                flash_erase_page(peripherals, 0);
+                flash_wait_ready(peripherals);
+                flash_unlock(peripherals);
                 flash_write_page(peripherals, 0, &mut ui.state.platform.entropy[..32]);
+                flash_wait_ready(peripherals);
                 flash_sleep(peripherals);
-            })},
-            _ => (),
-        };
-        adc.advance(());     
+                panic!("Seedphrase saved!");
+            });
+
+        }
+        adc.advance(());
         let voltage = adc.read();
         ui.advance(adc.read());
         let nfc_result = nfc.advance(voltage);
+        if nfc.is_empty() && idle_counter.is_some() {
+            let new_val = idle_counter.unwrap() + 1;
+            if new_val > MAX_EMPTY_CYCLES {
+                let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
+                ui.handle_address(line1.as_bytes().to_vec());
+                idle_counter = None;
+            } else {
+                idle_counter = Some(new_val);
+            }
+        } else if !nfc.is_empty() {
+            idle_counter = None;
+        }
         if nfc_result.is_some() {
+            idle_counter = None;
             match nfc_result.unwrap() {
                 NfcResult::KampelaStop => {},
                 NfcResult::DisplayAddress => {
                     // TODO: implement adress
-                    let mut stuff = [0u8; 130];
+                    // let mut stuff = [0u8];
                     let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
-                    stuff[0..79].copy_from_slice(&line1.as_bytes());
-                    ui.handle_rx(String::from("Show address\nPlease, tap...\n"), String::from("Tap once again\n"), stuff);
+                    // stuff[0..79].copy_from_slice(&line1.as_bytes());
+                    ui.handle_address(line1.as_bytes().to_vec());
                 },
                 NfcResult::Transaction(transaction) => {
                     // TODO: pass transaction
+                    panic!("Something happened");
                     let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
-            
+
                     let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
                     let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-            
+
                     let context = signing_context(SIGNING_CTX);
                     let signature = pair_derived.sign(attach_rng(context.bytes(&transaction.data_to_sign), &mut SeRng{}));
                     let mut signature_with_id: [u8; 65] = [1; 65];
                     signature_with_id[1..].copy_from_slice(&signature.to_bytes());
-                    let signature_into_qr: [u8; 130] = hex::encode(signature_with_id).into_bytes().try_into().expect("static known length");
+                    // let signature_into_qr: [u8; 130] = ;
 
-                    ui.handle_rx(call, extensions, signature_into_qr);
+                    ui.handle_transaction(call, extensions, hex::encode(signature_with_id).into_bytes());
 
 
 /* // calculate correct hash of the payload
@@ -258,7 +279,7 @@ fn main() -> ! {
                 }
             });
             let hash = hasher.finalize();
-            
+
             // transform signature and verifying key from der-encoding into usable form
             let signature = Signature::from_der(&nfc_payload.companion_signature).unwrap();
             let verifying_key = VerifyingKey::from_public_key_der(&nfc_payload.companion_public_key).unwrap();
