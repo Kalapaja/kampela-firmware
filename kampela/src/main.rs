@@ -5,7 +5,7 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{format, string::String, vec::Vec};
+use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
 use core::{alloc::Layout, panic::PanicInfo};
 use core::ptr::addr_of;
 use cortex_m::asm::delay;
@@ -31,7 +31,7 @@ use kampela_system::{
     draw::burning_tank, 
     init::init_peripherals,
     parallel::Operation,
-    BUF_QUARTER, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
+    BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
 };
 
 use core::cell::RefCell;
@@ -42,7 +42,7 @@ use cortex_m::interrupt::Mutex;
 //use p256::ecdsa::{signature::{hazmat::PrehashVerifier}, Signature, VerifyingKey};
 //use sha2::Digest;
 //use spki::DecodePublicKey;
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction};
+use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked};
 use schnorrkel::{
     context::attach_rng,
     keys::Keypair,
@@ -105,12 +105,12 @@ const SIGNING_CTX: &[u8] = b"substrate";
 fn main() -> ! {
     {
         use core::mem::MaybeUninit;
-        const HEAP_SIZE: usize = 0x4600;
+        const HEAP_SIZE: usize = 0x6500;
         static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
         unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
     }
 
-    let nfc_buffer: [u16; 4*BUF_QUARTER] = [1; 4*BUF_QUARTER];
+    let nfc_buffer: [u16; 3*BUF_THIRD] = [1; 3*BUF_THIRD];
     let nfc_transfer_block = NfcXferBlock {
         block0: NfcXfer {
             descriptors: LINK_DESCRIPTORS,
@@ -121,19 +121,13 @@ fn main() -> ! {
         block1: NfcXfer {
             descriptors: LINK_DESCRIPTORS,
             source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[BUF_QUARTER]) as u32,
+            dest: addr_of!(nfc_buffer[BUF_THIRD]) as u32,
             link: LINK_1,
         },
         block2: NfcXfer {
             descriptors: LINK_DESCRIPTORS,
             source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[2*BUF_QUARTER]) as u32,
-            link: LINK_1,
-        },
-        block3: NfcXfer {
-            descriptors: LINK_DESCRIPTORS,
-            source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[3*BUF_QUARTER]) as u32,
+            dest: addr_of!(nfc_buffer[2*BUF_THIRD]) as u32,
             link: LINK_2,
         },
     };
@@ -245,13 +239,23 @@ fn main() -> ! {
                     let mut signable_transaction_option = None;
                     in_free(|peripherals| {
                         let mut external_psram = ExternalPsram{peripherals};
-                        let compact_transaction = find_compact::<u32, PsramAccess, ExternalPsram>(&nfc_payload.encoded_data, &mut external_psram, position).unwrap();
-                        let start_address = nfc_payload.encoded_data.start_address.try_shift(compact_transaction.start_next_unit).unwrap();
-                        let transaction_encoded = psram_read_at_address(peripherals, start_address, compact_transaction.compact as usize).unwrap();
-                        signable_transaction_option = Some(Vec::<u8>::decode(&mut &transaction_encoded[..]).unwrap());
-                        position = compact_transaction.start_next_unit + compact_transaction.compact as usize;
+                        let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(&nfc_payload.encoded_data, &mut external_psram, position).unwrap(); // fix this madness maybe later
+                        position = compact_transaction_1.start_next_unit;
+                        let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(&nfc_payload.encoded_data, &mut external_psram, position).unwrap();
+                        position = compact_transaction_2.start_next_unit;
+
+                        let start_address = nfc_payload.encoded_data.start_address.try_shift(compact_transaction_2.start_next_unit).unwrap();
+
+                        let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&nfc_payload.encoded_data, &mut external_psram, position).unwrap();
+                        let start_address_to_sign = nfc_payload.encoded_data.start_address.try_shift(compact_call.start_next_unit).unwrap();
+                        let total_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit + position;
+
+                        let data_to_sign = psram_read_at_address(peripherals, start_address_to_sign, total_len_to_sign).unwrap();
+
+                        signable_transaction_option = Some(data_to_sign);
+                        position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
                     });
-                    let signable_transaction = signable_transaction_option.unwrap();
+                    let data_to_sign = signable_transaction_option.unwrap();
 
                     in_free(|peripherals| {
                         let start_address = nfc_payload.encoded_data.start_address.try_shift(position).unwrap();
@@ -259,38 +263,43 @@ fn main() -> ! {
                         assert!(public_key.starts_with(&[1u8]) & (public_key[1..] == ALICE_KAMPELA_KEY[64..]), "Unknown address.");
                     });
 
+
+                    let mut got_transaction_no_data = None;
                     in_free(|peripherals| {
+
                         let mut external_psram = ExternalPsram{peripherals};
-                        let binding = signable_transaction.as_ref();
-                        let marked_data: MarkedData<'_, &[u8], ()> = MarkedData::mark(&binding, &mut ()).unwrap();
-                        let data_to_sign = binding[marked_data.call_start()..].to_vec();
-                        let decoded_transaction = parse_transaction(
-                            &signable_transaction.as_ref(),
+
+                        let decoded_transaction = parse_transaction_unmarked(
+                            &data_to_sign.as_ref(),
                             &mut external_psram,
                             &checked_metadata_metal,
                             genesis_hash
                         ).unwrap();
-                        let carded = decoded_transaction.card(&checked_metadata_metal.to_specs(), &checked_metadata_metal.spec_name_version.spec_name);
-                        got_transaction = Some((
-                            carded.call_result.unwrap().iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
-                            carded.extensions.iter().map(|card| card.show()).collect::<Vec<String>>().join("\n"),
-                            data_to_sign
-                        ));
+
+                        got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));
                     });
+                    let (decoded_transaction, specs, spec_name) = got_transaction_no_data.unwrap();
+                    got_transaction = Some((decoded_transaction, data_to_sign, specs, spec_name));
                 },
                 _ => {nfc_collector = NfcCollector::new();}
             }
         }
         if got_transaction.is_some() {
 
-            let transaction = got_transaction.unwrap();
+            let (decoded_transaction, data_to_sign, specs, spec_name) = got_transaction.unwrap();
+            
+            let carded = decoded_transaction.card(&specs, &spec_name);
+            
+            let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
+            let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
+            
             let context = signing_context(SIGNING_CTX);
-            let signature = pair_derived.sign(attach_rng(context.bytes(&transaction.2), &mut SeRng{}));
+            let signature = pair_derived.sign(attach_rng(context.bytes(&data_to_sign), &mut SeRng{}));
             let mut signature_with_id: [u8; 65] = [1; 65];
             signature_with_id[1..].copy_from_slice(&signature.to_bytes());
             let signature_into_qr: [u8; 130] = hex::encode(signature_with_id).into_bytes().try_into().expect("static known length");
 
-            ui.handle_rx(transaction.0, transaction.1, signature_into_qr);
+            ui.handle_rx(call, extensions, signature_into_qr);
 
             break
         }
