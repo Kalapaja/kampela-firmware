@@ -10,7 +10,9 @@ enum FlashCommand {
     ReadId = 0x9f, /* 9f xx xx xx xx outputs JEDEC ID: 1 byte manufacturer ID & 2 byte device ID */
     ReadDiscoverableParameters = 0x5A, /* 5A xx xx xx xx Serial Flash Discoverable Parameters */
     ReadStatusRegister = 0x05, /* 05 xx xx xx xx to read out the values of the status register */
+    ReadStatusRegisterAdressed = 0x65,
     WriteStatusRegister = 0x01, /* 01 xx xx xx xx to write new values to the status register */
+    WriteStatusRegisterAdressed = 0x71,
     Read = 0x03, /* 03 a1 a2 a3 xx n bytes read out until CS# goes high */
     FastRead = 0x0b, /* 0b a1 a2 a3 dd n bytes read out until CS# goes high */
     Read2 = 0xbb, /* bb 12 3d xx xx n bytes read out by 2 I/O until CS# goes high */
@@ -22,7 +24,7 @@ enum FlashCommand {
     WritePage = 0x02, /* 02 a1 a2 a3 xx to program the selected page */
     WritePage4 = 0x38, /* 38 3a 3d xx xx quad input to program the selected page */
     WriteContinously = 0xad, /* ad a1 a2 a3 xx continously program whole chip, the address is automaticlly increase */
-    PowerDown = 0xb9, /* b9 xx xx xx xx enters deep power down mode */
+    DeepPowerDown = 0xb9, /* b9 xx xx xx xx enters deep power down mode */
     UltraDeepPowerDown = 0x79, /* 79 Ultra-Deep Power-Down mode */
     ResumeFromPowerDown = 0xab, /* ab xx xx xx xx release from deep power down mode */
     ReadIdMfid = 0x90, /* 90 ?? ?? ?? xx output the manufacter ID & device ID */
@@ -74,14 +76,14 @@ pub fn flash_init(peripherals: &mut Peripherals) {
 
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::EnableSoftReset);
-    deselect_flash(&mut peripherals.GPIO_S);    
+    deselect_flash(&mut peripherals.GPIO_S);
     write_to_usart(peripherals, 0); // for delay
 
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::SoftReset);
     deselect_flash(&mut peripherals.GPIO_S);
     // TODO: check if it's possible to determine readiness instead of using delay
-    delay(1000);
+    delay(10000);
 }
 
 pub fn flash_sleep(peripherals: &mut Peripherals) {
@@ -91,11 +93,13 @@ pub fn flash_sleep(peripherals: &mut Peripherals) {
 }
 
 pub fn flash_wakeup(peripherals: &mut Peripherals) {
-    select_flash(&mut peripherals.GPIO_S);
-    flash_cmd(peripherals, FlashCommand::ResumeFromPowerDown);
-    deselect_flash(&mut peripherals.GPIO_S);
-    // TODO: check if it's possible to determine readiness instead of using delay
-    delay(10000);
+    for _ in 0..2 {
+        select_flash(&mut peripherals.GPIO_S);
+        flash_cmd(peripherals, FlashCommand::ResumeFromPowerDown);
+        deselect_flash(&mut peripherals.GPIO_S);
+        // TODO: check if it's possible to determine readiness instead of using delay
+        delay(10000);
+    }
 }
 
 pub fn flash_unlock(peripherals: &mut Peripherals) {
@@ -202,18 +206,36 @@ enum StatusRegister1 {
     BusyStatus = 1<<0,
 }
 
-fn flash_read_status(peripherals: &mut Peripherals, reg: StatusRegister) -> u8 {
-    select_flash(&mut peripherals.GPIO_S);
-    flash_cmd(peripherals, FlashCommand::ReadStatusRegister);
-    flash_write_some(peripherals, &[reg as u8]);    
-    let res = write_to_usart(peripherals, 0);
-    deselect_flash(&mut peripherals.GPIO_S);
+pub fn flash_read_sr(peripherals: &mut Peripherals) -> [u8;6] {
+
+    let mut res = [0u8; 6];
+    for i in 0..6 {
+        select_flash(&mut peripherals.GPIO_S);
+        flash_cmd(peripherals, FlashCommand::ReadStatusRegisterAdressed);
+        flash_write_some(peripherals, &[i+1 as u8, 0u8]);
+        let ind = i as usize;
+        flash_read_some(peripherals, &mut res[ind..ind+1]);
+        deselect_flash(&mut peripherals.GPIO_S);
+    }
+
     res
 }
 
+pub fn flash_clear_sr(peripherals: &mut Peripherals) {
+    for i in 0..6 {
+        select_flash(&mut peripherals.GPIO_S);
+        flash_cmd(peripherals, FlashCommand::WriteStatusRegisterAdressed);
+        flash_write_some(peripherals, &[i+1 as u8, 0u8]);
+        deselect_flash(&mut peripherals.GPIO_S);
+    }
+}
+
+
 pub fn flash_wait_ready(peripherals: &mut Peripherals) {
+    // while flash_read_status(peripherals, StatusRegister::SR1) & (StatusRegister1::BusyStatus as u8) != 0 {}
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::ActiveStatus);
+    flash_write_some(peripherals, &[0_u8, 3]);
     while write_to_usart(peripherals, 0) != 0 {}
     deselect_flash(&mut peripherals.GPIO_S);
 }
@@ -231,7 +253,7 @@ pub fn flash_write_page(peripherals: &mut Peripherals, addr: u32, data: &[u8]) {
     flash_cmd(peripherals, FlashCommand::WritePage);
     flash_write_addr!(peripherals, addr);
     let xfer_len = if 256 < data.len() { 256 } else { data.len() };
-    flash_write_some(peripherals, &data[0..xfer_len]);    
+    flash_write_some(peripherals, &data[0..xfer_len]);
     deselect_flash(&mut peripherals.GPIO_S);
 }
 
@@ -240,7 +262,7 @@ pub fn flash_get_size(peripherals: &mut Peripherals) -> u32 {
     flash_cmd(peripherals, FlashCommand::ReadDiscoverableParameters);
     let mut jdt_head: [u8; 12] = [0; 12];
     flash_read_some(peripherals, &mut jdt_head);
-    let size_offset = ((1 + jdt_head[11]) as usize) << 3 + 4;    
+    let size_offset = ((1 + jdt_head[11]) as usize) << 3 + 4;
     for _ in 0..size_offset {
         write_to_usart(peripherals, 0);
     }
@@ -261,6 +283,7 @@ pub fn flash_read(peripherals: &mut Peripherals, addr: u32, data: &mut [u8]) {
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::Read);
     flash_write_addr!(peripherals, addr);
+    // flash_write_some(peripherals, &[0u8, 0u8, 0u8]);
     flash_read_some(peripherals, data);
     deselect_flash(&mut peripherals.GPIO_S);
 }
