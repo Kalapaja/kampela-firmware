@@ -6,18 +6,20 @@ use alloc::string::String;
 use lazy_static::lazy_static;
 
 use kampela_system::{
+    in_free,
     if_in_free,
     devices::{se_rng, touch::{Read, LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES}},
-    draw::FrameBuffer, 
+    draw::FrameBuffer,
     parallel::Operation,
 };
+use kampela_system::devices::flash::*;
 
-use kampela_ui::{display_def::*, uistate, pin::Pincode, platform::Platform};
+use kampela_ui::{display_def::*, uistate, pin::Pincode, platform::{NfcTransaction, Platform}};
 use embedded_graphics::prelude::Point;
 
 /// UI handler
 pub struct UI {
-    state: uistate::UIState<Hardware>,
+    pub state: uistate::UIState<Hardware>,
     status: UIStatus,
     update: uistate::UpdateRequest,
 }
@@ -55,7 +57,7 @@ impl UI {
                     },
                     Ok(None) => {},
                     Err(e) => panic!("{:?}", e),
-                } 
+                }
             },
         }
     }
@@ -73,7 +75,7 @@ impl UI {
             self.status = UIStatus::DisplayOperation;
             return;
         }
-        
+
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
@@ -82,8 +84,12 @@ impl UI {
         };
     }
 
-    pub fn handle_rx(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
-        self.update = self.state.handle_rx(transaction, extensions, signature);
+    pub fn handle_transaction(&mut self, transaction: NfcTransaction) {
+        self.update = self.state.handle_transaction(&mut se_rng::SeRng{}, transaction);
+    }
+
+    pub fn handle_address(&mut self, addr: [u8; 76]) {
+        self.update = self.state.handle_address(addr);
     }
 }
 
@@ -100,13 +106,14 @@ enum UIStatus {
     TouchOperation(Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>),
 }
 
-struct Hardware {
+pub struct Hardware {
     pin: Pincode,
-    entropy: Vec<u8>,
+    pub entropy: Vec<u8>,
     display: FrameBuffer,
-    transaction: Option<String>,
+    call: Option<String>,
     extensions: Option<String>,
     signature: Option<[u8; 130]>,
+    address: Option<[u8; 76]>,
 }
 
 impl Hardware {
@@ -119,9 +126,10 @@ impl Hardware {
             pin: pin,
             entropy: entropy,
             display: display,
-            transaction: None,
+            call: None,
             extensions: None,
             signature: None,
+            address: None,
         }
     }
 }
@@ -147,6 +155,62 @@ impl <'a> Platform for Hardware {
         &mut self.display
     }
 
+    fn store_entropy(&mut self) {
+        let len = self.entropy.len();
+        let mut entropy_storage = [0u8; 33];
+        entropy_storage[0] = len.try_into().expect("entropy is at most 32 bytes");
+        entropy_storage[1..1+len].copy_from_slice(&self.entropy);
+        // TODO encode
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, 0);
+            flash_wait_ready(peripherals);
+
+            flash_unlock(peripherals);
+            flash_write_page(peripherals, 0, &entropy_storage);
+            flash_wait_ready(peripherals);
+
+            let mut ent = [0u8; 35];
+            flash_read(peripherals, 0, &mut ent);
+
+            // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
+            if ent[2..35] != entropy_storage {
+                panic!("Failed to save seedphrase: {:?} ||| {:?}", &ent[2..35], &self.entropy[..33]);
+            }
+        });
+    }
+
+    fn read_entropy(&mut self) {
+        let mut ent = [0u8; 33];
+        in_free(|peripherals| {
+            // Make sure that flash is ok
+            flash_wakeup(peripherals);
+            flash_wait_ready(peripherals);
+            let fl_id = flash_get_id(peripherals);
+            let fl_len = flash_get_size(peripherals);
+            if (fl_id == 0) || (fl_len == 0) {
+                panic!("Flash error");
+            }
+            flash_read(peripherals, 0, &mut ent);
+            flash_sleep(peripherals);
+        });
+        // TODO decode
+        match ent[0] {
+            0 => self.entropy = Vec::new(),
+            16 => self.entropy = ent[1..17].to_vec(),
+            20 => self.entropy = ent[1..21].to_vec(),
+            24 => self.entropy = ent[1..25].to_vec(),
+            28 => self.entropy = ent[1..29].to_vec(),
+            32 => self.entropy = ent[1..33].to_vec(),
+            _ => {
+                self.store_entropy();
+                panic!("Seed storage corrupted! Wiping seed...");
+            },
+        }
+    }
+
     fn pin_display(&mut self) -> (&mut Pincode, &mut <Self as Platform>::Display) {
         (&mut self.pin, &mut self.display)
     }
@@ -155,29 +219,36 @@ impl <'a> Platform for Hardware {
         self.entropy = e.to_vec(); // TODO: dedicated array storage maybe
     }
 
-    fn entropy_display(&mut self) -> (&Vec<u8>, &mut <Self as Platform>::Display) {
+    fn entropy(&self) -> &[u8] {
+        &self.entropy
+    }
+
+    fn entropy_display(&mut self) -> (&[u8], &mut <Self as Platform>::Display) {
         (&self.entropy, &mut self.display)
     }
 
-    fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
-        self.transaction = Some(transaction);
+    fn set_address(&mut self, addr: [u8; 76]) {
+        self.address = Some(addr);
+    }
+
+    fn set_transaction(&mut self, call: String, extensions: String, signature: [u8; 130]) {
+        self.call = Some(call);
         self.extensions = Some(extensions);
         self.signature = Some(signature);
     }
 
-    fn transaction(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
-        if let Some(ref a) = self.transaction {
-            Some((a, &mut self.display))
-        } else {
-            None
+
+    fn call(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
+        match &self.call {
+            Some(a) => Some((a.as_str(), &mut self.display)),
+            None => None,
         }
     }
 
     fn extensions(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
-        if let Some(ref a) = self.extensions {
-            Some((a, &mut self.display))
-        } else {
-            None
+        match &self.extensions {
+            Some(a) => Some((a.as_str(), &mut self.display)),
+            None => None,
         }
     }
 
@@ -188,6 +259,15 @@ impl <'a> Platform for Hardware {
             panic!("qr generation failed");
         }
     }
+
+    fn address(&mut self) -> (&[u8; 76], &mut <Self as Platform>::Display) {
+        if let Some(ref a) = self.address {
+            (a, &mut self.display)
+        } else {
+            panic!("qr generation failed");
+        }
+    }
+
 }
 
 lazy_static! {
@@ -209,7 +289,7 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
 
         let touch_as_point2 = Point2::new(touch.x as f32, touch.y as f32);
         let display_as_point2 = AFFINE_MATRIX.transform_point(&touch_as_point2);
-           
+
         Some(
             Point {
                 x: display_as_point2.coords[0] as i32,
@@ -218,4 +298,3 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         )
     } else { None }
 }
-

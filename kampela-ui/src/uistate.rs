@@ -1,10 +1,21 @@
 //! UI state unit; almost all inerfacing should be done through this "object"
 
 #[cfg(not(feature="std"))]
-use alloc::string::String;
+mod stdwrap {
+    pub use alloc::string::String;
+    pub use alloc::vec::Vec;
+}
+
 
 #[cfg(feature="std")]
-use std::string::String;
+mod stdwrap {
+    pub use std::string::String;
+    pub use std::vec::Vec;
+}
+
+
+
+use stdwrap::*;
 
 use embedded_graphics::{
     prelude::Primitive,
@@ -20,11 +31,24 @@ use embedded_graphics_core::{
 
 use crate::display_def::*;
 
-use crate::platform::Platform;
+use crate::platform::{NfcTransaction, Platform};
 
 use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
+
+use rand::{CryptoRng, Rng};
+
+use schnorrkel::{
+    context::attach_rng,
+    derive::{ChainCode, Derivation},
+    keys::Keypair,
+    signing_context,
+    ExpansionMode,
+    MiniSecretKey,
+};
+
+const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct EventResult {
     pub request: UpdateRequest,
@@ -88,7 +112,7 @@ pub struct UIState<P> where
     P: Platform,
 {
     screen: Screen,
-    platform: P,
+    pub platform: P,
 }
 
 pub enum Screen {
@@ -99,17 +123,40 @@ pub enum Screen {
     PinRepeat,
     ShowTransaction,
     ShowExtension,
-    QR,
+    QRSignature,
+    QRAddress,
     Locked,
     End,
 }
 
 impl <P: Platform> UIState<P> {
-    pub fn new(platform: P) -> Self {
-        UIState {
-            screen: Screen::PinEntry,
-            platform: platform,
+    pub fn new(mut platform: P) -> Self {
+        platform.read_entropy();
+        if platform.entropy_display().0.is_empty() {
+            UIState {
+                screen: Screen::OnboardingRestoreOrGenerate,
+                platform: platform,
+            }
+        } else {
+            UIState {
+                screen: Screen::QRAddress,
+                platform: platform,
+            }
         }
+    }
+
+    pub fn is_initial(&self) -> bool {
+        if let Screen::OnboardingRestoreOrGenerate = self.screen {
+            return true;
+        }
+        false
+    }
+
+    pub fn is_end(&self) -> bool {
+        if let Screen::End = self.screen {
+            return true;
+        }
+        false
     }
 
     pub fn display(&mut self) -> &mut <P as Platform>::Display {
@@ -129,15 +176,15 @@ impl <P: Platform> UIState<P> {
         match self.screen {
             Screen::PinEntry => {
                 let res = self.platform.handle_pin_event(point, h)?;
-                out = res.request;
-                // TODO this properly, expo hack
+                out = res.request;/*
+                // TODO this properly, expo hack 
                 new_screen = match res.state {
                     Some(a) => match self.platform.transaction() {
                         Some(_) => Some(Screen::ShowTransaction),
                         None => Some(a),
                     },
                     None => None,
-                };
+                };*/
             }
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
@@ -161,7 +208,8 @@ impl <P: Platform> UIState<P> {
                 new_screen = res.state;
             },
             Screen::OnboardingBackup => {
-                new_screen = Some(Screen::PinRepeat);
+                self.platform.store_entropy();
+                new_screen = Some(Screen::QRAddress);
                 out.set_slow();
             },
             Screen::PinRepeat => {
@@ -182,12 +230,13 @@ impl <P: Platform> UIState<P> {
                     out.set_slow();
                 }
                 150..=300 => {
-                    new_screen = Some(Screen::QR);
+                    new_screen = Some(Screen::QRSignature);
                     out.set_slow();
                 }
                 _ => {},
             }
-            Screen::QR => (),
+            Screen::QRSignature => (),
+            Screen::QRAddress => (),
             Screen::Locked => (),
             Screen::End => (),
         }
@@ -200,17 +249,36 @@ impl <P: Platform> UIState<P> {
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
-    pub fn handle_rx(&mut self, transaction: String, extensions: String, signature: [u8; 130]) -> UpdateRequest
+    pub fn handle_transaction<R: Rng + ?Sized + CryptoRng>(&mut self, rng: &mut R, transaction: NfcTransaction) -> UpdateRequest
     {
         let mut out = UpdateRequest::new();
-        self.platform.set_transaction(transaction, extensions, signature);
-        match self.screen {
-            Screen::OnboardingRestoreOrGenerate => {
-                self.screen = Screen::ShowTransaction;
-                out.set_slow();
-            },
-            _ => {},
-        }
+        let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
+        let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
+        let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
+
+        let context = signing_context(SIGNING_CTX);
+        let signature = self.platform.pair().unwrap().sign(attach_rng(context.bytes(&transaction.data_to_sign), rng));
+        let mut signature_with_id: [u8; 65] = [1; 65];
+        signature_with_id[1..].copy_from_slice(&signature.to_bytes());
+
+        self.platform.set_transaction(call, extensions, hex::encode(signature_with_id).into_bytes().try_into().expect("static length"));
+
+        // match self.screen {
+            // Screen::OnboardingRestoreOrGenerate => {
+        self.screen = Screen::ShowTransaction;
+        out.set_slow();
+        out
+            // },
+            // _ => {},
+        // }
+        // out
+    }
+
+    pub fn handle_address(&mut self, addr: [u8; 76]) -> UpdateRequest {
+        let mut out = UpdateRequest::new();
+        self.platform.set_address(addr);
+        self.screen = Screen::QRAddress;
+        out.set_slow();
         out
     }
 
@@ -257,12 +325,14 @@ impl <P: Platform> UIState<P> {
             Screen::ShowExtension => {
                 self.platform.draw_extensions()?
             }
-            Screen::QR => {
-                self.platform.draw_qr()?
+            Screen::QRSignature => {
+                self.platform.draw_signature_qr()?
+            },
+            Screen::QRAddress => {
+                self.platform.draw_address_qr()?
             },
             _ => {}
         }
         Ok(())
     }
 }
-

@@ -99,8 +99,8 @@ gpio_pin!(
     /// Set display data/command:
     /// Clear display data/command:
     /// port D, pin [`DISP_DC_PIN`].
-    display_data_command_set,
-    display_data_command_clear,
+    spi_data_command_set,
+    spi_data_command_clear,
     portd_dout,
     DISP_DC_PIN
 );
@@ -297,7 +297,7 @@ fn set_gpio_pins(gpio: &mut GPIO_S) {
     pow_set(gpio);
     delay(100000); // wait after power set! (epaper manual for 2.8V setup)
     display_chip_select_set(gpio);
-    display_data_command_clear(gpio);
+    spi_data_command_clear(gpio);
     display_res_clear(gpio);
     sda_set(gpio);
     scl_set(gpio);
