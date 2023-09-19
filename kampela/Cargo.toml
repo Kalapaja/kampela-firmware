@@ -38,10 +38,6 @@ nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
 kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-features = false, rev = "c43327948b591fa8a9692cb793c66da47a2f773a"}
-hmac = "0.12.1"
-pbkdf2 = {version = "0.11.0", default-features = false}
-sha2 = {version = "0.10.6", default-features = false}
-sp-core = {version = "12.0.0", default-features = false, features = ["full_crypto"]}
 
 #p256 = {version = "0.12.0", default-features = false, features = ["ecdsa", "pkcs8"]}
 #sha2 = {version = "0.10.6", default-features = false}

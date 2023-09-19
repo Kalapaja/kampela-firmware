@@ -14,12 +14,10 @@ use embedded_alloc::Heap;
 use lazy_static::lazy_static;
 use parity_scale_codec::Decode;
 use primitive_types::H256;
-use hmac::Hmac;
-use pbkdf2::pbkdf2;
-use sha2::Sha512;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
 use kampela_system::devices::flash::*;
+use kampela_ui::platform::Platform;
 
 mod ui;
 use ui::UI;
@@ -56,7 +54,6 @@ use schnorrkel::{
     ExpansionMode,
     MiniSecretKey,
 };
-use sp_core::crypto::DeriveJunction;
 
 lazy_static!{
     #[derive(Debug)]
@@ -109,7 +106,6 @@ fn LDMA() {
 
 // const ALICE_KAMPELA_KEY: &[u8] = &[24, 79, 109, 158, 13, 45, 121, 126, 185, 49, 212, 255, 134, 18, 243, 96, 119, 210, 175, 115, 48, 181, 19, 238, 61, 135, 28, 186, 185, 31, 59, 9, 172, 24, 200, 176, 25, 207, 214, 199, 221, 214, 171, 143, 80, 246, 86, 104, 48, 40, 21, 99, 114, 3, 232, 85, 101, 7, 128, 198, 36, 11, 101, 63, 180, 120, 97, 66, 191, 43, 74, 35, 69, 3, 219, 194, 72, 141, 68, 185, 188, 177, 117, 246, 178, 250, 89, 134, 116, 20, 248, 247, 151, 45, 130, 59];
 const SIGNING_CTX: &[u8] = b"substrate";
-const MAX_EMPTY_CYCLES: u32 = 300000;
 
 
 #[entry]
@@ -170,34 +166,19 @@ fn main() -> ! {
 
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
-    // let mut nfc_collector = NfcCollector::new();
+    // Development: erase seed when Pilkki can't
+/*
+    in_free(|peripherals| {
+            flash_wakeup(peripherals);
 
-
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, 0);
+            flash_wait_ready(peripherals);
+    });
+*/
 
     let mut ui = UI::init();
     let mut adc = ADC::new();
-    let mut ent = [0u8; 64];
-
-    in_free(|peripherals| {
-        // Make sure that flash is ok
-        flash_wakeup(peripherals);
-        flash_wait_ready(peripherals);
-        let fl_id = flash_get_id(peripherals);
-        let fl_len = flash_get_size(peripherals);
-        if (fl_id == 0) || (fl_len == 0) {
-            panic!("Flash error");
-        }
-        flash_read(peripherals, 0, &mut ent);
-        flash_sleep(peripherals);
-    });
-
-    let big_seed = entropy_to_big_seed(&ent);
-
-    let mini_secret_bytes = &big_seed[..32];
-
-    let pair = MiniSecretKey::from_bytes(mini_secret_bytes)
-            .unwrap()
-            .expand_to_keypair(ExpansionMode::Ed25519);
 
     // hard derivation
     //let junction = DeriveJunction::hard("kampela");
@@ -207,70 +188,27 @@ fn main() -> ! {
     //         .expand_to_keypair(ExpansionMode::Ed25519);
 
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer, pair.public.to_bytes());
+    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public());
 
-    let mut idle_counter = Some(0);
     loop {
-        if ui.state.is_end() {
-
-            in_free(|peripherals| {
-                flash_wakeup(peripherals);
-
-                flash_unlock(peripherals);
-                flash_erase_page(peripherals, 0);
-                flash_wait_ready(peripherals);
-
-                flash_unlock(peripherals);
-                flash_write_page(peripherals, 0, &ui.state.platform.entropy[..32]);
-                flash_wait_ready(peripherals);
-
-                flash_read(peripherals, 0, &mut ent);
-
-                // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
-                if ent[2..34] != ui.state.platform.entropy[..32] {
-                    panic!("Failed to save seedphrase: {:?} ||| {:?}", &ent[2..34], &ui.state.platform.entropy[..32]);
-                }
-
-                panic!("Seedphrase saved! {:?}", &ent[2..34]);
-            });
-
-            // TODO: implement adress
-                    // let mut stuff = [0u8];
-            let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
-                    // stuff[0..79].copy_from_slice(&line1.as_bytes());
-            ui.handle_address(line1.as_bytes().to_vec());
-        }
         adc.advance(());
         let voltage = adc.read();
         ui.advance(adc.read());
         let nfc_result = nfc.advance(voltage);
-        if nfc.is_empty() && idle_counter.is_some() {
-            let new_val = idle_counter.unwrap() + 1;
-            if new_val > MAX_EMPTY_CYCLES {
-                let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
-                ui.handle_address(line1.as_bytes().to_vec());
-                idle_counter = None;
-            } else {
-                idle_counter = Some(new_val);
-            }
-        } else if !nfc.is_empty() {
-            idle_counter = None;
-        }
+        
         if nfc_result.is_some() {
-            // panic!("panic");
-            idle_counter = None;
             match nfc_result.unwrap() {
                 NfcResult::KampelaStop => {},
                 NfcResult::DisplayAddress => {
+                    /*
                     // TODO: implement adress
                     // let mut stuff = [0u8];
-                    let line1 = format!("substrate:0x{}:0x", hex::encode(pair.public.to_bytes()));
+                    let line1 = format!("substrate:0x{}", hex::encode(pair.public.to_bytes()));
                     // stuff[0..79].copy_from_slice(&line1.as_bytes());
-                    ui.handle_address(line1.as_bytes().to_vec());
+                    ui.handle_address(line1.as_bytes().try_into().expect("static length"));*/
                 },
                 NfcResult::Transaction(transaction) => {
-                    // TODO: pass transaction
-                    // panic!("Something happened");
+                    /*
                     let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
 
                     let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
@@ -282,7 +220,8 @@ fn main() -> ! {
                     signature_with_id[1..].copy_from_slice(&signature.to_bytes());
                     // let signature_into_qr: [u8; 130] = ;
 
-                    ui.handle_transaction(call, extensions, hex::encode(signature_with_id).into_bytes());
+                    ui.handle_transaction(call, extensions, hex::encode(signature_with_id).into_bytes().try_into().expect("static length"));*/
+                    ui.handle_transaction(transaction);
 
 
 /* // calculate correct hash of the payload
@@ -316,14 +255,4 @@ fn main() -> ! {
     }
 }
 
-pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
-    //check_entropy_length(entropy)?;
 
-    let salt = "mnemonic";
-
-    let mut seed = [0u8; 64];
-
-    pbkdf2::<Hmac<Sha512>>(entropy, salt.as_bytes(), 2048, &mut seed);
-
-    seed
-}

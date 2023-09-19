@@ -11,6 +11,7 @@ use cortex_m::interrupt::free;
 use crate::BUFFER_STATUS;
 use efm32pg23_fix::{NVIC,Interrupt};
 
+use kampela_ui::platform::NfcTransaction;
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, CheckedMetadataMetal, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 // use substrate_parser::compacts::find_compact;
@@ -280,16 +281,6 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 */
 }
 
-
-
-
-pub struct NfcTransaction {
-    pub decoded_transaction: TransactionUnmarkedParsed,
-    pub data_to_sign: Vec<u8>,
-    pub specs: ShortSpecs,
-    pub spec_name: String,
-}
-
 pub enum NfcResult {
     Transaction(NfcTransaction),
     DisplayAddress,
@@ -312,12 +303,21 @@ pub struct NfcReceiver <'a> {
 impl <'a> NfcReceiver<'a> {
 
 
-    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: [u8; 32]) -> Self {
-        Self {
-            buffer: nfc_buffer,
-            collector: NfcCollector::new(),
-            state: NfcState::Operational,
-            public_memory: public_memory,
+    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: Option<[u8; 32]>) -> Self {
+        match public_memory {
+            Some(a) => Self {
+                buffer: nfc_buffer,
+                collector: NfcCollector::new(),
+                state: NfcState::Operational,
+                public_memory: a,
+            },
+            None => 
+                Self {
+                    buffer: nfc_buffer,
+                    collector: NfcCollector::new(),
+                    state: NfcState::Done,
+                    public_memory: [0u8; 32],
+            },
         }
     }
 
