@@ -8,7 +8,7 @@ use lazy_static::lazy_static;
 use kampela_system::{
     in_free,
     if_in_free,
-    devices::{se_rng, touch::{Read, LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES}},
+    devices::{se_rng, se_aes_gcm, touch::{Read, LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES}},
     draw::FrameBuffer,
     parallel::Operation,
 };
@@ -157,11 +157,25 @@ impl <'a> Platform for Hardware {
 
     fn store_entropy(&mut self) {
         let len = self.entropy.len();
-        let mut entropy_storage = [0u8; 33];
-        entropy_storage[0] = len.try_into().expect("entropy is at most 32 bytes");
-        entropy_storage[1..1+len].copy_from_slice(&self.entropy);
+        //let mut entropy_storage = [0u8; 33];
+        //entropy_storage[0] = len.try_into().expect("entropy is at most 32 bytes");
+        //entropy_storage[1..1+len].copy_from_slice(&self.entropy);
         // TODO encode
         in_free(|peripherals| {
+            se_aes_gcm::create_key(peripherals).unwrap();
+            let protected = se_aes_gcm::aes_gcm_encrypt(
+                peripherals,
+                [0; se_aes_gcm::AAD_LEN],
+                [0; se_aes_gcm::IV_LEN],
+                self.entropy.clone(),
+            ).unwrap();
+
+            let mut storage_payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
+            storage_payload[0] = protected.len as u8;
+            storage_payload[1..1+se_aes_gcm::SECRET_MAX_LEN].copy_from_slice(&protected.data);
+            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].copy_from_slice(&protected.tag);
+            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].copy_from_slice( unsafe { &se_aes_gcm::KEY_BUFFER });
+
             flash_wakeup(peripherals);
 
             flash_unlock(peripherals);
@@ -169,21 +183,21 @@ impl <'a> Platform for Hardware {
             flash_wait_ready(peripherals);
 
             flash_unlock(peripherals);
-            flash_write_page(peripherals, 0, &entropy_storage);
+            flash_write_page(peripherals, 0, &storage_payload);
             flash_wait_ready(peripherals);
 
-            let mut ent = [0u8; 35];
+            let mut ent = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
             flash_read(peripherals, 0, &mut ent);
 
             // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
-            if ent[2..35] != entropy_storage {
+            if ent[2..] != storage_payload {
                 panic!("Failed to save seedphrase: {:?} ||| {:?}", &ent[2..35], &self.entropy[..33]);
             }
         });
     }
 
     fn read_entropy(&mut self) {
-        let mut ent = [0u8; 33];
+        let mut ent = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
         in_free(|peripherals| {
             // Make sure that flash is ok
             flash_wakeup(peripherals);
@@ -196,14 +210,25 @@ impl <'a> Platform for Hardware {
             flash_read(peripherals, 0, &mut ent);
             flash_sleep(peripherals);
         });
-        // TODO decode
         match ent[0] {
             0 => self.entropy = Vec::new(),
-            16 => self.entropy = ent[1..17].to_vec(),
-            20 => self.entropy = ent[1..21].to_vec(),
-            24 => self.entropy = ent[1..25].to_vec(),
-            28 => self.entropy = ent[1..29].to_vec(),
-            32 => self.entropy = ent[1..33].to_vec(),
+            16 | 20 | 24 | 28 | 32 => {
+                let recovered_out = se_aes_gcm::Out {
+                    data: ent[1..1+se_aes_gcm::SECRET_MAX_LEN].try_into().expect("static length"),
+                    len: ent[0] as usize,
+                    tag: ent[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].try_into().expect("static length"),
+                };
+                unsafe { se_aes_gcm::KEY_BUFFER = ent[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].try_into().expect("static length"); }
+                in_free(|peripherals| {
+                    let out = se_aes_gcm::aes_gcm_decrypt(
+                        peripherals,
+                        &recovered_out,
+                        [0u8; se_aes_gcm::AAD_LEN],
+                        [0u8; se_aes_gcm::IV_LEN],
+                    ).unwrap();
+                    self.entropy = out.data[..out.len].to_vec();
+                })
+            },
             255 => self.entropy = Vec::new(),
             _ => {
                 self.store_entropy();
@@ -299,3 +324,5 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         )
     } else { None }
 }
+
+

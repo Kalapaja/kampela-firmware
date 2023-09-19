@@ -167,6 +167,7 @@ fn main() -> ! {
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
     // Development: erase seed when Pilkki can't
+  
 /*
     in_free(|peripherals| {
             flash_wakeup(peripherals);
