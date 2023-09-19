@@ -204,6 +204,7 @@ impl <'a> Platform for Hardware {
             24 => self.entropy = ent[1..25].to_vec(),
             28 => self.entropy = ent[1..29].to_vec(),
             32 => self.entropy = ent[1..33].to_vec(),
+            255 => self.entropy = Vec::new(),
             _ => {
                 self.store_entropy();
                 panic!("Seed storage corrupted! Wiping seed...");
