@@ -2143,7 +2143,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 [[package]]
 name = "substrate_parser"
 version = "0.4.0"
-source = "git+https://github.com/Alzymologist/substrate-parser?rev=632f621a595fa7161a3352c1f6a05ffcc5f2dcc8#632f621a595fa7161a3352c1f6a05ffcc5f2dcc8"
+source = "git+https://github.com/Alzymologist/substrate-parser?rev=be599ba0d2e12ea0b61d8ab111bf738cce545901#be599ba0d2e12ea0b61d8ab111bf738cce545901"
 dependencies = [
  "base58",
  "bitvec",
