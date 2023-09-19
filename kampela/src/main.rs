@@ -174,6 +174,9 @@ fn main() -> ! {
             flash_unlock(peripherals);
             flash_erase_page(peripherals, 0);
             flash_wait_ready(peripherals);
+            flash_unlock(peripherals);
+            flash_write_page(peripherals, 0, &[0u8; 64]);
+            flash_wait_ready(peripherals);
     });
 */
 
