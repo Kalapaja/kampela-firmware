@@ -87,10 +87,12 @@ impl HALHandle {
 struct DesktopSimulator {
     pin: Pincode,
     display: SimulatorDisplay<BinaryColor>,
-    seed: Vec<u8>,
+    entropy: Vec<u8>,
+    address: Option<[u8; 76]>,
     transaction: String,
     extensions: String,
     signature: Option<[u8; 130]>,
+    stored_entropy: Option<Vec<u8>>,
 }
 
 impl DesktopSimulator {
@@ -112,10 +114,12 @@ impl DesktopSimulator {
         Self {
             pin: pin,
             display: display,
-            seed: Vec::new(),
+            entropy: Vec::new(),
+            address: None,
             transaction: transaction,
             extensions: extensions,
             signature: signature,
+            stored_entropy: None,
         }
     }
 }
@@ -141,16 +145,37 @@ impl Platform for DesktopSimulator {
         &mut self.display
     }
 
+    fn store_entropy(&mut self) {
+        println!("entropy stored (not really, this is emulator)");
+    }
+
+    fn read_entropy(&mut self) {
+        self.entropy = if let Some(a) = &self.stored_entropy {
+            a.clone()
+        } else {
+            Vec::new()
+        };
+        println!("entropy read from emulated storage: {:?}", self.entropy);
+    }
+
     fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display) {
         (&mut self.pin, &mut self.display)
     }
 
     fn set_entropy(&mut self, e: &[u8]) {
-        self.seed = e.to_vec();
+        self.entropy = e.to_vec();
     }
 
-    fn entropy_display(&mut self) -> (&Vec<u8>, &mut Self::Display) {
-        (&self.seed, &mut self.display)
+    fn entropy(&self) -> &[u8] {
+        &self.entropy
+    }
+
+    fn entropy_display(&mut self) -> (&[u8], &mut Self::Display) {
+        (&self.entropy, &mut self.display)
+    }
+
+    fn set_address(&mut self, addr: [u8; 76]) {
+        self.address = Some(addr);
     }
 
     fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
@@ -159,7 +184,7 @@ impl Platform for DesktopSimulator {
         self.signature = Some(signature);
     }
 
-    fn transaction(&mut self) -> Option<(&str, &mut Self::Display)> {
+    fn call(&mut self) -> Option<(&str, &mut Self::Display)> {
         if self.transaction != "" {
             Some((&self.transaction, &mut self.display))
         } else {
@@ -180,6 +205,14 @@ impl Platform for DesktopSimulator {
             (a, &mut self.display)
         } else {
             panic!("qr not ready!");
+        }
+    }
+
+    fn address(&mut self) -> (&[u8; 76], &mut Self::Display) {
+        if let Some(ref a) = self.address {
+            (a, &mut self.display)
+        } else {
+            panic!("address qr not ready!");
         }
     }
 }
