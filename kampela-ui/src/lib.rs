@@ -5,7 +5,7 @@ pub mod platform;
 
 pub mod display_def;
 pub mod pin;
-mod seed_entry;
+mod seed_entry_t9;
 pub mod backup;
 mod restore_or_generate;
 

@@ -21,7 +21,7 @@ use schnorrkel::{
 };
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 
-use crate::pin::Pincode;
+use crate::{pin::Pincode, seed_entry_t9::SeedEntryState};
 use crate::uistate::EventResult;
 use crate::backup::draw_backup_screen;
 use crate::transaction;
@@ -60,6 +60,8 @@ pub trait Platform {
     /// Read entropy from flash
     fn read_entropy(&mut self);
 
+    fn seed_entry_display(&mut self) -> (&mut SeedEntryState, &mut Self::Display);
+
     /// Getter for pincode and canvas simultaneously (they should be independent)
     fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display);
 
@@ -94,6 +96,16 @@ pub trait Platform {
 
     fn generate_seed(&mut self, h: &mut Self::HAL) {
         self.set_entropy(&Self::generate_seed_entropy(h));
+    }
+
+    fn handle_seed_entry_event(&mut self, point: Point, seed: &mut Option<Vec<u8>>, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
+        let (e, d) = self.seed_entry_display();
+        e.handle_event(point, seed, &mut Self::rng(h), d)
+    }
+
+    fn draw_seed_entry(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
+        let (e, d) = self.seed_entry_display();
+        e.draw(d)
     }
 
     fn handle_pin_event(&mut self, point: Point, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
