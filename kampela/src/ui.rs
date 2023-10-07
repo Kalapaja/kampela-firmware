@@ -4,6 +4,7 @@ use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
 use alloc::vec::Vec;
 use alloc::string::String;
 use lazy_static::lazy_static;
+// use seed_entry_t9::SeedEntryState;
 
 use kampela_system::{
     in_free,
@@ -14,7 +15,7 @@ use kampela_system::{
 };
 use kampela_system::devices::flash::*;
 
-use kampela_ui::{display_def::*, uistate, pin::Pincode, platform::{NfcTransaction, Platform}};
+use kampela_ui::{display_def::*, uistate, pin::Pincode, platform::{NfcTransaction, Platform}, seed_entry_t9::*};
 use embedded_graphics::prelude::Point;
 
 /// UI handler
@@ -114,6 +115,7 @@ pub struct Hardware {
     extensions: Option<String>,
     signature: Option<[u8; 130]>,
     address: Option<[u8; 76]>,
+    seed_entry: SeedEntryState,
 }
 
 impl Hardware {
@@ -130,6 +132,7 @@ impl Hardware {
             extensions: None,
             signature: None,
             address: None,
+            seed_entry: SeedEntryState::new(&mut Self::rng(&mut ())),
         }
     }
 }
@@ -145,6 +148,10 @@ impl <'a> Platform for Hardware {
 
     fn pin(&self) -> &Pincode {
         &self.pin
+    }
+
+    fn seed_entry_display(&mut self) -> (&mut SeedEntryState, &mut Self::Display) {
+        (&mut self.seed_entry, &mut self.display)
     }
 
     fn pin_mut(&mut self) -> &mut Pincode {

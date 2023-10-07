@@ -8,6 +8,7 @@ use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
 use rand::{rngs::ThreadRng, thread_rng};
+use seed_entry_t9::SeedEntryState;
 use std::{thread::sleep, time::Duration};
 use clap::Parser;
 
@@ -28,7 +29,7 @@ mod pin;
 use pin::Pincode;
 
 mod restore_or_generate;
-mod seed_entry;
+mod seed_entry_t9;
 
 mod backup;
 
@@ -86,6 +87,7 @@ impl HALHandle {
 #[derive(Debug)]
 struct DesktopSimulator {
     pin: Pincode,
+    seed_entry: SeedEntryState,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
@@ -98,6 +100,7 @@ struct DesktopSimulator {
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
         let pin = Pincode::new(&mut h.rng, false);
+        let seed_entry = SeedEntryState::new(&mut h.rng);
         let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
             NFCState::Empty => String::new(),
@@ -113,6 +116,7 @@ impl DesktopSimulator {
         };
         Self {
             pin: pin,
+            seed_entry: seed_entry,
             display: display,
             entropy: Vec::new(),
             address: None,
@@ -156,6 +160,10 @@ impl Platform for DesktopSimulator {
             Vec::new()
         };
         println!("entropy read from emulated storage: {:?}", self.entropy);
+    }
+
+    fn seed_entry_display(&mut self) -> (&mut SeedEntryState, &mut Self::Display) {
+        (&mut self.seed_entry, &mut self.display)
     }
 
     fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display) {
