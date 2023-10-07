@@ -1,14 +1,14 @@
 //! Screen for seed phrase recovery
 #[cfg(not(feature="std"))]
-use alloc::{format, string::String, string::ToString, vec::Vec, collections::VecDeque, vec};
+use alloc::{format, string::String, string::ToString, vec::Vec, collections::VecDeque, vec, fmt};
 
 #[cfg(feature="std")]
-use std::{format, string::String, string::ToString, vec::Vec, collections::VecDeque, vec};
+use std::{format, string::String, string::ToString, vec::Vec, collections::VecDeque, vec, fmt};
 
 use embedded_graphics::{
     mono_font::{
         ascii::{FONT_10X20, FONT_4X6, FONT_6X10},
-        MonoTextStyle,
+        MonoTextStyle, self,
     },
     prelude::*,
     primitives::{
@@ -35,8 +35,6 @@ use crate::display_def::*;
 const WORD_LENGTH: usize = 8;
 const MAX_SEED: usize = 24;
 
-const MAX_PROPOSAL: usize = 12;
-
 const INPUT_AREA: Rectangle = Rectangle::new(
     Point::new(GAP as i32, GAP as i32),
     Size::new(100, SCREEN_SIZE_Y - GAP * 2),
@@ -49,6 +47,8 @@ const WORD_AREA: Rectangle = Rectangle::new(
     Point::new(INPUT_AREA.top_left.x, INPUT_AREA.top_left.y + PHRASE_AREA.size.height as i32 + GAP as i32),
     Size::new(INPUT_AREA.size.width, INPUT_AREA.size.height - PHRASE_AREA.size.height - GAP),
 );
+const WORD_FONT:mono_font::MonoFont = FONT_10X20;
+const MAX_PROPOSAL: usize = (WORD_AREA.size.height / WORD_FONT.character_size.height) as usize;
 
 const KEY_COUNT: usize = 12;
 const PAD_AREA: Rectangle = Rectangle::new(
@@ -180,8 +180,8 @@ struct SeedBuffer {
     ready: Option<Vec<u8>>,
 }
 ///manual Debug impl, neccessary for #derive in SeedEntryState
-impl ::std::fmt::Debug for SeedBuffer {
-    fn fmt(&self, __arg_0: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+impl fmt::Debug for SeedBuffer {
+    fn fmt(&self, __arg_0: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             SeedBuffer { seed_phrase: ref __self_0_0, ready: ref __self_0_1 } => {
                 let mut builder = __arg_0.debug_struct("SeedBuffer");
@@ -314,8 +314,8 @@ struct Proposal {
 }
 
 ///manual Debug impl, neccessary for #derive in SeedEntryState
-impl ::std::fmt::Debug for Proposal {
-    fn fmt(&self, __arg_0: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+impl fmt::Debug for Proposal {
+    fn fmt(&self, __arg_0: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Proposal {
                 entry: ref __self_0_0,
@@ -413,7 +413,7 @@ impl Proposal {
             self.variants = VecDeque::new();
             let variants = self.get_variants();
             new_variants = Proposal::append_guess(&mut guess, variants, Some(new_variants));
-            self.variants_depth = self.entry_len(); //sets depth when all variants was obtained for optimisation reasons
+            self.variants_depth = self.entry_len(); //sets depth when all variants was obtained for optimization reasons
         }
 
         if guess.len() > 0 {
@@ -539,7 +539,7 @@ impl SeedEntryState{
     where
         D: DrawTarget<Color = BinaryColor>,
     {
-        let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
+        let character_style = MonoTextStyle::new(&WORD_FONT, BinaryColor::On);
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Left)
             .vertical_alignment(VerticalAlignment::Top)
@@ -572,7 +572,7 @@ impl SeedEntryState{
         D: DrawTarget<Color = BinaryColor>,
     {
         self.update_entry(fast_display)?;
-        let character_style = MonoTextStyle::new(&FONT_4X6, BinaryColor::On);
+        let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
             .vertical_alignment(VerticalAlignment::Middle)
@@ -620,7 +620,7 @@ impl SeedEntryState{
         if self.proposal.entry_len() > 0 {
             self.proposal.remove_letter();
             self.update_entry(fast_display)?;
-            out.set_fast();
+            out.set_slow();
         } else if self.seed_phrase.len() > 0 {
             self.seed_phrase.remove_last();
             self.update_entry(fast_display)?;
@@ -682,7 +682,7 @@ impl SeedEntryState{
         let mut out = UpdateRequest::new();
         if self.proposal.add_letters(letters) {
             self.update_entry(fast_display)?;
-            out.set_fast();
+            out.set_slow();
         }
         Ok(out)
     }
@@ -694,7 +694,7 @@ impl SeedEntryState{
         let mut out = UpdateRequest::new();
         if WORD_AREA.contains(point) {
             let rel_y = point.y - WORD_AREA.top_left.y;
-            let word_index = usize::try_from(rel_y as u32 / FONT_6X10.character_size.height);
+            let word_index = usize::try_from(rel_y as u32 / WORD_FONT.character_size.height);
             if let Ok(word_index) = word_index {
                 if self.proposal.guess.len() > word_index {
                     let word = self.proposal.guess.swap_remove(word_index);
