@@ -200,13 +200,14 @@ fn main() -> ! {
         if nfc_result.is_some() {
             match nfc_result.unwrap() {
                 NfcResult::KampelaStop => {},
-                NfcResult::DisplayAddress => {
+                NfcResult::DisplayAddress(addr) => {
                     /*
                     // TODO: implement adress
                     // let mut stuff = [0u8];
                     let line1 = format!("substrate:0x{}", hex::encode(pair.public.to_bytes()));
                     // stuff[0..79].copy_from_slice(&line1.as_bytes());
                     ui.handle_address(line1.as_bytes().try_into().expect("static length"));*/
+                    ui.handle_address(addr);
                 },
                 NfcResult::Transaction(transaction) => {
                     /*
@@ -255,5 +256,3 @@ fn main() -> ! {
         }
     }
 }
-
-

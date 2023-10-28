@@ -88,7 +88,7 @@ impl UI {
         self.update = self.state.handle_transaction(&mut se_rng::SeRng{}, transaction);
     }
 
-    pub fn handle_address(&mut self, addr: [u8; 76]) {
+    pub fn handle_address(&mut self, addr: Vec<u8>) {
         self.update = self.state.handle_address(addr);
     }
 }
@@ -113,7 +113,7 @@ pub struct Hardware {
     call: Option<String>,
     extensions: Option<String>,
     signature: Option<[u8; 130]>,
-    address: Option<[u8; 76]>,
+    address: Option<Vec<u8>>,
 }
 
 impl Hardware {
@@ -253,7 +253,7 @@ impl <'a> Platform for Hardware {
         (&self.entropy, &mut self.display)
     }
 
-    fn set_address(&mut self, addr: [u8; 76]) {
+    fn set_address(&mut self, addr: Vec<u8>) {
         self.address = Some(addr);
     }
 
@@ -286,11 +286,10 @@ impl <'a> Platform for Hardware {
         }
     }
 
-    fn address(&mut self) -> (&[u8; 76], &mut <Self as Platform>::Display) {
-        if let Some(ref a) = self.address {
-            (a, &mut self.display)
-        } else {
-            panic!("qr generation failed");
+    fn address(&mut self) -> Option<(&Vec<u8>, &mut <Self as Platform>::Display)> {
+        match &self.address {
+            Some(a) => Some((a, &mut self.display)),
+            None => None,
         }
     }
 
@@ -324,5 +323,3 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         )
     } else { None }
 }
-
-
