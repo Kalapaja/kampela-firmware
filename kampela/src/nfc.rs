@@ -283,7 +283,7 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 
 pub enum NfcResult {
     Transaction(NfcTransaction),
-    DisplayAddress,
+    DisplayAddress(Vec<u8>),
     KampelaStop,
 }
 
@@ -329,6 +329,100 @@ impl <'a> NfcReceiver<'a> {
     }
 
 
+    fn process_address(&mut self, payload: TransferDataReceived) -> NfcResult {
+        let mut address_data_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            let address = payload.encoded_data.start_address.try_shift(1usize).unwrap(); //skipped first byte
+            address_data_option = Some(psram_read_at_address(peripherals, address, 66usize).unwrap()); //64bytes + start and stop bytes
+        });
+        let mut address_data: Vec<u8> = address_data_option.unwrap().try_into().expect("static size");
+        
+        let stop = address_data.iter().position(|a| a == &0u8).unwrap();
+        let byte_string = address_data.drain(1..stop as usize).collect();
+
+        NfcResult::DisplayAddress(byte_string)
+    }
+
+    fn process_transaction(&mut self, payload: TransferDataReceived) -> NfcResult {
+        let mut genesis_hash_bytes_option = None;
+        in_free(|peripherals| {
+            let address = payload.encoded_data.start_address.try_shift(1usize).unwrap(); //skipped first byte
+            genesis_hash_bytes_option = Some(psram_read_at_address(peripherals, address, 32usize).unwrap());
+        });
+        let genesis_hash = H256(genesis_hash_bytes_option.unwrap().try_into().expect("static size"));
+
+        let mut metadata_psram_access_option = None;
+        let mut position = 1usize + 32usize;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            let compact_meta = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+            let start_address = payload.encoded_data.start_address.try_shift(compact_meta.start_next_unit).unwrap();
+            metadata_psram_access_option = Some(PsramAccess{start_address, total_len: compact_meta.compact as usize});
+            position = compact_meta.start_next_unit + compact_meta.compact as usize;
+        });
+        let metadata_psram_access = metadata_psram_access_option.unwrap();
+
+        let mut checked_metadata_metal_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            checked_metadata_metal_option = Some(CheckedMetadataMetal::from(&metadata_psram_access, &mut external_psram).unwrap());
+        });
+        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+
+        let mut signable_transaction_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap(); // fix this madness maybe later
+            position = compact_transaction_1.start_next_unit;
+            let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+            position = compact_transaction_2.start_next_unit;
+
+            let start_address = payload.encoded_data.start_address.try_shift(compact_transaction_2.start_next_unit).unwrap();
+
+            let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+            let start_address_to_sign = payload.encoded_data.start_address.try_shift(compact_call.start_next_unit).unwrap();
+            let total_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit + position;
+
+            let data_to_sign = psram_read_at_address(peripherals, start_address_to_sign, total_len_to_sign).unwrap();
+
+            signable_transaction_option = Some(data_to_sign);
+            position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
+        });
+        let data_to_sign = signable_transaction_option.unwrap();
+
+
+        in_free(|peripherals| {
+            let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
+            let public_key = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
+            // TODO: check address differently
+            assert!(public_key.starts_with(&[1u8]) & (public_key[1..] == self.public_memory), "Invalid address");
+        });
+
+        let mut got_transaction_no_data = None;
+        in_free(|peripherals| {
+
+            let mut external_psram = ExternalPsram{peripherals};
+
+            let decoded_transaction = parse_transaction_unmarked(
+                &data_to_sign.as_ref(),
+                &mut external_psram,
+                &checked_metadata_metal,
+                genesis_hash
+            ).unwrap();
+
+            got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));
+        });
+        let (decoded_transaction, specs, spec_name) = got_transaction_no_data.unwrap();
+
+        NfcResult::Transaction(NfcTransaction{
+            decoded_transaction,
+            data_to_sign,
+            specs,
+            spec_name,
+        })
+    }
+
     fn process(&mut self) -> Option<NfcResult> {
         turn_nfc_collector_correctly(&mut self.collector, self.buffer);
 
@@ -343,85 +437,8 @@ impl <'a> NfcReceiver<'a> {
 
             match first_byte {
                 Some(0) => return Some(NfcResult::KampelaStop),
-                Some(2) => return Some(NfcResult::DisplayAddress),
-                Some(3) => {
-                    let mut genesis_hash_bytes_option = None;
-                    in_free(|peripherals| {
-                        let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
-                        genesis_hash_bytes_option = Some(psram_read_at_address(peripherals, address, 32usize).unwrap());
-                    });
-                    let genesis_hash = H256(genesis_hash_bytes_option.unwrap().try_into().expect("static size"));
-
-                    let mut metadata_psram_access_option = None;
-                    let mut position = 1usize + 32usize;
-                    in_free(|peripherals| {
-                        let mut external_psram = ExternalPsram{peripherals};
-                        let compact_meta = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-                        let start_address = payload.encoded_data.start_address.try_shift(compact_meta.start_next_unit).unwrap();
-                        metadata_psram_access_option = Some(PsramAccess{start_address, total_len: compact_meta.compact as usize});
-                        position = compact_meta.start_next_unit + compact_meta.compact as usize;
-                    });
-                    let metadata_psram_access = metadata_psram_access_option.unwrap();
-
-                    let mut checked_metadata_metal_option = None;
-                    in_free(|peripherals| {
-                        let mut external_psram = ExternalPsram{peripherals};
-                        checked_metadata_metal_option = Some(CheckedMetadataMetal::from(&metadata_psram_access, &mut external_psram).unwrap());
-                    });
-                    let checked_metadata_metal = checked_metadata_metal_option.unwrap();
-
-                    let mut signable_transaction_option = None;
-                    in_free(|peripherals| {
-                        let mut external_psram = ExternalPsram{peripherals};
-                        let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap(); // fix this madness maybe later
-                        position = compact_transaction_1.start_next_unit;
-                        let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-                        position = compact_transaction_2.start_next_unit;
-
-                        let start_address = payload.encoded_data.start_address.try_shift(compact_transaction_2.start_next_unit).unwrap();
-
-                        let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-                        let start_address_to_sign = payload.encoded_data.start_address.try_shift(compact_call.start_next_unit).unwrap();
-                        let total_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit + position;
-
-                        let data_to_sign = psram_read_at_address(peripherals, start_address_to_sign, total_len_to_sign).unwrap();
-
-                        signable_transaction_option = Some(data_to_sign);
-                        position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
-                    });
-                    let data_to_sign = signable_transaction_option.unwrap();
-
-
-                    in_free(|peripherals| {
-                        let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
-                        let public_key = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
-                        // TODO: check address differently
-                        assert!(public_key.starts_with(&[1u8]) & (public_key[1..] == self.public_memory), "Invalid address");
-                    });
-
-                    let mut got_transaction_no_data = None;
-                    in_free(|peripherals| {
-
-                        let mut external_psram = ExternalPsram{peripherals};
-
-                        let decoded_transaction = parse_transaction_unmarked(
-                            &data_to_sign.as_ref(),
-                            &mut external_psram,
-                            &checked_metadata_metal,
-                            genesis_hash
-                        ).unwrap();
-
-                        got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));
-                    });
-                    let (decoded_transaction, specs, spec_name) = got_transaction_no_data.unwrap();
-
-                    return Some(NfcResult::Transaction(NfcTransaction{
-                        decoded_transaction,
-                        data_to_sign,
-                        specs,
-                        spec_name,
-                    }));
-                },
+                Some(2) => return Some(self.process_address(payload)),
+                Some(3) => return Some(self.process_transaction(payload)),
                 _ => {
                     self.collector = NfcCollector::new();
                 }

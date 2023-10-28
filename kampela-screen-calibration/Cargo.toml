@@ -11,9 +11,9 @@ cortex-m-rt = "0.7.2"
 cortex-m-semihosting = "0.3.3"
 efm32pg23_fix = {path = "../kampela_experiments_efm32pg23/efm32pg23_fix", features = ["critical-section", "rt"]}
 embedded-alloc = "0.5.0" # embedded-alloc required nightly!
-embedded-graphics = "0.7.1"
-embedded-graphics-core = "0.3.3"
-embedded-text = {version = "0.5.0", default-features = false}
+embedded-graphics = "0.8.1"
+embedded-graphics-core = "0.4.0"
+embedded-text = {version = "0.6.6", default-features = false}
 kampela-system = { path = "../kampela-system" }
 kampela-display-common = { path = "../kampela-display-common" }
 kolibri = {path = "../kolibri", default-features = false}
