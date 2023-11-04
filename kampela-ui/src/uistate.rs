@@ -36,6 +36,7 @@ use crate::platform::{NfcTransaction, Platform};
 use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
+use crate::test::Test;
 
 use rand::{CryptoRng, Rng};
 
@@ -112,10 +113,12 @@ pub struct UIState<P> where
     P: Platform,
 {
     screen: Screen,
+    test: Test,
     pub platform: P,
 }
 
 pub enum Screen {
+    Test,
     PinEntry,
     OnboardingRestoreOrGenerate,
     OnboardingRestore(SeedEntryState),
@@ -134,12 +137,14 @@ impl <P: Platform> UIState<P> {
         platform.read_entropy();
         if platform.entropy_display().0.is_empty() {
             UIState {
-                screen: Screen::OnboardingRestoreOrGenerate,
+                screen: Screen::Test,
+                test: Test::new(),
                 platform: platform,
             }
         } else {
             UIState {
                 screen: Screen::QRAddress,
+                test: Test::new(),
                 platform: platform,
             }
         }
@@ -174,6 +179,11 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
+            Screen::Test => {
+                let res = self.test.handle_tap(point, fast_display)?;
+                out = res.request;
+                new_screen = res.state;
+            },
             Screen::PinEntry => {
                 let res = self.platform.handle_pin_event(point, h)?;
                 out = res.request;/*
@@ -289,6 +299,9 @@ impl <P: Platform> UIState<P> {
         let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
         display.bounding_box().into_styled(clear).draw(display)?;
         match self.screen {
+            Screen::Test => {
+                self.test.draw(display)?;
+            }
             Screen::PinEntry => {
                 self.platform.draw_pincode()?;
             }

@@ -29,6 +29,11 @@ use pin::Pincode;
 
 mod restore_or_generate;
 mod seed_entry;
+mod test;
+mod widget {
+    pub mod view;
+    pub mod button;
+}
 
 mod backup;
 
