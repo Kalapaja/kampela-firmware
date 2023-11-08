@@ -37,6 +37,7 @@ use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
 use crate::test::Test;
+use crate::widget::view::View;
 
 use rand::{CryptoRng, Rng};
 
@@ -180,7 +181,11 @@ impl <P: Platform> UIState<P> {
         let mut new_screen = None;
         match self.screen {
             Screen::Test => {
-                let res = self.test.handle_tap(point, fast_display)?;
+                let mut res = Ok(EventResult{request: UpdateRequest::new(), state: None});
+                if let Some(a) = self.test.handle_tap(point, fast_display) {
+                    res = a;
+                };
+                let res = res?;
                 out = res.request;
                 new_screen = res.state;
             },

@@ -8,43 +8,48 @@ use embedded_graphics::{
     prelude::{DrawTarget, Point},
     geometry::{Size},
 };
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::TextBoxStyleBuilder,
-    TextBox,
-};
 
 use crate::{display_def::*, uistate::UpdateRequest};
 use crate::uistate::EventResult;
-use crate::widget::{view::View, button::Button};
+use crate::widget::{view::{View, DrawWindow}, button::Button};
 
 pub struct Test {
-    button: Button
+    area: Rectangle,
+    button: Button,
 }
+
 impl Test {
     pub fn new() -> Self {
         Test {
+            area: Rectangle {
+                top_left: Point { x:  132, y: 88 },
+                size: Size { width: 132, height: 88 },
+            },
             button: Button::new(
                 "hello",
                 Rectangle {
-                    top_left: Point { x: 100, y: 100 },
-                    size: Size { width: 100, height: 20 }
+                    top_left: Point { x: 0, y: 0 },
+                    size: Size { width: 66, height: 44 },
                 }
             )
         }
 
     }
-    pub fn draw<D: DrawTarget<Color = BinaryColor>> (&self, target: &mut D) -> Result<(), D::Error> {
+}
+impl <D: DrawTarget<Color = BinaryColor>> View<D> for Test {
+    fn area(&self) -> Rectangle {
+        self.area
+    }
+    fn draw_view(&self, target: &mut DrawWindow<D>) -> Result<(), D::Error> {
         self.button
         .draw(target)?;
         Ok(())
     }
-    pub fn handle_tap<D: DrawTarget<Color = BinaryColor>> (&self, point: Point, target: &mut D) -> Result<EventResult, D::Error> {
-        let out = UpdateRequest::new();
-        let mut res = Ok(EventResult{request: out, state: None});
-        if self.button.widget.area.contains(point){
-            res = self.button.handle_tap(point, target)
-        }
+    fn handle_tap_view(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error> {
+        let mut res = Ok(EventResult{request: UpdateRequest::new(), state: None});
+        if let Some(a) = self.button.handle_tap(point, target) {
+            res = a;
+        };
         res
     }
 }

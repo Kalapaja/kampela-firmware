@@ -24,12 +24,9 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{
-    widget::view::{View, Widget},
-    platform::Platform,
-};
+use crate::widget::view::{View, Widget, DrawWindow};
 
-use crate::uistate::{EventResult, UpdateRequest, Screen};
+use crate::uistate::{EventResult, UpdateRequest};
 
 pub struct Button {
 	label: String,
@@ -40,17 +37,22 @@ impl Button {
 	pub fn new(label: &str, area: Rectangle) -> Self {
 		Button {
 			label: label.to_string(),
-			widget: Widget { area },
+			widget: Widget::new(area),
 		}
 	}
 }
 
 impl <D: DrawTarget<Color = BinaryColor>> View<D> for Button {
-	fn draw(&self, target: &mut D) -> Result<(),D::Error> {
+    fn area(&self) -> Rectangle {
+        self.widget.area()
+    }
+
+	fn draw_view(&self, target: &mut DrawWindow<D>) -> Result<(),D::Error> {
 		let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
         let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 2);
 
-        self.widget.area.into_styled(thin_stroke).draw(target)?;
+        let area = <Button as View<D>>::area_view(self);
+        area.into_styled(thin_stroke).draw(target)?;
 
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
@@ -59,19 +61,23 @@ impl <D: DrawTarget<Color = BinaryColor>> View<D> for Button {
 
         TextBox::with_textbox_style(
             &self.label,
-            self.widget.area.bounding_box(),
+            area,
             character_style,
             textbox_style,
         )
 		.draw(target)?;
 		Ok(())
 	}
-    fn handle_tap(&self, point: Point, target: &mut D) -> Result<EventResult, D::Error> {
+    fn handle_tap_view(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error> {
+        let state = None;
+        self.label = String::from("Yay!");
+
         let mut request = UpdateRequest::new();
         let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::Off);
         let filled = PrimitiveStyle::with_fill(BinaryColor::On);
     
-        self.widget.area.into_styled(filled).draw(target)?;
+        let area = <Button as View<D>>::area_view(self);
+        area.into_styled(filled).draw(target)?;
     
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
@@ -80,13 +86,12 @@ impl <D: DrawTarget<Color = BinaryColor>> View<D> for Button {
     
         TextBox::with_textbox_style(
             &self.label,
-            self.widget.area,
+            area,
             character_style,
             textbox_style,
         )
         .draw(target)?;
         request.set_both();
-        let state = None;
         Ok(EventResult {request, state})
     }
 }
