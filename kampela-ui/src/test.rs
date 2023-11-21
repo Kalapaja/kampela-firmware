@@ -1,3 +1,8 @@
+#[cfg(not(feature="std"))]
+use alloc::{vec::Vec};
+#[cfg(feature="std")]
+use std::{vec::Vec};
+
 use embedded_graphics::{
     mono_font::{
         ascii::{FONT_10X20},
@@ -11,11 +16,12 @@ use embedded_graphics::{
 
 use crate::{display_def::*, uistate::UpdateRequest};
 use crate::uistate::EventResult;
-use crate::widget::{view::{View, DrawWindow}, button::Button};
+use crate::widget::{view::{View, DrawWindow}, button::{Button}};
 
 pub struct Test {
     area: Rectangle,
     button: Button,
+    state: bool,
 }
 
 impl Test {
@@ -30,22 +36,32 @@ impl Test {
                 Rectangle {
                     top_left: Point { x: 0, y: 0 },
                     size: Size { width: 66, height: 44 },
-                }
-            )
+                },
+            ),
+            state: false
         }
 
     }
+    pub fn onclick(&mut self) -> () {
+        self.state = !self.state;
+    }
 }
-impl <D: DrawTarget<Color = BinaryColor>> View<D> for Test {
+
+impl View for Test {
     fn area(&self) -> Rectangle {
         self.area
     }
-    fn draw_view(&self, target: &mut DrawWindow<D>) -> Result<(), D::Error> {
-        self.button
-        .draw(target)?;
+    fn draw_view<D>(&self, target: &mut DrawWindow<D>) -> Result<(), D::Error>
+    where
+        D: DrawTarget
+    {
+        target.draw_view(self.button);
         Ok(())
     }
-    fn handle_tap_view(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error> {
+    fn handle_tap_view<D>(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error>
+    where
+        D: DrawTarget
+    {
         let mut res = Ok(EventResult{request: UpdateRequest::new(), state: None});
         if let Some(a) = self.button.handle_tap(point, target) {
             res = a;
