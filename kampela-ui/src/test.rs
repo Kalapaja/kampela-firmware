@@ -1,7 +1,8 @@
+use core::cell::RefCell;
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec};
+use alloc::{rc::Rc, vec::Vec};
 #[cfg(feature="std")]
-use std::{vec::Vec};
+use std::{rc::Rc, vec::Vec};
 
 use embedded_graphics::{
     mono_font::{
@@ -14,58 +15,46 @@ use embedded_graphics::{
     geometry::{Size},
 };
 
-use crate::{display_def::*, uistate::UpdateRequest};
+use crate::{display_def::*, uistate::UpdateRequest, widget::view::ViewScreen};
 use crate::uistate::EventResult;
-use crate::widget::{view::{View, DrawWindow}, button::{Button}};
+use crate::widget::{view::{View, DrawView}, button::Button};
 
 pub struct Test {
-    area: Rectangle,
     button: Button,
-    state: bool,
+    state: bool
 }
 
 impl Test {
     pub fn new() -> Self {
         Test {
-            area: Rectangle {
-                top_left: Point { x:  132, y: 88 },
-                size: Size { width: 132, height: 88 },
-            },
             button: Button::new(
                 "hello",
                 Rectangle {
                     top_left: Point { x: 0, y: 0 },
                     size: Size { width: 66, height: 44 },
-                },
+                }
             ),
-            state: false
+            state: false,
         }
-
-    }
-    pub fn onclick(&mut self) -> () {
-        self.state = !self.state;
     }
 }
 
-impl View for Test {
-    fn area(&self) -> Rectangle {
-        self.area
-    }
-    fn draw_view<D>(&self, target: &mut DrawWindow<D>) -> Result<(), D::Error>
-    where
-        D: DrawTarget
-    {
-        target.draw_view(self.button);
+pub trait StateOutput {
+    fn get_state(&self) -> bool;
+}
+
+impl <D: DrawTarget<Color = BinaryColor>> ViewScreen<D> for Test {
+    fn draw_screen(&self, target: &mut D) -> Result<(), D::Error> {
+        self.button
+        .draw(target)?;
         Ok(())
     }
-    fn handle_tap_view<D>(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error>
-    where
-        D: DrawTarget
-    {
-        let mut res = Ok(EventResult{request: UpdateRequest::new(), state: None});
-        if let Some(a) = self.button.handle_tap(point, target) {
-            res = a;
-        };
-        res
+    fn handle_tap_screen(&mut self, point: Point, target: &mut D) -> Result<EventResult, D::Error> {
+        let mut request = UpdateRequest::new();
+        let state = None;
+        self.button.handle_tap(point, target)?;
+        self.state = self.button.get_state();
+        request.set_both(); //only screen has authority to set update speed
+        Ok(EventResult { request, state })
     }
 }

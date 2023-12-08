@@ -4,6 +4,7 @@
 mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::vec::Vec;
+    pub use alloc::rc::Rc;
 }
 
 
@@ -11,8 +12,12 @@ mod stdwrap {
 mod stdwrap {
     pub use std::string::String;
     pub use std::vec::Vec;
+    pub use std::rc::Rc;
 }
 
+
+
+use core::cell::RefCell;
 
 
 use stdwrap::*;
@@ -29,7 +34,7 @@ use embedded_graphics_core::{
     pixelcolor::BinaryColor,
 };
 
-use crate::display_def::*;
+use crate::{display_def::*, widget::view::ViewScreen};
 
 use crate::platform::{NfcTransaction, Platform};
 
@@ -140,13 +145,13 @@ impl <P: Platform> UIState<P> {
             UIState {
                 screen: Screen::Test,
                 test: Test::new(),
-                platform: platform,
+                platform,
             }
         } else {
             UIState {
                 screen: Screen::QRAddress,
                 test: Test::new(),
-                platform: platform,
+                platform,
             }
         }
     }
@@ -170,7 +175,7 @@ impl <P: Platform> UIState<P> {
     }
 
     /// Read user touch event
-    pub fn handle_event<D>(
+    pub fn handle_tap<D>(
         &mut self,
         point: Point,
         h: &mut <P as Platform>::HAL,
@@ -181,10 +186,7 @@ impl <P: Platform> UIState<P> {
         let mut new_screen = None;
         match self.screen {
             Screen::Test => {
-                let mut res = Ok(EventResult{request: UpdateRequest::new(), state: None});
-                if let Some(a) = self.test.handle_tap(point, fast_display) {
-                    res = a;
-                };
+                let res = self.test.handle_tap_screen(point, fast_display);
                 let res = res?;
                 out = res.request;
                 new_screen = res.state;
@@ -305,7 +307,7 @@ impl <P: Platform> UIState<P> {
         display.bounding_box().into_styled(clear).draw(display)?;
         match self.screen {
             Screen::Test => {
-                self.test.draw(display)?;
+                self.test.draw_screen(display)?;
             }
             Screen::PinEntry => {
                 self.platform.draw_pincode()?;

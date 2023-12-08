@@ -1,38 +1,28 @@
-#[cfg(not(feature="std"))]
-use alloc::{vec::Vec};
-#[cfg(feature="std")]
-use std::{vec::Vec};
-
 use embedded_graphics::{
-    Drawable,
     pixelcolor::BinaryColor,
     prelude::{DrawTarget, Point, Pixel, Dimensions},
-    primitives::{Rectangle, Primitive, PrimitiveStyle, Styled},
-    geometry::{Size}, text::{renderer::{TextRenderer, CharacterStyle}, self, Text},
-    pixelcolor::Rgb888,
+    primitives::{Rectangle, Primitive},
+    geometry::{Size},
 };
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    TextBox,
-    plugin::{PluginMarker as Plugin},
-};
+use embedded_graphics_core::Drawable;
 
 use crate::uistate::{EventResult, UpdateRequest};
+use crate::display_def::*;
 
-pub struct DrawWindow<'a, D> where
+pub struct DrawView<'a, D> where
     D: DrawTarget
 {
     area: Rectangle,
     origin: &'a mut D,
 }
 
-impl <'a, D: DrawTarget> DrawWindow<'a, D> {
+impl <'a, D: DrawTarget> DrawView<'a, D> {
     fn new(area: Rectangle, target: &'a mut D) -> Self {
-        DrawWindow { area, origin: target }
+        DrawView { area, origin: target }
     }
 }
 
-impl <'a, D: DrawTarget> DrawTarget for DrawWindow<'a, D> {
+impl <'a, D: DrawTarget> DrawTarget for DrawView<'a, D> {
     type Color = D::Color;
     type Error = D::Error;
     fn draw_iter<I>(&mut self, pixels: I) -> Result<(), Self::Error>
@@ -49,33 +39,9 @@ impl <'a, D: DrawTarget> DrawTarget for DrawWindow<'a, D> {
     }
 }
 
-impl <'a, D: DrawTarget> Dimensions for DrawWindow<'a, D> {
+impl <'a, D: DrawTarget> Dimensions for DrawView<'a, D> {
     fn bounding_box(&self) -> Rectangle {
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.area.size }
-    }
-}
-
-impl <'a, D> DrawWindow<'a, D> where
-    D: DrawTarget
-{
-    pub fn draw_styled<T>(&mut self, primitive: Styled<T, PrimitiveStyle<D::Color>>)
-    where
-        T: Primitive,
-    {
-        primitive.draw(self.origin);
-    }
-
-    pub fn draw_textbox<F, M>(&mut self, textbox: TextBox<'a, F, M>)
-    where
-        F: TextRenderer<Color = <F as CharacterStyle>::Color> + CharacterStyle,
-        <F as CharacterStyle>::Color: From<Rgb888>,
-        M: Plugin<'a, <F as TextRenderer>::Color> + Plugin<'a, <F as CharacterStyle>::Color>,
-    {
-        textbox.draw(self.origin); // No idea what type is required
-    }
-
-    pub fn draw_view(&mut self, view: View) {
-        view.draw(self.origin);
     }
 }
 
@@ -92,7 +58,9 @@ impl Widget {
     }
 }
 
-pub trait View {
+pub trait View<D> where
+    D: DrawTarget,
+{
     /// Getter for area field in Struct
     fn area(&self) -> Rectangle;
 
@@ -100,27 +68,28 @@ pub trait View {
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.area().size }
     }
 
-    fn draw_view<D>(&self, target: &mut DrawWindow<D>) -> Result<(),D::Error> where D: DrawTarget;
+    fn draw_view(&self, target: &mut DrawView<D>) -> Result<(),D::Error>;
+    fn handle_tap_view(&mut self, point: Point, target: &mut DrawView<D>) -> Result<(), D::Error> ;
 
-    fn handle_tap_view<D>(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error> where D: DrawTarget;
-
-    fn draw<D>(&self, target: &mut D) -> Result<(), D::Error>
-    where
-        D: DrawTarget,
-    {
-        let mut window_target = DrawWindow::new(self.area(), target);
-        self.draw_view(&mut window_target)
+    fn draw(&self, target: &mut D) -> Result<(),D::Error> {
+        let mut view_target = DrawView::new(self.area(), target);
+        self.draw_view(&mut view_target)
     }
 
-	fn handle_tap<D>(&mut self, point: Point, target: &mut D) -> Option<Result<EventResult, D::Error>>
-    where
-        D: DrawTarget
-    {
+	fn handle_tap(&mut self, point: Point, target: &mut D) -> Result<(), D::Error> {
         if self.area().contains(point) {
             let point_offsetted = Point::new(point.x - self.area().top_left.x, point.y - self.area().top_left.y);
-            let mut window_target = DrawWindow::new(self.area(), target);
-            Some(self.handle_tap_view(point_offsetted, &mut window_target));
+            let mut view_target = DrawView::new(self.area(), target);
+            self.handle_tap_view(point_offsetted, &mut view_target)
+        } else {
+            Ok(())
         }
-        None
     }
+}
+
+pub trait ViewScreen<D> where
+    D: DrawTarget,
+{
+    fn draw_screen(&self, target: &mut D) -> Result<(),D::Error>;
+    fn handle_tap_screen(&mut self, point: Point, target: &mut D) -> Result<EventResult, D::Error>;
 }

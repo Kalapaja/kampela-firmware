@@ -1,8 +1,8 @@
 #[cfg(not(feature="std"))]
-use alloc::{format, string::String, string::ToString, vec::Vec};
-use core::fmt::Display;
+use alloc::{format, string::String, string::ToString, vec::Vec, rc::Rc};
+use core::{fmt::Display, cell::{RefCell, Ref}};
 #[cfg(feature="std")]
-use std::{format, string::String, string::ToString, vec::Vec};
+use std::{format, string::String, string::ToString, vec::Vec, rc::Rc};
 
 use embedded_graphics::{
 	pixelcolor::BinaryColor,
@@ -24,10 +24,9 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{widget::view::{View, Widget, DrawWindow, Display}};
+use crate::{widget::view::{View, Widget, DrawView}, test::{Test, StateOutput}};
 
 use crate::uistate::{EventResult, UpdateRequest};
-
 
 pub struct Button {
 	label: String,
@@ -43,63 +42,59 @@ impl Button {
 	}
 }
 
-impl View for Button {
+impl StateOutput for Button {
+    fn get_state(&self) -> bool {
+        true
+    }
+}
+
+impl <D: DrawTarget<Color = BinaryColor>> View<D> for Button {
     fn area(&self) -> Rectangle {
         self.widget.area()
     }
 
-	fn draw_view<D>(&self, target: &mut DrawWindow<D>) -> Result<(),D::Error>
-    where
-        D: DrawTarget,
-    {
+	fn draw_view(&self, target: &mut DrawView<D>) -> Result<(),D::Error> {
 		let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
         let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 2);
 
-        let area = <Button as View>::area_view(self);
+        let area = <Button as View<D>>::area(self);
         area.into_styled(thin_stroke).draw(target)?;
 
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
             .vertical_alignment(VerticalAlignment::Middle)
             .build();
-        let textbox = TextBox::with_textbox_style(
+
+        TextBox::with_textbox_style(
             &self.label,
             area,
             character_style,
             textbox_style,
-        );
-        target.draw_textbox(textbox);
+        )
+		.draw(target)?;
 		Ok(())
 	}
-
-    fn handle_tap_view<D>(&mut self, point: Point, target: &mut DrawWindow<D>) -> Result<EventResult, D::Error>
-    where
-        D: DrawTarget
-    {
-        let state = None;
+    fn handle_tap_view(&mut self, point: Point, target: &mut DrawView<D>) -> Result<(), D::Error> {
         self.label = String::from("Yay!");
 
-        let mut request = UpdateRequest::new();
         let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::Off);
         let filled = PrimitiveStyle::with_fill(BinaryColor::On);
     
-        let mut area = <Button as View>::area_view(self);
-        area.into_styled(filled);
-        target.draw_styled(area);
+        let area = <Button as View<D>>::area(self);
+        area.into_styled(filled).draw(target)?;
     
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
             .vertical_alignment(VerticalAlignment::Middle)
             .build();
     
-        let textbox = TextBox::with_textbox_style(
+        TextBox::with_textbox_style(
             &self.label,
             area,
             character_style,
             textbox_style,
-        );
-        target.draw_textbox(textbox);
-        request.set_both();
-        Ok(EventResult {request, state})
+        )
+        .draw(target)?;
+        Ok(())
     }
 }

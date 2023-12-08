@@ -282,7 +282,7 @@ fn main() {
                     point,
                 } => {
                     println!("{}", point);
-                        match state.handle_event::<SimulatorDisplay<BinaryColor>>(point, &mut h) {
+                        match state.handle_tap::<SimulatorDisplay<BinaryColor>>(point, &mut h) {
                             Ok(a) => update = a,
                             Err(e) => println!("{e}"),
                         };

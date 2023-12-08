@@ -52,7 +52,7 @@ impl UI {
             UIStatus::TouchOperation(ref mut touch) => {
                 match touch.advance(()) {
                     Ok(Some(touch)) => if let Some(point) = convert(touch) {
-                        self.update = self.state.handle_event::<FrameBuffer>(point, &mut ()).unwrap();
+                        self.update = self.state.handle_tap::<FrameBuffer>(point, &mut ()).unwrap();
                         self.status = UIStatus::Listen;
                     },
                     Ok(None) => {},
