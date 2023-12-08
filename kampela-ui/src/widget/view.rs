@@ -4,9 +4,8 @@ use embedded_graphics::{
     primitives::{Rectangle, Primitive},
     geometry::{Size},
 };
-use embedded_graphics_core::Drawable;
 
-use crate::uistate::{EventResult, UpdateRequest};
+use crate::uistate::{EventResult, Reason};
 use crate::display_def::*;
 
 pub struct DrawView<'a, D> where
@@ -68,21 +67,18 @@ pub trait View<D> where
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.area().size }
     }
 
-    fn draw_view(&self, target: &mut DrawView<D>) -> Result<(),D::Error>;
-    fn handle_tap_view(&mut self, point: Point, target: &mut DrawView<D>) -> Result<(), D::Error> ;
+    fn draw_view(&self, target: &mut DrawView<D>, reason: &Reason) -> Result<(),D::Error>;
+    fn handle_tap_view(&mut self, point: Point);
 
-    fn draw(&self, target: &mut D) -> Result<(),D::Error> {
-        let mut view_target = DrawView::new(self.area(), target);
-        self.draw_view(&mut view_target)
+    fn draw(&self, target: &mut D, reason: &Reason) -> Result<(),D::Error> {
+        let mut window_target = DrawView::new(self.area(), target);
+        self.draw_view(&mut window_target, reason)
     }
 
-	fn handle_tap(&mut self, point: Point, target: &mut D) -> Result<(), D::Error> {
+	fn handle_tap(&mut self, point: Point) {
         if self.area().contains(point) {
             let point_offsetted = Point::new(point.x - self.area().top_left.x, point.y - self.area().top_left.y);
-            let mut view_target = DrawView::new(self.area(), target);
-            self.handle_tap_view(point_offsetted, &mut view_target)
-        } else {
-            Ok(())
+            self.handle_tap_view(point_offsetted);
         }
     }
 }
@@ -90,6 +86,6 @@ pub trait View<D> where
 pub trait ViewScreen<D> where
     D: DrawTarget,
 {
-    fn draw_screen(&self, target: &mut D) -> Result<(),D::Error>;
-    fn handle_tap_screen(&mut self, point: Point, target: &mut D) -> Result<EventResult, D::Error>;
+    fn draw_screen(&self, target: &mut D, reason: &Reason) -> Result<EventResult, D::Error>;
+    fn handle_tap_screen(&mut self, point: Point) -> EventResult;
 }

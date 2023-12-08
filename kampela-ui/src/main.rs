@@ -256,16 +256,21 @@ fn main() {
     // 4. do internal things
     loop {
         // display event; it would be delayed
-        if update.read_fast() {
+        let f = update.read_fast();
+        let s = update.read_slow();
+
+        if f || s {
+            match state.render::<SimulatorDisplay<BinaryColor>>() {
+                Ok(u) => update = u,
+                Err(e) => println!("{:?}", e),
+            };
+        }
+        if f {
             window.update(state.display());
             println!("skip {} events in fast update", window.events().count());
             //no-op for non-EPD
         }
-        if update.read_slow() {
-            match state.render::<SimulatorDisplay<BinaryColor>>() {
-                    Ok(()) => (),
-                    Err(e) => println!("{:?}", e),
-                };
+        if s {
             sleep(SLOW_UPDATE_TIME);
             window.update(state.display());
             println!("skip {} events in slow update", window.events().count());
