@@ -4,6 +4,7 @@
 mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::vec::Vec;
+    pub use alloc::rc::Rc;
 }
 
 
@@ -11,8 +12,12 @@ mod stdwrap {
 mod stdwrap {
     pub use std::string::String;
     pub use std::vec::Vec;
+    pub use std::rc::Rc;
 }
 
+
+
+use core::cell::RefCell;
 
 
 use stdwrap::*;
@@ -29,13 +34,15 @@ use embedded_graphics_core::{
     pixelcolor::BinaryColor,
 };
 
-use crate::display_def::*;
+use crate::{display_def::*, widget::view::ViewScreen};
 
 use crate::platform::{NfcTransaction, Platform};
 
 use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
+use crate::test::Test;
+use crate::widget::view::View;
 
 use rand::{CryptoRng, Rng};
 
@@ -51,7 +58,9 @@ use schnorrkel::{
 const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct EventResult {
-    pub request: UpdateRequest,
+    pub request: UpdateRequest, // TODO: since new screen will always
+                                // require slow update, there seems to be
+                                // no reason to request slow update
     pub state: Option<Screen>,
 }
 
@@ -106,16 +115,50 @@ impl Default for UpdateRequest {
         Self::new()
     }
 }
+#[derive(Copy, Clone)]
+pub enum Cause {
+    NewScreen,
+    Tap,
+}
+pub struct Reason {
+    cause: Cause,
+    repeats: usize,
+}
+
+impl Reason {
+    fn new() -> Self {
+        Reason{
+            cause: Cause::NewScreen,
+            repeats: 0,
+        }
+    }
+    fn set_cause(&mut self, cause: Cause) {
+        self.cause = cause;
+        self.repeats = 0;
+    }
+    fn inc_repeats(&mut self) {
+        self.repeats = self.repeats + 1;
+    }
+    pub fn cause(&self) -> Cause {
+        self.cause
+    }
+    pub fn repeats(&self) -> usize {
+        self.repeats
+    }
+}
 
 /// State of UI
 pub struct UIState<P> where
     P: Platform,
 {
     screen: Screen,
+    reason: Reason,
+    test: Test,
     pub platform: P,
 }
 
 pub enum Screen {
+    Test,
     PinEntry,
     OnboardingRestoreOrGenerate,
     OnboardingRestore(SeedEntryState),
@@ -132,16 +175,17 @@ pub enum Screen {
 impl <P: Platform> UIState<P> {
     pub fn new(mut platform: P) -> Self {
         platform.read_entropy();
+        let mut initial_screen: Screen;
         if platform.entropy_display().0.is_empty() {
-            UIState {
-                screen: Screen::OnboardingRestoreOrGenerate,
-                platform: platform,
-            }
+            initial_screen = Screen::Test
         } else {
-            UIState {
-                screen: Screen::QRAddress,
-                platform: platform,
-            }
+            initial_screen = Screen::QRAddress
+        }
+        UIState {
+            screen: initial_screen,
+            reason: Reason::new(),
+            test: Test::new(),
+            platform,
         }
     }
 
@@ -164,7 +208,7 @@ impl <P: Platform> UIState<P> {
     }
 
     /// Read user touch event
-    pub fn handle_event<D>(
+    pub fn handle_tap<D: DrawTarget<Color = BinaryColor>>(
         &mut self,
         point: Point,
         h: &mut <P as Platform>::HAL,
@@ -174,6 +218,11 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
+            Screen::Test => {
+                let res = <Test as ViewScreen<D>>::handle_tap_screen(&mut self.test, point);
+                out = res.request;
+                new_screen = res.state;
+            },
             Screen::PinEntry => {
                 let res = self.platform.handle_pin_event(point, h)?;
                 out = res.request;/*
@@ -241,7 +290,11 @@ impl <P: Platform> UIState<P> {
             Screen::End => (),
         }
         if let Some(a) = new_screen {
-           self.screen = a;
+            self.screen = a;
+            self.reason.set_cause(Cause::NewScreen);
+            //out.set_slow(); TODO: there seem to be no reason new state would use fast update
+        } else {
+            self.reason.set_cause(Cause::Tap);
         }
         Ok(out)
     }
@@ -283,12 +336,21 @@ impl <P: Platform> UIState<P> {
     }
 
     /// Display new screen state; should be called only when needed, is slow
-    pub fn render<D>(&mut self) -> Result<(), <<P as Platform>::Display as DrawTarget>::Error>
+    pub fn render<D>(&mut self) -> Result<UpdateRequest, <<P as Platform>::Display as DrawTarget>::Error>
     {
         let display = self.platform.display();
         let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
         display.bounding_box().into_styled(clear).draw(display)?;
+
+        let mut out = UpdateRequest::new();
+        let mut new_screen = None;
+
         match self.screen {
+            Screen::Test => {
+                let res: EventResult = self.test.draw_screen(display, &self.reason)?;
+                out = res.request;
+                new_screen = res.state;
+            }
             Screen::PinEntry => {
                 self.platform.draw_pincode()?;
             }
@@ -333,6 +395,14 @@ impl <P: Platform> UIState<P> {
             },
             _ => {}
         }
-        Ok(())
+
+        if let Some(a) = new_screen {
+            self.screen = a;
+            self.reason.set_cause(Cause::NewScreen);
+            //out.set_slow(); TODO: there seem to be no reason new state would use fast update
+        } else {
+            self.reason.inc_repeats();
+        }
+        Ok(out)
     }
 }

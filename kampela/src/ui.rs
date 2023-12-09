@@ -52,7 +52,7 @@ impl UI {
             UIStatus::TouchOperation(ref mut touch) => {
                 match touch.advance(()) {
                     Ok(Some(touch)) => if let Some(point) = convert(touch) {
-                        self.update = self.state.handle_event::<FrameBuffer>(point, &mut ()).unwrap();
+                        self.update = self.state.handle_tap::<FrameBuffer>(point, &mut ()).unwrap();
                         self.status = UIStatus::Listen;
                     },
                     Ok(None) => {},
@@ -64,18 +64,21 @@ impl UI {
 
     fn listen(&mut self) {
         // 1. update ui if needed
-        if self.update.read_fast() {
-            self.state.display().request_fast();
-            self.status = UIStatus::DisplayOperation;
-            return;
-        }
-        if self.update.read_slow() {
-            self.state.render::<FrameBuffer>().expect("guaranteed to work, no errors implemented");
-            self.state.display().request_full();
-            self.status = UIStatus::DisplayOperation;
-            return;
-        }
+        let f = self.update.read_fast();
+        let s = self.update.read_slow();
 
+        if f || s {
+            self.update = self.state.render::<FrameBuffer>().expect("guaranteed to work, no errors implemented");
+            self.status = UIStatus::DisplayOperation;
+        }
+        if f {
+            self.state.display().request_fast();
+            return;
+        }
+        if s {
+            self.state.display().request_full();
+            return;
+        }
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
