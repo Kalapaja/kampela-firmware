@@ -134,18 +134,18 @@ impl DesktopSimulator {
 
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
-    type Rng<'a> = ThreadRng;
+    type Rng = ThreadRng;
     type Display = SimulatorDisplay<BinaryColor>;
 
-    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng<'a> {
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
         &mut h.rng
     }
 
-    fn pin<'a>(&self) -> &Pincode<Self::Rng<'a>> {
+    fn pin(&self) -> &Pincode<Self::Rng> {
         &self.pin
     }
 
-    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng<'a>> {
+    fn pin_mut(&mut self) -> &mut Pincode<Self::Rng> {
         &mut self.pin
     }
 
@@ -166,7 +166,7 @@ impl Platform for DesktopSimulator {
         println!("entropy read from emulated storage: {:?}", self.entropy);
     }
 
-    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng<'a>>, &mut Self::Display) {
+    fn pin_display(&mut self) -> (&mut Pincode<Self::Rng>, &mut Self::Display) {
         (&mut self.pin, &mut self.display)
     }
 
@@ -240,7 +240,7 @@ fn main() {
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state, &mut h);
 
-    let mut state = UIState::new(desktop);
+    let mut state = UIState::new(desktop, &mut h);
 
     // Draw
     let output_settings = OutputSettingsBuilder::new()

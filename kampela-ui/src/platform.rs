@@ -38,19 +38,19 @@ pub trait Platform {
     type HAL;
 
     /// Sufficiently good random source used everywhere
-    type Rng<'a>: Rng + Sized + CryptoRng;
+    type Rng: Rng + Sized + CryptoRng;
 
     /// Device-specific screen canvas abstraction
     type Display: DrawTarget<Color = BinaryColor>;
 
     /// RNG getter
-    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng<'a>;
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;
 
     /// Device-specific "global" storage and management of pincode state RO
-    fn pin<'a>(&self) -> &Pincode<Self::Rng<'a>>;
+    fn pin<'a>(&self) -> &Pincode<Self::Rng>;
 
     /// Device-specific "global" storage and management of pincode state RW
-    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng<'a>>;
+    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng>;
 
     /// Getter for canvas
     fn display(&mut self) -> &mut Self::Display;
@@ -62,7 +62,7 @@ pub trait Platform {
     fn read_entropy(&mut self);
 
     /// Getter for pincode and canvas simultaneously (they should be independent)
-    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng<'a>>, &mut Self::Display);
+    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng>, &mut Self::Display);
 
     /// Set new seed
     fn set_entropy(&mut self, e: &[u8]);

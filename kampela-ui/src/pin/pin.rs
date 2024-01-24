@@ -24,7 +24,7 @@ use embedded_text::{
 
 use rand::Rng;
 
-use crate::{display_def::*, uistate::{Screen, UpdateRequest}, widget::view::ViewScreen};
+use crate::{display_def::*, uistate::{UnitScreen, UpdateRequest}, widget::view::ViewScreen};
 use crate::uistate::{EventResult, Reason, Cause};
 use crate::widget::view::{View};
 
@@ -116,7 +116,7 @@ impl<R> ViewScreen for Pincode<R> where
         
         if matches!(reason.cause(), Cause::Tap) && reason.repeats() < 1 {
             if self.entered_nums.len() == PIN_LEN && self.check_pin(){
-                state = Some(Screen::PinOk);
+                state = Some(UnitScreen::PinOk);
             } else {
                 request.set_fast();
             }

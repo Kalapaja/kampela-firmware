@@ -30,7 +30,7 @@ use embedded_text::{
 
 use patches::phrase::{phrase_to_entropy, wordlist_english, WordListElement};
 
-use crate::uistate::{EventResult, Screen, UpdateRequest};
+use crate::uistate::{EventResult, UnitScreen, UpdateRequest};
 use crate::display_def::*;
 
 const WORD_LENGTH: usize = 8;
@@ -288,10 +288,10 @@ impl SeedEntryState {
         }
     }
 
-    fn new_state(&self, seed: &mut Option<Vec<u8>>) -> Option<Screen> {
+    fn new_state(&self, seed: &mut Option<Vec<u8>>) -> Option<UnitScreen> {
         if let Some(a) = &self.seed_phrase.ready {
             *seed = Some(a.clone());
-            Some(Screen::OnboardingBackup) // TODO (entropy_to_phrase(&a).unwrap()))
+            Some(UnitScreen::OnboardingBackup) // TODO (entropy_to_phrase(&a).unwrap()))
         } else { None }
     }
 

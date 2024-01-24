@@ -43,7 +43,8 @@ impl UI {
         let mut update = uistate::UpdateRequest::new();
         update.set_slow();
         let hardware = Hardware::new();
-        let state = uistate::UIState::new(hardware);
+        let mut h = HALHandle::new();
+        let state = uistate::UIState::new(hardware, &mut h);
         return Self {
             state: state,
             status: UIStatus::Listen,
@@ -77,13 +78,13 @@ impl UI {
     }
 
     fn listen(&mut self) {
-        let mut h = HALHandle::new();
         // 1. update ui if needed
         let f = self.update.read_fast();
         let s = self.update.read_slow();
         let p = self.update.read_part();
 
         if f || s || p.is_some() {
+            let mut h = HALHandle::new();
             self.update = self.state.render::<FrameBuffer>(f || s, &mut h).expect("guaranteed to work, no errors implemented");
             self.status = UIStatus::DisplayOperation;
         }
@@ -158,20 +159,20 @@ impl Hardware {
     }
 }
 
-impl <'a> Platform for Hardware {
+impl Platform for Hardware {
     type HAL = HALHandle;
-    type Rng<'c> = se_rng::SeRng;
+    type Rng = se_rng::SeRng;
     type Display = FrameBuffer;
 
-    fn rng<'b>(h: &'b mut HALHandle) -> &'b mut Self::Rng<'b> {
+    fn rng<'b>(h: &'b mut HALHandle) -> &'b mut Self::Rng {
         &mut h.rng
     }
 
-    fn pin<'c>(&self) -> &Pincode<Self::Rng<'c>> {
+    fn pin(&self) -> &Pincode<Self::Rng> {
         &self.pin
     }
 
-    fn pin_mut<'c>(&mut self) -> &mut Pincode<Self::Rng<'c>> {
+    fn pin_mut(&mut self) -> &mut Pincode<Self::Rng> {
         &mut self.pin
     }
 
@@ -261,7 +262,7 @@ impl <'a> Platform for Hardware {
         }
     }
 
-    fn pin_display<'c>(&mut self) -> (&mut Pincode<Self::Rng<'c>>, &mut <Self as Platform>::Display) {
+    fn pin_display(&mut self) -> (&mut Pincode<Self::Rng>, &mut <Self as Platform>::Display) {
         (&mut self.pin, &mut self.display)
     }
 
