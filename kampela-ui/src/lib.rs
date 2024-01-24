@@ -9,6 +9,7 @@ mod seed_entry;
 pub mod backup;
 mod restore_or_generate;
 
+pub mod address;
 pub mod transaction;
 pub mod qr;
 
