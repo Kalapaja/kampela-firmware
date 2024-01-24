@@ -89,7 +89,7 @@ struct DesktopSimulator {
     pin: Pincode,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
-    address: Option<[u8; 76]>,
+    address: Option<Vec<u8>>,
     transaction: String,
     extensions: String,
     signature: Option<[u8; 130]>,
@@ -175,7 +175,7 @@ impl Platform for DesktopSimulator {
         (&self.entropy, &mut self.display)
     }
 
-    fn set_address(&mut self, addr: [u8; 76]) {
+    fn set_address(&mut self, addr: Vec<u8>) {
         self.address = Some(addr);
     }
 
@@ -209,9 +209,9 @@ impl Platform for DesktopSimulator {
         }
     }
 
-    fn address(&mut self) -> (&[u8; 76], &mut Self::Display) {
+    fn address(&mut self) -> Option<(&Vec<u8>, &mut Self::Display)> {
         if let Some(ref a) = self.address {
-            (a, &mut self.display)
+            Some((a, &mut self.display))
         } else {
             panic!("address qr not ready!");
         }
