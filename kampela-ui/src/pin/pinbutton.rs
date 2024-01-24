@@ -31,13 +31,13 @@ pub const BUTTON_FONT: MonoFont = FONT_10X20;
 
 #[derive(Debug)]
 pub struct PinButton {
-	num: usize,
+	num: u8,
 	pub widget: Widget,
     tapped: bool,
 }
 
 impl PinButton {
-	pub fn new(num: usize, area: Rectangle, parent_top_left: Point) -> Self {
+	pub fn new(num: u8, area: Rectangle, parent_top_left: Point) -> Self {
 		Self {
 			num,
 			widget: Widget::new(area, parent_top_left),
@@ -52,13 +52,14 @@ impl PinButton {
             false
         }
     }
-    pub fn num(&self) -> usize {
+    pub fn num(&self) -> u8 {
         self.num
     }
 }
 
 impl View for PinButton {
     type DrawInput<'a> = ();
+    type TapInput<'a> = ();
     type TapOutput = bool;
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -80,7 +81,7 @@ impl View for PinButton {
             }
         }
 	}
-    fn handle_tap_view(&mut self, _point: Point) -> bool {
+    fn handle_tap_view(&mut self, _point: Point, input: ()) -> bool {
         self.tapped = true;
         true
     }

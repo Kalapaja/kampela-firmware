@@ -43,6 +43,7 @@ impl Pindots {
 
 impl View for Pindots {
     type DrawInput<'a> = usize;
+    type TapInput<'a> = ();
     type TapOutput = ();
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -77,6 +78,6 @@ impl View for Pindots {
         }
         Ok(())
 	}
-    fn handle_tap_view(&mut self, _point: Point) {
+    fn handle_tap_view(&mut self, _point: Point, input: ()) {
     }
 }

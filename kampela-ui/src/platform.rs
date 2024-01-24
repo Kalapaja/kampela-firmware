@@ -47,10 +47,10 @@ pub trait Platform {
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;
 
     /// Device-specific "global" storage and management of pincode state RO
-    fn pin<'a>(&self) -> &Pincode<Self::Rng>;
+    fn pin(&self) -> &[u8; 4];
 
     /// Device-specific "global" storage and management of pincode state RW
-    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng>;
+    fn pin_mut(&mut self) -> &mut [u8; 4];
 
     /// Getter for canvas
     fn display(&mut self) -> &mut Self::Display;
@@ -60,9 +60,6 @@ pub trait Platform {
 
     /// Read entropy from flash
     fn read_entropy(&mut self);
-
-    /// Getter for pincode and canvas simultaneously (they should be independent)
-    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng>, &mut Self::Display);
 
     /// Set new seed
     fn set_entropy(&mut self, e: &[u8]);
@@ -95,16 +92,6 @@ pub trait Platform {
 
     fn generate_seed(&mut self, h: &mut Self::HAL) {
         self.set_entropy(&Self::generate_seed_entropy(h));
-    }
-
-    fn handle_pin_event(&mut self, point: Point, h: &mut Self::HAL) -> EventResult {
-        let (p, _) = self.pin_display();
-        p.handle_tap_screen(point).0
-    }
-
-    fn draw_pincode(&mut self, reason: &Reason, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
-        let (p, d) = self.pin_display();
-        p.draw_screen(d, reason, &mut Self::rng(h))
     }
 
     fn draw_backup(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {

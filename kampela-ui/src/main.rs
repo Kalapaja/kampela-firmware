@@ -93,7 +93,7 @@ impl HALHandle {
 
 #[derive(Debug)]
 struct DesktopSimulator {
-    pin: Pincode<ThreadRng>,
+    pin: [u8; 4],
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
@@ -105,7 +105,7 @@ struct DesktopSimulator {
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
-        let pin = Pincode::new(&mut h.rng);
+        let pin = [0; 4]; //TODO proper pin initialization
         let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
             NFCState::Empty => String::new(),
@@ -141,11 +141,11 @@ impl Platform for DesktopSimulator {
         &mut h.rng
     }
 
-    fn pin(&self) -> &Pincode<Self::Rng> {
+    fn pin(&self) -> &[u8; 4] {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut Pincode<Self::Rng> {
+    fn pin_mut(&mut self) -> &mut [u8; 4] {
         &mut self.pin
     }
 
@@ -164,10 +164,6 @@ impl Platform for DesktopSimulator {
             Vec::new()
         };
         println!("entropy read from emulated storage: {:?}", self.entropy);
-    }
-
-    fn pin_display(&mut self) -> (&mut Pincode<Self::Rng>, &mut Self::Display) {
-        (&mut self.pin, &mut self.display)
     }
 
     fn set_entropy(&mut self, e: &[u8]) {

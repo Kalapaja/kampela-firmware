@@ -131,7 +131,7 @@ enum UIStatus {
 }
 
 pub struct Hardware {
-    pin: Pincode<se_rng::SeRng>,
+    pin: [u8; 4],
     pub entropy: Vec<u8>,
     display: FrameBuffer,
     call: Option<String>,
@@ -145,7 +145,7 @@ impl Hardware {
         let entropy = Vec::new();
         let pin_set = false; // TODO query storage
         let mut h = HALHandle::new();
-        let pin = Pincode::new(&mut h.rng);
+        let pin = [0; 4];
         let display = FrameBuffer::new_white();
         Self {
             pin: pin,
@@ -168,11 +168,11 @@ impl Platform for Hardware {
         &mut h.rng
     }
 
-    fn pin(&self) -> &Pincode<Self::Rng> {
+    fn pin(&self) -> &[u8; 4] {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut Pincode<Self::Rng> {
+    fn pin_mut(&mut self) -> &mut [u8; 4] {
         &mut self.pin
     }
 
@@ -260,10 +260,6 @@ impl Platform for Hardware {
                 panic!("Seed storage corrupted! Wiping seed...");
             },
         }
-    }
-
-    fn pin_display(&mut self) -> (&mut Pincode<Self::Rng>, &mut <Self as Platform>::Display) {
-        (&mut self.pin, &mut self.display)
     }
 
     fn set_entropy(&mut self, e: &[u8]) {

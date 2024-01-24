@@ -36,7 +36,7 @@ fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R, bounding_box_absolut: Rectangle)
         width: bounding_box_absolut.size.width / 3,
         height: bounding_box_absolut.size.height / 4,
     };
-    let mut pinnums: [usize; 10] = core::array::from_fn(|i| {
+    let mut pinnums: [u8; 10] = core::array::from_fn(|i| {
         (i).try_into()
             .expect("static initialization of numbers 0..15")
     });
@@ -103,6 +103,7 @@ impl<R> View for Pinpad<R> where
     R: Rng + ?Sized
 {
     type DrawInput<'a> = &'a mut R where Self: 'a;
+    type TapInput<'a> = ();
     type TapOutput = usize;
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -119,10 +120,10 @@ impl<R> View for Pinpad<R> where
         }
         Ok(())
 	}
-    fn handle_tap_view(&mut self, point: Point) -> usize {
+    fn handle_tap_view(&mut self, point: Point, input: ()) -> usize {
         let mut tapped = 0;
         for (i, button) in self.buttons.iter_mut().enumerate() {
-            if button.handle_tap(point).is_some() {
+            if button.handle_tap(point, ()).is_some() {
                 tapped = i;
             }
         }

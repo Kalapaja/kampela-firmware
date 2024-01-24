@@ -260,7 +260,7 @@ impl <P: Platform> UIState<P> {
         let mut new_screen = None;
         match self.screen {
             Screen::PinEntry((ref mut a, u)) => {
-                let res = a.handle_tap_screen(point).0;
+                let res = a.handle_tap_screen(point, self.platform.pin()).0;
                 out = res.request;
                 new_screen = res.state;
             },

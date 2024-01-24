@@ -34,7 +34,7 @@ use crate::pin::{
 };
 
 pub const PIN_LEN: usize = 4;
-const PIN_CODE_MOCK: [usize; PIN_LEN] = [0; PIN_LEN];
+const PIN_CODE_MOCK: [u8; PIN_LEN] = [0; PIN_LEN];
 
 #[derive(Debug)]
 pub struct Pincode<R> where
@@ -42,7 +42,8 @@ pub struct Pincode<R> where
 {
     pinpad: Pinpad<R>,
     pindots: Pindots,
-    entered_nums: Vec<usize>,
+    entered_nums: Vec<u8>,
+    pinok: bool,
 }
 
 impl<R> Pincode<R> where
@@ -79,22 +80,23 @@ impl<R> Pincode<R> where
                 SCREEN_ZERO,
             ),
             entered_nums: Vec::new(),
+            pinok: false,
         }
     }
-    fn check_pin(&mut self) -> bool {
+    fn check_pin(&mut self, pin: &[u8; 4]) -> bool {
+        let r: bool;
+        // TODO: proper attempt counter and pin check
         if self.entered_nums == PIN_CODE_MOCK {
-            true
+            r = true
         } else {
-            false
+            r = false
         }
+        self.entered_nums = Vec::new();
+        r
     }
-    fn push_entered(&mut self, num: usize) {
+    fn push_entered(&mut self, num: u8) {
         if self.entered_nums.len() < PIN_LEN {
             self.entered_nums.push(num);
-        }
-        if self.entered_nums.len() == PIN_LEN && !self.check_pin() {
-            // TODO: proper attempt counter
-            self.entered_nums = Vec::new();
         }
     }
 }
@@ -103,34 +105,37 @@ impl<R> ViewScreen for Pincode<R> where
     R: Rng + ?Sized
 {
     type DrawInput<'a> = &'a mut R where Self: 'a;
+    type TapInput<'a> = &'a [u8; 4];
     type TapOutput = ();
-    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, rng: &'a mut R) -> Result<EventResult, D::Error>
+    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<EventResult, D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
     {
-        self.pindots.draw(target, reason, self.entered_nums.len())?;
-        self.pinpad.draw(target, reason, rng)?;
-
         let mut request = UpdateRequest::new();
         let mut state = None;
-        
         if matches!(reason.cause(), Cause::Tap) && reason.repeats() < 1 {
-            if self.entered_nums.len() == PIN_LEN && self.check_pin(){
+            if self.pinok {
                 state = Some(UnitScreen::PinOk);
             } else {
                 request.set_fast();
             }
         }
 
+        self.pindots.draw(target, reason, self.entered_nums.len())?;
+        self.pinpad.draw(target, reason, rng)?;
+
         Ok(EventResult { request, state })
     }
-    fn handle_tap_screen(&mut self, point: Point) -> (EventResult, ()) {
+    fn handle_tap_screen<'a>(&mut self, point: Point, pin: Self::TapInput<'a>) -> (EventResult, ()) {
         let state = None;
         let mut request = UpdateRequest::new();
 
-        if let Some(b) = self.pinpad.handle_tap(point) {
+        if let Some(b) = self.pinpad.handle_tap(point, ()) {
             request.set_part(self.pinpad.buttons[b].bounding_box_absolut());
             self.push_entered(self.pinpad.buttons[b].num());
+            if self.entered_nums.len() == pin.len() && self.check_pin(pin) {
+                self.pinok = true;
+            }
         }
 
         (EventResult{ request, state }, ())

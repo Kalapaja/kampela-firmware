@@ -74,6 +74,7 @@ impl Dimensions for Widget {
 
 pub trait View {
     type DrawInput<'a> where Self: 'a;
+    type TapInput<'a>;
     type TapOutput;
     /// Getter for area field in Struct
     fn bounding_box(&self) -> Rectangle;
@@ -89,7 +90,7 @@ pub trait View {
     where 
         D: DrawTarget<Color = BinaryColor>;
 
-    fn handle_tap_view(&mut self, point: Point) -> Self::TapOutput;
+    fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput;
 
     fn draw<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(),D::Error>
     where
@@ -99,10 +100,10 @@ pub trait View {
         self.draw_view(&mut window_target, reason, input)
     }
 
-	fn handle_tap(&mut self, point: Point) -> Option<Self::TapOutput> {
+	fn handle_tap<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Option<Self::TapOutput> {
         if self.bounding_box().contains(point) {
             let point_offsetted = Point::new(point.x - self.bounding_box().top_left.x, point.y - self.bounding_box().top_left.y);
-            Some(self.handle_tap_view(point_offsetted))
+            Some(self.handle_tap_view(point_offsetted, input))
         } else {
             None
         }
@@ -111,9 +112,10 @@ pub trait View {
 
 pub trait ViewScreen {
     type DrawInput<'a> where Self: 'a;
+    type TapInput<'a>;
     type TapOutput;
     fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<EventResult, D::Error>
     where
         D: DrawTarget<Color = BinaryColor>;
-    fn handle_tap_screen(&mut self, point: Point) -> (EventResult, Self::TapOutput);
+    fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput);
 }
