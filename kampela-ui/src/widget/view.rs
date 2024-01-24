@@ -4,6 +4,7 @@ use embedded_graphics::{
     primitives::{Rectangle, Primitive},
     geometry::{Size},
 };
+use rand::{Rng};
 
 use crate::uistate::{EventResult, Reason};
 use crate::display_def::*;
@@ -44,48 +45,75 @@ impl <'a, D: DrawTarget> Dimensions for DrawView<'a, D> {
     }
 }
 
+#[derive(Debug)]
 pub struct Widget {
     area: Rectangle,
+    absolut_top_left: Point,
 }
 
 impl Widget {
-    pub fn new(area: Rectangle) -> Self {
-        Widget { area }
+    pub fn new(area: Rectangle, parent_top_left: Point) -> Self {
+        Self {
+            area,
+            absolut_top_left: Point {
+                x: area.top_left.x + parent_top_left.x,
+                y: area.top_left.y + parent_top_left.y,
+            }
+        }
     }
-    pub fn area(&self) -> Rectangle {
+    pub fn bounding_box_absolut(&self) -> Rectangle {
+        Rectangle::new(self.absolut_top_left, self.area.size)
+    }
+}
+
+impl Dimensions for Widget {
+    fn bounding_box(&self) -> Rectangle {
         self.area
     }
 }
 
-pub trait View<D> where
-    D: DrawTarget,
-{
+pub trait View {
+    type DrawInput<'a> where Self: 'a;
+    type TapOutput;
     /// Getter for area field in Struct
-    fn area(&self) -> Rectangle;
+    fn bounding_box(&self) -> Rectangle;
 
-    fn area_view(&self) -> Rectangle {
-        Rectangle { top_left: Point { x: 0, y: 0 }, size: self.area().size }
+    /// Getter for area field in Struct
+    fn bounding_box_absolut(&self) -> Rectangle;
+
+    fn bounding_box_view(&self) -> Rectangle {
+        Rectangle { top_left: Point { x: 0, y: 0 }, size: self.bounding_box().size }
     }
 
-    fn draw_view(&self, target: &mut DrawView<D>, reason: &Reason) -> Result<(),D::Error>;
-    fn handle_tap_view(&mut self, point: Point);
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(),D::Error>
+    where 
+        D: DrawTarget<Color = BinaryColor>;
 
-    fn draw(&self, target: &mut D, reason: &Reason) -> Result<(),D::Error> {
-        let mut window_target = DrawView::new(self.area(), target);
-        self.draw_view(&mut window_target, reason)
+    fn handle_tap_view(&mut self, point: Point) -> Self::TapOutput;
+
+    fn draw<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(),D::Error>
+    where
+        D: DrawTarget<Color = BinaryColor>
+    {
+        let mut window_target = DrawView::new(self.bounding_box(), target);
+        self.draw_view(&mut window_target, reason, input)
     }
 
-	fn handle_tap(&mut self, point: Point) {
-        if self.area().contains(point) {
-            let point_offsetted = Point::new(point.x - self.area().top_left.x, point.y - self.area().top_left.y);
-            self.handle_tap_view(point_offsetted);
+	fn handle_tap(&mut self, point: Point) -> Option<Self::TapOutput> {
+        if self.bounding_box().contains(point) {
+            let point_offsetted = Point::new(point.x - self.bounding_box().top_left.x, point.y - self.bounding_box().top_left.y);
+            Some(self.handle_tap_view(point_offsetted))
+        } else {
+            None
         }
     }
 }
 
-pub trait ViewScreen<D> where
-    D: DrawTarget,
-{
-    fn draw_screen(&self, target: &mut D, reason: &Reason) -> Result<EventResult, D::Error>;
-    fn handle_tap_screen(&mut self, point: Point) -> EventResult;
+pub trait ViewScreen {
+    type DrawInput<'a> where Self: 'a;
+    type TapOutput;
+    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<EventResult, D::Error>
+    where
+        D: DrawTarget<Color = BinaryColor>;
+    fn handle_tap_screen(&mut self, point: Point) -> (EventResult, Self::TapOutput);
 }

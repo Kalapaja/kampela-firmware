@@ -1,17 +1,18 @@
 //! Asynchronous operation generic code
 
 /// Default (non-blocking) delay for operation start
-pub const DELAY: usize = 100; //This is magic; don't change without testing or UI will get mean
+pub const DELAY: usize = 100; //100 This is magic; don't change without testing or UI will get mean
 
 /// Asynchronous procedures should implement this.
 ///
 /// To call, iterate over advance()
 pub trait Operation {
+    type Init;
     type Input<'a>;
     type Output;
     type StateEnum;
 
-    fn new() -> Self;
+    fn new(data: Self::Init) -> Self;
 
     /// Generally delayed state transition
     fn wind(&mut self, state: Self::StateEnum, delay: usize);

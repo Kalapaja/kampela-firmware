@@ -24,15 +24,18 @@ pub use display_def::*;
 mod platform;
 use platform::Platform;
 
-mod pin;
-use pin::Pincode;
+mod pin {
+    pub mod pin;
+    pub mod pindots;
+    pub mod pinpad;
+    pub mod pinbutton;
+}
+use pin::pin::Pincode;
 
 mod restore_or_generate;
 mod seed_entry;
-mod test;
 mod widget {
     pub mod view;
-    pub mod button;
 }
 
 mod backup;
@@ -90,7 +93,7 @@ impl HALHandle {
 
 #[derive(Debug)]
 struct DesktopSimulator {
-    pin: Pincode,
+    pin: Pincode<ThreadRng>,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
@@ -102,7 +105,7 @@ struct DesktopSimulator {
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
-        let pin = Pincode::new(&mut h.rng, false);
+        let pin = Pincode::new(&mut h.rng);
         let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
             NFCState::Empty => String::new(),
@@ -131,18 +134,18 @@ impl DesktopSimulator {
 
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
-    type Rng<'a> = &'a mut ThreadRng;
+    type Rng<'a> = ThreadRng;
     type Display = SimulatorDisplay<BinaryColor>;
 
-    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng<'a> {
         &mut h.rng
     }
 
-    fn pin(&self) -> &Pincode {
+    fn pin<'a>(&self) -> &Pincode<Self::Rng<'a>> {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut Pincode {
+    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng<'a>> {
         &mut self.pin
     }
 
@@ -163,7 +166,7 @@ impl Platform for DesktopSimulator {
         println!("entropy read from emulated storage: {:?}", self.entropy);
     }
 
-    fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display) {
+    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng<'a>>, &mut Self::Display) {
         (&mut self.pin, &mut self.display)
     }
 
@@ -258,14 +261,15 @@ fn main() {
         // display event; it would be delayed
         let f = update.read_fast();
         let s = update.read_slow();
+        let p = update.read_part();
 
-        if f || s {
-            match state.render::<SimulatorDisplay<BinaryColor>>() {
+        if f || s || p.is_some() {
+            match state.render::<SimulatorDisplay<BinaryColor>>(f || s, &mut h) {
                 Ok(u) => update = u,
                 Err(e) => println!("{:?}", e),
             };
         }
-        if f {
+        if f || p.is_some() {
             window.update(state.display());
             println!("skip {} events in fast update", window.events().count());
             //no-op for non-EPD

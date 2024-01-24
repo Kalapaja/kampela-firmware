@@ -1,32 +1,38 @@
 //! display control functions
 
-use efm32pg23_fix::{GPIO_S, Peripherals};
-use cortex_m::asm::delay;
 use crate::peripherals::usart::*;
 use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
 use crate::{FreeError, if_in_free, in_free};
 use crate::parallel::Operation;
+use crate::devices::display_transmission::{display_is_busy, EPDCommand, EPDData, EPDDataB, EPDDataPart, BUFSIZE};
 
 /// Draw sequence
 ///
 /// Iterate through this to perform drawing and send display to proper sleep mode
-pub struct Request<R: for <'a> RequestType<Input<'a> = &'a [u8]>> {
+pub struct Request<R: for <'a> RequestType<Init = (), Input<'a> = (&'a [u8], (u8, u8, u16, u16))>> {
     state: RequestState<R>,
 }
 
-pub enum RequestState<R: for <'a> RequestType<Input<'a> = &'a [u8]>> {
+pub enum RequestState<R: for <'a> RequestType<Init = (), Input<'a> = (&'a [u8], (u8, u8, u16, u16))>> {
     Init(EPDInit),
     Draw(R),
 }
 
-impl <R: for <'a> RequestType<Input<'a> = &'a [u8], Output = bool>> Operation for Request<R> {
-    type Input<'a> = &'a [u8];
+impl<R> Operation for Request<R> where
+    R: for <'a> RequestType<
+        Init = (),
+        Input<'a> = (&'a [u8], (u8, u8, u16, u16)),
+        Output = bool
+    >
+{
+    type Init = ();
+    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
     type Output = bool;
     type StateEnum = RequestState<R>;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: RequestState::Init(EPDInit::new()),
+            state: RequestState::Init(EPDInit::new(())),
         }
     }
 
@@ -38,7 +44,7 @@ impl <R: for <'a> RequestType<Input<'a> = &'a [u8], Output = bool>> Operation fo
         match self.state {
             RequestState::Init(ref mut a) => {
                 if a.advance(()) {
-                    let new_state = RequestState::Draw(R::new());
+                    let new_state = RequestState::Draw(R::new(()));
                     self.wind_d(new_state);
                 };
                 false
@@ -51,140 +57,11 @@ impl <R: for <'a> RequestType<Input<'a> = &'a [u8], Output = bool>> Operation fo
         or
         epaper_draw_stuff_differently(peripherals, self.data.into_inner());
                 */
-            },
+            }
         }
     }
 }
 
-/// BUSY is on port B, pin [`SPI_BUSY_PIN`].
-pub fn display_is_busy() -> Result<bool, FreeError> {
-    if_in_free(|peripherals| spi_is_busy(&mut peripherals.GPIO_S))
-}
-
-/// Send command to EPD
-///
-/// for critical section
-fn epaper_write_command(peripherals: &mut Peripherals, command_set: &[u8]) {
-    // CS clear corresponds to selected chip, see epaper docs
-
-    deselect_display(&mut peripherals.GPIO_S);
-    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-    
-    display_select_command(&mut peripherals.GPIO_S);
-    for command in command_set.iter() {
-        write_to_usart(peripherals, *command);
-    }
-    deselect_display(&mut peripherals.GPIO_S);
-}
-
-/// Send data to EPD
-///
-/// for critical section
-fn epaper_write_data(peripherals: &mut Peripherals, data_set: &[u8]) {
-    deselect_display(&mut peripherals.GPIO_S);
-    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-
-    display_select_data(&mut peripherals.GPIO_S);
-    for data in data_set.iter() {
-        write_to_usart(peripherals, *data);
-    }
-    deselect_display(&mut peripherals.GPIO_S);
-    //    display_data_command_clear(peripherals);
-}
-
-/// BUSY is on port B, pin [`SPI_BUSY_PIN`].
-///
-/// Blocking variant to be called from critical section (init, panic)
-pub fn display_is_busy_cs(peripherals: &mut Peripherals) -> bool {
-    spi_is_busy(&mut peripherals.GPIO_S)
-}
-
-/// Reset EPD, should be performed in many situations
-///
-/// for critical section
-///
-/// Why these specific numbers for delays?
-pub fn epaper_reset(gpio: &mut GPIO_S) {
-    delay(1000);
-    display_res_clear(gpio);
-    delay(5000);
-    display_res_set(gpio);
-    delay(10000);
-    display_res_clear(gpio);
-    delay(5000);
-    deselect_display(gpio); // this is not the default state, should not be here
-    delay(5000);
-}
-
-/// Last command in drawing protocol; actually starts display action
-pub fn epaper_update(peripherals: &mut Peripherals) {
-    epaper_write_command(peripherals, &[0x12]);
-    delay(100000);
-    while display_is_busy_cs(peripherals) {}
-    epaper_write_command(peripherals, &[0x22]); // from manual, Y: "Display Update Control"
-epaper_write_data(peripherals, &[0xF7]); // ?
-    epaper_write_command(peripherals, &[0x20]); // from manual, Y: "Activate Display Update Sequence"
-    while display_is_busy_cs(peripherals) {}
-}
-
-/// Partial display update; used to initiate display action when performing fast drawing without
-/// full clear
-pub fn epaper_update_part(peripherals: &mut Peripherals) {
-    epaper_write_command(peripherals, &[0x22]); // from manual, Y: "Display Update Control"
-    epaper_write_data(peripherals, &[0xFF]); // ?
-    epaper_write_command(peripherals, &[0x20]); // from manual, Y: "Activate Display Update Sequence"
-    delay(1000); // why delay, from where the number?
-    while display_is_busy_cs(peripherals) {}
-}
-
-pub const BUFSIZE: usize = 5808;
-
-/// Normal drawing protocol, with full screen clearing
-pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
-    epaper_reset(&mut peripherals.GPIO_S);
-    epaper_write_command(peripherals, &[0x4E]);
-    epaper_write_data(peripherals, &[0x00]);
-    epaper_write_command(peripherals, &[0x4F]);
-    epaper_write_data(peripherals, &[0x07]);
-    epaper_write_command(peripherals, &[0x24]); // from manual, Y: "Write Black and White image to RAM"
-    epaper_write_data(peripherals, &stuff);
-    epaper_write_command(peripherals, &[0x26]);
-    epaper_write_data(peripherals, &stuff);
-    epaper_update(peripherals);
-}
-
-/// Fast and dirty refresh drawing
-pub fn epaper_draw_stuff_quickly(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
-    epaper_reset(&mut peripherals.GPIO_S);
-    epaper_write_command(peripherals, &[0x4E]);
-    epaper_write_data(peripherals, &[0x00]);
-    epaper_write_command(peripherals, &[0x4F]);
-    epaper_write_data(peripherals, &[0x07]);
-    epaper_write_command(peripherals, &[0x3C]);
-    epaper_write_data(peripherals, &[0x80]);
-    epaper_write_command(peripherals, &[0x24]); // from manual, Y: "Write Black and White image to RAM"
-    epaper_write_data(peripherals, &stuff);
-    epaper_update_part(peripherals);
-}
-
-/// Send EPD to low power state; should be performed when screen is not drawing at all times to
-/// extend component life
-pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
-    epaper_write_command(peripherals, &[0x10]); // from manual, enter deep sleep
-    epaper_write_data(peripherals, &[0x01]); // ?
-    delay(100000); // why delay, from where the number?
-}
-
-/// EPD init, also should be performed to wake screen from sleep
-///
-/// used within critical section
-pub fn epaper_hw_init_cs(peripherals: &mut Peripherals) {
-    epaper_reset(&mut peripherals.GPIO_S);
-    while display_is_busy_cs(peripherals) {}
-    epaper_write_command(peripherals, &[0x12]);
-    delay(10000);
-    while display_is_busy_cs(peripherals) {}
-}
 
 /// EPD init to wake up display
 pub struct EPDInit {
@@ -197,13 +74,14 @@ pub enum EPDInitState {
 }
 
 impl Operation for EPDInit {
+    type Init = ();
     type Input<'a> = ();
     type Output = bool;
     type StateEnum = EPDInitState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: EPDInitState::Reset(Reset::new()),
+            state: EPDInitState::Reset(Reset::new(())),
         }
     }
 
@@ -215,14 +93,14 @@ impl Operation for EPDInit {
         match self.state{
             EPDInitState::Reset(ref mut a) => {
                 if a.advance(()) {
-                    self.wind(EPDInitState::WakeUp(EPDCommand::<0x12>::new()), 5000)
+                    self.wind(EPDInitState::WakeUp(EPDCommand::<0x12>::new(())), 10)
                 }
                 false
             },
             EPDInitState::WakeUp(ref mut a) => {
                 if display_is_busy() != Ok(false) { return false };
                 a.advance(())
-            },
+            }
         }
     }
 }
@@ -254,11 +132,12 @@ impl Reset {
 }
 
 impl Operation for Reset {
+    type Init = ();
     type Input<'a> = ();
     type Output = bool;
     type StateEnum = ResetState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
             state: ResetState::R0,
             timer: 0
@@ -302,6 +181,7 @@ impl Operation for Reset {
 pub trait RequestType: Operation {}
 impl RequestType for FastDraw {}
 impl RequestType for FullDraw {}
+impl RequestType for PartDraw {}
 
 /// Fast draw sequence without full refresh
 ///
@@ -316,21 +196,22 @@ pub enum FastDrawState {
     PrepareD1(EPDDataB<0x00>),
     PrepareC2(EPDCommand<0x4F>),
     PrepareD2(EPDDataB<0x07>),
-    PrepareC3(EPDCommand<0x3C>),
-    PrepareD3(EPDDataB<0x80>),
+
     SendC1(EPDCommand<0x24>),
     SendD1(EPDData<BUFSIZE>),
+
     Update(UpdateFast),
 }
 
 impl Operation for FastDraw {
-    type Input<'a> = &'a [u8];
+    type Init = ();
+    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
     type Output = bool;
     type StateEnum = FastDrawState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: FastDrawState::PrepareC1(EPDCommand::<0x4E>::new()),
+            state: FastDrawState::PrepareC1(EPDCommand::<0x4E>::new(())),
             timer: 0,
         }
     }
@@ -344,49 +225,38 @@ impl Operation for FastDraw {
         match self.state{
             FastDrawState::PrepareC1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FastDrawState::PrepareD1(EPDDataB::<0x00>::new()));
+                    self.change(FastDrawState::PrepareD1(EPDDataB::<0x00>::new(())));
                 }
                 false
             },
             FastDrawState::PrepareD1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FastDrawState::PrepareC2(EPDCommand::<0x4F>::new()));
+                    self.change(FastDrawState::PrepareC2(EPDCommand::<0x4F>::new(())));
                 }
                 false
             },
             FastDrawState::PrepareC2(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FastDrawState::PrepareD2(EPDDataB::<0x07>::new()));
+                    self.change(FastDrawState::PrepareD2(EPDDataB::<0x07>::new(())));
                 }
                 false
             },
             FastDrawState::PrepareD2(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FastDrawState::PrepareC3(EPDCommand::<0x3C>::new()));
-                }
-                false
-            },
-            FastDrawState::PrepareC3(ref mut a) => {
-                if a.advance(()) {
-                    self.change(FastDrawState::PrepareD3(EPDDataB::<0x80>::new()));
-                }
-                false
-            },
-            FastDrawState::PrepareD3(ref mut a) => {
-                if a.advance(()) {
-                    self.change(FastDrawState::SendC1(EPDCommand::<0x24>::new()));
+                    self.change(FastDrawState::SendC1(EPDCommand::<0x24>::new(())));
                 }
                 false
             },
             FastDrawState::SendC1(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
                 if a.advance(()) {
-                    self.change(FastDrawState::SendD1(EPDData::<BUFSIZE>::new()));
+                    self.change(FastDrawState::SendD1(EPDData::<BUFSIZE>::new(())));
                 }
                 false
             },
             FastDrawState::SendD1(ref mut a) => {
-                if a.advance(data) {
-                    self.change(FastDrawState::Update(UpdateFast::new()));
+                if a.advance(data.0) {
+                    self.change(FastDrawState::Update(UpdateFast::new(())));
                 }
                 false
             },
@@ -413,19 +283,18 @@ pub enum FullDrawState {
     PrepareD2(EPDDataB<0x07>),
     SendC1(EPDCommand<0x24>),
     SendD1(EPDData<BUFSIZE>),
-    SendC2(EPDCommand<0x26>),
-    SendD2(EPDData<BUFSIZE>),
     Update(UpdateFull),
 }
 
 impl Operation for FullDraw {
-    type Input<'a> = &'a [u8];
+    type Init = ();
+    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
     type Output = bool;
     type StateEnum = FullDrawState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: FullDrawState::PrepareC1(EPDCommand::<0x4E>::new()),
+            state: FullDrawState::PrepareC1(EPDCommand::<0x4E>::new(())),
             timer: 0,
         }
     }
@@ -439,49 +308,37 @@ impl Operation for FullDraw {
         match self.state{
             FullDrawState::PrepareC1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FullDrawState::PrepareD1(EPDDataB::<0x00>::new()));
+                    self.change(FullDrawState::PrepareD1(EPDDataB::<0x00>::new(())));
                 }
                 false
             },
             FullDrawState::PrepareD1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FullDrawState::PrepareC2(EPDCommand::<0x4F>::new()));
+                    self.change(FullDrawState::PrepareC2(EPDCommand::<0x4F>::new(())));
                 }
                 false
             },
             FullDrawState::PrepareC2(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FullDrawState::PrepareD2(EPDDataB::<0x07>::new()));
+                    self.change(FullDrawState::PrepareD2(EPDDataB::<0x07>::new(())));
                 }
                 false
             },
             FullDrawState::PrepareD2(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FullDrawState::SendC1(EPDCommand::<0x24>::new()));
+                    self.change(FullDrawState::SendC1(EPDCommand::<0x24>::new(())));
                 }
                 false
             },
             FullDrawState::SendC1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(FullDrawState::SendD1(EPDData::<BUFSIZE>::new()));
+                    self.change(FullDrawState::SendD1(EPDData::<BUFSIZE>::new(())));
                 }
                 false
             },
             FullDrawState::SendD1(ref mut a) => {
-                if a.advance(data) {
-                    self.change(FullDrawState::SendC2(EPDCommand::<0x26>::new()));
-                }
-                false
-            },
-            FullDrawState::SendC2(ref mut a) => {
-                if a.advance(()) {
-                    self.change(FullDrawState::SendD2(EPDData::<BUFSIZE>::new()));
-                }
-                false
-            },
-            FullDrawState::SendD2(ref mut a) => {
-                if a.advance(data) {
-                    self.change(FullDrawState::Update(UpdateFull::new()));
+                if a.advance(data.0) {
+                    self.change(FullDrawState::Update(UpdateFull::new(())));
                 }
                 false
             },
@@ -492,240 +349,160 @@ impl Operation for FullDraw {
     }
 }
 
-/// Send command `C` to EPD
-pub struct EPDCommand<const C: u8>{
-    state: EPDByteState,
+pub struct PartDraw {
+    state: PartDrawState,
     timer: usize,
 }
 
-pub enum EPDByteState {
-    /// State where command is actually sent
-    Init,
-    /// Receive something to keep protocol running and close connection
-    Aftermath,
+pub enum PartDrawState {
+    //BorderWavefrom,
+    PrepareC1(EPDCommand<0x3C>),
+    PrepareD1(EPDDataB<0x80>),
+    //Set RAM X address start/end postition (which is Y due to orientation)
+    PrepareC2(EPDCommand<0x44>),
+    PrepareD21(EPDData<1>),
+    PrepareD22(EPDData<1>),
+    //Set RAM Y address start/end postition (which is X due to orientation)
+    PrepareC3(EPDCommand<0x45>),
+    PrepareD31(EPDData<2>),
+    PrepareD32(EPDData<2>),
+    //Set RAM X&Y address write starting position
+    PrepareC4(EPDCommand<0x4E>),
+    PrepareD4(EPDData<1>),
+    PrepareC5(EPDCommand<0x4F>),
+    PrepareD5(EPDData<2>),
+
+    SendC1(EPDCommand<0x24>),
+    SendD1(EPDDataPart<BUFSIZE>),
+    SendC2(EPDCommand<0x26>), //for some reason red ram still used in mode 2
+    SendD2(EPDDataPart<BUFSIZE>),
+
+    Update(UpdateUltraFast),
 }
 
-impl <const C: u8> Operation for EPDCommand<C> {
-    type Input<'a> = ();
+impl Operation for PartDraw {
+    type Init = ();
+    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
     type Output = bool;
-    type StateEnum = EPDByteState;
+    type StateEnum = PartDrawState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: EPDByteState::Init,
+            state: PartDrawState::PrepareC1(EPDCommand::<0x3C>::new(())),
             timer: 0,
         }
     }
 
-    fn wind(&mut self, state: EPDByteState, delay: usize) {
-        self.state = state;
-        self.timer = delay;
-    }
-    
-    fn advance(&mut self, _: ()) -> bool {
-        match self.state {
-            EPDByteState::Init => {
-                in_free(|peripherals| {
-                    deselect_display(&mut peripherals.GPIO_S);
-                    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_command(&mut peripherals.GPIO_S);
-                });
-                if if_in_free(|peripherals|
-                    peripherals.USART0_S.status.read().txbl().bit_is_clear()
-                ) == Ok(false) {
-                    in_free(|peripherals|
-                        peripherals
-                            .USART0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(C))
-                            );
-                    self.change(EPDByteState::Aftermath);
-                }
-                false
-            },
-            EPDByteState::Aftermath => {
-                if if_in_free(|peripherals|
-                    peripherals
-                        .USART0_S
-                        .status
-                        .read()
-                        .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
-                    in_free(|peripherals| {
-                        peripherals
-                            .USART0_S
-                            .rxdata
-                            .read()
-                            .rxdata()
-                            .bits();
-                        deselect_display(&mut peripherals.GPIO_S);
-                    });
-                    true
-                } else {
-                    false
-                }
-            },
-        }
-    }
-}
-
-
-
-/// Send data byte `B` to EPD
-pub struct EPDDataB<const B: u8>{
-    state: EPDByteState,
-    timer: usize,
-}
-
-impl <const B: u8> Operation for EPDDataB<B> {
-    type Input<'a> = ();
-    type Output = bool;
-    type StateEnum = EPDByteState;
-
-    fn new() -> Self {
-        Self {
-            state: EPDByteState::Init,
-            timer: 0,
-        }
-    }
-
-    fn wind(&mut self, state: EPDByteState, delay: usize) {
-        self.state = state;
-        self.timer = delay;
-    }
-
-    fn advance(&mut self, _: ()) -> bool {
-        match self.state {
-            EPDByteState::Init => {
-                in_free(|peripherals| {
-                    deselect_display(&mut peripherals.GPIO_S);
-                    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_data(&mut peripherals.GPIO_S);
-                });
-                if if_in_free(|peripherals|
-                    peripherals.USART0_S.status.read().txbl().bit_is_clear()
-                ) == Ok(false) {
-                    in_free(|peripherals|
-                        peripherals
-                            .USART0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(B))
-                            );
-                    self.change(EPDByteState::Aftermath);
-                }
-                false
-            },
-            EPDByteState::Aftermath => {
-                if if_in_free(|peripherals|
-                    peripherals
-                        .USART0_S
-                        .status
-                        .read()
-                        .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
-                    in_free(|peripherals| {
-                        peripherals
-                            .USART0_S
-                            .rxdata
-                            .read()
-                            .rxdata()
-                            .bits();
-                        deselect_display(&mut peripherals.GPIO_S);
-                    });
-                    true
-                } else {
-                    false
-                }
-            },
-        }
-    }
-}
-
-/// Send data byte `B` to EPD
-pub struct EPDData<const LEN: usize>{
-    state: EPDDataState,
-    position: usize,
-    timer: usize,
-}
-
-pub enum EPDDataState {
-    /// State where command is actually sent
-    Init,
-    /// Receive something to keep protocol running and close connection
-    Aftermath,
-}
-
-impl <const LEN: usize> Operation for EPDData<LEN> {
-    type Input<'a> = &'a [u8];
-    type Output = bool;
-    type StateEnum = EPDDataState;
-
-    fn new() -> Self {
-        Self {
-            state: EPDDataState::Init,
-            position: 0,
-            timer: 0,
-        }
-    }
-
-    fn wind(&mut self, state: EPDDataState, delay: usize) {
+    fn wind(&mut self, state: PartDrawState, delay: usize) {
         self.state = state;
         self.timer = delay;
     }
 
     fn advance(&mut self, data: Self::Input<'_>) -> bool {
-        match self.state {
-            EPDDataState::Init => {
-                in_free(|peripherals| {
-                    deselect_display(&mut peripherals.GPIO_S);
-                    select_display(&mut peripherals.GPIO_S); // not necessary if state is known and default at start
-                    display_select_data(&mut peripherals.GPIO_S);
-                });
-                if if_in_free(|peripherals|
-                    peripherals.USART0_S.status.read().txbl().bit_is_clear()
-                ) == Ok(false) {
-                    in_free(|peripherals|
-                        peripherals
-                            .USART0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(data[self.position]))
-                            );
-                    if self.position < LEN-1 {
-                        self.position += 1;
-                    } else {
-                        self.change(EPDDataState::Aftermath);
-                    }
+        match self.state{
+            PartDrawState::PrepareC1(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareD1(EPDDataB::<0x80>::new(())));
                 }
                 false
             },
-            EPDDataState::Aftermath => {
-                if if_in_free(|peripherals|
-                    peripherals
-                        .USART0_S
-                        .status
-                        .read()
-                        .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
-                    in_free(|peripherals| {
-                        peripherals
-                            .USART0_S
-                            .rxdata
-                            .read()
-                            .rxdata()
-                            .bits();
-                        deselect_display(&mut peripherals.GPIO_S);
-                    });
-                    true
-                } else {
-                    false
+            PartDrawState::PrepareD1(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareC2(EPDCommand::<0x44>::new(())));
                 }
+                false
             },
+            PartDrawState::PrepareC2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareD21(EPDData::<1>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD21(ref mut a) => {
+                if a.advance(&data.1.0.to_le_bytes()) {
+                    self.change(PartDrawState::PrepareD22(EPDData::<1>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD22(ref mut a) => {
+                if a.advance(&data.1.1.to_le_bytes()) {
+                    self.change(PartDrawState::PrepareC3(EPDCommand::<0x45>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareC3(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareD31(EPDData::<2>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD31(ref mut a) => {
+                if a.advance(&data.1.2.to_le_bytes()) {
+                    self.change(PartDrawState::PrepareD32(EPDData::<2>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD32(ref mut a) => {
+                if a.advance(&data.1.3.to_le_bytes()) {
+                    self.change(PartDrawState::PrepareC4(EPDCommand::<0x4E>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareC4(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareD4(EPDData::<1>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD4(ref mut a) => {
+                if a.advance(&data.1.0.to_le_bytes()) {
+                    self.change(PartDrawState::PrepareC5(EPDCommand::<0x4F>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareC5(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::PrepareD5(EPDData::<2>::new(())));
+                }
+                false
+            },
+            PartDrawState::PrepareD5(ref mut a) => {
+                if a.advance(&(data.1.2 - 1).to_le_bytes()) { // why -1px?
+                    self.change(PartDrawState::SendC1(EPDCommand::<0x24>::new(())));
+                }
+                false
+            },
+            PartDrawState::SendC1(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::SendD1(EPDDataPart::<BUFSIZE>::new(data.1)));
+                }
+                false
+            },
+            PartDrawState::SendD1(ref mut a) => {
+                if a.advance(data.0) {
+                    self.change(PartDrawState::SendC2(EPDCommand::<0x26>::new(())));
+                }
+                false
+            },
+            PartDrawState::SendC2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(PartDrawState::SendD2(EPDDataPart::<BUFSIZE>::new(data.1)));
+                }
+                false
+            },
+            PartDrawState::SendD2(ref mut a) => {
+                if a.advance(data.0) {
+                    self.change(PartDrawState::Update(UpdateUltraFast::new(())));
+                }
+                false
+            },
+            PartDrawState::Update(ref mut a) => {
+                a.advance(())
+            }
         }
     }
 }
+
 
 pub struct UpdateFull {
     state: UpdateFullState,
@@ -733,10 +510,18 @@ pub struct UpdateFull {
 }
 
 pub enum UpdateFullState {
-    Init(EPDCommand<0x12>),
-    UpdateC1(EPDCommand<0x22>),
-    UpdateD1(EPDDataB<0xF7>),
-    UpdateC2(EPDCommand<0x20>),
+     //bypass RED RAM
+    UpdateC1(EPDCommand<0x21>),
+    UpdateD11(EPDDataB<0x40>),
+    UpdateD12(EPDDataB<0x00>),
+    // set read temperature from internal TS
+    UpdateC2(EPDCommand<0x18>),
+    UpdateD2(EPDDataB<0x80>),
+    
+    UpdateC3(EPDCommand<0x22>),
+    UpdateD3(EPDDataB<0xF7>),
+
+    UpdateC4(EPDCommand<0x20>),
 }
 
 impl UpdateFull {
@@ -751,13 +536,14 @@ impl UpdateFull {
 }
 
 impl Operation for UpdateFull {
+    type Init = ();
     type Input<'a> = ();
     type Output = bool;
     type StateEnum = UpdateFullState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: UpdateFullState::Init(EPDCommand::<0x12>::new()),
+            state: UpdateFullState::UpdateC1(EPDCommand::<0x21>::new(())),
             timer: 0
         }
     }
@@ -771,25 +557,50 @@ impl Operation for UpdateFull {
     fn advance(&mut self, _: ()) -> bool {
         if self.count() { return false };
         match self.state {
-            UpdateFullState::Init(ref mut a) => {
-                if a.advance(()) {
-                    self.wind_d(UpdateFullState::UpdateC1(EPDCommand::<0x22>::new()));
-                }
-                false
-            },
             UpdateFullState::UpdateC1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(UpdateFullState::UpdateD1(EPDDataB::<0xF7>::new()));
+                    self.change(UpdateFullState::UpdateD11(EPDDataB::<0x40>::new(())));
                 }
                 false
             },
-            UpdateFullState::UpdateD1(ref mut a) => {
+            UpdateFullState::UpdateD11(ref mut a) => {
                 if a.advance(()) {
-                    self.change(UpdateFullState::UpdateC2(EPDCommand::<0x20>::new()));
+                    self.change(UpdateFullState::UpdateD12(EPDDataB::<0x00>::new(())));
+                }
+                false
+            },
+            UpdateFullState::UpdateD12(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFullState::UpdateC2(EPDCommand::<0x18>::new(())));
                 }
                 false
             },
             UpdateFullState::UpdateC2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFullState::UpdateD2(EPDDataB::<0x80>::new(())));
+                }
+                false
+            },
+            UpdateFullState::UpdateD2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFullState::UpdateC3(EPDCommand::<0x22>::new(())));
+                }
+                false
+            },
+            UpdateFullState::UpdateC3(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFullState::UpdateD3(EPDDataB::<0xF7>::new(())));
+                }
+                false
+            },
+            UpdateFullState::UpdateD3(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFullState::UpdateC4(EPDCommand::<0x20>::new(())));
+                }
+                false
+            },
+            UpdateFullState::UpdateC4(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
                 if a.advance(()) {
                     true
                 } else {
@@ -806,9 +617,26 @@ pub struct UpdateFast {
 }
 
 pub enum UpdateFastState {
-    UpdateC1(EPDCommand<0x22>),
-    UpdateD1(EPDDataB<0xFF>),
-    UpdateC2(EPDCommand<0x20>),
+    //set read from internal temperature sensor
+    PrepareC1(EPDCommand<0x18>),
+    PrepareD1(EPDDataB<0x80>),
+    //set temperature register at 100deg
+    PrepareC2(EPDCommand<0x1A>),
+    PrepareD21(EPDDataB<0x64>),
+    PrepareD22(EPDDataB<0x00>),
+    //load LUT with new temperature value
+    PrepareC3(EPDCommand<0x22>),
+    PrepareD3(EPDDataB<0x91>),
+    PrepareC4(EPDCommand<0x20>),
+    // bypass RED RAM
+    UpdateC1(EPDCommand<0x21>), 
+    UpdateD11(EPDDataB<0x40>),
+    UpdateD12(EPDDataB<0x00>),
+    // set to display with new LUT
+    UpdateC2(EPDCommand<0x22>),
+    UpdateD2(EPDDataB<0xC7>),
+
+    UpdateC3(EPDCommand<0x20>),
 }
 
 impl UpdateFast {
@@ -823,13 +651,14 @@ impl UpdateFast {
 }
 
 impl Operation for UpdateFast {
+    type Init = ();
     type Input<'a> = ();
     type Output = bool;
     type StateEnum = UpdateFastState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
-            state: UpdateFastState::UpdateC1(EPDCommand::<0x22>::new()),
+            state: UpdateFastState::PrepareC1(EPDCommand::<0x18>::new(())),
             timer: 0
         }
     }
@@ -842,19 +671,180 @@ impl Operation for UpdateFast {
     fn advance(&mut self, _: ()) -> bool {
         if self.count() { return false };
         match self.state {
-            UpdateFastState::UpdateC1(ref mut a) => {
+            UpdateFastState::PrepareC1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(UpdateFastState::UpdateD1(EPDDataB::<0xFF>::new()));
+                    self.change(UpdateFastState::PrepareD1(EPDDataB::<0x80>::new(())));
                 }
                 false
             },
-            UpdateFastState::UpdateD1(ref mut a) => {
+            UpdateFastState::PrepareD1(ref mut a) => {
                 if a.advance(()) {
-                    self.change(UpdateFastState::UpdateC2(EPDCommand::<0x20>::new()));
+                    self.change(UpdateFastState::PrepareC2(EPDCommand::<0x1A>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareC2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::PrepareD21(EPDDataB::<0x64>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareD21(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::PrepareD22(EPDDataB::<0x00>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareD22(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::PrepareC3(EPDCommand::<0x22>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareC3(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::PrepareD3(EPDDataB::<0x91>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareD3(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::PrepareC4(EPDCommand::<0x20>::new(())));
+                }
+                false
+            },
+            UpdateFastState::PrepareC4(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateC1(EPDCommand::<0x21>::new(())));
+                }
+                false
+            },
+            UpdateFastState::UpdateC1(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateD11(EPDDataB::<0x40>::new(())));
+                }
+                false
+            },
+            UpdateFastState::UpdateD11(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateD12(EPDDataB::<0x00>::new(())));
+                }
+                false
+            },
+            UpdateFastState::UpdateD12(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateC2(EPDCommand::<0x22>::new(())));
                 }
                 false
             },
             UpdateFastState::UpdateC2(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateD2(EPDDataB::<0xC7>::new(())));
+                }
+                false
+            },
+            UpdateFastState::UpdateD2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateFastState::UpdateC3(EPDCommand::<0x20>::new(())));
+                }
+                false
+            },
+            UpdateFastState::UpdateC3(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
+                if a.advance(()) {
+                    true
+                } else {
+                    false
+                }
+            },
+        }
+    }
+}
+
+pub struct UpdateUltraFast {
+    state: UpdateUltraFastState,
+    timer: usize,
+}
+
+pub enum UpdateUltraFastState {
+    //inverse RED RAM (for some reason red ram still used in mode 2)
+    UpdateC1(EPDCommand<0x21>),
+    UpdateD11(EPDDataB<0x80>),
+    UpdateD12(EPDDataB<0x00>),
+    
+    UpdateC2(EPDCommand<0x22>),
+    UpdateD2(EPDDataB<0xFF>),
+
+    UpdateC3(EPDCommand<0x20>),
+}
+
+impl UpdateUltraFast {
+    fn count(&mut self) -> bool {
+        if self.timer == 0 {
+            false
+        } else {
+            self.timer -= 1;
+            true
+        }
+    }
+}
+
+impl Operation for UpdateUltraFast {
+    type Init = ();
+    type Input<'a> = ();
+    type Output = bool;
+    type StateEnum = UpdateUltraFastState;
+
+    fn new(_: ()) -> Self {
+        Self {
+            state: UpdateUltraFastState::UpdateC1(EPDCommand::<0x21>::new(())),
+            timer: 0
+        }
+    }
+    
+    fn wind(&mut self, state: UpdateUltraFastState, delay: usize) {
+        self.state = state;
+        self.timer = delay;
+    }
+
+    fn advance(&mut self, _: ()) -> bool {
+        if self.count() { return false };
+        match self.state {
+            UpdateUltraFastState::UpdateC1(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateUltraFastState::UpdateD11(EPDDataB::<0x80>::new(())));
+                }
+                false
+            },
+            UpdateUltraFastState::UpdateD11(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateUltraFastState::UpdateD12(EPDDataB::<0x00>::new(())));
+                }
+                false
+            },
+            UpdateUltraFastState::UpdateD12(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateUltraFastState::UpdateC2(EPDCommand::<0x22>::new(())));
+                }
+                false
+            },
+            UpdateUltraFastState::UpdateC2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateUltraFastState::UpdateD2(EPDDataB::<0xFF>::new(())));
+                }
+                false
+            },
+            UpdateUltraFastState::UpdateD2(ref mut a) => {
+                if a.advance(()) {
+                    self.change(UpdateUltraFastState::UpdateC3(EPDCommand::<0x20>::new(())));
+                }
+                false
+            },
+
+            UpdateUltraFastState::UpdateC3(ref mut a) => {
+                if display_is_busy() != Ok(false) { return false };
                 if a.advance(()) {
                     true
                 } else {

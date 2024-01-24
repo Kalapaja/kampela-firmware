@@ -21,7 +21,8 @@ use schnorrkel::{
 };
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 
-use crate::pin::Pincode;
+use crate::{widget::view::ViewScreen, uistate::Reason};
+use crate::pin::pin::Pincode;
 use crate::uistate::EventResult;
 use crate::backup::draw_backup_screen;
 use crate::transaction;
@@ -43,13 +44,13 @@ pub trait Platform {
     type Display: DrawTarget<Color = BinaryColor>;
 
     /// RNG getter
-    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a>;
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng<'a>;
 
     /// Device-specific "global" storage and management of pincode state RO
-    fn pin(&self) -> &Pincode;
+    fn pin<'a>(&self) -> &Pincode<Self::Rng<'a>>;
 
     /// Device-specific "global" storage and management of pincode state RW
-    fn pin_mut(&mut self) -> &mut Pincode;
+    fn pin_mut<'a>(&mut self) -> &mut Pincode<Self::Rng<'a>>;
 
     /// Getter for canvas
     fn display(&mut self) -> &mut Self::Display;
@@ -61,7 +62,7 @@ pub trait Platform {
     fn read_entropy(&mut self);
 
     /// Getter for pincode and canvas simultaneously (they should be independent)
-    fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display);
+    fn pin_display<'a>(&mut self) -> (&mut Pincode<Self::Rng<'a>>, &mut Self::Display);
 
     /// Set new seed
     fn set_entropy(&mut self, e: &[u8]);
@@ -96,19 +97,14 @@ pub trait Platform {
         self.set_entropy(&Self::generate_seed_entropy(h));
     }
 
-    fn handle_pin_event(&mut self, point: Point, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
-        let (a, b) = self.pin_display();
-        a.handle_event(point, &mut Self::rng(h), b)
+    fn handle_pin_event(&mut self, point: Point, h: &mut Self::HAL) -> EventResult {
+        let (p, _) = self.pin_display();
+        p.handle_tap_screen(point).0
     }
 
-    fn handle_pin_event_repeat(&mut self, point: Point, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
-        let (a, b) = self.pin_display();
-        a.handle_event_repeat(point, &mut Self::rng(h), b)
-    }
-
-    fn draw_pincode(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
+    fn draw_pincode(&mut self, reason: &Reason, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
         let (p, d) = self.pin_display();
-        p.draw(d)
+        p.draw_screen(d, reason, &mut Self::rng(h))
     }
 
     fn draw_backup(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {

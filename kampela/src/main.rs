@@ -30,7 +30,7 @@ static HEAP: Heap = Heap::empty();
 use kampela_system::{
     PERIPHERALS, CORE_PERIPHERALS, in_free,
     devices::{power::ADC, psram::{psram_read_at_address, CheckedMetadataMetal, ExternalPsram, PsramAccess}, se_rng::SeRng},
-    draw::burning_tank,
+    debug_display::burning_tank,
     init::init_peripherals,
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
@@ -179,7 +179,7 @@ fn main() -> ! {
 */
 
     let mut ui = UI::init();
-    let mut adc = ADC::new();
+    let mut adc = ADC::new(());
 
     // hard derivation
     //let junction = DeriveJunction::hard("kampela");

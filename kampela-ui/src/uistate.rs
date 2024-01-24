@@ -17,7 +17,7 @@ mod stdwrap {
 
 
 
-use core::cell::RefCell;
+use core::{cell::RefCell, mem};
 
 
 use stdwrap::*;
@@ -31,7 +31,7 @@ use embedded_graphics::{
 use embedded_graphics_core::{
     draw_target::DrawTarget,
     geometry::{Dimensions, Point},
-    pixelcolor::BinaryColor,
+    pixelcolor::BinaryColor, primitives::Rectangle,
 };
 
 use crate::{display_def::*, widget::view::ViewScreen};
@@ -41,8 +41,6 @@ use crate::platform::{NfcTransaction, Platform};
 use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
-use crate::test::Test;
-use crate::widget::view::View;
 
 use rand::{CryptoRng, Rng};
 
@@ -58,15 +56,14 @@ use schnorrkel::{
 const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct EventResult {
-    pub request: UpdateRequest, // TODO: since new screen will always
-                                // require slow update, there seems to be
-                                // no reason to request slow update
+    pub request: UpdateRequest,
     pub state: Option<Screen>,
 }
 
 pub struct UpdateRequest {
     fast: bool,
     slow: bool,
+    part: Option<Rectangle>,
 }
 
 impl UpdateRequest {
@@ -74,6 +71,7 @@ impl UpdateRequest {
         UpdateRequest {
             fast: false,
             slow: false,
+            part: None,
 }
     }
 
@@ -84,6 +82,9 @@ impl UpdateRequest {
     pub fn set_fast(&mut self) {
         self.fast = true;
     }
+    pub fn set_part(&mut self, area: Rectangle) {
+        self.part = Some(area);
+    }
 
     pub fn set_both(&mut self) {
         self.set_slow();
@@ -93,6 +94,7 @@ impl UpdateRequest {
     pub fn propagate(&mut self, mut new: UpdateRequest) {
         if new.read_fast() { self.set_fast() };
         if new.read_slow() { self.set_slow() };
+        if let Some(a) = new.read_part() { self.set_part(a) };
     }
 
     pub fn read_slow(&mut self) -> bool {
@@ -107,6 +109,14 @@ impl UpdateRequest {
             self.fast = false;
             true
         } else { false }
+    }
+
+    pub fn read_part(&mut self) -> Option<Rectangle> {
+        if self.part.is_some() {
+            let area = self.part;
+            self.part = None;
+            area
+        } else { None }
     }
 }
 
@@ -153,17 +163,16 @@ pub struct UIState<P> where
 {
     screen: Screen,
     reason: Reason,
-    test: Test,
+    protected_screen: Option<Screen>,
     pub platform: P,
 }
 
 pub enum Screen {
-    Test,
+    PinOk,
     PinEntry,
     OnboardingRestoreOrGenerate,
     OnboardingRestore(SeedEntryState),
     OnboardingBackup,
-    PinRepeat,
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -176,15 +185,17 @@ impl <P: Platform> UIState<P> {
     pub fn new(mut platform: P) -> Self {
         platform.read_entropy();
         let mut initial_screen: Screen;
+        let mut protected_screen: Option<Screen> = None;
         if platform.entropy_display().0.is_empty() {
-            initial_screen = Screen::Test
+            initial_screen = Screen::OnboardingRestoreOrGenerate;
         } else {
-            initial_screen = Screen::QRAddress
+            initial_screen = Screen::PinEntry;
+            protected_screen = Some(Screen::QRAddress);
         }
         UIState {
             screen: initial_screen,
             reason: Reason::new(),
-            test: Test::new(),
+            protected_screen,
             platform,
         }
     }
@@ -203,6 +214,10 @@ impl <P: Platform> UIState<P> {
         false
     }
 
+    pub fn protected_screen(&mut self) -> Option<Screen> {
+        mem::take(&mut self.protected_screen)
+    }
+
     pub fn display(&mut self) -> &mut <P as Platform>::Display {
         self.platform.display()
     }
@@ -218,23 +233,11 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
-            Screen::Test => {
-                let res = <Test as ViewScreen<D>>::handle_tap_screen(&mut self.test, point);
+            Screen::PinEntry => {
+                let res = self.platform.handle_pin_event(point, h);
                 out = res.request;
                 new_screen = res.state;
             },
-            Screen::PinEntry => {
-                let res = self.platform.handle_pin_event(point, h)?;
-                out = res.request;/*
-                // TODO this properly, expo hack 
-                new_screen = match res.state {
-                    Some(a) => match self.platform.transaction() {
-                        Some(_) => Some(Screen::ShowTransaction),
-                        None => Some(a),
-                    },
-                    None => None,
-                };*/
-            }
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
                     new_screen = Some(Screen::OnboardingRestore(SeedEntryState::new()));
@@ -261,11 +264,6 @@ impl <P: Platform> UIState<P> {
                 new_screen = Some(Screen::QRAddress);
                 out.set_slow();
             },
-            Screen::PinRepeat => {
-                let res = self.platform.handle_pin_event_repeat(point, h)?;
-                out = res.request;
-                new_screen = res.state;
-            },
             Screen::ShowTransaction => match point.x {
                 150..=300 => {
                     new_screen = Some(Screen::ShowExtension);
@@ -283,11 +281,8 @@ impl <P: Platform> UIState<P> {
                     out.set_slow();
                 }
                 _ => {},
-            }
-            Screen::QRSignature => (),
-            Screen::QRAddress => (),
-            Screen::Locked => (),
-            Screen::End => (),
+            },
+            _ => (),
         }
         if let Some(a) = new_screen {
             self.screen = a;
@@ -336,30 +331,39 @@ impl <P: Platform> UIState<P> {
     }
 
     /// Display new screen state; should be called only when needed, is slow
-    pub fn render<D>(&mut self) -> Result<UpdateRequest, <<P as Platform>::Display as DrawTarget>::Error>
+    pub fn render<D>(
+        &mut self,
+        is_clear_update: bool,
+        h: &mut <P as Platform>::HAL,
+    ) -> Result<UpdateRequest, <<P as Platform>::Display as DrawTarget>::Error>
     {
         let display = self.platform.display();
-        let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
-        display.bounding_box().into_styled(clear).draw(display)?;
-
+        if is_clear_update {
+            let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
+            display.bounding_box().into_styled(clear).draw(display)?;
+        }
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
 
         match self.screen {
-            Screen::Test => {
-                let res: EventResult = self.test.draw_screen(display, &self.reason)?;
-                out = res.request;
-                new_screen = res.state;
-            }
             Screen::PinEntry => {
-                self.platform.draw_pincode()?;
-            }
+                let res: EventResult = self.platform.draw_pincode(&self.reason, h)?;
+                if let Some(s) = res.state {
+                    if matches!(s, Screen::PinOk) {
+                        out.set_slow();
+                        new_screen = self.protected_screen();
+                    }
+                } else {
+                    out = res.request;
+                    new_screen = res.state;
+                }
+            },
             Screen::OnboardingRestoreOrGenerate => {
                 restore_or_generate::draw(display)?;
-            }
+            },
             Screen::OnboardingRestore(ref entry) => {
                 entry.draw(display)?;
-            }
+            },
             Screen::Locked => {
                 let linestyle = PrimitiveStyle::with_stroke(BinaryColor::On, 5);
                 Line::new(
@@ -374,19 +378,16 @@ impl <P: Platform> UIState<P> {
                 )
                 .into_styled(linestyle)
                 .draw(display)?;
-            }
+            },
             Screen::OnboardingBackup => {
                 self.platform.draw_backup()?;
-            }
-            Screen::PinRepeat => {
-                self.platform.draw_pincode()?;
             },
             Screen::ShowTransaction => {
                 self.platform.draw_transaction()?
             },
             Screen::ShowExtension => {
                 self.platform.draw_extensions()?
-            }
+            },
             Screen::QRSignature => {
                 self.platform.draw_signature_qr()?
             },
@@ -399,7 +400,6 @@ impl <P: Platform> UIState<P> {
         if let Some(a) = new_screen {
             self.screen = a;
             self.reason.set_cause(Cause::NewScreen);
-            //out.set_slow(); TODO: there seem to be no reason new state would use fast update
         } else {
             self.reason.inc_repeats();
         }

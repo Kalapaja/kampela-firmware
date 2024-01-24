@@ -14,8 +14,21 @@ use kampela_system::{
 };
 use kampela_system::devices::flash::*;
 
-use kampela_ui::{display_def::*, uistate, pin::Pincode, platform::{NfcTransaction, Platform}};
+use kampela_ui::{display_def::*, uistate, pin::pin::Pincode, platform::{NfcTransaction, Platform}};
 use embedded_graphics::prelude::Point;
+
+pub struct HALHandle {
+    pub rng: se_rng::SeRng,
+}
+
+impl HALHandle {
+    pub fn new() -> Self {
+        let rng = se_rng::SeRng{};
+        Self {
+            rng: rng,
+        }
+    }
+}
 
 /// UI handler
 pub struct UI {
@@ -52,7 +65,8 @@ impl UI {
             UIStatus::TouchOperation(ref mut touch) => {
                 match touch.advance(()) {
                     Ok(Some(touch)) => if let Some(point) = convert(touch) {
-                        self.update = self.state.handle_tap::<FrameBuffer>(point, &mut ()).unwrap();
+                        let mut h = HALHandle::new();
+                        self.update = self.state.handle_tap::<FrameBuffer>(point, &mut h).unwrap();
                         self.status = UIStatus::Listen;
                     },
                     Ok(None) => {},
@@ -63,12 +77,14 @@ impl UI {
     }
 
     fn listen(&mut self) {
+        let mut h = HALHandle::new();
         // 1. update ui if needed
         let f = self.update.read_fast();
         let s = self.update.read_slow();
+        let p = self.update.read_part();
 
-        if f || s {
-            self.update = self.state.render::<FrameBuffer>().expect("guaranteed to work, no errors implemented");
+        if f || s || p.is_some() {
+            self.update = self.state.render::<FrameBuffer>(f || s, &mut h).expect("guaranteed to work, no errors implemented");
             self.status = UIStatus::DisplayOperation;
         }
         if f {
@@ -79,11 +95,15 @@ impl UI {
             self.state.display().request_full();
             return;
         }
+        if let Some(a) = p {
+            self.state.display().request_part(a);
+            return;
+        }
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
         ).unwrap() {
-            self.status = UIStatus::TouchOperation(Read::new());
+            self.status = UIStatus::TouchOperation(Read::new(()));
         };
     }
 
@@ -110,7 +130,7 @@ enum UIStatus {
 }
 
 pub struct Hardware {
-    pin: Pincode,
+    pin: Pincode<se_rng::SeRng>,
     pub entropy: Vec<u8>,
     display: FrameBuffer,
     call: Option<String>,
@@ -123,7 +143,8 @@ impl Hardware {
     pub fn new() -> Self {
         let entropy = Vec::new();
         let pin_set = false; // TODO query storage
-        let pin = Pincode::new(&mut Self::rng(&mut ()), pin_set);
+        let mut h = HALHandle::new();
+        let pin = Pincode::new(&mut h.rng);
         let display = FrameBuffer::new_white();
         Self {
             pin: pin,
@@ -138,19 +159,19 @@ impl Hardware {
 }
 
 impl <'a> Platform for Hardware {
-    type HAL = ();
+    type HAL = HALHandle;
     type Rng<'c> = se_rng::SeRng;
     type Display = FrameBuffer;
 
-    fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {
-        se_rng::SeRng{}
+    fn rng<'b>(h: &'b mut HALHandle) -> &'b mut Self::Rng<'b> {
+        &mut h.rng
     }
 
-    fn pin(&self) -> &Pincode {
+    fn pin<'c>(&self) -> &Pincode<Self::Rng<'c>> {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut Pincode {
+    fn pin_mut<'c>(&mut self) -> &mut Pincode<Self::Rng<'c>> {
         &mut self.pin
     }
 
@@ -240,7 +261,7 @@ impl <'a> Platform for Hardware {
         }
     }
 
-    fn pin_display(&mut self) -> (&mut Pincode, &mut <Self as Platform>::Display) {
+    fn pin_display<'c>(&mut self) -> (&mut Pincode<Self::Rng<'c>>, &mut <Self as Platform>::Display) {
         (&mut self.pin, &mut self.display)
     }
 
