@@ -167,7 +167,6 @@ pub struct UIState<P> where
 // Some macro can be used to generate this enum from enum Screen
 #[derive(Copy, Clone)]
 pub enum UnitScreen {
-    PinOk,
     OnboardingRestoreOrGenerate,
     OnboardingRestore,
     OnboardingBackup,
@@ -178,6 +177,8 @@ pub enum UnitScreen {
     Locked,
     End,
 }
+
+/// keeps states of screens, initialization can take a lot of memory
 pub enum Screen<R: Rng + ?Sized> {
     PinEntry((Pincode<R>, UnitScreen)),
     OnboardingRestoreOrGenerate,
@@ -260,9 +261,12 @@ impl <P: Platform> UIState<P> {
         let mut new_screen = None;
         match self.screen {
             Screen::PinEntry((ref mut a, u)) => {
-                let res = a.handle_tap_screen(point, self.platform.pin()).0;
+                let (res, pinok) = a.handle_tap_screen(point, self.platform.pin());
                 out = res.request;
                 new_screen = res.state;
+                if pinok {
+                    self.unlocked = true;
+                }
             },
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
@@ -373,13 +377,10 @@ impl <P: Platform> UIState<P> {
 
         match self.screen {
             Screen::PinEntry((ref mut a, u)) => {
-                let res: EventResult = a.draw_screen(display, &self.reason, P::rng(h))?;
-                if let Some(s) = res.state {
-                    if matches!(s, UnitScreen::PinOk) {
-                        self.unlocked = true;
-                        out.set_slow();
-                        new_screen = Some(u);
-                    }
+                let (res, _) = a.draw_screen(display, &self.reason, P::rng(h))?;
+                if self.unlocked {
+                    out.set_slow();
+                    new_screen = Some(u);
                 } else {
                     out = res.request;
                     new_screen = res.state;

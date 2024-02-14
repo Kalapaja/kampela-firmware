@@ -22,7 +22,7 @@ pub mod display_def;
 pub use display_def::*;
 
 mod platform;
-use platform::Platform;
+use platform::{Platform, PinCode};
 
 mod pin {
     pub mod pin;
@@ -30,7 +30,6 @@ mod pin {
     pub mod pinpad;
     pub mod pinbutton;
 }
-use pin::pin::Pincode;
 
 mod restore_or_generate;
 mod seed_entry;
@@ -48,6 +47,8 @@ use data_state::{AppStateInit, NFCState, DataInit, StorageState};
 
 mod transaction;
 mod qr;
+
+
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -93,7 +94,7 @@ impl HALHandle {
 
 #[derive(Debug)]
 struct DesktopSimulator {
-    pin: [u8; 4],
+    pin: PinCode,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
@@ -141,11 +142,11 @@ impl Platform for DesktopSimulator {
         &mut h.rng
     }
 
-    fn pin(&self) -> &[u8; 4] {
+    fn pin(&self) -> &PinCode {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut [u8; 4] {
+    fn pin_mut(&mut self) -> &mut PinCode {
         &mut self.pin
     }
 

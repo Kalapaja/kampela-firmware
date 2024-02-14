@@ -27,7 +27,7 @@ use crate::{widget::view::{View, Widget, DrawView}};
 
 use crate::uistate::{EventResult, Reason, Cause};
 
-pub const BUTTON_FONT: MonoFont = FONT_10X20;
+const BUTTON_FONT: MonoFont = FONT_10X20;
 
 #[derive(Debug)]
 pub struct PinButton {
@@ -59,6 +59,7 @@ impl PinButton {
 
 impl View for PinButton {
     type DrawInput<'a> = ();
+    type DrawOutput = bool;
     type TapInput<'a> = ();
     type TapOutput = bool;
     fn bounding_box(&self) -> Rectangle {
@@ -67,19 +68,14 @@ impl View for PinButton {
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolut()
     }
-	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: ()) -> Result<(),D::Error> {
-        match reason.cause() {
-            Cause::NewScreen => {
-                self.draw_initial(target)
-            }
-            Cause::Tap => {
-                if self.reset_tapped() && reason.repeats() < 1 {
-                    self.draw_tapped(target)
-                } else {
-                    self.draw_initial(target)
-                }
-            }
+	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: ()) -> Result<Self::DrawOutput, D::Error> {
+        let t = self.reset_tapped();
+        if t {
+            self.draw_tapped(target)?;
+        } else {
+            self.draw_initial(target)?;
         }
+        Ok(t)
 	}
     fn handle_tap_view(&mut self, _point: Point, input: ()) -> bool {
         self.tapped = true;

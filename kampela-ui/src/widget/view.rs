@@ -74,6 +74,7 @@ impl Dimensions for Widget {
 
 pub trait View {
     type DrawInput<'a> where Self: 'a;
+    type DrawOutput;
     type TapInput<'a>;
     type TapOutput;
     /// Getter for area field in Struct
@@ -86,13 +87,13 @@ pub trait View {
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.bounding_box().size }
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(),D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where 
         D: DrawTarget<Color = BinaryColor>;
 
     fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput;
 
-    fn draw<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(),D::Error>
+    fn draw<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where
         D: DrawTarget<Color = BinaryColor>
     {
@@ -112,9 +113,10 @@ pub trait View {
 
 pub trait ViewScreen {
     type DrawInput<'a> where Self: 'a;
+    type DrawOutput;
     type TapInput<'a>;
     type TapOutput;
-    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<EventResult, D::Error>
+    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>;
     fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput);

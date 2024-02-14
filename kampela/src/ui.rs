@@ -14,7 +14,7 @@ use kampela_system::{
 };
 use kampela_system::devices::flash::*;
 
-use kampela_ui::{display_def::*, uistate, pin::pin::Pincode, platform::{NfcTransaction, Platform}};
+use kampela_ui::{display_def::*, uistate, platform::{NfcTransaction, Platform, PinCode}};
 use embedded_graphics::prelude::Point;
 
 pub struct HALHandle {
@@ -131,7 +131,7 @@ enum UIStatus {
 }
 
 pub struct Hardware {
-    pin: [u8; 4],
+    pin: PinCode,
     pub entropy: Vec<u8>,
     display: FrameBuffer,
     call: Option<String>,
@@ -168,11 +168,11 @@ impl Platform for Hardware {
         &mut h.rng
     }
 
-    fn pin(&self) -> &[u8; 4] {
+    fn pin(&self) -> &PinCode {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut [u8; 4] {
+    fn pin_mut(&mut self) -> &mut PinCode {
         &mut self.pin
     }
 

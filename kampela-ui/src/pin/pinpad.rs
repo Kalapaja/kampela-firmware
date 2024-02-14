@@ -23,19 +23,31 @@ use embedded_text::{
     TextBox,
 };
 use rand::{Rng, seq::SliceRandom};
+use crate::display_def::*;
 use crate::widget::view::{View, Widget, DrawView};
-use crate::pin::{pinbutton::PinButton};
+use crate::pin::{pinbutton::PinButton, pindots::PINDOT_SIZE};
 
 use crate::uistate::{EventResult, Reason, Cause};
 
-pub const PAD_SIZE_WIDTH: u32 = 200;
+const PAD_SIZE_WIDTH: u32 = 200;
 
+pub const PINPAD_AREA: Rectangle = Rectangle {
+    top_left: Point {
+        x: (SCREEN_SIZE_X - PAD_SIZE_WIDTH) as i32 / 2,
+        y: PINDOT_SIZE.height as i32
+    },
+    size: Size {
+        width: PAD_SIZE_WIDTH,
+        height: SCREEN_SIZE_Y - PINDOT_SIZE.height
+    },
+};
+
+const BUTTON_SIZE: Size = Size {
+    width: PINPAD_AREA.size.width / 3,
+    height: PINPAD_AREA.size.height / 4,
+};
 /// Shuffle keys
-fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R, bounding_box_absolut: Rectangle) -> [PinButton; 10] {
-    let button_size = Size {
-        width: bounding_box_absolut.size.width / 3,
-        height: bounding_box_absolut.size.height / 4,
-    };
+fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R) -> [PinButton; 10] {
     let mut pinnums: [u8; 10] = core::array::from_fn(|i| {
         (i).try_into()
             .expect("static initialization of numbers 0..15")
@@ -48,20 +60,20 @@ fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R, bounding_box_absolut: Rectangle)
                 top_left: Point {
                     x: {
                         match i {
-                            0 => button_size.width as i32,
-                            _ => (i as i32 - 1) % 3 * button_size.width as i32,
+                            0 => BUTTON_SIZE.width as i32,
+                            _ => (i as i32 - 1) % 3 * BUTTON_SIZE.width as i32,
                         }
                     },
                     y: {
                         match i {
-                            0 => 3 * button_size.height as i32,
-                            _ => (i as i32 - 1) / 3 * button_size.height as i32,
+                            0 => 3 * BUTTON_SIZE.height as i32,
+                            _ => (i as i32 - 1) / 3 * BUTTON_SIZE.height as i32,
                         }
                     }
                 },
-                size: button_size,
+                size: BUTTON_SIZE,
             },
-            bounding_box_absolut.top_left,
+            PINPAD_AREA.top_left,
         )
     );
     pinset
@@ -79,14 +91,10 @@ pub struct Pinpad<R> where
 impl<R> Pinpad<R> where
     R: Rng + ?Sized
 {
-	pub fn new(area: Rectangle, parent_top_left: Point, rng: &mut R) -> Self {
-        let widget = Widget::new(area, parent_top_left);
+	pub fn new(parent_top_left: Point, rng: &mut R) -> Self {
+        let widget = Widget::new(PINPAD_AREA, parent_top_left);
 
-        let button_size = Size {
-            width: area.size.width / 3,
-            height: area.size.height / 4,
-        };
-        let buttons: [PinButton; 10] = get_pinbuttons::<R>(rng, widget.bounding_box_absolut());
+        let buttons: [PinButton; 10] = get_pinbuttons::<R>(rng);
 		Self {
 			widget,
             buttons,
@@ -95,7 +103,7 @@ impl<R> Pinpad<R> where
 	}
     /// Change pin keys positions; remember to run before new key press
     fn shuffle(&mut self, rng: &mut R) {
-        self.buttons = get_pinbuttons::<R>(rng, self.widget.bounding_box_absolut());
+        self.buttons = get_pinbuttons::<R>(rng);
     }
 }
 
@@ -103,6 +111,7 @@ impl<R> View for Pinpad<R> where
     R: Rng + ?Sized
 {
     type DrawInput<'a> = &'a mut R where Self: 'a;
+    type DrawOutput = ();
     type TapInput<'a> = ();
     type TapOutput = usize;
     fn bounding_box(&self) -> Rectangle {
@@ -112,11 +121,14 @@ impl<R> View for Pinpad<R> where
         self.widget.bounding_box_absolut()
     }
 	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<(),D::Error> {
-        if matches!(reason.cause(), Cause::Tap) && reason.repeats() > 0 {
-            self.shuffle(rng);
-        }
+        let mut t = false;
         for button in self.buttons.iter_mut() {
-            button.draw(target, reason, ())?
+            if button.draw(target, reason, ())? {
+                t = true;
+            }
+        }
+        if t {
+            self.shuffle(rng);
         }
         Ok(())
 	}

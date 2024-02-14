@@ -28,6 +28,7 @@ use crate::backup::draw_backup_screen;
 use crate::transaction;
 use crate::qr;
 
+pub type PinCode = [u8; 4]; //TODO: consider if it's good password storing type
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
 
 /// Implement this on platform to make crate work
@@ -47,10 +48,10 @@ pub trait Platform {
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;
 
     /// Device-specific "global" storage and management of pincode state RO
-    fn pin(&self) -> &[u8; 4];
+    fn pin(&self) -> &PinCode;
 
     /// Device-specific "global" storage and management of pincode state RW
-    fn pin_mut(&mut self) -> &mut [u8; 4];
+    fn pin_mut(&mut self) -> &mut PinCode;
 
     /// Getter for canvas
     fn display(&mut self) -> &mut Self::Display;

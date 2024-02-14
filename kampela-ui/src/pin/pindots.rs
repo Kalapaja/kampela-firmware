@@ -14,6 +14,7 @@ use embedded_graphics::{
     primitives::{
         Circle, PrimitiveStyle, Rectangle,
     },
+    geometry::Size,
 };
 
 use embedded_text::{
@@ -22,11 +23,25 @@ use embedded_text::{
     TextBox,
 };
 
+use crate::display_def::*;
 use crate::widget::view::{View, Widget, DrawView};
 use crate::pin::pin::PIN_LEN;
 use crate::uistate::{EventResult, Reason, Cause};
 
-pub const DOT_DIAMETER: u32 = 16;
+const DOT_DIAMETER: u32 = 16;
+
+pub const PINDOT_SIZE: Size = Size {
+    width: DOT_DIAMETER * PIN_LEN as u32,
+    height: DOT_DIAMETER,
+};
+
+const PINDOTS_AREA: Rectangle = Rectangle {
+    top_left: Point {
+        x: (SCREEN_SIZE_X - PINDOT_SIZE.width) as i32 / 2,
+        y: 0,
+    },
+    size: PINDOT_SIZE,
+};
 
 #[derive(Debug)]
 pub struct Pindots {
@@ -34,15 +49,16 @@ pub struct Pindots {
 }
 
 impl Pindots {
-	pub fn new(area: Rectangle, parent_top_left: Point) -> Self {
+	pub fn new(parent_top_left: Point) -> Self {
 		Pindots {
-			widget: Widget::new(area, parent_top_left),
+			widget: Widget::new(PINDOTS_AREA, parent_top_left),
 		}
 	}
 }
 
 impl View for Pindots {
     type DrawInput<'a> = usize;
+    type DrawOutput = ();
     type TapInput<'a> = ();
     type TapOutput = ();
     fn bounding_box(&self) -> Rectangle {
