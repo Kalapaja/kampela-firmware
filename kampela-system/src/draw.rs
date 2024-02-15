@@ -78,26 +78,25 @@ impl FrameBuffer {
         } else if self.refreshable_area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
             0
         } else {
-            (SCREEN_SIZE_X as i32 - 1 - self.refreshable_area.top_left.x) as u16
+            ((SCREEN_SIZE_X - 1) as i32 - self.refreshable_area.top_left.x) as u16
         };
 
-        let bottom = self.refreshable_area.top_left.y + self.refreshable_area.size.height as i32 - 1;
-        let right = self.refreshable_area.top_left.x + self.refreshable_area.size.width as i32 - 1;
+        let bottom_right = self.refreshable_area.top_left + self.refreshable_area.size;
         
-        let x_end_address: u8 = if bottom > SCREEN_SIZE_Y as i32 {
+        let x_end_address: u8 = if bottom_right.y > SCREEN_SIZE_Y as i32 {
             (SCREEN_SIZE_Y / 8 - 1) as u8
-        } else if bottom < 1 {
+        } else if bottom_right.y < 0 {
             0
         } else {
-            ((bottom / 8 + (bottom % 8).signum()) - 1) as u8
+            ((bottom_right.y / 8 + (bottom_right.y % 8).signum()) - 1) as u8
         };
 
-        let y_end_address: u16 = if right > SCREEN_SIZE_X as i32 {
-            0
-        } else if right < 0 {
-            (SCREEN_SIZE_X - 1) as u16
+        let y_end_address: u16 = if bottom_right.x > SCREEN_SIZE_X as i32 {
+            1
+        } else if bottom_right.x < 1 {
+            SCREEN_SIZE_X as u16
         } else {
-            (SCREEN_SIZE_X as i32 - 1 - right) as u16
+            (SCREEN_SIZE_X as i32 - bottom_right.x) as u16
         };
 
         (x_start_address, x_end_address, y_start_address, y_end_address)

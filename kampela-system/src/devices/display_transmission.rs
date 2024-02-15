@@ -27,7 +27,7 @@ pub fn display_is_busy_cs(peripherals: &mut Peripherals) -> bool {
 /// extend component life
 pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
     epaper_write_command(peripherals, &[0x10]); // from manual, enter deep sleep
-    epaper_write_data(peripherals, &[0x01]); // ?
+    epaper_write_data(peripherals, &[0x03]); // Deep sleep mode 2, cannot retain RAM data
     delay(100); // why delay, from where the number?
 }
 
@@ -348,14 +348,14 @@ impl <const LEN: usize> Operation for EPDDataPart<LEN> {
 
     fn new(addresses: Self::Init) -> Self {
         let x_start_position = addresses.0 as usize;
-        let y_start_position = SCREEN_SIZE_X as usize - addresses.2 as usize; //Y coordinates inversed for some reason
+        let y_start_position = (SCREEN_SIZE_X - 1) as usize - addresses.2 as usize; //Y coordinates inversed for some reason
         Self {
             state: EPDDataState::Init,
             position: y_start_position * X_ADDRESS_WIDTH as usize + x_start_position,
             x_start_position,
             y_start_position,
             x_end_position: addresses.1 as usize,
-            y_end_position: SCREEN_SIZE_X as usize - addresses.3 as usize,
+            y_end_position: (SCREEN_SIZE_X - 1) as usize - addresses.3 as usize,
             timer: 0,
         }
     }

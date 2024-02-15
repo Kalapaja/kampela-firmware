@@ -111,7 +111,7 @@ impl<R> View for Pinpad<R> where
     R: Rng + ?Sized
 {
     type DrawInput<'a> = &'a mut R where Self: 'a;
-    type DrawOutput = ();
+    type DrawOutput = bool;
     type TapInput<'a> = ();
     type TapOutput = usize;
     fn bounding_box(&self) -> Rectangle {
@@ -120,7 +120,7 @@ impl<R> View for Pinpad<R> where
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolut()
     }
-	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<(),D::Error> {
+	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<Self::DrawOutput, D::Error> {
         let mut t = false;
         for button in self.buttons.iter_mut() {
             if button.draw(target, reason, ())? {
@@ -130,7 +130,7 @@ impl<R> View for Pinpad<R> where
         if t {
             self.shuffle(rng);
         }
-        Ok(())
+        Ok(t)
 	}
     fn handle_tap_view(&mut self, point: Point, input: ()) -> usize {
         let mut tapped = 0;

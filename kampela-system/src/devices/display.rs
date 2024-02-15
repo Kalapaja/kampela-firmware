@@ -467,7 +467,7 @@ impl Operation for PartDraw {
                 false
             },
             PartDrawState::PrepareD5(ref mut a) => {
-                if a.advance(&(data.1.2 - 1).to_le_bytes()) { // why -1px?
+                if a.advance(&data.1.2.to_le_bytes()) {
                     self.change(PartDrawState::SendC1(EPDCommand::<0x24>::new(())));
                 }
                 false

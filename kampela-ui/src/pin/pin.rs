@@ -100,9 +100,9 @@ impl<R> ViewScreen for Pincode<R> where
         let state = None;
 
         self.pindots.draw(target, reason, self.entered_nums.len())?;
-        self.pinpad.draw(target, reason, rng)?;
+        let t = self.pinpad.draw(target, reason, rng)?;
 
-        if matches!(reason.cause(), Cause::Tap) && reason.repeats() < 1 {
+        if t {
             request.set_fast();
         }
 
