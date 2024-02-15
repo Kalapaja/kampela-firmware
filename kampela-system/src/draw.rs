@@ -83,7 +83,7 @@ impl FrameBuffer {
 
         let bottom_right = self.refreshable_area.top_left + self.refreshable_area.size;
         
-        let x_end_address: u8 = if bottom_right.y > SCREEN_SIZE_Y as i32 {
+        let x_end_address: u8 = if bottom_right.y > (SCREEN_SIZE_Y - 1) as i32 {
             (SCREEN_SIZE_Y / 8 - 1) as u8
         } else if bottom_right.y < 0 {
             0
@@ -91,10 +91,10 @@ impl FrameBuffer {
             ((bottom_right.y / 8 + (bottom_right.y % 8).signum()) - 1) as u8
         };
 
-        let y_end_address: u16 = if bottom_right.x > SCREEN_SIZE_X as i32 {
-            1
-        } else if bottom_right.x < 1 {
-            SCREEN_SIZE_X as u16
+        let y_end_address: u16 = if bottom_right.x > (SCREEN_SIZE_X - 1) as i32 {
+            0
+        } else if bottom_right.x < 0 {
+            (SCREEN_SIZE_X - 1) as u16
         } else {
             (SCREEN_SIZE_X as i32 - bottom_right.x) as u16
         };
