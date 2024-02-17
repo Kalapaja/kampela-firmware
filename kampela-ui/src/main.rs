@@ -22,13 +22,20 @@ pub mod display_def;
 pub use display_def::*;
 
 mod platform;
-use platform::Platform;
+use platform::{Platform, PinCode};
 
-mod pin;
-use pin::Pincode;
+mod pin {
+    pub mod pin;
+    pub mod pindots;
+    pub mod pinpad;
+    pub mod pinbutton;
+}
 
 mod restore_or_generate;
 mod seed_entry;
+mod widget {
+    pub mod view;
+}
 
 mod backup;
 
@@ -40,6 +47,8 @@ use data_state::{AppStateInit, NFCState, DataInit, StorageState};
 
 mod transaction;
 mod qr;
+
+
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -85,7 +94,7 @@ impl HALHandle {
 
 #[derive(Debug)]
 struct DesktopSimulator {
-    pin: Pincode,
+    pin: PinCode,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
@@ -97,7 +106,7 @@ struct DesktopSimulator {
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
-        let pin = Pincode::new(&mut h.rng, false);
+        let pin = [0; 4]; //TODO proper pin initialization
         let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
             NFCState::Empty => String::new(),
@@ -126,18 +135,18 @@ impl DesktopSimulator {
 
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
-    type Rng<'a> = &'a mut ThreadRng;
+    type Rng = ThreadRng;
     type Display = SimulatorDisplay<BinaryColor>;
 
-    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
         &mut h.rng
     }
 
-    fn pin(&self) -> &Pincode {
+    fn pin(&self) -> &PinCode {
         &self.pin
     }
 
-    fn pin_mut(&mut self) -> &mut Pincode {
+    fn pin_mut(&mut self) -> &mut PinCode {
         &mut self.pin
     }
 
@@ -156,10 +165,6 @@ impl Platform for DesktopSimulator {
             Vec::new()
         };
         println!("entropy read from emulated storage: {:?}", self.entropy);
-    }
-
-    fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display) {
-        (&mut self.pin, &mut self.display)
     }
 
     fn set_entropy(&mut self, e: &[u8]) {
@@ -232,7 +237,7 @@ fn main() {
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state, &mut h);
 
-    let mut state = UIState::new(desktop);
+    let mut state = UIState::new(desktop, &mut h);
 
     // Draw
     let output_settings = OutputSettingsBuilder::new()
@@ -251,16 +256,22 @@ fn main() {
     // 4. do internal things
     loop {
         // display event; it would be delayed
-        if update.read_fast() {
+        let f = update.read_fast();
+        let s = update.read_slow();
+        let p = update.read_part();
+
+        if f || s || p.is_some() {
+            match state.render::<SimulatorDisplay<BinaryColor>>(f || s, &mut h) {
+                Ok(u) => update = u,
+                Err(e) => println!("{:?}", e),
+            };
+        }
+        if f || p.is_some() {
             window.update(state.display());
             println!("skip {} events in fast update", window.events().count());
             //no-op for non-EPD
         }
-        if update.read_slow() {
-            match state.render::<SimulatorDisplay<BinaryColor>>() {
-                    Ok(()) => (),
-                    Err(e) => println!("{:?}", e),
-                };
+        if s {
             sleep(SLOW_UPDATE_TIME);
             window.update(state.display());
             println!("skip {} events in slow update", window.events().count());
@@ -277,7 +288,7 @@ fn main() {
                     point,
                 } => {
                     println!("{}", point);
-                        match state.handle_event::<SimulatorDisplay<BinaryColor>>(point, &mut h) {
+                        match state.handle_tap::<SimulatorDisplay<BinaryColor>>(point, &mut h) {
                             Ok(a) => update = a,
                             Err(e) => println!("{e}"),
                         };

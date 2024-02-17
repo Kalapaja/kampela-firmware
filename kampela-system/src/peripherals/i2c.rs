@@ -97,11 +97,12 @@ impl ReadI2C {
 }
 
 impl Operation for ReadI2C {
+    type Init = ();
     type Input<'a> = ();
     type Output = Result<Option<u8>, I2CError>;
     type StateEnum = ReadI2CState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self {
             state: ReadI2CState::Init,
             value: None,

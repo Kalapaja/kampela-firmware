@@ -4,6 +4,7 @@
 mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::vec::Vec;
+    pub use alloc::rc::Rc;
 }
 
 
@@ -11,9 +12,11 @@ mod stdwrap {
 mod stdwrap {
     pub use std::string::String;
     pub use std::vec::Vec;
+    pub use std::rc::Rc;
 }
 
 
+use core::mem::take;
 
 use stdwrap::*;
 
@@ -26,10 +29,10 @@ use embedded_graphics::{
 use embedded_graphics_core::{
     draw_target::DrawTarget,
     geometry::{Dimensions, Point},
-    pixelcolor::BinaryColor,
+    pixelcolor::BinaryColor, primitives::Rectangle,
 };
 
-use crate::display_def::*;
+use crate::{display_def::*, pin::pin::Pincode, widget::view::ViewScreen};
 
 use crate::platform::{NfcTransaction, Platform};
 
@@ -52,12 +55,13 @@ const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct EventResult {
     pub request: UpdateRequest,
-    pub state: Option<Screen>,
+    pub state: Option<UnitScreen>,
 }
 
 pub struct UpdateRequest {
     fast: bool,
     slow: bool,
+    part: Option<Rectangle>,
 }
 
 impl UpdateRequest {
@@ -65,6 +69,7 @@ impl UpdateRequest {
         UpdateRequest {
             fast: false,
             slow: false,
+            part: None,
 }
     }
 
@@ -75,6 +80,9 @@ impl UpdateRequest {
     pub fn set_fast(&mut self) {
         self.fast = true;
     }
+    pub fn set_part(&mut self, area: Rectangle) {
+        self.part = Some(area);
+    }
 
     pub fn set_both(&mut self) {
         self.set_slow();
@@ -84,6 +92,7 @@ impl UpdateRequest {
     pub fn propagate(&mut self, mut new: UpdateRequest) {
         if new.read_fast() { self.set_fast() };
         if new.read_slow() { self.set_slow() };
+        if let Some(a) = new.read_part() { self.set_part(a) };
     }
 
     pub fn read_slow(&mut self) -> bool {
@@ -99,6 +108,14 @@ impl UpdateRequest {
             true
         } else { false }
     }
+
+    pub fn read_part(&mut self) -> Option<Rectangle> {
+        if self.part.is_some() {
+            let area = self.part;
+            self.part = None;
+            area
+        } else { None }
+    }
 }
 
 impl Default for UpdateRequest {
@@ -106,21 +123,53 @@ impl Default for UpdateRequest {
         Self::new()
     }
 }
+#[derive(Copy, Clone)]
+pub enum Cause {
+    NewScreen,
+    Tap,
+}
+pub struct Reason {
+    cause: Cause,
+    repeats: usize,
+}
+
+impl Reason {
+    fn new() -> Self {
+        Reason{
+            cause: Cause::NewScreen,
+            repeats: 0,
+        }
+    }
+    fn set_cause(&mut self, cause: Cause) {
+        self.cause = cause;
+        self.repeats = 0;
+    }
+    fn inc_repeats(&mut self) {
+        self.repeats = self.repeats + 1;
+    }
+    pub fn cause(&self) -> Cause {
+        self.cause
+    }
+    pub fn repeats(&self) -> usize {
+        self.repeats
+    }
+}
 
 /// State of UI
 pub struct UIState<P> where
     P: Platform,
 {
-    screen: Screen,
+    screen: Screen<P::Rng>,
+    reason: Reason,
     pub platform: P,
+    unlocked: bool,
 }
-
-pub enum Screen {
-    PinEntry,
+// Some macro can be used to generate this enum from enum Screen
+#[derive(Copy, Clone)]
+pub enum UnitScreen {
     OnboardingRestoreOrGenerate,
-    OnboardingRestore(SeedEntryState),
+    OnboardingRestore,
     OnboardingBackup,
-    PinRepeat,
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -129,42 +178,79 @@ pub enum Screen {
     End,
 }
 
+/// keeps states of screens, initialization can take a lot of memory
+pub enum Screen<R: Rng + ?Sized> {
+    PinEntry((Pincode<R>, UnitScreen)),
+    OnboardingRestoreOrGenerate,
+    OnboardingRestore(SeedEntryState),
+    OnboardingBackup,
+    ShowTransaction,
+    ShowExtension,
+    QRSignature,
+    QRAddress,
+    Locked,
+}
+
 impl <P: Platform> UIState<P> {
-    pub fn new(mut platform: P) -> Self {
+    pub fn new(mut platform: P, h: &mut <P as Platform>::HAL) -> Self {
         platform.read_entropy();
+        let mut initial_screen: Screen<P::Rng>;
+        let mut unlocked: bool;
         if platform.entropy_display().0.is_empty() {
-            UIState {
-                screen: Screen::OnboardingRestoreOrGenerate,
-                platform: platform,
-            }
+            initial_screen = Screen::OnboardingRestoreOrGenerate;
+            unlocked = true;
         } else {
-            UIState {
-                screen: Screen::QRAddress,
-                platform: platform,
-            }
+            initial_screen = Screen::PinEntry((Pincode::new(P::rng(h)), UnitScreen::QRAddress));
+            unlocked = false;
         }
-    }
-
-    pub fn is_initial(&self) -> bool {
-        if let Screen::OnboardingRestoreOrGenerate = self.screen {
-            return true;
+        UIState {
+            screen: initial_screen,
+            reason: Reason::new(),
+            platform,
+            unlocked,
         }
-        false
-    }
-
-    pub fn is_end(&self) -> bool {
-        if let Screen::End = self.screen {
-            return true;
-        }
-        false
     }
 
     pub fn display(&mut self) -> &mut <P as Platform>::Display {
         self.platform.display()
     }
 
+    fn switch_screen(&mut self, s: UnitScreen, h: &mut <P as Platform>::HAL) {
+        match s {
+            UnitScreen::QRAddress => {
+                if self.unlocked {
+                    self.screen = Screen::QRAddress;
+                } else {
+                    self.screen = Screen::PinEntry((Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRAddress));
+                }
+            },
+            UnitScreen::Locked => {
+                self.screen = Screen::Locked;
+            },
+            UnitScreen::OnboardingBackup => {
+                self.screen = Screen::OnboardingBackup;
+            },
+            UnitScreen::OnboardingRestore => {
+                self.screen = Screen::OnboardingRestore(SeedEntryState::new());
+            },
+            UnitScreen::OnboardingRestoreOrGenerate => {
+                self.screen = Screen::OnboardingRestoreOrGenerate;
+            },
+            UnitScreen::QRSignature => {//should it be protected?
+                self.screen = Screen::QRSignature
+            },
+            UnitScreen::ShowExtension => {
+                self.screen = Screen::ShowExtension;
+            },
+            UnitScreen::ShowTransaction => {
+                self.screen = Screen::ShowTransaction;
+            },
+            _ => {}
+        }
+    }
+
     /// Read user touch event
-    pub fn handle_event<D>(
+    pub fn handle_tap<D: DrawTarget<Color = BinaryColor>>(
         &mut self,
         point: Point,
         h: &mut <P as Platform>::HAL,
@@ -174,26 +260,22 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
-            Screen::PinEntry => {
-                let res = self.platform.handle_pin_event(point, h)?;
-                out = res.request;/*
-                // TODO this properly, expo hack 
-                new_screen = match res.state {
-                    Some(a) => match self.platform.transaction() {
-                        Some(_) => Some(Screen::ShowTransaction),
-                        None => Some(a),
-                    },
-                    None => None,
-                };*/
-            }
+            Screen::PinEntry((ref mut a, u)) => {
+                let (res, pinok) = a.handle_tap_screen(point, self.platform.pin());
+                out = res.request;
+                new_screen = res.state;
+                if pinok {
+                    self.unlocked = true;
+                }
+            },
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
-                    new_screen = Some(Screen::OnboardingRestore(SeedEntryState::new()));
+                    new_screen = Some(UnitScreen::OnboardingRestore);
                     out.set_slow();
                 }
                 150..=300 => {
                     self.platform.generate_seed(h);
-                    new_screen = Some(Screen::OnboardingBackup);
+                    new_screen = Some(UnitScreen::OnboardingBackup);
                     out.set_slow();
                 }
                 _ => {},
@@ -209,39 +291,35 @@ impl <P: Platform> UIState<P> {
             },
             Screen::OnboardingBackup => {
                 self.platform.store_entropy();
-                new_screen = Some(Screen::QRAddress);
+                new_screen = Some(UnitScreen::QRAddress);
                 out.set_slow();
-            },
-            Screen::PinRepeat => {
-                let res = self.platform.handle_pin_event_repeat(point, h)?;
-                out = res.request;
-                new_screen = res.state;
             },
             Screen::ShowTransaction => match point.x {
                 150..=300 => {
-                    new_screen = Some(Screen::ShowExtension);
+                    new_screen = Some(UnitScreen::ShowExtension);
                     out.set_slow();
                 }
                 _ => {},
             },
             Screen::ShowExtension => match point.x {
                 0..=100 => {
-                    new_screen = Some(Screen::ShowTransaction);
+                    new_screen = Some(UnitScreen::ShowTransaction);
                     out.set_slow();
                 }
                 150..=300 => {
-                    new_screen = Some(Screen::QRSignature);
+                    new_screen = Some(UnitScreen::QRSignature);
                     out.set_slow();
                 }
                 _ => {},
-            }
-            Screen::QRSignature => (),
-            Screen::QRAddress => (),
-            Screen::Locked => (),
-            Screen::End => (),
+            },
+            _ => (),
         }
-        if let Some(a) = new_screen {
-           self.screen = a;
+        if let Some(s) = new_screen {
+            self.switch_screen(s, h);
+            self.reason.set_cause(Cause::NewScreen);
+            //out.set_slow(); TODO: there seem to be no reason new state would use fast update
+        } else {
+            self.reason.set_cause(Cause::Tap);
         }
         Ok(out)
     }
@@ -283,21 +361,37 @@ impl <P: Platform> UIState<P> {
     }
 
     /// Display new screen state; should be called only when needed, is slow
-    pub fn render<D>(&mut self) -> Result<(), <<P as Platform>::Display as DrawTarget>::Error>
+    pub fn render<D>(
+        &mut self,
+        is_clear_update: bool,
+        h: &mut <P as Platform>::HAL,
+    ) -> Result<UpdateRequest, <<P as Platform>::Display as DrawTarget>::Error>
     {
         let display = self.platform.display();
-        let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
-        display.bounding_box().into_styled(clear).draw(display)?;
+        if is_clear_update {
+            let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
+            display.bounding_box().into_styled(clear).draw(display)?;
+        }
+        let mut out = UpdateRequest::new();
+        let mut new_screen = None;
+
         match self.screen {
-            Screen::PinEntry => {
-                self.platform.draw_pincode()?;
-            }
+            Screen::PinEntry((ref mut a, u)) => {
+                let (res, _) = a.draw_screen(display, &self.reason, P::rng(h))?;
+                if self.unlocked {
+                    out.set_slow();
+                    new_screen = Some(u);
+                } else {
+                    out = res.request;
+                    new_screen = res.state;
+                }
+            },
             Screen::OnboardingRestoreOrGenerate => {
                 restore_or_generate::draw(display)?;
-            }
+            },
             Screen::OnboardingRestore(ref entry) => {
                 entry.draw(display)?;
-            }
+            },
             Screen::Locked => {
                 let linestyle = PrimitiveStyle::with_stroke(BinaryColor::On, 5);
                 Line::new(
@@ -312,19 +406,16 @@ impl <P: Platform> UIState<P> {
                 )
                 .into_styled(linestyle)
                 .draw(display)?;
-            }
+            },
             Screen::OnboardingBackup => {
                 self.platform.draw_backup()?;
-            }
-            Screen::PinRepeat => {
-                self.platform.draw_pincode()?;
             },
             Screen::ShowTransaction => {
                 self.platform.draw_transaction()?
             },
             Screen::ShowExtension => {
                 self.platform.draw_extensions()?
-            }
+            },
             Screen::QRSignature => {
                 self.platform.draw_signature_qr()?
             },
@@ -333,6 +424,13 @@ impl <P: Platform> UIState<P> {
             },
             _ => {}
         }
-        Ok(())
+
+        if let Some(s) = new_screen {
+            self.switch_screen(s, h);
+            self.reason.set_cause(Cause::NewScreen);
+        } else {
+            self.reason.inc_repeats();
+        }
+        Ok(out)
     }
 }
