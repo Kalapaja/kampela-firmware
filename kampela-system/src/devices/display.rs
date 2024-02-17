@@ -9,11 +9,11 @@ use crate::devices::display_transmission::{display_is_busy, EPDCommand, EPDData,
 /// Draw sequence
 ///
 /// Iterate through this to perform drawing and send display to proper sleep mode
-pub struct Request<R: for <'a> RequestType<Init = (), Input<'a> = (&'a [u8], (u8, u8, u16, u16))>> {
+pub struct Request<R> {
     state: RequestState<R>,
 }
 
-pub enum RequestState<R: for <'a> RequestType<Init = (), Input<'a> = (&'a [u8], (u8, u8, u16, u16))>> {
+pub enum RequestState<R> {
     Init(EPDInit),
     Draw(R),
 }
@@ -21,12 +21,11 @@ pub enum RequestState<R: for <'a> RequestType<Init = (), Input<'a> = (&'a [u8], 
 impl<R> Operation for Request<R> where
     R: for <'a> RequestType<
         Init = (),
-        Input<'a> = (&'a [u8], (u8, u8, u16, u16)),
-        Output = bool
+        Output = bool,
     >
 {
     type Init = ();
-    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
+    type Input<'a> = R::Input<'a>;
     type Output = bool;
     type StateEnum = RequestState<R>;
 
@@ -205,7 +204,7 @@ pub enum FastDrawState {
 
 impl Operation for FastDraw {
     type Init = ();
-    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
+    type Input<'a> = &'a [u8];
     type Output = bool;
     type StateEnum = FastDrawState;
 
@@ -255,7 +254,7 @@ impl Operation for FastDraw {
                 false
             },
             FastDrawState::SendD1(ref mut a) => {
-                if a.advance(data.0) {
+                if a.advance(data) {
                     self.change(FastDrawState::Update(UpdateFast::new(())));
                 }
                 false
@@ -288,7 +287,7 @@ pub enum FullDrawState {
 
 impl Operation for FullDraw {
     type Init = ();
-    type Input<'a> = (&'a [u8], (u8, u8, u16, u16));
+    type Input<'a> = &'a [u8];
     type Output = bool;
     type StateEnum = FullDrawState;
 
@@ -337,7 +336,7 @@ impl Operation for FullDraw {
                 false
             },
             FullDrawState::SendD1(ref mut a) => {
-                if a.advance(data.0) {
+                if a.advance(data) {
                     self.change(FullDrawState::Update(UpdateFull::new(())));
                 }
                 false
@@ -854,6 +853,3 @@ impl Operation for UpdateUltraFast {
         }
     }
 }
-
-
-

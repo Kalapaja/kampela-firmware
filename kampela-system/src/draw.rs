@@ -21,6 +21,45 @@ const SCREEN_SIZE_VALUE: usize = (SCREEN_SIZE_X*SCREEN_SIZE_Y) as usize;
 
 use crate::{in_free, parallel::Operation}; 
 
+// x and y of framebuffer and display RAM address are inversed
+fn refreshable_area_address(refreshable_area: Rectangle) -> (u8, u8, u16, u16) {
+    let x_start_address: u8 = if refreshable_area.top_left.y < 0 {
+        0
+    } else if refreshable_area.top_left.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y / 8 - 1) as u8
+    } else {
+        (refreshable_area.top_left.y / 8) as u8
+    };
+
+    let y_start_address: u16 = if refreshable_area.top_left.x < 0 {
+        (SCREEN_SIZE_X - 1) as u16
+    } else if refreshable_area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
+        0
+    } else {
+        ((SCREEN_SIZE_X - 1) as i32 - refreshable_area.top_left.x) as u16
+    };
+
+    let bottom_right = refreshable_area.top_left + refreshable_area.size;
+    
+    let x_end_address: u8 = if bottom_right.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y / 8 - 1) as u8
+    } else if bottom_right.y < 0 {
+        0
+    } else {
+        ((bottom_right.y / 8 + (bottom_right.y % 8).signum()) - 1) as u8
+    };
+
+    let y_end_address: u16 = if bottom_right.x > (SCREEN_SIZE_X - 1) as i32 {
+        0
+    } else if bottom_right.x < 0 {
+        (SCREEN_SIZE_X - 1) as u16
+    } else {
+        (SCREEN_SIZE_X as i32 - bottom_right.x) as u16
+    };
+
+    (x_start_address, x_end_address, y_start_address, y_end_address)
+}
+
 #[derive(Debug)]
 pub enum DisplayError {}
 
@@ -39,7 +78,6 @@ type PixelData = BitArr!(for SCREEN_SIZE_VALUE, in u8, Msb0);
 /// A virtual display that could be written to EPD simultaneously
 pub struct FrameBuffer {
     data: PixelData,
-    refreshable_area: Rectangle,
     display_state: DisplayState,
     timer: usize,
 }
@@ -49,7 +87,6 @@ impl FrameBuffer {
     pub fn new_white() -> Self {
         Self {
             data: bitarr!(u8, Msb0; 1; SCREEN_SIZE_X as usize*SCREEN_SIZE_Y as usize),
-            refreshable_area: Rectangle::new(SCREEN_ZERO, SCREEN_SIZE),
             display_state: DisplayState::Idle,
             timer: 0,
         }
@@ -62,48 +99,6 @@ impl FrameBuffer {
             self.timer -= 1;
             true
         }
-    }
-    // x and y of framebuffer and display RAM address are inversed
-    fn refreshable_area_address(&self) -> (u8, u8, u16, u16) {
-        let x_start_address: u8 = if self.refreshable_area.top_left.y < 0 {
-            0
-        } else if self.refreshable_area.top_left.y > (SCREEN_SIZE_Y - 1) as i32 {
-            (SCREEN_SIZE_Y / 8 - 1) as u8
-        } else {
-            (self.refreshable_area.top_left.y / 8) as u8
-        };
-
-        let y_start_address: u16 = if self.refreshable_area.top_left.x < 0 {
-            (SCREEN_SIZE_X - 1) as u16
-        } else if self.refreshable_area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
-            0
-        } else {
-            ((SCREEN_SIZE_X - 1) as i32 - self.refreshable_area.top_left.x) as u16
-        };
-
-        let bottom_right = self.refreshable_area.top_left + self.refreshable_area.size;
-        
-        let x_end_address: u8 = if bottom_right.y > (SCREEN_SIZE_Y - 1) as i32 {
-            (SCREEN_SIZE_Y / 8 - 1) as u8
-        } else if bottom_right.y < 0 {
-            0
-        } else {
-            ((bottom_right.y / 8 + (bottom_right.y % 8).signum()) - 1) as u8
-        };
-
-        let y_end_address: u16 = if bottom_right.x > (SCREEN_SIZE_X - 1) as i32 {
-            0
-        } else if bottom_right.x < 0 {
-            (SCREEN_SIZE_X - 1) as u16
-        } else {
-            (SCREEN_SIZE_X as i32 - bottom_right.x) as u16
-        };
-
-        (x_start_address, x_end_address, y_start_address, y_end_address)
-    }
-
-    fn reset_area(&mut self) {
-        self.refreshable_area = Rectangle::new(SCREEN_ZERO, SCREEN_SIZE);
     }
 
     /// Send display data to real EPD; invokes full screen refresh
@@ -125,8 +120,7 @@ impl FrameBuffer {
 
     /// Start partial fast display update sequence
     pub fn request_part(&mut self, area: Rectangle) {
-        self.display_state = DisplayState::PartRequested(Request::<PartDraw>::new(()));
-        self.refreshable_area = area;
+        self.display_state = DisplayState::PartRequested(Request::<PartDraw>::new(()), area);
     }
 }
 
@@ -142,7 +136,7 @@ pub enum DisplayState {
     /// Slow update was requested; waiting for power
     FullRequested(Request<FullDraw>),
     /// Part update was requested; waiting for power
-    PartRequested(Request<PartDraw>),
+    PartRequested(Request<PartDraw>, Rectangle),
     /// Display not available due to update cycle
     UpdatingNow,
 }
@@ -165,13 +159,12 @@ impl Operation for FrameBuffer {
     /// Move through display update progress
     fn advance(&mut self, voltage: i32) -> bool {
         if self.count() { return false };
-        let d: (u8, u8, u16, u16) = self.refreshable_area_address();
+
         match self.display_state {
             DisplayState::Idle => true,
             DisplayState::FastRequested(ref mut a) => {
-
                 if voltage > FAST_REFRESH_POWER {        
-                    if a.advance((&self.data.data, d)) {
+                    if a.advance(&self.data.data) {
                         self.wind_d(DisplayState::UpdatingNow)
                     }
                 };
@@ -179,14 +172,15 @@ impl Operation for FrameBuffer {
             },
             DisplayState::FullRequested(ref mut a) => {
                 if voltage > FULL_REFRESH_POWER {
-                    if a.advance((&self.data.data, d)) {
+                    if a.advance(&self.data.data) {
                         self.wind_d(DisplayState::UpdatingNow)
                     }
                 };
                 false
             },
-            DisplayState::PartRequested(ref mut a) => {
+            DisplayState::PartRequested(ref mut a, r) => {
                 if voltage > PART_REFRESH_POWER {
+                    let d: (u8, u8, u16, u16) = refreshable_area_address(r);
                     if a.advance((&self.data.data, d)) {
                         self.wind_d(DisplayState::UpdatingNow)
                     }
@@ -195,7 +189,6 @@ impl Operation for FrameBuffer {
             },
             DisplayState::UpdatingNow => {
                 in_free(|peripherals| epaper_deep_sleep(peripherals));
-                self.reset_area();
                 self.display_state = DisplayState::Idle;
                 false
             },
