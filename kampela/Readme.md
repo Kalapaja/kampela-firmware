@@ -6,7 +6,6 @@
 ```sh
 [sudo] pacman -S rustup arm-none-eabi-gcc arm-none-eabi-binutils
 rustup update
-rustup default stable
 ```
 
 ## MacOs (tested on M1)
@@ -15,7 +14,6 @@ rustup default stable
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 rustup update
-rustup default stable
 ```
 
 ### Install ARM toolchain
@@ -32,7 +30,6 @@ download and install suitable darwin GNU-ARM package from [ARM GNU website](http
 # Preparations
 
 ```sh
-rustup target add thumbv8m.main-none-eabihf
 cargo install flip-link
 ```
 
