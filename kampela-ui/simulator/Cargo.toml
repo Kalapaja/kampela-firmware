@@ -1,0 +1,11 @@
+[package]
+name = "kampela-ui-simulator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.2.1", features = ["derive"] }
+embedded-graphics-core = "0.3.3"
+embedded-graphics-simulator = { version = "0.3.0" }
+kampela-ui = {path = "../"}
+rand = { version = "0.8.5" }
