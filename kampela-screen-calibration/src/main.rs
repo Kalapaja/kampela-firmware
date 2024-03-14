@@ -1,27 +1,33 @@
 #![no_main]
 #![no_std]
 #![feature(alloc_error_handler)]
+#![deny(unused_crate_dependencies)]
 
 extern crate alloc;
 extern crate core;
 
+use alloc::format;
 use core::{alloc::Layout, panic::PanicInfo};
-use cortex_m::peripheral::syst::SystClkSource;
-use cortex_m_rt::{entry, exception};
-use embedded_alloc::Heap;
-use embedded_graphics::prelude::Point;
-
+use cortex_m::interrupt::free;
+use cortex_m_rt::entry;
 use efm32pg23_fix::Peripherals;
-
+use embedded_alloc::Heap;
+use embedded_graphics::{
+    pixelcolor::BinaryColor,
+    prelude::{Point, Primitive},
+    primitives::{Circle, PrimitiveStyle},
+    Drawable,
+};
 use kampela_display_common::display_def::SCREEN_SIZE_X;
 use kampela_system::{
     devices::{
         se_rng::SeRng,
-        touch::{ft6336_read_at, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES},
+        touch::{Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES},
     },
-    draw::{highlight_point, FrameBuffer},
-    init::init_peripherals,
-    COUNT,
+    draw::{burning_tank, FrameBuffer},
+    parallel::Operation,
+    peripherals::{cmu::init_cmu, gpio_pins::init_gpio, i2c::init_i2c, usart::init_usart},
+    PERIPHERALS,
 };
 use kolibri::uistate::UIState;
 
@@ -29,32 +35,30 @@ use kolibri::uistate::UIState;
 static HEAP: Heap = Heap::empty();
 
 #[alloc_error_handler]
-fn oom(_: Layout) -> ! {
-    loop {}
+fn oom(layout: Layout) -> ! {
+    panic!("Out of memory! {layout:?}")
 }
 
 #[panic_handler]
-fn panic(_panic: &PanicInfo<'_>) -> ! {
+fn panic(panic: &PanicInfo<'_>) -> ! {
+    let mut peripherals = unsafe { Peripherals::steal() };
+    burning_tank(&mut peripherals, format!("{:?}", panic));
     loop {}
 }
 
-#[allow(non_snake_case)]
-#[exception]
-fn SysTick() {
-    unsafe {
-        COUNT = COUNT.wrapping_add(1);
-    }
-}
+/// Initialize peripherals for screen calibration
+pub fn init_peripherals_calibration(peripherals: &mut Peripherals) {
+    // first, start clocking
+    init_cmu(&mut peripherals.CMU_S);
 
-fn init_systick(cortex_periph: &mut cortex_m::Peripherals) {
-    let syst = &mut cortex_periph.SYST;
-    const DEFAULT_HZ: u32 = 14_000_000u32;
+    // map GPIO pins to their functions and set their starting values
+    init_gpio(&mut peripherals.GPIO_S);
 
-    syst.set_clock_source(SystClkSource::Core);
-    syst.set_reload(DEFAULT_HZ / 1_000u32);
-    syst.clear_current();
-    syst.enable_counter();
-    syst.enable_interrupt();
+    // Setting up USART0, for epaper display and flash memory
+    init_usart(peripherals);
+
+    // set up i2c line to communicate with touch pad
+    init_i2c(peripherals);
 }
 
 #[entry]
@@ -66,33 +70,26 @@ fn main() -> ! {
         unsafe { HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE) }
     }
 
-    let mut cortex_periph = cortex_m::Peripherals::take().unwrap();
-    init_systick(&mut cortex_periph);
-
     let mut peripherals = Peripherals::take().unwrap();
+    init_peripherals_calibration(&mut peripherals);
 
-    init_peripherals(&mut peripherals);
+    free(|cs| {
+        PERIPHERALS.borrow(cs).replace(Some(peripherals));
+    });
 
     let mut do_update = true;
-    let mut state = UIState::init(&mut SeRng {
-        peripherals: &mut peripherals,
-    });
+    let mut state = UIState::init(&mut SeRng {});
+
+    let mut reader = Read::<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>::new();
 
     let measured_affine = loop {
         if do_update {
-            let mut display = FrameBuffer::new_white();
-            state.render(&mut display).unwrap();
-            display.apply(&mut peripherals);
+            let mut frame_buffer = FrameBuffer::new_white();
+            state.render(&mut frame_buffer).unwrap();
+            frame_buffer.request_full();
+            while !frame_buffer.advance(20000i32) {}
             do_update = false;
-        } else if peripherals.GPIO_S.if_.read().extif0().bit_is_set() {
-            peripherals
-                .GPIO_S
-                .if_
-                .write(|w_reg| w_reg.extif0().clear_bit());
-
-            let touch_data =
-                ft6336_read_at::<LEN_NUM_TOUCHES>(&mut peripherals, FT6X36_REG_NUM_TOUCHES)
-                    .unwrap();
+        } else if let Some(touch_data) = reader.advance(()).unwrap() {
             if touch_data[0] == 1 {
                 if let UIState::Complete(a) = state {
                     break a;
@@ -105,29 +102,16 @@ fn main() -> ! {
                         x: SCREEN_SIZE_X as i32 - detected_x as i32,
                         y: detected_y as i32,
                     };
-                    do_update = state
-                        .process_touch(
-                            point,
-                            &mut SeRng {
-                                peripherals: &mut peripherals,
-                            },
-                        )
-                        .unwrap();
+                    do_update = state.process_touch(point, &mut SeRng {}).unwrap();
                 }
             }
         }
     };
 
-    loop {
-        if peripherals.GPIO_S.if_.read().extif0().bit_is_set() {
-            peripherals
-                .GPIO_S
-                .if_
-                .write(|w_reg| w_reg.extif0().clear_bit());
+    let mut reader = Read::<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>::new();
 
-            let touch_data =
-                ft6336_read_at::<LEN_NUM_TOUCHES>(&mut peripherals, FT6X36_REG_NUM_TOUCHES)
-                    .unwrap();
+    loop {
+        if let Some(touch_data) = reader.advance(()).unwrap() {
             if touch_data[0] == 1 {
                 let detected_y = ((touch_data[1] as u16 & 0b00001111) << 8) | touch_data[2] as u16;
                 let detected_x = ((touch_data[3] as u16 & 0b00001111) << 8) | touch_data[4] as u16;
@@ -136,7 +120,13 @@ fn main() -> ! {
                     y: detected_y as i32,
                 };
                 let point_on_display = measured_affine.transform(&point);
-                highlight_point(&mut peripherals, point_on_display);
+                let mut frame_buffer = FrameBuffer::new_white();
+                Circle::with_center(point_on_display, 20)
+                    .into_styled(PrimitiveStyle::with_fill(BinaryColor::On))
+                    .draw(&mut frame_buffer)
+                    .unwrap();
+                frame_buffer.request_full();
+                while !frame_buffer.advance(20000i32) {}
             }
         }
     }

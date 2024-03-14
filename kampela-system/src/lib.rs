@@ -13,7 +13,7 @@
 extern crate alloc;
 
 pub mod init;
-mod peripherals;
+pub mod peripherals;
 pub mod devices;
 pub mod draw;
 pub mod parallel;
