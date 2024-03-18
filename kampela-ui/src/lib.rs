@@ -1,4 +1,5 @@
 #![no_std]
+#![deny(unused_crate_dependencies)]
 
 pub mod uistate;
 pub mod platform;

@@ -16,11 +16,8 @@ use embedded_graphics::{
     primitives::{
         Circle, PrimitiveStyle, Rectangle,
     },
-    Drawable,
 };
 use embedded_graphics_core::{
-    draw_target::DrawTarget,
-    geometry::{Point, Size},
     pixelcolor::BinaryColor,
 };
 use embedded_text::{
@@ -125,7 +122,7 @@ where
     let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::On);
     let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
 
-    bounds.clone().into_styled(thin_stroke).draw(display)?;
+    bounds.into_styled(thin_stroke).draw(display)?;
 
     let textbox_style = TextBoxStyleBuilder::new()
         .alignment(HorizontalAlignment::Center)
@@ -150,7 +147,7 @@ where
     let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::Off);
     let filled = PrimitiveStyle::with_fill(BinaryColor::On);
 
-    bounds.clone().into_styled(filled).draw(display)?;
+    bounds.into_styled(filled).draw(display)?;
 
     let textbox_style = TextBoxStyleBuilder::new()
         .alignment(HorizontalAlignment::Center)
@@ -185,13 +182,12 @@ where
     if on {
         let filled = PrimitiveStyle::with_fill(BinaryColor::On);
         bounds
-            .clone()
             .offset(-3)
             .into_styled(filled)
             .draw(display)?;
-        bounds.clone().into_styled(medium_stroke).draw(display)?;
+        bounds.into_styled(medium_stroke).draw(display)?;
     } else {
-        bounds.clone().into_styled(medium_stroke).draw(display)?;
+        bounds.into_styled(medium_stroke).draw(display)?;
     };
     Ok(())
 }
@@ -214,7 +210,7 @@ impl Pincode {
             code: [u4::new(0); PIN_LEN],
             position: 0,
             permutation: get_pinkeys(rng),
-            pin_set: pin_set,
+            pin_set,
             pin_incorrect: false,
         }
     }
@@ -257,7 +253,7 @@ impl Pincode {
         let mut out = UpdateRequest::new();
         for (index, area) in PIN_BUTTON_AREA_ACTIVE.iter().enumerate() {
             if area.contains(point) {
-                let key = self.permutation[index].clone();
+                let key = self.permutation[index];
                 pin_button_pushed(&key, &PIN_BUTTON_AREA[index], fast_display)?;
                 self.input(rng, key);
                 out.set_both();
@@ -279,7 +275,7 @@ impl Pincode {
         let mut out = UpdateRequest::new();
         for (index, area) in PIN_BUTTON_AREA_ACTIVE.iter().enumerate() {
             if area.contains(point) {
-                let key = self.permutation[index].clone();
+                let key = self.permutation[index];
                 pin_button_pushed(&key, &PIN_BUTTON_AREA[index], fast_display)?;
                 self.input_repeat(rng, key);
                 out.set_both();

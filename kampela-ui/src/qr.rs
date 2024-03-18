@@ -1,25 +1,15 @@
 use embedded_graphics::{
-    mono_font::{
-        ascii::{FONT_6X10},
-        MonoTextStyle,
-    },
     Pixel,
-    primitives::Rectangle,
     Drawable,
 };
 use embedded_graphics_core::{
     draw_target::DrawTarget,
-    geometry::{Point, Size},
+    geometry::Point,
     pixelcolor::BinaryColor,
-};
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::{HeightMode, TextBoxStyleBuilder},
-    TextBox,
 };
 
 use crate::display_def::*;
-use qrcodegen_noheap::{QrCode, QrCodeEcc, Version};
+use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
 pub fn draw<D>(data_to_qr: &[u8], display: &mut D) -> Result<(), D::Error>
 where

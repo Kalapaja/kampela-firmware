@@ -16,11 +16,6 @@ use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, C
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 // use substrate_parser::compacts::find_compact;
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
-use schnorrkel::{
-    context::attach_rng,
-    keys::Keypair,
-    signing_context,
-};
 
 use core::ops::DerefMut;
 
@@ -408,7 +403,7 @@ impl <'a> NfcReceiver<'a> {
                             &data_to_sign.as_ref(),
                             &mut external_psram,
                             &checked_metadata_metal,
-                            genesis_hash
+                            Some(genesis_hash)
                         ).unwrap();
 
                         got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));

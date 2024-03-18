@@ -7,19 +7,8 @@ use std::{format, string::String, vec::Vec};
 
 use embedded_graphics::{pixelcolor::BinaryColor, prelude::{DrawTarget, Point}};
 use rand::{CryptoRng, Rng};
-
-use hmac::Hmac;
-use pbkdf2::pbkdf2;
-use sha2::Sha512;
-use schnorrkel::{
-    context::attach_rng,
-    derive::{ChainCode, Derivation},
-    keys::Keypair,
-    signing_context,
-    ExpansionMode,
-    MiniSecretKey,
-};
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
+use substrate_crypto_light::sr25519::{Pair, Public};
+use substrate_parser::{TransactionUnmarkedParsed, ShortSpecs};
 
 use crate::pin::Pincode;
 use crate::uistate::EventResult;
@@ -43,7 +32,7 @@ pub trait Platform {
     type Display: DrawTarget<Color = BinaryColor>;
 
     /// RNG getter
-    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a>;
+    fn rng(h: &mut Self::HAL) -> Self::Rng<'_>;
 
     /// Device-specific "global" storage and management of pincode state RO
     fn pin(&self) -> &Pincode;
@@ -140,42 +129,22 @@ pub trait Platform {
     fn draw_address_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
         //let (s, d) = self.address();
        
-        let line1 = format!("substrate:0x{}", hex::encode(self.public().expect("no entropy stored, no address could be shown")));
+        let line1 = format!("substrate:0x{}", hex::encode(self.public().expect("no entropy stored, no address could be shown").0));
 
-        qr::draw(&line1.as_bytes(), self.display())
+        qr::draw(line1.as_bytes(), self.display())
     }
 
-    fn pair(&self) -> Option<Keypair> {
+    fn pair(&self) -> Option<Pair> {
         let e = self.entropy();
         if e.is_empty() { None } else {
-            let big_seed = entropy_to_big_seed(&e);
-
-            let mini_secret_bytes = &big_seed[..32];
-
-            Some(
-                MiniSecretKey::from_bytes(mini_secret_bytes)
-                    .unwrap()
-                    .expand_to_keypair(ExpansionMode::Ed25519)
-            )
+            Pair::from_entropy_and_pwd(self.entropy(), "").ok()
         }
     }
 
-    fn public(&self) -> Option<[u8; 32]> {
-        self.pair().map(|pair| pair.public.to_bytes())
+    fn public(&self) -> Option<Public> {
+        self.pair().map(|pair| pair.public())
     }
 
-}
-
-pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
-    //check_entropy_length(entropy)?;
-
-    let salt = "mnemonic";
-
-    let mut seed = [0u8; 64];
-
-    pbkdf2::<Hmac<Sha512>>(entropy, salt.as_bytes(), 2048, &mut seed);
-
-    seed
 }
 
 pub struct NfcTransaction {
