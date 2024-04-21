@@ -25,7 +25,7 @@ use embedded_text::{
 use rand::Rng;
 
 use crate::{display_def::*, uistate::{UnitScreen, UpdateRequest}, widget::view::ViewScreen};
-use crate::uistate::{EventResult, Reason, Cause};
+use crate::uistate::EventResult;
 use crate::widget::view::{View};
 use crate::platform::PinCode;
 
@@ -92,15 +92,15 @@ impl<R> ViewScreen for Pincode<R> where
     type DrawOutput = ();
     type TapInput<'a> = &'a PinCode;
     type TapOutput = bool;
-    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<(EventResult, ()), D::Error>
+    fn draw_screen<'a, D>(&mut self, target: &mut D, rng: Self::DrawInput<'a>) -> Result<(EventResult, ()), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
     {
         let mut request = UpdateRequest::new();
         let state = None;
 
-        self.pindots.draw(target, reason, self.entered_nums.len())?;
-        let t = self.pinpad.draw(target, reason, rng)?;
+        self.pindots.draw(target, self.entered_nums.len())?;
+        let t = self.pinpad.draw(target, rng)?;
 
         if t {
             request.set_fast();

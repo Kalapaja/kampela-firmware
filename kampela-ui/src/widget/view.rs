@@ -6,7 +6,7 @@ use embedded_graphics::{
 };
 use rand::{Rng};
 
-use crate::uistate::{EventResult, Reason};
+use crate::uistate::EventResult;
 use crate::display_def::*;
 
 pub struct DrawView<'a, D> where
@@ -87,18 +87,18 @@ pub trait View {
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.bounding_box().size }
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where 
         D: DrawTarget<Color = BinaryColor>;
 
     fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput;
 
-    fn draw<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
+    fn draw<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where
         D: DrawTarget<Color = BinaryColor>
     {
         let mut window_target = DrawView::new(self.bounding_box(), target);
-        self.draw_view(&mut window_target, reason, input)
+        self.draw_view(&mut window_target, input)
     }
 
 	fn handle_tap<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Option<Self::TapOutput> {
@@ -116,7 +116,7 @@ pub trait ViewScreen {
     type DrawOutput;
     type TapInput<'a>;
     type TapOutput;
-    fn draw_screen<'a, D>(&mut self, target: &mut D, reason: &Reason, input: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
+    fn draw_screen<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>;
     fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput);

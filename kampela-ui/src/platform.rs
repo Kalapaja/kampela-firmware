@@ -21,7 +21,7 @@ use schnorrkel::{
 };
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 
-use crate::{widget::view::ViewScreen, uistate::Reason};
+use crate::widget::view::ViewScreen;
 use crate::pin::pin::Pincode;
 use crate::uistate::EventResult;
 use crate::backup::draw_backup_screen;

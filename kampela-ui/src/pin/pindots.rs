@@ -26,7 +26,7 @@ use embedded_text::{
 use crate::display_def::*;
 use crate::widget::view::{View, Widget, DrawView};
 use crate::pin::pin::PIN_LEN;
-use crate::uistate::{EventResult, Reason, Cause};
+use crate::uistate::EventResult;
 
 const DOT_DIAMETER: u32 = 16;
 
@@ -67,7 +67,7 @@ impl View for Pindots {
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolut()
     }
-	fn draw_view<D>(&mut self, target: &mut DrawView<D>, reason: &Reason, dots: usize) -> Result<(),D::Error>
+	fn draw_view<D>(&mut self, target: &mut DrawView<D>, dots: usize) -> Result<(),D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
     {

@@ -27,7 +27,7 @@ use crate::display_def::*;
 use crate::widget::view::{View, Widget, DrawView};
 use crate::pin::{pinbutton::PinButton, pindots::PINDOT_SIZE};
 
-use crate::uistate::{EventResult, Reason, Cause};
+use crate::uistate::EventResult;
 
 const PAD_SIZE_WIDTH: u32 = 200;
 
@@ -120,10 +120,10 @@ impl<R> View for Pinpad<R> where
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolut()
     }
-	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, rng: Self::DrawInput<'a>) -> Result<Self::DrawOutput, D::Error> {
+	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, rng: Self::DrawInput<'a>) -> Result<Self::DrawOutput, D::Error> {
         let mut t = false;
         for button in self.buttons.iter_mut() {
-            if button.draw(target, reason, ())? {
+            if button.draw(target, ())? {
                 t = true;
             }
         }

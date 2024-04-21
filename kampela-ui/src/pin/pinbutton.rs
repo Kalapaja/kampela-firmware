@@ -25,7 +25,7 @@ use embedded_text::{
 
 use crate::{widget::view::{View, Widget, DrawView}};
 
-use crate::uistate::{EventResult, Reason, Cause};
+use crate::uistate::EventResult;
 
 const BUTTON_FONT: MonoFont = FONT_10X20;
 
@@ -68,7 +68,7 @@ impl View for PinButton {
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolut()
     }
-	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, reason: &Reason, input: ()) -> Result<Self::DrawOutput, D::Error> {
+	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, input: ()) -> Result<Self::DrawOutput, D::Error> {
         let t = self.reset_tapped();
         if t {
             self.draw_tapped(target)?;

@@ -123,44 +123,12 @@ impl Default for UpdateRequest {
         Self::new()
     }
 }
-#[derive(Copy, Clone)]
-pub enum Cause {
-    NewScreen,
-    Tap,
-}
-pub struct Reason {
-    cause: Cause,
-    repeats: usize,
-}
-
-impl Reason {
-    fn new() -> Self {
-        Reason{
-            cause: Cause::NewScreen,
-            repeats: 0,
-        }
-    }
-    fn set_cause(&mut self, cause: Cause) {
-        self.cause = cause;
-        self.repeats = 0;
-    }
-    fn inc_repeats(&mut self) {
-        self.repeats = self.repeats + 1;
-    }
-    pub fn cause(&self) -> Cause {
-        self.cause
-    }
-    pub fn repeats(&self) -> usize {
-        self.repeats
-    }
-}
 
 /// State of UI
 pub struct UIState<P> where
     P: Platform,
 {
     screen: Screen<P::Rng>,
-    reason: Reason,
     pub platform: P,
     unlocked: bool,
 }
@@ -194,28 +162,30 @@ pub enum Screen<R: Rng + ?Sized> {
 impl <P: Platform> UIState<P> {
     pub fn new(mut platform: P, h: &mut <P as Platform>::HAL) -> Self {
         platform.read_entropy();
-        let mut initial_screen: Screen<P::Rng>;
+        let mut initial_screen: Option<UnitScreen>;
         let mut unlocked: bool;
         if platform.entropy_display().0.is_empty() {
-            initial_screen = Screen::OnboardingRestoreOrGenerate;
+            initial_screen = Some(UnitScreen::OnboardingRestoreOrGenerate);
             unlocked = true;
         } else {
-            initial_screen = Screen::PinEntry((Pincode::new(P::rng(h)), UnitScreen::QRAddress));
+            initial_screen = Some(UnitScreen::QRAddress);
             unlocked = false;
         }
-        UIState {
-            screen: initial_screen,
-            reason: Reason::new(),
+        let mut state = UIState {
+            screen: Screen::Locked, // doesn't matter
             platform,
             unlocked,
-        }
+        };
+        state.switch_screen(initial_screen, h);
+        state
     }
 
     pub fn display(&mut self) -> &mut <P as Platform>::Display {
         self.platform.display()
     }
 
-    fn switch_screen(&mut self, s: UnitScreen, h: &mut <P as Platform>::HAL) {
+    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL) {
+        if let Some(s) = s {
         match s {
             UnitScreen::QRAddress => {
                 if self.unlocked {
@@ -246,6 +216,7 @@ impl <P: Platform> UIState<P> {
                 self.screen = Screen::ShowTransaction;
             },
             _ => {}
+            }
         }
     }
 
@@ -314,13 +285,7 @@ impl <P: Platform> UIState<P> {
             },
             _ => (),
         }
-        if let Some(s) = new_screen {
-            self.switch_screen(s, h);
-            self.reason.set_cause(Cause::NewScreen);
-            //out.set_slow(); TODO: there seem to be no reason new state would use fast update
-        } else {
-            self.reason.set_cause(Cause::Tap);
-        }
+        self.switch_screen(new_screen, h);
         Ok(out)
     }
 
@@ -377,7 +342,7 @@ impl <P: Platform> UIState<P> {
 
         match self.screen {
             Screen::PinEntry((ref mut a, u)) => {
-                let (res, _) = a.draw_screen(display, &self.reason, P::rng(h))?;
+                let (res, _) = a.draw_screen(display, P::rng(h))?;
                 if self.unlocked {
                     out.set_slow();
                     new_screen = Some(u);
@@ -424,13 +389,7 @@ impl <P: Platform> UIState<P> {
             },
             _ => {}
         }
-
-        if let Some(s) = new_screen {
-            self.switch_screen(s, h);
-            self.reason.set_cause(Cause::NewScreen);
-        } else {
-            self.reason.inc_repeats();
-        }
+        self.switch_screen(new_screen, h);
         Ok(out)
     }
 }
