@@ -53,24 +53,34 @@ impl UI {
     }
 
     /// Call in event loop to progress through UI state
-    pub fn advance(&mut self, voltage: i32) {
+    pub fn advance(&mut self, voltage: i32) -> Option<bool> {
         match self.status {
             UIStatus::Listen => {
                 self.listen();
+                Some(true)
             },
             UIStatus::DisplayOperation => {
-                if self.state.display().advance(voltage) {
-                    self.status = UIStatus::Listen;
+                match self.state.display().advance(voltage) {
+                    Some(c) => {
+                        if c {
+                            self.status = UIStatus::Listen;
+                        }
+                        Some(false)
+                    },
+                    None => None,
                 }
             },
             UIStatus::TouchOperation(ref mut touch) => {
                 match touch.advance(()) {
-                    Ok(Some(touch)) => if let Some(point) = convert(touch) {
-                        let mut h = HALHandle::new();
-                        self.update = self.state.handle_tap::<FrameBuffer>(point, &mut h).unwrap();
-                        self.status = UIStatus::Listen;
+                    Ok(Some(touch)) => {
+                        if let Some(point) = convert(touch) {
+                            let mut h = HALHandle::new();
+                            self.update = self.state.handle_tap::<FrameBuffer>(point, &mut h).unwrap();
+                            self.status = UIStatus::Listen;
+                        };
+                        Some(false)
                     },
-                    Ok(None) => {},
+                    Ok(None) => {None},
                     Err(e) => panic!("{:?}", e),
                 }
             },
@@ -103,9 +113,13 @@ impl UI {
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
-        ).unwrap() {
+        ).unwrap() && matches!(self.status, UIStatus::Listen) {
             self.status = UIStatus::TouchOperation(Read::new(()));
         };
+    }
+
+    pub fn handle_message(&mut self, message: String) {
+        self.update = self.state.handle_message(message);
     }
 
     pub fn handle_transaction(&mut self, transaction: NfcTransaction) {

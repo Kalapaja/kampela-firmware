@@ -110,17 +110,17 @@ impl FrameBuffer {
 
     /// Start full display update sequence
     pub fn request_full(&mut self) {
-        self.display_state = DisplayState::FullRequested(Request::<FullDraw>::new(()));
+        self.display_state = DisplayState::FullRequested;
     }
 
     /// Start partial fast display update sequence
     pub fn request_fast(&mut self) {
-        self.display_state = DisplayState::FastRequested(Request::<FastDraw>::new(()));
+        self.display_state = DisplayState::FastRequested;
     }
 
     /// Start partial fast display update sequence
     pub fn request_part(&mut self, area: Rectangle) {
-        self.display_state = DisplayState::PartRequested(Request::<PartDraw>::new(()), area);
+        self.display_state = DisplayState::PartRequested(area);
     }
 }
 
@@ -132,11 +132,14 @@ pub enum DisplayState {
     /// Initial state, where we can change framebuffer. If this was typestate, this would be Zero.
     Idle,
     /// Fast update was requested; waiting for power
-    FastRequested(Request<FastDraw>),
+    FastRequested,
+    FastOperating(Request<FastDraw>),
     /// Slow update was requested; waiting for power
-    FullRequested(Request<FullDraw>),
+    FullRequested,
+    FullOperating(Request<FullDraw>),
     /// Part update was requested; waiting for power
-    PartRequested(Request<PartDraw>, Rectangle),
+    PartRequested(Rectangle),
+    PartOperating(Request<PartDraw>, (u8, u8, u16, u16)),
     /// Display not available due to update cycle
     UpdatingNow,
 }
@@ -144,7 +147,7 @@ pub enum DisplayState {
 impl Operation for FrameBuffer {
     type Init = ();
     type Input<'a> = i32;
-    type Output = bool;
+    type Output = Option<bool>;
     type StateEnum = DisplayState;
 
     fn new(_: ()) -> Self {
@@ -157,40 +160,52 @@ impl Operation for FrameBuffer {
     }
 
     /// Move through display update progress
-    fn advance(&mut self, voltage: i32) -> bool {
-        if self.count() { return false };
+    fn advance(&mut self, voltage: i32) -> Option<bool> {
+        if self.count() { return None };
 
         match self.display_state {
-            DisplayState::Idle => true,
-            DisplayState::FastRequested(ref mut a) => {
+            DisplayState::Idle => Some(true),
+            DisplayState::FastRequested => {
                 if voltage > FAST_REFRESH_POWER {        
-                    if a.advance(&self.data.data) {
-                        self.wind_d(DisplayState::UpdatingNow)
-                    }
+                    self.display_state = DisplayState::FastOperating(Request::<FastDraw>::new(()));
                 };
-                false
+                None
             },
-            DisplayState::FullRequested(ref mut a) => {
+            DisplayState::FastOperating(ref mut a) => {
+                if a.advance(&self.data.data) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
+            },
+            DisplayState::FullRequested => {
                 if voltage > FULL_REFRESH_POWER {
-                    if a.advance(&self.data.data) {
-                        self.wind_d(DisplayState::UpdatingNow)
-                    }
+                    self.display_state = DisplayState::FullOperating(Request::<FullDraw>::new(()));
                 };
-                false
+                None
             },
-            DisplayState::PartRequested(ref mut a, r) => {
+            DisplayState::FullOperating(ref mut a) => {
+                if a.advance(&self.data.data) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
+            },
+            DisplayState::PartRequested(r) => {
                 if voltage > PART_REFRESH_POWER {
                     let d: (u8, u8, u16, u16) = refreshable_area_address(r);
-                    if a.advance((&self.data.data, d)) {
-                        self.wind_d(DisplayState::UpdatingNow)
-                    }
+                    self.display_state = DisplayState::PartOperating(Request::<PartDraw>::new(()), d);
                 };
-                false
+                None
+            },
+            DisplayState::PartOperating(ref mut a, bounds) => {
+                if a.advance((&self.data.data, bounds)) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
             },
             DisplayState::UpdatingNow => {
                 in_free(|peripherals| epaper_deep_sleep(peripherals));
                 self.display_state = DisplayState::Idle;
-                false
+                Some(false)
             },
         }
     }

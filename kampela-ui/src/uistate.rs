@@ -40,6 +40,8 @@ use crate::seed_entry::SeedEntryState;
 
 use crate::restore_or_generate;
 
+use crate::message;
+
 use rand::{CryptoRng, Rng};
 
 use schnorrkel::{
@@ -152,6 +154,7 @@ pub enum Screen<R: Rng + ?Sized> {
     OnboardingRestoreOrGenerate,
     OnboardingRestore(SeedEntryState),
     OnboardingBackup,
+    ShowMessage(String),
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -185,37 +188,37 @@ impl <P: Platform> UIState<P> {
     }
 
     fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL) {
-        if let Some(s) = s {
-        match s {
-            UnitScreen::QRAddress => {
-                if self.unlocked {
-                    self.screen = Screen::QRAddress;
-                } else {
-                    self.screen = Screen::PinEntry((Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRAddress));
-                }
-            },
-            UnitScreen::Locked => {
-                self.screen = Screen::Locked;
-            },
-            UnitScreen::OnboardingBackup => {
-                self.screen = Screen::OnboardingBackup;
-            },
-            UnitScreen::OnboardingRestore => {
-                self.screen = Screen::OnboardingRestore(SeedEntryState::new());
-            },
-            UnitScreen::OnboardingRestoreOrGenerate => {
-                self.screen = Screen::OnboardingRestoreOrGenerate;
-            },
-            UnitScreen::QRSignature => {//should it be protected?
-                self.screen = Screen::QRSignature
-            },
-            UnitScreen::ShowExtension => {
-                self.screen = Screen::ShowExtension;
-            },
-            UnitScreen::ShowTransaction => {
-                self.screen = Screen::ShowTransaction;
-            },
-            _ => {}
+        if let Some(ref s) = s {
+            match s {
+                UnitScreen::QRAddress => {
+                    if self.unlocked {
+                        self.screen = Screen::QRAddress;
+                    } else {
+                        self.screen = Screen::PinEntry((Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRAddress));
+                    }
+                },
+                UnitScreen::Locked => {
+                    self.screen = Screen::Locked;
+                },
+                UnitScreen::OnboardingBackup => {
+                    self.screen = Screen::OnboardingBackup;
+                },
+                UnitScreen::OnboardingRestore => {
+                    self.screen = Screen::OnboardingRestore(SeedEntryState::new());
+                },
+                UnitScreen::OnboardingRestoreOrGenerate => {
+                    self.screen = Screen::OnboardingRestoreOrGenerate;
+                },
+                UnitScreen::QRSignature => {//should it be protected?
+                    self.screen = Screen::QRSignature
+                },
+                UnitScreen::ShowExtension => {
+                    self.screen = Screen::ShowExtension;
+                },
+                UnitScreen::ShowTransaction => {
+                    self.screen = Screen::ShowTransaction;
+                },
+                _ => {}
             }
         }
     }
@@ -288,7 +291,12 @@ impl <P: Platform> UIState<P> {
         self.switch_screen(new_screen, h);
         Ok(out)
     }
-
+    pub fn handle_message(&mut self, message: String) -> UpdateRequest {
+        let mut out = UpdateRequest::new();
+        self.screen = Screen::ShowMessage(message);
+        out.set_fast();
+        out
+    }
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
@@ -374,6 +382,9 @@ impl <P: Platform> UIState<P> {
             },
             Screen::OnboardingBackup => {
                 self.platform.draw_backup()?;
+            },
+            Screen::ShowMessage(ref m) => {
+                message::draw(display, m)?;
             },
             Screen::ShowTransaction => {
                 self.platform.draw_transaction()?

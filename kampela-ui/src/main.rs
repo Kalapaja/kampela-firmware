@@ -46,6 +46,7 @@ mod data_state;
 use data_state::{AppStateInit, NFCState, DataInit, StorageState};
 
 mod transaction;
+mod message;
 mod qr;
 
 

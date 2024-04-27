@@ -16,6 +16,7 @@ pub mod pin{
 mod seed_entry;
 pub mod backup;
 mod restore_or_generate;
+mod message;
 
 pub mod transaction;
 pub mod qr;
