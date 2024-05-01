@@ -49,7 +49,12 @@ mod transaction;
 mod message;
 mod qr;
 
-
+#[derive(Debug)]
+pub struct NfcTransactionData {
+    pub call: String,
+    pub extension: String,
+    pub signature: [u8; 130],
+}
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -99,9 +104,7 @@ struct DesktopSimulator {
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
     address: Option<[u8; 76]>,
-    transaction: String,
-    extensions: String,
-    signature: Option<[u8; 130]>,
+    transaction: Option<NfcTransactionData>,
     stored_entropy: Option<Vec<u8>>,
 }
 
@@ -110,16 +113,12 @@ impl DesktopSimulator {
         let pin = [0; 4]; //TODO proper pin initialization
         let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
-            NFCState::Empty => String::new(),
-            NFCState::Transaction => String::from("Hello, this is a transaction!"),
-        };
-        let extensions = match init_state.nfc {
-            NFCState::Empty => String::new(),
-            NFCState::Transaction => String::from("Hello, this is a transaction!"),
-        };
-        let signature = match init_state.nfc {
             NFCState::Empty => None,
-            NFCState::Transaction => Some([0u8; 130]),
+            NFCState::Transaction => Some(NfcTransactionData{
+                call: String::from("Hello, this is a transaction!"),
+                extension: String::from("Hello, this is a transaction!"),
+                signature: [0u8; 130],
+            }),
         };
         Self {
             pin: pin,
@@ -127,8 +126,6 @@ impl DesktopSimulator {
             entropy: Vec::new(),
             address: None,
             transaction: transaction,
-            extensions: extensions,
-            signature: signature,
             stored_entropy: None,
         }
     }
@@ -138,6 +135,7 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng = ThreadRng;
     type Display = SimulatorDisplay<BinaryColor>;
+    type NfcTransaction = NfcTransactionData;
 
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
         &mut h.rng
@@ -184,33 +182,28 @@ impl Platform for DesktopSimulator {
         self.address = Some(addr);
     }
 
-    fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
-        self.transaction = transaction;
-        self.extensions = extensions;
-        self.signature = Some(signature);
+    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
+        self.transaction = Some(transaction);
     }
 
-    fn call(&mut self) -> Option<(&str, &mut Self::Display)> {
-        if self.transaction != "" {
-            Some((&self.transaction, &mut self.display))
-        } else {
-            None
+    fn call(&mut self) -> Option<(String, &mut Self::Display)> {
+        match self.transaction {
+            Some(ref a) => Some((a.call.to_owned(), &mut self.display)),
+            None => None,
         }
     }
 
-    fn extensions(&mut self) -> Option<(&str, &mut Self::Display)> {
-        if self.extensions != "" {
-            Some((&self.extensions, &mut self.display))
-        } else {
-            None
+    fn extensions(&mut self) -> Option<(String, &mut Self::Display)> {
+        match self.transaction {
+            Some(ref a) => Some((a.extension.to_owned(), &mut self.display)),
+            None => None,
         }
     }
 
-    fn signature(&mut self) -> (&[u8; 130], &mut Self::Display) {
-        if let Some(ref a) = self.signature {
-            (a, &mut self.display)
-        } else {
-            panic!("qr not ready!");
+    fn signature(&mut self, h: &mut Self::HAL) -> ([u8; 130], &mut Self::Display) {
+        match self.transaction {
+            Some(ref a) => (a.signature, &mut self.display),
+            None =>  panic!("qr not ready!"),
         }
     }
 

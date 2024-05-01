@@ -6,6 +6,7 @@ use alloc::{format, string::String, vec::Vec};
 use std::{format, string::String, vec::Vec};
 
 use embedded_graphics::{pixelcolor::BinaryColor, prelude::{DrawTarget, Point}};
+
 use rand::{CryptoRng, Rng};
 
 use hmac::Hmac;
@@ -44,6 +45,9 @@ pub trait Platform {
     /// Device-specific screen canvas abstraction
     type Display: DrawTarget<Color = BinaryColor>;
 
+    /// Transaction data or addresses for transaction data in psram
+    type NfcTransaction;
+
     /// RNG getter
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;
 
@@ -73,13 +77,13 @@ pub trait Platform {
 
     fn set_address(&mut self, addr: [u8; 76]);
 
-    fn set_transaction(&mut self, call: String, extensions: String, signature: [u8; 130]);
+    fn set_transaction(&mut self, transaction: Self::NfcTransaction);
 
-    fn call(&mut self) -> Option<(&str, &mut Self::Display)>;
+    fn call(&mut self) -> Option<(String, &mut Self::Display)>;
 
-    fn extensions(&mut self) -> Option<(&str, &mut Self::Display)>;
+    fn extensions(&mut self) -> Option<(String, &mut Self::Display)>;
 
-    fn signature(&mut self) -> (&[u8; 130], &mut Self::Display);
+    fn signature(&mut self, h: &mut Self::HAL) -> ([u8; 130], &mut Self::Display);
 
     fn address(&mut self) -> (&[u8; 76], &mut Self::Display);
 
@@ -102,7 +106,7 @@ pub trait Platform {
 
     fn draw_transaction(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
         if let Some((s, d)) = self.call() {
-            transaction::draw(s, d)
+            transaction::draw(&s, d)
         } else {
             Ok(())
         }
@@ -110,15 +114,15 @@ pub trait Platform {
 
     fn draw_extensions(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
         if let Some((s, d)) = self.extensions() {
-            transaction::draw(s, d)
+            transaction::draw(&s, d)
         } else {
             Ok(())
         }
     }
 
-    fn draw_signature_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (s, d) = self.signature();
-        qr::draw(s, d)
+    fn draw_signature_qr(&mut self, h: &mut Self::HAL) -> Result<(), <Self::Display as DrawTarget>::Error> {
+        let (s, d) = self.signature(h);
+        qr::draw(&s, d)
     }
 
     fn draw_address_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
@@ -161,12 +165,4 @@ pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
 
     seed
 }
-
-pub struct NfcTransaction {
-    pub decoded_transaction: TransactionUnmarkedParsed,
-    pub data_to_sign: Vec<u8>,
-    pub specs: ShortSpecs,
-    pub spec_name: String,
-}
-
 

@@ -1,21 +1,33 @@
 //! Everything high-level related to interfacing with user
 
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::vec::Vec;
-use alloc::string::String;
+use alloc::{borrow::ToOwned, vec::Vec, string::String};
 use lazy_static::lazy_static;
 
 use kampela_system::{
-    in_free,
-    if_in_free,
-    devices::{se_rng, se_aes_gcm, touch::{Read, LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES}},
+    devices::{psram::{psram_read_at_address, PsramAccess, ExternalPsram, CheckedMetadataMetal},
+    se_aes_gcm,
+    se_rng,
+    touch::{Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}},
     draw::FrameBuffer,
-    parallel::Operation,
+    if_in_free,
+    in_free,
+    parallel::Operation
 };
+use substrate_parser::{decode_as_call_unmarked, decode_extensions_unmarked, ShortSpecs, TransactionUnmarkedParsed};
 use kampela_system::devices::flash::*;
-
-use kampela_ui::{display_def::*, uistate, platform::{NfcTransaction, Platform, PinCode}};
+use crate::nfc::NfcTransactionPsramAccess;
+use kampela_ui::{display_def::*, uistate, platform::{Platform, PinCode}};
 use embedded_graphics::prelude::Point;
+
+use primitive_types::H256;
+
+use schnorrkel::{
+    context::attach_rng,
+    signing_context,
+};
+
+const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct HALHandle {
     pub rng: se_rng::SeRng,
@@ -97,19 +109,19 @@ impl UI {
             let mut h = HALHandle::new();
             self.update = self.state.render::<FrameBuffer>(f || s, &mut h).expect("guaranteed to work, no errors implemented");
             self.status = UIStatus::DisplayOperation;
-        }
-        if f {
-            self.state.display().request_fast();
+
+            if f {
+                self.state.display().request_fast();
+            }
+            if s {
+                self.state.display().request_full();
+            }
+            if let Some(a) = p {
+                self.state.display().request_part(a);
+            }
             return;
         }
-        if s {
-            self.state.display().request_full();
-            return;
-        }
-        if let Some(a) = p {
-            self.state.display().request_part(a);
-            return;
-        }
+
         // 2. read input if possible
         if if_in_free(|peripherals|
             peripherals.GPIO_S.if_.read().extif0().bit_is_set()
@@ -122,8 +134,9 @@ impl UI {
         self.update = self.state.handle_message(message);
     }
 
-    pub fn handle_transaction(&mut self, transaction: NfcTransaction) {
-        self.update = self.state.handle_transaction(&mut se_rng::SeRng{}, transaction);
+    pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
+        self.state.platform.set_transaction(transaction);
+        self.update = self.state.handle_transaction(&mut se_rng::SeRng{});
     }
 
     pub fn handle_address(&mut self, addr: [u8; 76]) {
@@ -148,10 +161,8 @@ pub struct Hardware {
     pin: PinCode,
     pub entropy: Vec<u8>,
     display: FrameBuffer,
-    call: Option<String>,
-    extensions: Option<String>,
-    signature: Option<[u8; 130]>,
     address: Option<[u8; 76]>,
+    transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
 
 impl Hardware {
@@ -165,10 +176,8 @@ impl Hardware {
             pin: pin,
             entropy: entropy,
             display: display,
-            call: None,
-            extensions: None,
-            signature: None,
             address: None,
+            transaction_psram_access: None,
         }
     }
 }
@@ -177,6 +186,7 @@ impl Platform for Hardware {
     type HAL = HALHandle;
     type Rng = se_rng::SeRng;
     type Display = FrameBuffer;
+    type NfcTransaction = NfcTransactionPsramAccess;
 
     fn rng<'b>(h: &'b mut HALHandle) -> &'b mut Self::Rng {
         &mut h.rng
@@ -292,33 +302,180 @@ impl Platform for Hardware {
         self.address = Some(addr);
     }
 
-    fn set_transaction(&mut self, call: String, extensions: String, signature: [u8; 130]) {
-        self.call = Some(call);
-        self.extensions = Some(extensions);
-        self.signature = Some(signature);
+    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
+        self.transaction_psram_access = Some(transaction);
     }
 
 
-    fn call(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
-        match &self.call {
-            Some(a) => Some((a.as_str(), &mut self.display)),
-            None => None,
-        }
+    fn call(&mut self) -> Option<(String, &mut <Self as Platform>::Display)> {
+        let transaction_psram_access = match self.transaction_psram_access {
+            Some(ref a) => a,
+            None => return None
+        };
+        
+        let mut call_to_sign_option = None;
+        let call_to_sign_psram_access = &transaction_psram_access.call_to_sign_psram_access;
+        in_free(|peripherals| {
+            call_to_sign_option = Some(
+                psram_read_at_address(
+                    peripherals,
+                    call_to_sign_psram_access.start_address,
+                    call_to_sign_psram_access.total_len
+                ).unwrap()
+            );
+        });
+        let call_to_sign = call_to_sign_option.unwrap();
+    
+        let mut checked_metadata_metal_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            checked_metadata_metal_option = Some(
+                CheckedMetadataMetal::from(
+                    &transaction_psram_access.metadata_psram_access,
+                    &mut external_psram
+                ).unwrap()
+            );
+        });
+        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+        let specs = checked_metadata_metal.to_specs();
+        let spec_name = &checked_metadata_metal.spec_name_version.spec_name;
+    
+        let mut decoded_call_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            let mut decoding_postition = 0;
+            let decoded_call = decode_as_call_unmarked(
+                &call_to_sign.as_ref(),
+                &mut decoding_postition,
+                &mut external_psram,
+                &checked_metadata_metal,
+            ).unwrap();
+    
+            decoded_call_option = Some(decoded_call);
+        });
+        let decoded_call = decoded_call_option.unwrap();
+
+        let carded = decoded_call.card(0, &specs, spec_name);
+        let call = carded
+            .into_iter()
+            .map(|card| card.show())
+            .collect::<Vec<String>>()
+            .join("\n");
+
+        Some((call, &mut self.display))
     }
 
-    fn extensions(&mut self) -> Option<(&str, &mut <Self as Platform>::Display)> {
-        match &self.extensions {
-            Some(a) => Some((a.as_str(), &mut self.display)),
-            None => None,
+    fn extensions(&mut self) -> Option<(String, &mut <Self as Platform>::Display)> {
+        let transaction_psram_access = match self.transaction_psram_access {
+            Some(ref a) => a,
+            None => return None
+        };
+        
+        let mut extension_to_sign_option = None;
+        let extension_to_sign_psram_access = &transaction_psram_access.extension_to_sign_psram_access;
+        in_free(|peripherals| {
+            extension_to_sign_option = Some(
+                psram_read_at_address(
+                    peripherals,
+                    extension_to_sign_psram_access.start_address,
+                    extension_to_sign_psram_access.total_len
+                ).unwrap()
+            );
+        });
+        let extension_to_sign = extension_to_sign_option.unwrap();
+    
+        let mut checked_metadata_metal_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            checked_metadata_metal_option = Some(
+                CheckedMetadataMetal::from(
+                    &transaction_psram_access.metadata_psram_access,
+                    &mut external_psram
+                ).unwrap()
+            );
+        });
+        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+        let specs = checked_metadata_metal.to_specs();
+        let spec_name = &checked_metadata_metal.spec_name_version.spec_name;
+    
+        let mut genesis_hash_bytes_option = None;
+        let genesis_hash_bytes_psram_access = &transaction_psram_access.genesis_hash_bytes_psram_access;
+        in_free(|peripherals| {
+            genesis_hash_bytes_option = Some(
+                psram_read_at_address(
+                    peripherals,
+                    genesis_hash_bytes_psram_access.start_address,
+                    genesis_hash_bytes_psram_access.total_len
+                ).unwrap()
+            );
+        });
+        let genesis_hash = H256(genesis_hash_bytes_option.unwrap().try_into().expect("static size"));
+    
+        let mut decoded_extension_option = None;
+        in_free(|peripherals| {
+            let mut external_psram = ExternalPsram{peripherals};
+            let mut decoding_postition = 0;
+            let decoded_extension = decode_extensions_unmarked(
+                &extension_to_sign.as_ref(),
+                &mut decoding_postition,
+                &mut external_psram,
+                &checked_metadata_metal,
+                genesis_hash
+            ).unwrap();
+    
+            decoded_extension_option = Some(decoded_extension);
+        });
+        let decoded_extension = decoded_extension_option.unwrap();
+
+        let mut carded = Vec::new();
+        for ext in decoded_extension.iter() {
+            let addition_set = ext.card(0, true, &specs, spec_name);
+            if !addition_set.is_empty() {
+                carded.extend_from_slice(&addition_set)
+            }
         }
+        let extensions = carded
+            .into_iter()
+            .map(|card| card.show())
+            .collect::<Vec<String>>()
+            .join("\n");
+
+        Some((extensions, &mut self.display))
     }
 
-    fn signature(&mut self) -> (&[u8; 130], &mut <Self as Platform>::Display) {
-        if let Some(ref a) = self.signature {
-            (a, &mut self.display)
-        } else {
-            panic!("qr generation failed");
-        }
+    fn signature(&mut self, h: &mut Self::HAL) -> ([u8; 130], &mut <Self as Platform>::Display) {
+        let transaction_psram_access = match self.transaction_psram_access {
+            Some(ref a) => a,
+            None => panic!("qr generation failed")
+        };
+        
+        let mut data_to_sign_option = None;
+        let call_to_sign_psram_access = &transaction_psram_access.call_to_sign_psram_access;
+        let extension_to_sign_psram_access = &transaction_psram_access.extension_to_sign_psram_access;
+        in_free(|peripherals| {
+            data_to_sign_option = Some(
+                psram_read_at_address(
+                    peripherals,
+                    call_to_sign_psram_access.start_address,
+                    call_to_sign_psram_access.total_len + extension_to_sign_psram_access.total_len
+                ).unwrap()
+            );
+        });
+        let data_to_sign = data_to_sign_option.unwrap();
+
+        let context = signing_context(SIGNING_CTX);
+        let signature = self.pair()
+            .unwrap()
+            .sign(attach_rng(context.bytes(&data_to_sign), Self::rng(h)));
+
+        let mut signature_with_id: [u8; 65] = [1; 65];
+        signature_with_id[1..].copy_from_slice(&signature.to_bytes());
+        let signature_with_id_bytes = hex::encode(signature_with_id)
+            .into_bytes()
+            .try_into()
+            .expect("static length");
+        
+        (signature_with_id_bytes, &mut self.display)
     }
 
     fn address(&mut self) -> (&[u8; 76], &mut <Self as Platform>::Display) {

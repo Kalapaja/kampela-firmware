@@ -22,7 +22,7 @@ use kampela_ui::platform::Platform;
 mod ui;
 use ui::UI;
 mod nfc;
-use nfc::{BufferStatus, turn_nfc_collector_correctly, NfcCollector, NfcReceiver, NfcState, NfcResult, NfcError, process_nfc_payload};
+use nfc::{BufferStatus, turn_nfc_collector_correctly, NfcCollector, NfcReceiver, NfcStateOutput, NfcResult, NfcError, process_nfc_payload};
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
@@ -190,8 +190,6 @@ fn main() -> ! {
 
 
     let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public());
-    let mut first = true;
-    let mut done_rendering = false;
     loop {
         adc.advance(());
         let nfc_state = nfc.advance(adc.read());
@@ -210,18 +208,15 @@ fn main() -> ! {
                 }
                 Ok(s) => {
                     match s {
-                        NfcState::Operational => {
-                            if first {
+                        NfcStateOutput::Operational(i) => {
+                            if i == 1 {
                                 ui.handle_message("Receiving NFC packets...".to_owned());
-                                first = false;
                             }
-                            if !done_rendering {
-                                while !ui.advance(adc.read()).is_some_and(|c| c == false) {
-                                    adc.advance(());
-                                }
+                            while !ui.advance(adc.read()).is_some_and(|c| c == false) {
+                                adc.advance(());
                             }
                         },
-                        NfcState::Done(r) => {
+                        NfcStateOutput::Done(r) => {
                             match r {
                                 NfcResult::KampelaStop => {break},
                                 NfcResult::DisplayAddress => {

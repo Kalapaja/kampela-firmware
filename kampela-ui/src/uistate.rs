@@ -34,7 +34,7 @@ use embedded_graphics_core::{
 
 use crate::{display_def::*, pin::pin::Pincode, widget::view::ViewScreen};
 
-use crate::platform::{NfcTransaction, Platform};
+use crate::platform::Platform;
 
 use crate::seed_entry::SeedEntryState;
 
@@ -43,17 +43,6 @@ use crate::restore_or_generate;
 use crate::message;
 
 use rand::{CryptoRng, Rng};
-
-use schnorrkel::{
-    context::attach_rng,
-    derive::{ChainCode, Derivation},
-    keys::Keypair,
-    signing_context,
-    ExpansionMode,
-    MiniSecretKey,
-};
-
-const SIGNING_CTX: &[u8] = b"substrate";
 
 pub struct EventResult {
     pub request: UpdateRequest,
@@ -300,20 +289,9 @@ impl <P: Platform> UIState<P> {
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
-    pub fn handle_transaction<R: Rng + ?Sized + CryptoRng>(&mut self, rng: &mut R, transaction: NfcTransaction) -> UpdateRequest
+    pub fn handle_transaction<R: Rng + ?Sized + CryptoRng>(&mut self, rng: &mut R) -> UpdateRequest
     {
         let mut out = UpdateRequest::new();
-        let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
-        let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-        let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-
-        let context = signing_context(SIGNING_CTX);
-        let signature = self.platform.pair().unwrap().sign(attach_rng(context.bytes(&transaction.data_to_sign), rng));
-        let mut signature_with_id: [u8; 65] = [1; 65];
-        signature_with_id[1..].copy_from_slice(&signature.to_bytes());
-
-        self.platform.set_transaction(call, extensions, hex::encode(signature_with_id).into_bytes().try_into().expect("static length"));
-
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
         self.screen = Screen::ShowTransaction;
@@ -393,7 +371,7 @@ impl <P: Platform> UIState<P> {
                 self.platform.draw_extensions()?
             },
             Screen::QRSignature => {
-                self.platform.draw_signature_qr()?
+                self.platform.draw_signature_qr(h)?
             },
             Screen::QRAddress => {
                 self.platform.draw_address_qr()?
