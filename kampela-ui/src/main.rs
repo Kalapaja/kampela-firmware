@@ -22,7 +22,7 @@ pub mod display_def;
 pub use display_def::*;
 
 mod platform;
-use platform::{Platform, PinCode};
+use platform::{public_from_entropy, PinCode, Platform};
 
 mod pin {
     pub mod pin;
@@ -102,7 +102,7 @@ impl HALHandle {
 struct DesktopSimulator {
     pin: PinCode,
     display: SimulatorDisplay<BinaryColor>,
-    entropy: Vec<u8>,
+    entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     transaction: Option<NfcTransactionData>,
     stored_entropy: Option<Vec<u8>>,
@@ -123,7 +123,7 @@ impl DesktopSimulator {
         Self {
             pin: pin,
             display: display,
-            entropy: Vec::new(),
+            entropy: None,
             address: None,
             transaction: transaction,
             stored_entropy: None,
@@ -153,29 +153,25 @@ impl Platform for DesktopSimulator {
         &mut self.display
     }
 
-    fn store_entropy(&mut self) {
+    fn store_entropy(&mut self, e: &[u8]) {
+        self.entropy = Some(e.to_vec());
         println!("entropy stored (not really, this is emulator)");
     }
 
     fn read_entropy(&mut self) {
-        self.entropy = if let Some(a) = &self.stored_entropy {
-            a.clone()
-        } else {
-            Vec::new()
-        };
-        println!("entropy read from emulated storage: {:?}", self.entropy);
+        self.entropy = self.stored_entropy.clone();
+        println!("entropy read from emulated storage: {:?}", &self.entropy);
     }
 
-    fn set_entropy(&mut self, e: &[u8]) {
-        self.entropy = e.to_vec();
+    fn entropy(&self) -> Option<Vec<u8>> {
+        self.entropy.clone()
     }
 
-    fn entropy(&self) -> &[u8] {
-        &self.entropy
-    }
-
-    fn entropy_display(&mut self) -> (&[u8], &mut Self::Display) {
-        (&self.entropy, &mut self.display)
+    fn public(&self) -> Option<[u8; 32]> {
+        match &self.entropy {
+            Some(e) => public_from_entropy(e),
+            None => None,
+        }
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -253,18 +249,33 @@ fn main() {
         let f = update.read_fast();
         let s = update.read_slow();
         let p = update.read_part();
+        let i = update.read_hidden();
 
-        if f || s || p.is_some() {
+        if i || f || s || p.is_some() {
             match state.render::<SimulatorDisplay<BinaryColor>>(f || s, &mut h) {
                 Ok(u) => update = u,
                 Err(e) => println!("{:?}", e),
             };
         }
-        if f || p.is_some() {
+
+        if i {
+            window.update(state.display());
+            println!("skip {} events in hidden update", window.events().count());
+            //no-op for non-EPD
+        }
+
+        if f {
             window.update(state.display());
             println!("skip {} events in fast update", window.events().count());
             //no-op for non-EPD
         }
+
+        if p.is_some() {
+            window.update(state.display());
+            println!("skip {} events in part update", window.events().count());
+            //no-op for non-EPD
+        }
+
         if s {
             sleep(SLOW_UPDATE_TIME);
             window.update(state.display());

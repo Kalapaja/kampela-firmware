@@ -22,10 +22,7 @@ use schnorrkel::{
 };
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 
-use crate::widget::view::ViewScreen;
 use crate::pin::pin::Pincode;
-use crate::uistate::EventResult;
-use crate::backup::draw_backup_screen;
 use crate::transaction;
 use crate::qr;
 
@@ -61,19 +58,15 @@ pub trait Platform {
     fn display(&mut self) -> &mut Self::Display;
 
     /// Put entropy in flash
-    fn store_entropy(&mut self);
+    fn store_entropy(&mut self, e: &[u8]);
 
     /// Read entropy from flash
     fn read_entropy(&mut self);
-
-    /// Set new seed
-    fn set_entropy(&mut self, e: &[u8]);
     
     /// Getter for seed
-    fn entropy(&self) -> &[u8];
+    fn entropy(&self) -> Option<Vec<u8>>;
 
-    /// Getter for seed and canvas
-    fn entropy_display(&mut self) -> (&[u8], &mut Self::Display);
+    fn public(&self) -> Option<[u8; 32]>;
 
     fn set_address(&mut self, addr: [u8; 76]);
 
@@ -95,13 +88,14 @@ pub trait Platform {
         entropy
     }
 
-    fn generate_seed(&mut self, h: &mut Self::HAL) {
-        self.set_entropy(&Self::generate_seed_entropy(h));
-    }
+    /// Getter for seed and canvas
+    fn entropy_display(&mut self) -> Option<(Vec<u8>, &mut <Self as Platform>::Display)> {
+        if let Some(e) = self.entropy() {
+            Some((e, self.display()))
+        } else {
+            None
+        }
 
-    fn draw_backup(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (s, d) = self.entropy_display();
-        draw_backup_screen(s, d)
     }
 
     fn draw_transaction(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
@@ -134,23 +128,14 @@ pub trait Platform {
     }
 
     fn pair(&self) -> Option<Keypair> {
-        let e = self.entropy();
-        if e.is_empty() { None } else {
-            let big_seed = entropy_to_big_seed(&e);
-
-            let mini_secret_bytes = &big_seed[..32];
-
-            Some(
-                MiniSecretKey::from_bytes(mini_secret_bytes)
-                    .unwrap()
-                    .expand_to_keypair(ExpansionMode::Ed25519)
-            )
+        match self.entropy() {
+            None => None,
+            Some(e) => pair_from_entropy(&e),
         }
     }
 
-    fn public(&self) -> Option<[u8; 32]> {
-        self.pair().map(|pair| pair.public.to_bytes())
-    }
+
+    
 
 }
 
@@ -166,3 +151,25 @@ pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
     seed
 }
 
+
+pub fn pair_from_entropy(e: &[u8]) -> Option<Keypair> {
+    if e.is_empty() { None } else {
+        let big_seed = entropy_to_big_seed(&e);
+
+        let mini_secret_bytes = &big_seed[..32];
+
+        Some(
+            MiniSecretKey::from_bytes(mini_secret_bytes)
+                .unwrap()
+                .expand_to_keypair(ExpansionMode::Ed25519)
+        )
+    }
+}
+
+pub fn public_from_entropy(e: &[u8]) -> Option<[u8; 32]> {
+    let pair = pair_from_entropy(e);
+    match pair {
+        None => None,
+        Some(p) => Some(p.public.to_bytes())
+    }
+}

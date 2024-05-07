@@ -5,8 +5,8 @@ use alloc::{borrow::ToOwned, vec::Vec, string::String};
 use lazy_static::lazy_static;
 
 use kampela_system::{
-    devices::{psram::{psram_read_at_address, PsramAccess, ExternalPsram, CheckedMetadataMetal},
-    se_aes_gcm,
+    devices::{psram::{psram_read_at_address, CheckedMetadataMetal, ExternalPsram, PsramAccess},
+    se_aes_gcm::{self, Out},
     se_rng,
     touch::{Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}},
     draw::FrameBuffer,
@@ -17,7 +17,7 @@ use kampela_system::{
 use substrate_parser::{decode_as_call_unmarked, decode_extensions_unmarked, ShortSpecs, TransactionUnmarkedParsed};
 use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
-use kampela_ui::{display_def::*, uistate, platform::{Platform, PinCode}};
+use kampela_ui::{display_def::*, platform::{public_from_entropy, PinCode, Platform}, uistate};
 use embedded_graphics::prelude::Point;
 
 use primitive_types::H256;
@@ -104,20 +104,24 @@ impl UI {
         let f = self.update.read_fast();
         let s = self.update.read_slow();
         let p = self.update.read_part();
-
-        if f || s || p.is_some() {
+        let i = self.update.read_hidden();
+        
+        if i || f || s || p.is_some() {
             let mut h = HALHandle::new();
             self.update = self.state.render::<FrameBuffer>(f || s, &mut h).expect("guaranteed to work, no errors implemented");
-            self.status = UIStatus::DisplayOperation;
 
-            if f {
-                self.state.display().request_fast();
-            }
-            if s {
-                self.state.display().request_full();
-            }
-            if let Some(a) = p {
-                self.state.display().request_part(a);
+            if !i {
+                self.status = UIStatus::DisplayOperation;
+
+                if f {
+                    self.state.display().request_fast();
+                }
+                if s {
+                    self.state.display().request_full();
+                }
+                if let Some(a) = p {
+                    self.state.display().request_part(a);
+                }
             }
             return;
         }
@@ -131,12 +135,14 @@ impl UI {
     }
 
     pub fn handle_message(&mut self, message: String) {
-        self.update = self.state.handle_message(message);
+        let mut h = HALHandle::new();
+        self.update = self.state.handle_message(message, &mut h);
     }
 
     pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
+        let mut h = HALHandle::new();
         self.state.platform.set_transaction(transaction);
-        self.update = self.state.handle_transaction(&mut se_rng::SeRng{});
+        self.update = self.state.handle_transaction(&mut h);
     }
 
     pub fn handle_address(&mut self, addr: [u8; 76]) {
@@ -159,7 +165,8 @@ enum UIStatus {
 
 pub struct Hardware {
     pin: PinCode,
-    pub entropy: Vec<u8>,
+    pub protected: Option<[u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]>,
+    pub public_key: Option<[u8; 32]>,
     display: FrameBuffer,
     address: Option<[u8; 76]>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
@@ -167,14 +174,16 @@ pub struct Hardware {
 
 impl Hardware {
     pub fn new() -> Self {
-        let entropy = Vec::new();
+        let protected = None;
+        let public_key = None;
         let pin_set = false; // TODO query storage
         let mut h = HALHandle::new();
         let pin = [0; 4];
         let display = FrameBuffer::new_white();
         Self {
             pin: pin,
-            entropy: entropy,
+            protected: protected,
+            public_key: public_key,
             display: display,
             address: None,
             transaction_psram_access: None,
@@ -204,27 +213,41 @@ impl Platform for Hardware {
         &mut self.display
     }
 
-    fn store_entropy(&mut self) {
-        let len = self.entropy.len();
-        //let mut entropy_storage = [0u8; 33];
-        //entropy_storage[0] = len.try_into().expect("entropy is at most 32 bytes");
-        //entropy_storage[1..1+len].copy_from_slice(&self.entropy);
-        // TODO encode
+    fn store_entropy(&mut self, e: &[u8]) {
+        let mut protected = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
+        let public_key = public_from_entropy(e);
+        let len = e.len();
+        // encoding entropy
         in_free(|peripherals| {
-            se_aes_gcm::create_key(peripherals).unwrap();
-            let protected = se_aes_gcm::aes_gcm_encrypt(
-                peripherals,
-                [0; se_aes_gcm::AAD_LEN],
-                [0; se_aes_gcm::IV_LEN],
-                self.entropy.clone(),
-            ).unwrap();
+            let out = if len != 0 {
+                se_aes_gcm::create_key(peripherals).unwrap();
+                se_aes_gcm::aes_gcm_encrypt(
+                    peripherals,
+                    [0; se_aes_gcm::AAD_LEN],
+                    [0; se_aes_gcm::IV_LEN],
+                    e.to_vec(),
+                ).unwrap()
+            } else {
+                Out{
+                    data: [0u8; se_aes_gcm::SECRET_MAX_LEN],
+                    len: 0,
+                    tag: [0; se_aes_gcm::TAG_LEN]
+                }
+            };
 
-            let mut storage_payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
-            storage_payload[0] = protected.len as u8;
-            storage_payload[1..1+se_aes_gcm::SECRET_MAX_LEN].copy_from_slice(&protected.data);
-            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].copy_from_slice(&protected.tag);
-            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].copy_from_slice( unsafe { &se_aes_gcm::KEY_BUFFER });
+            protected[0] = out.len as u8;
+            protected[1..1+se_aes_gcm::SECRET_MAX_LEN].copy_from_slice(&out.data);
+            protected[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].copy_from_slice(&out.tag);
+            protected[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].copy_from_slice( unsafe { &se_aes_gcm::KEY_BUFFER });
+        });
 
+        // stroring encoded entropy and publilc key
+        let mut payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+        payload[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN].copy_from_slice(&protected);
+        payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..].copy_from_slice(&public_key.unwrap_or([0u8; 32]));
+        
+        let mut data = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+        in_free(|peripherals| {
             flash_wakeup(peripherals);
 
             flash_unlock(peripherals);
@@ -232,21 +255,28 @@ impl Platform for Hardware {
             flash_wait_ready(peripherals);
 
             flash_unlock(peripherals);
-            flash_write_page(peripherals, 0, &storage_payload);
+
+            flash_write_page(peripherals, 0, &payload);
             flash_wait_ready(peripherals);
 
-            let mut ent = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
-            flash_read(peripherals, 0, &mut ent);
-
-            // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
-            if ent[2..] != storage_payload {
-                panic!("Failed to save seedphrase: {:?} ||| {:?}", &ent[2..35], &self.entropy[..33]);
-            }
+            flash_read(peripherals, 0, &mut data);
         });
+
+        // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
+        if &data[2..] != &payload {
+            panic!("Failed to save seedphrase: {:?} ||| {:?}", &data[2..35], &payload[..33]);
+        }
+        
+        self.public_key = public_key;
+        self.protected = if len != 0 {
+            Some(protected)
+        } else {
+            None
+        }
     }
 
     fn read_entropy(&mut self) {
-        let mut ent = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
+        let mut data = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
         in_free(|peripherals| {
             // Make sure that flash is ok
             flash_wakeup(peripherals);
@@ -256,18 +286,49 @@ impl Platform for Hardware {
             if (fl_id == 0) || (fl_len == 0) {
                 panic!("Flash error");
             }
-            flash_read(peripherals, 0, &mut ent);
+            flash_read(peripherals, 0, &mut data);
             flash_sleep(peripherals);
         });
-        match ent[0] {
-            0 => self.entropy = Vec::new(),
+        match data[0] {
+            0 => {
+                self.protected = None;
+                self.public_key = None;
+            },
             16 | 20 | 24 | 28 | 32 => {
-                let recovered_out = se_aes_gcm::Out {
-                    data: ent[1..1+se_aes_gcm::SECRET_MAX_LEN].try_into().expect("static length"),
-                    len: ent[0] as usize,
-                    tag: ent[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].try_into().expect("static length"),
-                };
-                unsafe { se_aes_gcm::KEY_BUFFER = ent[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].try_into().expect("static length"); }
+                self.protected = Some(
+                    data[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]
+                        .try_into()
+                        .expect("static length")
+                );
+                self.public_key = Some(
+                    data[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..]
+                        .try_into()
+                        .expect("static length")
+                );
+            },
+            255 => {
+                self.protected = None;
+                self.public_key = None;
+            },
+            _ => {
+                self.store_entropy(&Vec::new());
+                panic!("Seed storage corrupted! Wiping seed...");
+            },
+        }
+    }
+
+    fn entropy(&self) -> Option<Vec<u8>> {
+        let mut entropy = None;
+        if let Some(p) = self.protected {
+
+            let recovered_out = se_aes_gcm::Out {
+                data: p[1..1+se_aes_gcm::SECRET_MAX_LEN].try_into().expect("static length"),
+                len: p[0] as usize,
+                tag: p[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].try_into().expect("static length"),
+            };
+            unsafe { se_aes_gcm::KEY_BUFFER = p[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].try_into().expect("static length"); }
+    
+            if recovered_out.len != 0 {
                 in_free(|peripherals| {
                     let out = se_aes_gcm::aes_gcm_decrypt(
                         peripherals,
@@ -275,27 +336,15 @@ impl Platform for Hardware {
                         [0u8; se_aes_gcm::AAD_LEN],
                         [0u8; se_aes_gcm::IV_LEN],
                     ).unwrap();
-                    self.entropy = out.data[..out.len].to_vec();
-                })
-            },
-            255 => self.entropy = Vec::new(),
-            _ => {
-                self.store_entropy();
-                panic!("Seed storage corrupted! Wiping seed...");
-            },
+                    entropy = Some(out.data[..out.len].to_vec());
+                });
+            }
         }
+        entropy
     }
 
-    fn set_entropy(&mut self, e: &[u8]) {
-        self.entropy = e.to_vec(); // TODO: dedicated array storage maybe
-    }
-
-    fn entropy(&self) -> &[u8] {
-        &self.entropy
-    }
-
-    fn entropy_display(&mut self) -> (&[u8], &mut <Self as Platform>::Display) {
-        (&self.entropy, &mut self.display)
+    fn public(&self) -> Option<[u8; 32]> {
+        self.public_key
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -313,39 +362,20 @@ impl Platform for Hardware {
             None => return None
         };
         
-        let mut call_to_sign_option = None;
-        let call_to_sign_psram_access = &transaction_psram_access.call_to_sign_psram_access;
-        in_free(|peripherals| {
-            call_to_sign_option = Some(
-                psram_read_at_address(
-                    peripherals,
-                    call_to_sign_psram_access.start_address,
-                    call_to_sign_psram_access.total_len
-                ).unwrap()
-            );
-        });
-        let call_to_sign = call_to_sign_option.unwrap();
+        let call_data = read_from_psram(&transaction_psram_access.call_to_sign_psram_access);
     
-        let mut checked_metadata_metal_option = None;
-        in_free(|peripherals| {
-            let mut external_psram = ExternalPsram{peripherals};
-            checked_metadata_metal_option = Some(
-                CheckedMetadataMetal::from(
-                    &transaction_psram_access.metadata_psram_access,
-                    &mut external_psram
-                ).unwrap()
-            );
-        });
-        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
-        let specs = checked_metadata_metal.to_specs();
-        let spec_name = &checked_metadata_metal.spec_name_version.spec_name;
+        let (
+            checked_metadata_metal,
+            specs,
+            spec_name
+        ) = read_checked_metadata_metal(&transaction_psram_access.metadata_psram_access);
     
         let mut decoded_call_option = None;
         in_free(|peripherals| {
             let mut external_psram = ExternalPsram{peripherals};
             let mut decoding_postition = 0;
             let decoded_call = decode_as_call_unmarked(
-                &call_to_sign.as_ref(),
+                &call_data.as_ref(),
                 &mut decoding_postition,
                 &mut external_psram,
                 &checked_metadata_metal,
@@ -355,7 +385,7 @@ impl Platform for Hardware {
         });
         let decoded_call = decoded_call_option.unwrap();
 
-        let carded = decoded_call.card(0, &specs, spec_name);
+        let carded = decoded_call.card(0, &specs, &spec_name);
         let call = carded
             .into_iter()
             .map(|card| card.show())
@@ -371,52 +401,26 @@ impl Platform for Hardware {
             None => return None
         };
         
-        let mut extension_to_sign_option = None;
-        let extension_to_sign_psram_access = &transaction_psram_access.extension_to_sign_psram_access;
-        in_free(|peripherals| {
-            extension_to_sign_option = Some(
-                psram_read_at_address(
-                    peripherals,
-                    extension_to_sign_psram_access.start_address,
-                    extension_to_sign_psram_access.total_len
-                ).unwrap()
-            );
-        });
-        let extension_to_sign = extension_to_sign_option.unwrap();
+        let extension_data = read_from_psram(&transaction_psram_access.extension_to_sign_psram_access);
     
-        let mut checked_metadata_metal_option = None;
-        in_free(|peripherals| {
-            let mut external_psram = ExternalPsram{peripherals};
-            checked_metadata_metal_option = Some(
-                CheckedMetadataMetal::from(
-                    &transaction_psram_access.metadata_psram_access,
-                    &mut external_psram
-                ).unwrap()
-            );
-        });
-        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
-        let specs = checked_metadata_metal.to_specs();
-        let spec_name = &checked_metadata_metal.spec_name_version.spec_name;
-    
-        let mut genesis_hash_bytes_option = None;
-        let genesis_hash_bytes_psram_access = &transaction_psram_access.genesis_hash_bytes_psram_access;
-        in_free(|peripherals| {
-            genesis_hash_bytes_option = Some(
-                psram_read_at_address(
-                    peripherals,
-                    genesis_hash_bytes_psram_access.start_address,
-                    genesis_hash_bytes_psram_access.total_len
-                ).unwrap()
-            );
-        });
-        let genesis_hash = H256(genesis_hash_bytes_option.unwrap().try_into().expect("static size"));
+        let (
+            checked_metadata_metal,
+            specs,
+            spec_name
+        ) = read_checked_metadata_metal(&transaction_psram_access.metadata_psram_access);
+
+        let genesis_hash = H256(
+            read_from_psram(&transaction_psram_access.genesis_hash_bytes_psram_access)
+                .try_into()
+                .expect("static size")
+        );
     
         let mut decoded_extension_option = None;
         in_free(|peripherals| {
             let mut external_psram = ExternalPsram{peripherals};
             let mut decoding_postition = 0;
             let decoded_extension = decode_extensions_unmarked(
-                &extension_to_sign.as_ref(),
+                &extension_data.as_ref(),
                 &mut decoding_postition,
                 &mut external_psram,
                 &checked_metadata_metal,
@@ -429,7 +433,7 @@ impl Platform for Hardware {
 
         let mut carded = Vec::new();
         for ext in decoded_extension.iter() {
-            let addition_set = ext.card(0, true, &specs, spec_name);
+            let addition_set = ext.card(0, true, &specs, &spec_name);
             if !addition_set.is_empty() {
                 carded.extend_from_slice(&addition_set)
             }
@@ -449,19 +453,13 @@ impl Platform for Hardware {
             None => panic!("qr generation failed")
         };
         
-        let mut data_to_sign_option = None;
-        let call_to_sign_psram_access = &transaction_psram_access.call_to_sign_psram_access;
-        let extension_to_sign_psram_access = &transaction_psram_access.extension_to_sign_psram_access;
-        in_free(|peripherals| {
-            data_to_sign_option = Some(
-                psram_read_at_address(
-                    peripherals,
-                    call_to_sign_psram_access.start_address,
-                    call_to_sign_psram_access.total_len + extension_to_sign_psram_access.total_len
-                ).unwrap()
-            );
-        });
-        let data_to_sign = data_to_sign_option.unwrap();
+        let data_to_sign_psram_access = PsramAccess {
+            start_address: transaction_psram_access.call_to_sign_psram_access.start_address,
+            total_len:
+                transaction_psram_access.call_to_sign_psram_access.total_len
+                + &transaction_psram_access.extension_to_sign_psram_access.total_len
+        };
+        let data_to_sign = read_from_psram(&data_to_sign_psram_access);
 
         let context = signing_context(SIGNING_CTX);
         let signature = self.pair()
@@ -474,7 +472,7 @@ impl Platform for Hardware {
             .into_bytes()
             .try_into()
             .expect("static length");
-        
+
         (signature_with_id_bytes, &mut self.display)
     }
 
@@ -497,6 +495,43 @@ lazy_static! {
             RowVector3::<f32>::new(0.0, 0.0, 1.0),
         ])
     );
+}
+
+fn read_checked_metadata_metal(metadata_psram_access: &PsramAccess) -> (CheckedMetadataMetal, ShortSpecs, String) {
+    let mut checked_metadata_metal_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        checked_metadata_metal_option = Some(
+            CheckedMetadataMetal::from(
+                metadata_psram_access,
+                &mut external_psram
+            ).unwrap()
+        );
+    });
+
+    let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+    let specs = checked_metadata_metal.to_specs();
+    let spec_name = checked_metadata_metal.spec_name_version.spec_name.to_owned();
+    (
+        checked_metadata_metal,
+        specs,
+        spec_name
+    )
+}
+
+fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
+    let mut bytes_option = None;
+    in_free(|peripherals| {
+        bytes_option = Some(
+            psram_read_at_address(
+                peripherals,
+                psram_access.start_address,
+                psram_access.total_len
+            ).unwrap()
+        );
+    });
+    
+    bytes_option.unwrap()
 }
 
 pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {

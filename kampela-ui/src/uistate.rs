@@ -5,6 +5,7 @@ mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::vec::Vec;
     pub use alloc::rc::Rc;
+    pub use alloc::borrow::ToOwned;
 }
 
 
@@ -13,6 +14,7 @@ mod stdwrap {
     pub use std::string::String;
     pub use std::vec::Vec;
     pub use std::rc::Rc;
+    pub use std::borrow::ToOwned;
 }
 
 
@@ -34,6 +36,8 @@ use embedded_graphics_core::{
 
 use crate::{display_def::*, pin::pin::Pincode, widget::view::ViewScreen};
 
+use crate::backup::Backup;
+
 use crate::platform::Platform;
 
 use crate::seed_entry::SeedEntryState;
@@ -49,10 +53,12 @@ pub struct EventResult {
     pub state: Option<UnitScreen>,
 }
 
+//TODO: enum
 pub struct UpdateRequest {
     fast: bool,
     slow: bool,
     part: Option<Rectangle>,
+    hidden: bool,
 }
 
 impl UpdateRequest {
@@ -61,7 +67,8 @@ impl UpdateRequest {
             fast: false,
             slow: false,
             part: None,
-}
+            hidden: false,
+        }
     }
 
     pub fn set_slow(&mut self) {
@@ -75,14 +82,19 @@ impl UpdateRequest {
         self.part = Some(area);
     }
 
-    pub fn set_both(&mut self) {
+    pub fn set_both(&mut self) { //unnecessary
         self.set_slow();
         self.set_fast();
+    }
+
+    pub fn set_hidden(&mut self) {
+        self.hidden = true;
     }
 
     pub fn propagate(&mut self, mut new: UpdateRequest) {
         if new.read_fast() { self.set_fast() };
         if new.read_slow() { self.set_slow() };
+        if new.read_hidden() { self.set_hidden() };
         if let Some(a) = new.read_part() { self.set_part(a) };
     }
 
@@ -107,6 +119,13 @@ impl UpdateRequest {
             area
         } else { None }
     }
+
+    pub fn read_hidden(&mut self) -> bool {
+        if self.hidden {
+            self.hidden = false;
+            true
+        } else { false }
+    }
 }
 
 impl Default for UpdateRequest {
@@ -123,12 +142,13 @@ pub struct UIState<P> where
     pub platform: P,
     unlocked: bool,
 }
-// Some macro can be used to generate this enum from enum Screen
-#[derive(Copy, Clone)]
+
+#[derive(Clone)]
 pub enum UnitScreen {
     OnboardingRestoreOrGenerate,
     OnboardingRestore,
-    OnboardingBackup,
+    OnboardingBackup(Vec<u8>),
+    ShowMessage(String),
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -139,11 +159,11 @@ pub enum UnitScreen {
 
 /// keeps states of screens, initialization can take a lot of memory
 pub enum Screen<R: Rng + ?Sized> {
-    PinEntry((Pincode<R>, UnitScreen)),
+    PinEntry(Pincode<R>, UnitScreen),
     OnboardingRestoreOrGenerate,
     OnboardingRestore(SeedEntryState),
-    OnboardingBackup,
-    ShowMessage(String),
+    OnboardingBackup(Backup),
+    ShowMessage(String, Option<UnitScreen>),
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -156,7 +176,7 @@ impl <P: Platform> UIState<P> {
         platform.read_entropy();
         let mut initial_screen: Option<UnitScreen>;
         let mut unlocked: bool;
-        if platform.entropy_display().0.is_empty() {
+        if platform.public().is_none() {
             initial_screen = Some(UnitScreen::OnboardingRestoreOrGenerate);
             unlocked = true;
         } else {
@@ -177,20 +197,19 @@ impl <P: Platform> UIState<P> {
     }
 
     fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL) {
-        if let Some(ref s) = s {
+        if let Some(s) = s {
             match s {
                 UnitScreen::QRAddress => {
-                    if self.unlocked {
-                        self.screen = Screen::QRAddress;
-                    } else {
-                        self.screen = Screen::PinEntry((Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRAddress));
-                    }
+                    self.screen = Screen::QRAddress;
                 },
                 UnitScreen::Locked => {
                     self.screen = Screen::Locked;
                 },
-                UnitScreen::OnboardingBackup => {
-                    self.screen = Screen::OnboardingBackup;
+                UnitScreen::OnboardingBackup(e) => {
+                    self.screen = Screen::OnboardingBackup(Backup::new(e));
+                },
+                UnitScreen::ShowMessage(m) => {
+                    self.screen = Screen::ShowMessage(m, None);
                 },
                 UnitScreen::OnboardingRestore => {
                     self.screen = Screen::OnboardingRestore(SeedEntryState::new());
@@ -198,8 +217,16 @@ impl <P: Platform> UIState<P> {
                 UnitScreen::OnboardingRestoreOrGenerate => {
                     self.screen = Screen::OnboardingRestoreOrGenerate;
                 },
-                UnitScreen::QRSignature => {//should it be protected?
-                    self.screen = Screen::QRSignature
+                UnitScreen::QRSignature => {
+                    if self.unlocked {
+                        if matches!(self.screen, Screen::ShowMessage(_, _)) {
+                            self.screen = Screen::QRSignature;
+                        } else {
+                            self.screen = Screen::ShowMessage("Signing...".to_owned(), Some(UnitScreen::QRSignature));
+                        }
+                    } else {
+                        self.screen = Screen::PinEntry(Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRSignature);
+                    }
                 },
                 UnitScreen::ShowExtension => {
                     self.screen = Screen::ShowExtension;
@@ -223,7 +250,7 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
-            Screen::PinEntry((ref mut a, u)) => {
+            Screen::PinEntry(ref mut a, ref u) => {
                 let (res, pinok) = a.handle_tap_screen(point, self.platform.pin());
                 out = res.request;
                 new_screen = res.state;
@@ -234,44 +261,40 @@ impl <P: Platform> UIState<P> {
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
                     new_screen = Some(UnitScreen::OnboardingRestore);
-                    out.set_slow();
+                    out.set_fast();
                 }
                 150..=300 => {
-                    self.platform.generate_seed(h);
-                    new_screen = Some(UnitScreen::OnboardingBackup);
-                    out.set_slow();
+                    let e = P::generate_seed_entropy(h).to_vec();
+                    new_screen = Some(UnitScreen::OnboardingBackup(e));
+                    out.set_fast();
                 }
                 _ => {},
             },
             Screen::OnboardingRestore(ref mut a) => {
-                let mut seed = None;
-                let res = a.handle_event(point, &mut seed, fast_display)?;
-                if let Some(b) = seed {
-                    self.platform.set_entropy(&b);
-                }
+                let res = a.handle_event(point, fast_display)?;
                 out = res.request;
                 new_screen = res.state;
             },
-            Screen::OnboardingBackup => {
-                self.platform.store_entropy();
-                new_screen = Some(UnitScreen::QRAddress);
-                out.set_slow();
+            Screen::OnboardingBackup(ref mut a) => {
+                let (res, _) = a.handle_tap_screen(point, ());
+                out = res.request;
+                new_screen = res.state;
             },
             Screen::ShowTransaction => match point.x {
                 150..=300 => {
                     new_screen = Some(UnitScreen::ShowExtension);
-                    out.set_slow();
+                    out.set_fast();
                 }
                 _ => {},
             },
             Screen::ShowExtension => match point.x {
                 0..=100 => {
                     new_screen = Some(UnitScreen::ShowTransaction);
-                    out.set_slow();
+                    out.set_fast();
                 }
                 150..=300 => {
                     new_screen = Some(UnitScreen::QRSignature);
-                    out.set_slow();
+                    out.set_fast();
                 }
                 _ => {},
             },
@@ -280,22 +303,24 @@ impl <P: Platform> UIState<P> {
         self.switch_screen(new_screen, h);
         Ok(out)
     }
-    pub fn handle_message(&mut self, message: String) -> UpdateRequest {
+    pub fn handle_message(&mut self, message: String, h: &mut <P as Platform>::HAL) -> UpdateRequest {
         let mut out = UpdateRequest::new();
-        self.screen = Screen::ShowMessage(message);
+        let screen = Some(UnitScreen::ShowMessage(message));
+        self.switch_screen(screen, h);
         out.set_fast();
         out
     }
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
-    pub fn handle_transaction<R: Rng + ?Sized + CryptoRng>(&mut self, rng: &mut R) -> UpdateRequest
+    pub fn handle_transaction(&mut self, h: &mut <P as Platform>::HAL) -> UpdateRequest
     {
         let mut out = UpdateRequest::new();
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
-        self.screen = Screen::ShowTransaction;
-        out.set_slow();
+        let screen = Some(UnitScreen::ShowTransaction);
+        self.switch_screen(screen, h);
+        out.set_fast();
         out
             // },
             // _ => {},
@@ -327,11 +352,11 @@ impl <P: Platform> UIState<P> {
         let mut new_screen = None;
 
         match self.screen {
-            Screen::PinEntry((ref mut a, u)) => {
+            Screen::PinEntry(ref mut a, ref u) => {
                 let (res, _) = a.draw_screen(display, P::rng(h))?;
                 if self.unlocked {
-                    out.set_slow();
-                    new_screen = Some(u);
+                    out.set_fast();
+                    new_screen = Some(u.clone());
                 } else {
                     out = res.request;
                     new_screen = res.state;
@@ -358,11 +383,20 @@ impl <P: Platform> UIState<P> {
                 .into_styled(linestyle)
                 .draw(display)?;
             },
-            Screen::OnboardingBackup => {
-                self.platform.draw_backup()?;
+            Screen::OnboardingBackup(ref mut a) => {
+                let (res, entropy) = a.draw_screen(display, ())?;
+                if let Some(e) = entropy {
+                    self.platform.store_entropy(&e);
+                }
+                out = res.request;
+                new_screen = res.state;
             },
-            Screen::ShowMessage(ref m) => {
+            Screen::ShowMessage(ref m, ref next) => {
                 message::draw(display, m)?;
+                if next.is_some() {
+                    out.set_fast();
+                }
+                new_screen = next.clone();
             },
             Screen::ShowTransaction => {
                 self.platform.draw_transaction()?

@@ -26,7 +26,7 @@ use core::ops::DerefMut;
 use parity_scale_codec::Decode;
 
 pub const FREQ: u16 = 22;
-const NFC_MIN_VOLTAGE: i32 = 4000;
+const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
 
 #[derive(Clone, Debug)]
 pub enum BufferStatus {
@@ -293,7 +293,7 @@ pub enum NfcError {
 pub enum NfcResult {
     Transaction(NfcTransactionPsramAccess),
     DisplayAddress,
-    KampelaStop,
+    Empty,
 }
 
 enum NfcState {
@@ -442,11 +442,11 @@ impl <'a> NfcReceiver<'a> {
                         })));
                     },
                     _ => {
-                        return Some(Ok(NfcResult::KampelaStop))
+                        return Some(Ok(NfcResult::Empty))
                     }
                 }
             },
-            NfcCollector::Empty => Some(Ok(NfcResult::KampelaStop)),
+            NfcCollector::Empty => Some(Ok(NfcResult::Empty)),
             NfcCollector::InProgress(_) => None,
         }
     }
@@ -472,7 +472,7 @@ impl <'a> NfcReceiver<'a> {
                     },
                 }
             },
-            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::KampelaStop))) }
+            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty))) }
         }
     }
 }

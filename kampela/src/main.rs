@@ -218,30 +218,12 @@ fn main() -> ! {
                         },
                         NfcStateOutput::Done(r) => {
                             match r {
-                                NfcResult::KampelaStop => {break},
+                                NfcResult::Empty => {break},
                                 NfcResult::DisplayAddress => {
-                                    /*
-                                    // TODO: implement adress
-                                    // let mut stuff = [0u8];
-                                    let line1 = format!("substrate:0x{}", hex::encode(pair.public.to_bytes()));
-                                    // stuff[0..79].copy_from_slice(&line1.as_bytes());*/
                                     ui.handle_address([0;76]);
                                     break
                                 },
                                 NfcResult::Transaction(transaction) => {
-                                    /*
-                                    let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
-        
-                                    let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-                                    let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-        
-                                    let context = signing_context(SIGNING_CTX);
-                                    let signature = pair.sign(attach_rng(context.bytes(&transaction.data_to_sign), &mut SeRng{}));
-                                    let mut signature_with_id: [u8; 65] = [1; 65];
-                                    signature_with_id[1..].copy_from_slice(&signature.to_bytes());
-                                    // let signature_into_qr: [u8; 130] = ;
-        
-                                    ui.handle_transaction(call, extensions, hex::encode(signature_with_id).into_bytes().try_into().expect("static length"));*/
                                     ui.handle_transaction(transaction);
                                     break
         

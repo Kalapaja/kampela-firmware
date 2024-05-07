@@ -288,10 +288,9 @@ impl SeedEntryState {
         }
     }
 
-    fn new_state(&self, seed: &mut Option<Vec<u8>>) -> Option<UnitScreen> {
+    fn new_state(&self) -> Option<UnitScreen> {
         if let Some(a) = &self.seed_phrase.ready {
-            *seed = Some(a.clone());
-            Some(UnitScreen::OnboardingBackup) // TODO (entropy_to_phrase(&a).unwrap()))
+            Some(UnitScreen::OnboardingBackup(a.clone())) // TODO (entropy_to_phrase(&a).unwrap()))
         } else { None }
     }
 
@@ -347,11 +346,11 @@ impl SeedEntryState {
         if self.proposal.entry.len() > 0 {
             self.proposal.remove_letter();
             self.update_entry(fast_display)?;
-            out.set_fast();
+            out.set_part(WORD_AREA);
         } else if self.seed_phrase.len() > 0 {
             self.seed_phrase.remove_last();
             self.update_proposal(fast_display)?;
-            out.set_slow();
+            out.set_fast();
         };
         Ok(out)
     }
@@ -365,11 +364,11 @@ impl SeedEntryState {
             self.seed_phrase.submit_word(a);
             self.update_proposal(fast_display)?;
             self.update_entry(fast_display)?;
-            out.set_slow();
+            out.set_fast();
         } else {
             if self.proposal.proposed_len() == 0 {
                 if self.seed_phrase.validate() {
-                    out.set_slow();
+                    out.set_fast();
                 }
             }
         };
@@ -383,7 +382,7 @@ impl SeedEntryState {
         let mut out = UpdateRequest::new();
         if self.proposal.add_letter(key) {
             self.update_entry(fast_display)?;
-            out.set_fast();
+            out.set_part(WORD_AREA);
         }
         Ok(out)
     }
@@ -408,12 +407,12 @@ impl SeedEntryState {
         Ok(out)
     }
 
-    pub fn handle_event<D>(&mut self, point: Point, seed: &mut Option<Vec<u8>>, fast_display: &mut D) -> Result<EventResult, D::Error>
+    pub fn handle_event<D>(&mut self, point: Point, fast_display: &mut D) -> Result<EventResult, D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
     {
         let request = self.handle_button(point, fast_display)?;
-        let state = self.new_state(seed);
+        let state = self.new_state();
         Ok(EventResult {request, state})
     }
 
