@@ -28,7 +28,7 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::{phrase_to_entropy, wordlist_english, WordListElement};
+use patches::phrase::{phrase_to_entropy, get_words_by_prefix, WordListElement};
 
 use crate::uistate::{EventResult, UnitScreen, UpdateRequest};
 use crate::display_def::*;
@@ -227,7 +227,7 @@ impl Proposal {
     pub fn add_letter(&mut self, letter: char) -> bool {
         let mut new = self.entry.clone();
         new.push(letter);
-        let guess = wordlist_english().get_words_by_prefix(&new);
+        let guess = get_words_by_prefix(&new);
         if guess.len() > 0 {
             self.entry = new;
             self.guess = guess;
@@ -246,7 +246,7 @@ impl Proposal {
         self.guess = if self.proposed_len() == 0 {
             Vec::new()
         } else {
-            wordlist_english().get_words_by_prefix(&self.entry)
+            get_words_by_prefix(&self.entry)
         };
         true
     }

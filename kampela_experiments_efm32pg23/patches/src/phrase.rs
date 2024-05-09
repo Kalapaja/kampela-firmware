@@ -5,17 +5,7 @@ use alloc::{string::String, vec::Vec};
 use bitvec::prelude::{BitSlice, BitVec, Msb0};
 use sha2::{Digest, Sha256};
 
-use crate::{error::Error, wordlist::WORDLIST_ENGLISH};
-
-pub struct WordList {
-    inner: [&'static str; 2048],
-}
-
-pub const fn wordlist_english() -> WordList {
-    WordList {
-        inner: WORDLIST_ENGLISH,
-    }
-}
+use crate::{error::Error, wordlist::{self, WORDLIST_ENGLISH}};
 
 pub struct WordListElement {
     word: &'static str,
@@ -31,40 +21,38 @@ impl WordListElement {
     }
 }
 
-impl WordList {
-    pub fn get_word(&self, bits: Bits11) -> &'static str {
-        self.inner[bits.bits() as usize]
+pub fn get_word(bits: Bits11) -> &'static str {
+    WORDLIST_ENGLISH[bits.bits() as usize]
+}
+
+pub fn get_words_by_prefix(prefix: &str) -> Vec<WordListElement> {
+    let start = WORDLIST_ENGLISH.binary_search(&prefix).unwrap_or_else(|idx| idx);
+    let count = WORDLIST_ENGLISH[start..]
+        .iter()
+        .take_while(|word| word.starts_with(prefix))
+        .count();
+
+    let mut out: Vec<WordListElement> = Vec::with_capacity(count);
+    for idx in start..start + count {
+        out.push(WordListElement {
+            word: WORDLIST_ENGLISH[idx],
+            bits11: Bits11::from(idx as u16),
+        })
     }
+    out
+}
 
-    pub fn get_words_by_prefix(&self, prefix: &str) -> Vec<WordListElement> {
-        let start = self.inner.binary_search(&prefix).unwrap_or_else(|idx| idx);
-        let count = self.inner[start..]
-            .iter()
-            .take_while(|word| word.starts_with(prefix))
-            .count();
-
-        let mut out: Vec<WordListElement> = Vec::with_capacity(count);
-        for idx in start..start + count {
-            out.push(WordListElement {
-                word: self.inner[idx],
-                bits11: Bits11::from(idx as u16),
-            })
+pub fn get_bits11(word: &str) -> Result<Bits11, Error> {
+    let mut found = None;
+    for (i, element) in WORDLIST_ENGLISH.iter().enumerate() {
+        if element == &word {
+            found = Some(i);
+            break;
         }
-        out
     }
-
-    pub fn get_bits11(&self, word: &str) -> Result<Bits11, Error> {
-        let mut found = None;
-        for (i, element) in self.inner.iter().enumerate() {
-            if element == &word {
-                found = Some(i);
-                break;
-            }
-        }
-        match found {
-            Some(idx) => Ok(Bits11::from(idx as u16)),
-            None => Err(Error::NoWord),
-        }
+    match found {
+        Some(idx) => Ok(Bits11::from(idx as u16)),
+        None => Err(Error::NoWord),
     }
 }
 
@@ -146,7 +134,6 @@ fn sha256_first_byte(input: &[u8]) -> u8 {
 
 pub fn entropy_to_phrase(entropy: &[u8]) -> Result<String, Error> {
     check_entropy_length(entropy)?;
-    let wordlist = wordlist_english();
     let checksum_byte = sha256_first_byte(entropy);
     let mut entropy_bits: BitVec<u8, Msb0> = BitVec::with_capacity((entropy.len() + 1) * 8);
     entropy_bits.extend_from_bitslice(&BitVec::<u8, Msb0>::from_slice(entropy));
@@ -161,22 +148,20 @@ pub fn entropy_to_phrase(entropy: &[u8]) -> Result<String, Error> {
                     bits11 |= 1 << (10 - i)
                 }
             }
-            wordlist.get_word(Bits11(bits11))
+            get_word(Bits11(bits11))
         })
         .collect();
     Ok(words.join(" "))
 }
 
 pub fn phrase_to_entropy(phrase: &str) -> Result<Vec<u8>, Error> {
-    let wordlist = wordlist_english();
-
     let words: Vec<&str> = phrase.split(' ').collect();
     let mnemonic_type = MnemonicType::from(words.len())?;
 
     let mut entropy_bits: BitVec<u8, Msb0> = BitVec::with_capacity(mnemonic_type.total_bits());
 
     for word in words {
-        let bits11 = wordlist.get_bits11(word)?;
+        let bits11 = get_bits11(word)?;
         entropy_bits.extend_from_bitslice(
             &BitSlice::<u8, Msb0>::from_slice(&(bits11.bits() as u16).to_be_bytes())[5..16],
         )
