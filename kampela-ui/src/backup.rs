@@ -1,14 +1,14 @@
 //! Screen for seed phrase display
 
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec};
+use alloc::vec::Vec;
 #[cfg(feature="std")]
-use std::{vec::Vec};
+use std::vec::Vec;
 
 use patches::entropy_to_phrase;
 use embedded_graphics::{
     mono_font::{
-        ascii::{FONT_8X13_BOLD},
+        ascii::FONT_8X13_BOLD,
         MonoTextStyle,
     },
     primitives::Rectangle,
@@ -25,7 +25,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{display_def::*, message, platform::Platform, uistate::UnitScreen};
+use crate::{display_def::*, message, uistate::UnitScreen};
 
 use crate::widget::view::ViewScreen;
 
@@ -102,19 +102,19 @@ impl ViewScreen for Backup {
             BackupState::Storing => {
                 entropy = Some(self.entropy.clone());
                 state = Some(UnitScreen::QRAddress);
-                request.set_fast();
+                request.set_slow();
             },
         }
 
         Ok((EventResult { request, state }, entropy))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: ()) -> (EventResult, ()) {
+    fn handle_tap_screen<'a>(&mut self, _: Point, _: ()) -> (EventResult, ()) {
         let state = None;
         let mut request = UpdateRequest::new();
 
         if matches!(self.state, BackupState::ShowSeed) {
             self.state = BackupState::Message;
-            request.set_fast();
+            request.set_ultrafast();
         }
 
         (EventResult{ request, state }, ())

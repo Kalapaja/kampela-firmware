@@ -4,7 +4,6 @@
 mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::vec::Vec;
-    pub use alloc::rc::Rc;
     pub use alloc::borrow::ToOwned;
 }
 
@@ -16,9 +15,6 @@ mod stdwrap {
     pub use std::rc::Rc;
     pub use std::borrow::ToOwned;
 }
-
-
-use core::mem::take;
 
 use stdwrap::*;
 
@@ -40,13 +36,13 @@ use crate::backup::Backup;
 
 use crate::platform::Platform;
 
-use crate::seed_entry::SeedEntryState;
+use crate::seed_entry::seed_entry::SeedEntry;
 
 use crate::restore_or_generate;
 
 use crate::message;
 
-use rand::{CryptoRng, Rng};
+use rand::Rng;
 
 pub struct EventResult {
     pub request: UpdateRequest,
@@ -58,6 +54,7 @@ pub struct UpdateRequest {
     fast: bool,
     slow: bool,
     part: Option<Rectangle>,
+    ultrafast: bool,
     hidden: bool,
 }
 
@@ -67,6 +64,7 @@ impl UpdateRequest {
             fast: false,
             slow: false,
             part: None,
+            ultrafast: false,
             hidden: false,
         }
     }
@@ -80,6 +78,10 @@ impl UpdateRequest {
     }
     pub fn set_part(&mut self, area: Rectangle) {
         self.part = Some(area);
+    }
+
+    pub fn set_ultrafast(&mut self) {
+        self.ultrafast = true;
     }
 
     pub fn set_both(&mut self) { //unnecessary
@@ -118,6 +120,13 @@ impl UpdateRequest {
             self.part = None;
             area
         } else { None }
+    }
+
+    pub fn read_ultrafast(&mut self) -> bool {
+        if self.ultrafast {
+            self.ultrafast = false;
+            true
+        } else { false }
     }
 
     pub fn read_hidden(&mut self) -> bool {
@@ -161,7 +170,7 @@ pub enum UnitScreen {
 pub enum Screen<R: Rng + ?Sized> {
     PinEntry(Pincode<R>, UnitScreen),
     OnboardingRestoreOrGenerate,
-    OnboardingRestore(SeedEntryState),
+    OnboardingRestore(SeedEntry),
     OnboardingBackup(Backup),
     ShowMessage(String, Option<UnitScreen>),
     ShowTransaction,
@@ -174,8 +183,8 @@ pub enum Screen<R: Rng + ?Sized> {
 impl <P: Platform> UIState<P> {
     pub fn new(mut platform: P, h: &mut <P as Platform>::HAL) -> Self {
         platform.read_entropy();
-        let mut initial_screen: Option<UnitScreen>;
-        let mut unlocked: bool;
+        let initial_screen: Option<UnitScreen>;
+        let unlocked: bool;
         if platform.public().is_none() {
             initial_screen = Some(UnitScreen::OnboardingRestoreOrGenerate);
             unlocked = true;
@@ -212,7 +221,7 @@ impl <P: Platform> UIState<P> {
                     self.screen = Screen::ShowMessage(m, None);
                 },
                 UnitScreen::OnboardingRestore => {
-                    self.screen = Screen::OnboardingRestore(SeedEntryState::new());
+                    self.screen = Screen::OnboardingRestore(SeedEntry::new());
                 },
                 UnitScreen::OnboardingRestoreOrGenerate => {
                     self.screen = Screen::OnboardingRestoreOrGenerate;
@@ -246,11 +255,10 @@ impl <P: Platform> UIState<P> {
         h: &mut <P as Platform>::HAL,
     ) -> Result<UpdateRequest, <<P as Platform>::Display as DrawTarget>::Error>
     {
-        let fast_display = self.platform.display();
         let mut out = UpdateRequest::new();
         let mut new_screen = None;
         match self.screen {
-            Screen::PinEntry(ref mut a, ref u) => {
+            Screen::PinEntry(ref mut a, _) => {
                 let (res, pinok) = a.handle_tap_screen(point, self.platform.pin());
                 out = res.request;
                 new_screen = res.state;
@@ -271,7 +279,7 @@ impl <P: Platform> UIState<P> {
                 _ => {},
             },
             Screen::OnboardingRestore(ref mut a) => {
-                let res = a.handle_event(point, fast_display)?;
+                let (res, _) = a.handle_tap_screen(point, ());
                 out = res.request;
                 new_screen = res.state;
             },
@@ -307,7 +315,7 @@ impl <P: Platform> UIState<P> {
         let mut out = UpdateRequest::new();
         let screen = Some(UnitScreen::ShowMessage(message));
         self.switch_screen(screen, h);
-        out.set_fast();
+        out.set_ultrafast();
         out
     }
     /// Handle NFC message reception.
@@ -320,7 +328,7 @@ impl <P: Platform> UIState<P> {
             // Screen::OnboardingRestoreOrGenerate => {
         let screen = Some(UnitScreen::ShowTransaction);
         self.switch_screen(screen, h);
-        out.set_fast();
+        out.set_ultrafast();
         out
             // },
             // _ => {},
@@ -365,8 +373,10 @@ impl <P: Platform> UIState<P> {
             Screen::OnboardingRestoreOrGenerate => {
                 restore_or_generate::draw(display)?;
             },
-            Screen::OnboardingRestore(ref entry) => {
-                entry.draw(display)?;
+            Screen::OnboardingRestore(ref mut entry) => {
+                let (res, _) = entry.draw_screen(display, ())?;
+                out = res.request;
+                new_screen = res.state;
             },
             Screen::Locked => {
                 let linestyle = PrimitiveStyle::with_stroke(BinaryColor::On, 5);
@@ -394,7 +404,7 @@ impl <P: Platform> UIState<P> {
             Screen::ShowMessage(ref m, ref next) => {
                 message::draw(display, m)?;
                 if next.is_some() {
-                    out.set_fast();
+                    out.set_ultrafast();
                 }
                 new_screen = next.clone();
             },
@@ -410,7 +420,6 @@ impl <P: Platform> UIState<P> {
             Screen::QRAddress => {
                 self.platform.draw_address_qr()?
             },
-            _ => {}
         }
         self.switch_screen(new_screen, h);
         Ok(out)

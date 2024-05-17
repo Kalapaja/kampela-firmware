@@ -1,19 +1,13 @@
-#[cfg(not(feature="std"))]
-use alloc::string::String;
-#[cfg(feature="std")]
-use std::string::String;
-
 use embedded_graphics::{
     mono_font::{
-        ascii::{FONT_10X20},
+        ascii::FONT_10X20,
         MonoTextStyle,
     },
-    primitives::Rectangle,
+    primitives::{Primitive, PrimitiveStyle},
     Drawable,
 };
 use embedded_graphics_core::{
     draw_target::DrawTarget,
-    geometry::{Point, Size},
     pixelcolor::BinaryColor,
 };
 use embedded_text::{
@@ -22,22 +16,22 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::display_def::*;
-
-/// Draw the screen informing that device receives nfc packets
+/// Draw the screen informing with fullscreen message
 pub fn draw<D>(display: &mut D, message: &str) -> Result<(), D::Error>
 where
     D: DrawTarget<Color = BinaryColor>,
 {
-    let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::On);
+    let filled = PrimitiveStyle::with_fill(BinaryColor::On);
+    let character_style = MonoTextStyle::new(&FONT_10X20, BinaryColor::Off);
     let textbox_style = TextBoxStyleBuilder::new()
         .alignment(HorizontalAlignment::Center)
         .vertical_alignment(VerticalAlignment::Middle)
         .build();
-    let bounds = Rectangle::new(Point::new(0, 0), Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
+    let area = display.bounding_box();
+    area.into_styled(filled).draw(display)?;
     TextBox::with_textbox_style(
         message,
-        bounds,
+        area,
         character_style,
         textbox_style,
     )

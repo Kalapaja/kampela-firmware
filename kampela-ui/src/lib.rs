@@ -13,7 +13,21 @@ pub mod pin{
     pub mod pinpad;
     pub mod pinbutton;
 }
-mod seed_entry;
+
+pub mod seed_entry{
+    pub mod seed_entry;
+    pub mod entry;
+    pub mod proposal;
+    pub mod phrase;
+    pub mod keyboard;
+    pub mod key;
+}
+
+pub mod nav_bar{
+    pub mod nav_bar;
+    pub mod nav_button;
+}
+
 pub mod backup;
 mod restore_or_generate;
 mod message;

@@ -1,32 +1,17 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, format};
+use alloc::vec::Vec;
 #[cfg(feature="std")]
-use std::{vec::Vec, format};
+use std::vec::Vec;
 
 use embedded_graphics::{
-    mono_font::{
-        ascii::{FONT_10X20},
-        MonoTextStyle,
-    },
-    primitives::Rectangle,
-    pixelcolor::BinaryColor,
-    prelude::{DrawTarget, Point},
-    geometry::{Size},
-    Drawable,
-    pixelcolor::PixelColor,
-};
-
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::TextBoxStyleBuilder,
-    TextBox,
+    pixelcolor::BinaryColor, prelude::{Drawable, DrawTarget, Point}, primitives::{Primitive, PrimitiveStyle}
 };
 
 use rand::Rng;
 
-use crate::{display_def::*, uistate::{UnitScreen, UpdateRequest}, widget::view::ViewScreen};
+use crate::{uistate::UpdateRequest, widget::view::ViewScreen};
 use crate::uistate::EventResult;
-use crate::widget::view::{View};
+use crate::widget::view::View;
 use crate::platform::PinCode;
 
 use crate::pin::{
@@ -36,10 +21,6 @@ use crate::pin::{
 
 pub const PIN_LEN: usize = 4;
 
-
-
-
-
 #[derive(Debug)]
 pub struct Pincode<R> where
     R: Rng + ?Sized
@@ -47,7 +28,7 @@ pub struct Pincode<R> where
     pinpad: Pinpad<R>,
     pindots: Pindots,
     entered_nums: Vec<u8>,
-    pinok: bool,
+    tapped: bool,
 }
 
 impl<R> Pincode<R> where
@@ -56,15 +37,10 @@ impl<R> Pincode<R> where
     pub fn new(rng: &mut R) -> Self {
 
         Self {
-            pinpad: Pinpad::new(
-                SCREEN_ZERO,
-                rng
-            ),
-            pindots: Pindots::new(
-                SCREEN_ZERO,
-            ),
+            pinpad: Pinpad::new(rng),
+            pindots: Pindots::new(),
             entered_nums: Vec::new(),
-            pinok: false,
+            tapped: false,
         }
     }
     fn check_pin(&mut self, pin: &PinCode) -> bool {
@@ -83,6 +59,14 @@ impl<R> Pincode<R> where
             self.entered_nums.push(num);
         }
     }
+    fn reset_tapped(&mut self) -> bool {
+        if self.tapped {
+            self.tapped = false;
+            true
+        } else {
+            false
+        }
+    }
 }
 
 impl<R> ViewScreen for Pincode<R> where
@@ -99,11 +83,23 @@ impl<R> ViewScreen for Pincode<R> where
         let mut request = UpdateRequest::new();
         let state = None;
 
-        self.pindots.draw(target, self.entered_nums.len())?;
-        let t = self.pinpad.draw(target, rng)?;
+        let t = self.reset_tapped();
+        let filled = if t {
+            PrimitiveStyle::with_fill(BinaryColor::On)
+        } else {
+            PrimitiveStyle::with_fill(BinaryColor::Off)
+        };
+        target.bounding_box().into_styled(filled).draw(target)?;
+        
+        self.pindots.draw(target, (self.entered_nums.len(), t))?;
+        self.pinpad.draw(target, (rng, t))?;
 
         if t {
-            request.set_fast();
+            if self.entered_nums.is_empty() {
+                request.set_fast();
+            } else {
+                request.set_ultrafast();
+            }
         }
 
         Ok((EventResult { request, state }, ()))
@@ -113,7 +109,8 @@ impl<R> ViewScreen for Pincode<R> where
         let mut request = UpdateRequest::new();
         let mut pinok = false;
         if let Some(b) = self.pinpad.handle_tap(point, ()) {
-            request.set_part(self.pinpad.buttons[b].bounding_box_absolut());
+            self.tapped = true;
+            request.set_ultrafast();
             self.push_entered(self.pinpad.buttons[b].num());
             if self.entered_nums.len() == pin.len() && self.check_pin(pin) {
                 pinok = true;

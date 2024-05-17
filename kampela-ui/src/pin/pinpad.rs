@@ -1,33 +1,14 @@
-#[cfg(not(feature="std"))]
-use alloc::{string::String, string::ToString, vec::Vec};
 use core::{array, marker::PhantomData};
-#[cfg(feature="std")]
-use std::{string::String, string::ToString, vec::Vec}; 
 
 use embedded_graphics::{
 	pixelcolor::BinaryColor,
-	prelude::{DrawTarget, Point, Primitive, Size, Dimensions},
-	Drawable,
-	mono_font::{
-        ascii::{FONT_6X10},
-        MonoTextStyle,
-    },
-    primitives::{
-        Circle, PrimitiveStyle, Rectangle,
-    },
+	prelude::{DrawTarget, Point, Size, Dimensions},
+    primitives:: Rectangle,
 };
 
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::TextBoxStyleBuilder,
-    TextBox,
-};
 use rand::{Rng, seq::SliceRandom};
-use crate::display_def::*;
-use crate::widget::view::{View, Widget, DrawView};
+use crate::{display_def::*, widget::view::{View, Widget, DrawView}};
 use crate::pin::{pinbutton::PinButton, pindots::PINDOT_SIZE};
-
-use crate::uistate::EventResult;
 
 const PAD_SIZE_WIDTH: u32 = 200;
 
@@ -42,10 +23,42 @@ pub const PINPAD_AREA: Rectangle = Rectangle {
     },
 };
 
+const PINPAD_WIDGET: Widget = Widget::new(PINPAD_AREA, SCREEN_ZERO);
+
 const BUTTON_SIZE: Size = Size {
     width: PINPAD_AREA.size.width / 3,
     height: PINPAD_AREA.size.height / 4,
 };
+
+const fn get_pinbutton_widgets() -> [Widget; 10] {
+    let mut widgets = [Widget::zero(); 10];
+    let mut i = 0;
+    while i < 10 {
+        widgets[i] = Widget::new(Rectangle{
+            top_left: Point {
+                x: {
+                    match i {
+                        0 => BUTTON_SIZE.width as i32,
+                        _ => (i as i32 - 1) % 3 * BUTTON_SIZE.width as i32,
+                    }
+                },
+                y: {
+                    match i {
+                        0 => 3 * BUTTON_SIZE.height as i32,
+                        _ => (i as i32 - 1) / 3 * BUTTON_SIZE.height as i32,
+                    }
+                }
+            },
+            size: BUTTON_SIZE,
+        },
+        PINPAD_WIDGET.absolute_top_left
+        );
+        i = i + 1;
+    }
+    widgets
+}
+
+const PIN_BUTTON_WIDGETS: [Widget; 10] = get_pinbutton_widgets();
 /// Shuffle keys
 fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R) -> [PinButton; 10] {
     let mut pinnums: [u8; 10] = core::array::from_fn(|i| {
@@ -56,24 +69,7 @@ fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R) -> [PinButton; 10] {
     let pinset: [PinButton; 10] = array::from_fn(
         |i| PinButton::new(
             pinnums[i],
-            Rectangle{
-                top_left: Point {
-                    x: {
-                        match i {
-                            0 => BUTTON_SIZE.width as i32,
-                            _ => (i as i32 - 1) % 3 * BUTTON_SIZE.width as i32,
-                        }
-                    },
-                    y: {
-                        match i {
-                            0 => 3 * BUTTON_SIZE.height as i32,
-                            _ => (i as i32 - 1) / 3 * BUTTON_SIZE.height as i32,
-                        }
-                    }
-                },
-                size: BUTTON_SIZE,
-            },
-            PINPAD_AREA.top_left,
+            &PIN_BUTTON_WIDGETS[i],
         )
     );
     pinset
@@ -83,7 +79,6 @@ fn get_pinbuttons<R: Rng + ?Sized>(rng: &mut R) -> [PinButton; 10] {
 pub struct Pinpad<R> where
     R: Rng + ?Sized
 {
-	pub widget: Widget,
     pub buttons: [PinButton; 10],
     input_type: PhantomData<R>,
 }
@@ -91,12 +86,9 @@ pub struct Pinpad<R> where
 impl<R> Pinpad<R> where
     R: Rng + ?Sized
 {
-	pub fn new(parent_top_left: Point, rng: &mut R) -> Self {
-        let widget = Widget::new(PINPAD_AREA, parent_top_left);
-
+	pub fn new(rng: &mut R) -> Self {
         let buttons: [PinButton; 10] = get_pinbuttons::<R>(rng);
 		Self {
-			widget,
             buttons,
             input_type: PhantomData::<R>::default(),
 		}
@@ -110,29 +102,26 @@ impl<R> Pinpad<R> where
 impl<R> View for Pinpad<R> where
     R: Rng + ?Sized
 {
-    type DrawInput<'a> = &'a mut R where Self: 'a;
-    type DrawOutput = bool;
+    type DrawInput<'a> = (&'a mut R, bool) where Self: 'a;
+    type DrawOutput = ();
     type TapInput<'a> = ();
     type TapOutput = usize;
     fn bounding_box(&self) -> Rectangle {
-        self.widget.bounding_box()
+        PINPAD_WIDGET.bounding_box()
     }
     fn bounding_box_absolut(&self) -> Rectangle {
-        self.widget.bounding_box_absolut()
+        PINPAD_WIDGET.bounding_box_absolute()
     }
-	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, rng: Self::DrawInput<'a>) -> Result<Self::DrawOutput, D::Error> {
-        let mut t = false;
+	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, (rng, t): Self::DrawInput<'a>) -> Result<(), D::Error> {
         for button in self.buttons.iter_mut() {
-            if button.draw(target, ())? {
-                t = true;
-            }
+            button.draw(target, t)?;
         }
         if t {
             self.shuffle(rng);
         }
-        Ok(t)
+        Ok(())
 	}
-    fn handle_tap_view(&mut self, point: Point, input: ()) -> usize {
+    fn handle_tap_view(&mut self, point: Point, _: ()) -> usize {
         let mut tapped = 0;
         for (i, button) in self.buttons.iter_mut().enumerate() {
             if button.handle_tap(point, ()).is_some() {

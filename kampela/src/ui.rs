@@ -14,11 +14,11 @@ use kampela_system::{
     in_free,
     parallel::Operation
 };
-use substrate_parser::{decode_as_call_unmarked, decode_extensions_unmarked, ShortSpecs, TransactionUnmarkedParsed};
+use substrate_parser::{decode_as_call_unmarked, decode_extensions_unmarked, ShortSpecs};
 use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
 use kampela_ui::{display_def::*, platform::{public_from_entropy, PinCode, Platform}, uistate};
-use embedded_graphics::prelude::Point;
+use embedded_graphics::{geometry::Dimensions, prelude::Point};
 
 use primitive_types::H256;
 
@@ -69,7 +69,7 @@ impl UI {
         match self.status {
             UIStatus::Listen => {
                 self.listen();
-                Some(true)
+                Some(true) // done operations
             },
             UIStatus::DisplayOperation => {
                 match self.state.display().advance(voltage) {
@@ -79,7 +79,7 @@ impl UI {
                         }
                         Some(false)
                     },
-                    None => None,
+                    None => None, // not enough energy to start screen update
                 }
             },
             UIStatus::TouchOperation(ref mut touch) => {
@@ -104,13 +104,14 @@ impl UI {
         let f = self.update.read_fast();
         let s = self.update.read_slow();
         let p = self.update.read_part();
-        let i = self.update.read_hidden();
+        let uf = self.update.read_ultrafast();
+        let hi = self.update.read_hidden();
         
-        if i || f || s || p.is_some() {
+        if hi || f || s || p.is_some() || uf {
             let mut h = HALHandle::new();
             self.update = self.state.render::<FrameBuffer>(f || s, &mut h).expect("guaranteed to work, no errors implemented");
 
-            if !i {
+            if !hi {
                 self.status = UIStatus::DisplayOperation;
 
                 if f {
@@ -120,6 +121,10 @@ impl UI {
                     self.state.display().request_full();
                 }
                 if let Some(a) = p {
+                    self.state.display().request_part(a);
+                }
+                if uf {
+                    let a = self.state.display().bounding_box();
                     self.state.display().request_part(a);
                 }
             }

@@ -5,8 +5,11 @@ use alloc::{string::String, vec::Vec};
 use bitvec::prelude::{BitSlice, BitVec, Msb0};
 use sha2::{Digest, Sha256};
 
-use crate::{error::Error, wordlist::{self, WORDLIST_ENGLISH}};
+use crate::{error::Error, wordlist::WORDLIST_ENGLISH};
 
+pub const MAX_WORD_LENGTH: usize = 8;
+
+#[derive(Clone)]
 pub struct WordListElement {
     word: &'static str,
     bits11: Bits11,

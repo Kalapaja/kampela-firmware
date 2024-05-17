@@ -1,13 +1,15 @@
+#[cfg(not(feature="std"))]
+use alloc::borrow::ToOwned;
+#[cfg(feature="std")]
+use std::borrow::ToOwned;
+
 use embedded_graphics::{
     pixelcolor::BinaryColor,
     prelude::{DrawTarget, Point, Pixel, Dimensions},
-    primitives::{Rectangle, Primitive},
-    geometry::{Size},
+    primitives::Rectangle,
 };
-use rand::{Rng};
 
 use crate::uistate::EventResult;
-use crate::display_def::*;
 
 pub struct DrawView<'a, D> where
     D: DrawTarget
@@ -46,29 +48,36 @@ impl <'a, D: DrawTarget> Dimensions for DrawView<'a, D> {
 }
 
 #[derive(Debug)]
+#[derive(Clone, Copy)]
 pub struct Widget {
-    area: Rectangle,
-    absolut_top_left: Point,
+    pub area: Rectangle,
+    pub absolute_top_left: Point,
 }
 
 impl Widget {
-    pub fn new(area: Rectangle, parent_top_left: Point) -> Self {
-        Self {
+    pub const fn new(area: Rectangle, parent_absolut_top_left: Point) -> Self {
+        Widget{
             area,
-            absolut_top_left: Point {
-                x: area.top_left.x + parent_top_left.x,
-                y: area.top_left.y + parent_top_left.y,
+            absolute_top_left: Point {
+                x: area.top_left.x + parent_absolut_top_left.x,
+                y: area.top_left.y + parent_absolut_top_left.y,
             }
         }
     }
-    pub fn bounding_box_absolut(&self) -> Rectangle {
-        Rectangle::new(self.absolut_top_left, self.area.size)
+    pub const fn zero() -> Self {
+        Self::new(Rectangle::zero(), Point::zero())
+    }
+    pub const fn bounding_box_absolute(&self) -> Rectangle {
+        Rectangle::new(self.absolute_top_left, self.area.size)
+    }
+    pub const fn top_left_absolute(&self) -> Point {
+        self.absolute_top_left
     }
 }
 
 impl Dimensions for Widget {
     fn bounding_box(&self) -> Rectangle {
-        self.area
+        self.area.to_owned()
     }
 }
 
@@ -85,6 +94,16 @@ pub trait View {
 
     fn bounding_box_view(&self) -> Rectangle {
         Rectangle { top_left: Point { x: 0, y: 0 }, size: self.bounding_box().size }
+    }
+
+    fn bounding_box_relative_to(&self, relative_to: &impl View) -> Rectangle {
+        Rectangle {
+            top_left: Point{
+                x: self.bounding_box_absolut().top_left.x - relative_to.bounding_box_absolut().top_left.x,
+                y: self.bounding_box_absolut().top_left.y - relative_to.bounding_box_absolut().top_left.y,
+            },
+            size: self.bounding_box().size
+        }
     }
 
     fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>

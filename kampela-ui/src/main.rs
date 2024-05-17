@@ -32,7 +32,19 @@ mod pin {
 }
 
 mod restore_or_generate;
-mod seed_entry;
+pub mod seed_entry{
+    pub mod seed_entry;
+    pub mod entry;
+    pub mod proposal;
+    pub mod phrase;
+    pub mod keyboard;
+    pub mod key;
+}
+
+pub mod nav_bar{
+    pub mod nav_bar;
+    pub mod nav_button;
+}
 mod widget {
     pub mod view;
 }
@@ -249,9 +261,10 @@ fn main() {
         let f = update.read_fast();
         let s = update.read_slow();
         let p = update.read_part();
+        let uf = update.read_ultrafast();
         let i = update.read_hidden();
 
-        if i || f || s || p.is_some() {
+        if i || f || s || p.is_some() || uf {
             match state.render::<SimulatorDisplay<BinaryColor>>(f || s, &mut h) {
                 Ok(u) => update = u,
                 Err(e) => println!("{:?}", e),
@@ -273,6 +286,12 @@ fn main() {
         if p.is_some() {
             window.update(state.display());
             println!("skip {} events in part update", window.events().count());
+            //no-op for non-EPD
+        }
+
+        if uf {
+            window.update(state.display());
+            println!("skip {} events in ultrafast update", window.events().count());
             //no-op for non-EPD
         }
 

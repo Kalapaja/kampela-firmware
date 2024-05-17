@@ -1,37 +1,20 @@
-#[cfg(not(feature="std"))]
-use alloc::{string::String, string::ToString};
-#[cfg(feature="std")]
-use std::{string::String, string::ToString};
-
 use embedded_graphics::{
 	pixelcolor::BinaryColor,
 	prelude::{DrawTarget, Point, Primitive, Dimensions},
 	Drawable,
-	mono_font::{
-        ascii::{FONT_6X10},
-        MonoTextStyle,
-    },
     primitives::{
-        Circle, PrimitiveStyle, Rectangle,
+        Circle, PrimitiveStyle, PrimitiveStyleBuilder, Rectangle, StrokeAlignment,
     },
     geometry::Size,
 };
 
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::TextBoxStyleBuilder,
-    TextBox,
-};
-
-use crate::display_def::*;
-use crate::widget::view::{View, Widget, DrawView};
+use crate::{display_def::*, widget::view::{View, Widget, DrawView}};
 use crate::pin::pin::PIN_LEN;
-use crate::uistate::EventResult;
 
 const DOT_DIAMETER: u32 = 16;
-
+const DOT_SPACING: u32 = 2;
 pub const PINDOT_SIZE: Size = Size {
-    width: DOT_DIAMETER * PIN_LEN as u32,
+    width: DOT_DIAMETER * PIN_LEN as u32 + DOT_SPACING * 3,
     height: DOT_DIAMETER,
 };
 
@@ -43,57 +26,63 @@ const PINDOTS_AREA: Rectangle = Rectangle {
     size: PINDOT_SIZE,
 };
 
+const PINDOTS_WIDGET: Widget = Widget::new(PINDOTS_AREA, SCREEN_ZERO);
+
 #[derive(Debug)]
 pub struct Pindots {
-	pub widget: Widget,
 }
 
 impl Pindots {
-	pub fn new(parent_top_left: Point) -> Self {
-		Pindots {
-			widget: Widget::new(PINDOTS_AREA, parent_top_left),
-		}
+	pub fn new() -> Self {
+		Pindots {}
 	}
 }
 
 impl View for Pindots {
-    type DrawInput<'a> = usize;
+    type DrawInput<'a> = (usize, bool);
     type DrawOutput = ();
     type TapInput<'a> = ();
     type TapOutput = ();
     fn bounding_box(&self) -> Rectangle {
-        self.widget.bounding_box()
+        PINDOTS_WIDGET.bounding_box()
     }
     fn bounding_box_absolut(&self) -> Rectangle {
-        self.widget.bounding_box_absolut()
+        PINDOTS_WIDGET.bounding_box_absolute()
     }
-	fn draw_view<D>(&mut self, target: &mut DrawView<D>, dots: usize) -> Result<(),D::Error>
+	fn draw_view<D>(&mut self, target: &mut DrawView<D>, (dots, t): Self::DrawInput<'_>) -> Result<(),D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
     {
-        
-        let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 2);
-        let filled = PrimitiveStyle::with_fill(BinaryColor::On);
-        let unfilled = PrimitiveStyle::with_fill(BinaryColor::Off);
+        let (on, _) = if t {
+            (BinaryColor::Off, BinaryColor::On)
+        } else {
+            (BinaryColor::On, BinaryColor::Off)
+        };
+
+        let thin_stroke = PrimitiveStyleBuilder::new()
+            .stroke_color(on)
+            .stroke_width(2)
+            .stroke_alignment(StrokeAlignment::Inside)
+            .build();
+        let filled = PrimitiveStyle::with_fill(on);
         let area = self.bounding_box_view();
-        let diameter = area.size.height;
         for i in 0..PIN_LEN {
             let dot = Circle::new(
                 Point {
-                    x: area.top_left.x + i as i32 * diameter as i32,
+                    x: area.top_left.x + i as i32 * (DOT_DIAMETER as i32 + DOT_SPACING as i32),
                     y: area.top_left.y
                 },
-                diameter
+                DOT_DIAMETER
             );
             if i < dots {
                 dot.into_styled(filled).draw(target)?;
+                dot.into_styled(thin_stroke).draw(target)?;
             } else {
-                dot.into_styled(unfilled).draw(target)?;
                 dot.into_styled(thin_stroke).draw(target)?;
             }
         }
         Ok(())
 	}
-    fn handle_tap_view(&mut self, _point: Point, input: ()) {
+    fn handle_tap_view(&mut self, _point: Point, _: ()) {
     }
 }
