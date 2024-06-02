@@ -33,8 +33,6 @@ use crate::display_def::*;
 
 use crate::platform::{NfcTransaction, Platform};
 
-use crate::seed_entry::SeedEntryState;
-
 use crate::restore_or_generate;
 
 use rand::{CryptoRng, Rng};
@@ -118,7 +116,7 @@ pub struct UIState<P> where
 pub enum Screen {
     PinEntry,
     OnboardingRestoreOrGenerate,
-    OnboardingRestore(SeedEntryState),
+    OnboardingRestore,
     OnboardingBackup,
     PinRepeat,
     ShowTransaction,
@@ -188,7 +186,7 @@ impl <P: Platform> UIState<P> {
             }
             Screen::OnboardingRestoreOrGenerate => match point.x {
                 0..=100 => {
-                    new_screen = Some(Screen::OnboardingRestore(SeedEntryState::new()));
+                    new_screen = Some(Screen::OnboardingRestore);
                     out.set_slow();
                 }
                 150..=300 => {
@@ -198,9 +196,9 @@ impl <P: Platform> UIState<P> {
                 }
                 _ => {},
             },
-            Screen::OnboardingRestore(ref mut a) => {
+            Screen::OnboardingRestore => {
                 let mut seed = None;
-                let res = a.handle_event(point, &mut seed, fast_display)?;
+                let res = self.platform.handle_seed_entry_event(point, &mut seed, h)?;
                 if let Some(b) = seed {
                     self.platform.set_entropy(&b);
                 }
@@ -295,8 +293,8 @@ impl <P: Platform> UIState<P> {
             Screen::OnboardingRestoreOrGenerate => {
                 restore_or_generate::draw(display)?;
             }
-            Screen::OnboardingRestore(ref entry) => {
-                entry.draw(display)?;
+            Screen::OnboardingRestore => {
+                self.platform.draw_seed_entry()?
             }
             Screen::Locked => {
                 let linestyle = PrimitiveStyle::with_stroke(BinaryColor::On, 5);
