@@ -11,12 +11,10 @@ cortex-m-rt = "0.7.2"
 cortex-m-semihosting = "0.3.3"
 efm32pg23_fix = {path = "../kampela_experiments_efm32pg23/efm32pg23_fix", features = ["critical-section", "rt"]}
 rand_core = {version = "0.6.4", default-features = false}
-patches = {path = "../kampela_experiments_efm32pg23/patches"}
 schnorrkel = {version = "0.11.2", default-features = false}
 embedded-alloc = "0.5.0" # embedded-alloc required nightly!
 embedded-graphics = "0.7.1"
 embedded-graphics-core = "0.3.3"
-embedded-text = {version = "0.5.0", default-features = false}
 panic-halt = "0.2.0"
 ux = { version = "0.1.3", default_features = false }
 rand = { version = "0.8.5", default_features = false }
@@ -29,8 +27,6 @@ parity-scale-codec = {version = "3.6.4", default-features = false, features = ["
 scale-info = {version = "2.9.0", default-features = false}
 substrate_parser = { git = "https://github.com/Alzymologist/substrate-parser", default-features = false, features = ["embed-display"], rev = "632f621a595fa7161a3352c1f6a05ffcc5f2dcc8" }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
-
-primitive-types = {version = "0.12.1", default-features = false}
 
 kampela-system = { path = "../kampela-system" }
 kampela-ui = { path = "../kampela-ui" , default-features = false }
@@ -47,4 +43,5 @@ kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-fe
 
 [profile.release]
 codegen-units = 1
+opt-level = 2
 lto = true

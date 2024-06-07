@@ -64,36 +64,38 @@ impl View for Key {
         self.widget.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
         where 
-            D: DrawTarget<Color = BinaryColor> {
-
+            D: DrawTarget<Color = BinaryColor>,
+            Self: 'a,
+        {
         let mut was_tapped = false;
-        self.draw_initial(target, t)?;
+        self.draw_initial(target, n)?;
         if self.this_tapped {
             was_tapped = true;
-            self.draw_tapped(target)?;
+            self.draw_tapped(target, n)?;
         }
         Ok(was_tapped)
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput {
+    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput
+    where Self: 'a {
         self.this_tapped = true;
         self.get_char()
     }
 }
 
 impl Key {
-    fn draw_initial<D>(&self, target: &mut D, t: bool) -> Result<(), D::Error>
+    fn draw_initial<D>(&self, target: &mut D, n: bool) -> Result<(), D::Error>
         where 
             D: DrawTarget<Color = BinaryColor> {
-        let character_style= if t {
+        let character_style= if n {
             MonoTextStyle::new(&KEY_FONT, BinaryColor::Off)
         } else {
             MonoTextStyle::new(&KEY_FONT, BinaryColor::On)
         };
         
-        let area = self.bounding_box_view();
+        let bounds = self.bounding_box_view();
 
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Center)
@@ -102,7 +104,7 @@ impl Key {
 
         TextBox::with_textbox_style(
             &self.label,
-            area,
+            bounds,
             character_style,
             textbox_style,
         ).draw(target)?;
@@ -110,12 +112,17 @@ impl Key {
         Ok(())
     }
 
-    fn draw_tapped<D>(&mut self, target: &mut D) -> Result<(), D::Error>
+    fn draw_tapped<D>(&mut self, target: &mut D, n: bool) -> Result<(), D::Error>
         where 
             D: DrawTarget<Color = BinaryColor> {
+        let (on, _) = if n {
+            (BinaryColor::Off, BinaryColor::On)
+        } else {
+            (BinaryColor::On, BinaryColor::Off)
+        };
         self.this_tapped = false;
         let thin_stroke = PrimitiveStyleBuilder::new()
-            .stroke_color(BinaryColor::Off)
+            .stroke_color(on)
             .stroke_width(2)
             .stroke_alignment(StrokeAlignment::Inside)
             .build();

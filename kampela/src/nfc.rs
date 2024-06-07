@@ -1,8 +1,7 @@
 //! NFC packet collector and decoder
 
 use nfca_parser::frame::Frame;
-//use alloc::vec::Vec;
-use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
+use alloc::vec::Vec;
 
 use kampela_system::{
     PERIPHERALS, in_free, BUF_THIRD, CH_TIM0,
@@ -14,16 +13,9 @@ use efm32pg23_fix::{NVIC,Interrupt};
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 // use substrate_parser::compacts::find_compact;
-use substrate_parser::{MarkedData, compacts::find_compact, ShortSpecs};
-use schnorrkel::{
-    context::attach_rng,
-    keys::Keypair,
-    signing_context,
-};
+use substrate_parser::compacts::find_compact;
 
 use core::ops::DerefMut;
-
-use parity_scale_codec::Decode;
 
 pub const FREQ: u16 = 22;
 const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
@@ -280,8 +272,8 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 }
 
 pub struct NfcTransactionPsramAccess {
-    pub call_to_sign_psram_access: PsramAccess,
-    pub extension_to_sign_psram_access: PsramAccess,
+    pub call_psram_access: PsramAccess,
+    pub extension_psram_access: PsramAccess,
     pub metadata_psram_access: PsramAccess,
     pub genesis_hash_bytes_psram_access: PsramAccess,
 }
@@ -314,8 +306,6 @@ pub struct NfcReceiver <'a> {
 }
 
 impl <'a> NfcReceiver<'a> {
-
-
     pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: Option<[u8; 32]>) -> Self {
         match public_memory {
             Some(a) => Self {
@@ -333,14 +323,6 @@ impl <'a> NfcReceiver<'a> {
             },
         }
     }
-
-    pub fn is_empty(&self) -> bool {
-        if let NfcCollector::Empty = self.collector {
-            return true;
-        }
-        false
-    }
-
 
     fn process(&mut self) -> Option<Result<NfcResult, NfcError>> {
         turn_nfc_collector_correctly(&mut self.collector, self.buffer);
@@ -389,10 +371,6 @@ impl <'a> NfcReceiver<'a> {
                             ).unwrap();
                             position = compact_transaction_2.start_next_unit;
 
-                            let start_address = payload.encoded_data.start_address
-                                .try_shift(compact_transaction_2.start_next_unit)
-                                .unwrap();
-
                             let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&
                                 payload.encoded_data,
                                 &mut external_psram,
@@ -435,8 +413,8 @@ impl <'a> NfcReceiver<'a> {
                         }
 
                         return Some(Ok(NfcResult::Transaction(NfcTransactionPsramAccess{
-                            call_to_sign_psram_access,
-                            extension_to_sign_psram_access,
+                            call_psram_access: call_to_sign_psram_access,
+                            extension_psram_access: extension_to_sign_psram_access,
                             metadata_psram_access,
                             genesis_hash_bytes_psram_access,
                         })));

@@ -1,21 +1,10 @@
 use embedded_graphics::{
-    mono_font::{
-        ascii::{FONT_6X10},
-        MonoTextStyle,
-    },
-    Pixel,
-    primitives::Rectangle,
-    Drawable,
-};
-use embedded_graphics_core::{
     draw_target::DrawTarget,
-    geometry::{Point, Size},
+    geometry::Point,
     pixelcolor::BinaryColor,
-};
-use embedded_text::{
-    alignment::{HorizontalAlignment, VerticalAlignment},
-    style::{HeightMode, TextBoxStyleBuilder},
-    TextBox,
+    Pixel,
+    Drawable,
+    primitives::{Primitive, PrimitiveStyle},
 };
 
 use crate::display_def::*;
@@ -38,6 +27,9 @@ where
         if qr_code.version() == Version::new(18) {2}
         else {SCREEN_SIZE_Y as i32/qr_code.size()}
     };
+
+    let filled = PrimitiveStyle::with_fill(BinaryColor::Off);
+    display.bounding_box().into_styled(filled).draw(display)?;
 
     let size = qr_code.size() * scaling;
     for y in 0..size {

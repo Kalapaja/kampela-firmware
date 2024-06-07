@@ -68,7 +68,8 @@ impl View for PinButton {
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolute()
     }
-	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput, D::Error> {
+	fn draw_view<'a, D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput, D::Error>
+    where Self: 'a {
         let this_tapped = self.reset_tapped();
         if this_tapped {
             self.draw_tapped(target)?;
@@ -77,7 +78,7 @@ impl View for PinButton {
         }
         Ok(())
 	}
-    fn handle_tap_view(&mut self, _point: Point, _: ()) -> bool {
+    fn handle_tap_view<'a>(&mut self, _point: Point, _: ()) -> bool where Self: 'a, {
         self.this_tapped = true;
         true
     }
@@ -97,15 +98,15 @@ impl PinButton {
             .stroke_alignment(StrokeAlignment::Inside)
             .build();
 
-        let area = self.bounding_box_view();
+        let bounds = self.bounding_box_view();
         let rounded = RoundedRectangle::new(
-            area.offset(BUTTON_BORDER_OFFSET),
+            bounds.offset(BUTTON_BORDER_OFFSET),
             CornerRadii::new(Size::new(BUTTON_RADIUS, BUTTON_RADIUS))
         );
         rounded.into_styled(filled).draw(target)?;
         rounded.into_styled(thin_stroke).draw(target)?;
 
-        if !t {
+        if t == false {
             let character_style = MonoTextStyle::new(&BUTTON_FONT, BinaryColor::On);
             let textbox_style = TextBoxStyleBuilder::new()
                 .alignment(HorizontalAlignment::Center)
@@ -114,7 +115,7 @@ impl PinButton {
     
             TextBox::with_textbox_style(
                 &self.num.to_string(),
-                area,
+                bounds,
                 character_style,
                 textbox_style,
             )
@@ -123,7 +124,7 @@ impl PinButton {
 
 		Ok(())
     }
-    fn draw_tapped<D: DrawTarget<Color = BinaryColor>>(&self, target: &mut DrawView<D>) -> Result<(), D::Error> {     
+    fn draw_tapped<D: DrawTarget<Color = BinaryColor>>(&self, target: &mut DrawView<D>) -> Result<(), D::Error> {
         let filled = PrimitiveStyle::with_fill(BinaryColor::Off);
 
         let area = self.bounding_box_view();

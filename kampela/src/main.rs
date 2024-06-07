@@ -5,37 +5,33 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
+use alloc::{borrow::ToOwned, format};
 use core::{alloc::Layout, panic::PanicInfo};
 use core::ptr::addr_of;
 use cortex_m::asm::delay;
 use cortex_m_rt::{entry, exception, ExceptionFrame};
 use embedded_alloc::Heap;
 use lazy_static::lazy_static;
-use parity_scale_codec::Decode;
-use primitive_types::H256;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
-use kampela_system::devices::flash::*;
 use kampela_ui::platform::Platform;
 
 mod ui;
 use ui::UI;
 mod nfc;
-use nfc::{BufferStatus, turn_nfc_collector_correctly, NfcCollector, NfcReceiver, NfcStateOutput, NfcResult, NfcError, process_nfc_payload};
+use nfc::{BufferStatus, NfcReceiver, NfcStateOutput, NfcResult, NfcError};
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
 
 use kampela_system::{
-    PERIPHERALS, CORE_PERIPHERALS, in_free,
-    devices::{power::ADC, psram::{psram_read_at_address, CheckedMetadataMetal, ExternalPsram, PsramAccess}, se_rng::SeRng},
+    PERIPHERALS, CORE_PERIPHERALS,
+    devices::power::ADC,
     debug_display::burning_tank,
     init::init_peripherals,
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
 };
-use kampela_ui::uistate::Screen;
 
 use core::cell::RefCell;
 use core::ops::DerefMut;
@@ -45,6 +41,7 @@ use cortex_m::interrupt::Mutex;
 //use p256::ecdsa::{signature::{hazmat::PrehashVerifier}, Signature, VerifyingKey};
 //use sha2::Digest;
 //use spki::DecodePublicKey;
+/*
 use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked};
 use schnorrkel::{
     context::attach_rng,
@@ -53,7 +50,7 @@ use schnorrkel::{
     signing_context,
     ExpansionMode,
     MiniSecretKey,
-};
+};*/
 
 lazy_static!{
     #[derive(Debug)]

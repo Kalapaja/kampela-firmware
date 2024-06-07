@@ -4,12 +4,12 @@ use cortex_m::asm::delay;
 
 use kampela_display_common::display_def::*;
 
-use embedded_graphics_core::{
+use embedded_graphics::{
     draw_target::DrawTarget,
     geometry::{Point, Size},
     pixelcolor::BinaryColor,
     primitives::rectangle::Rectangle,
-    prelude::Drawable,
+    Drawable,
 };
 
 use embedded_graphics::mono_font::{ascii::FONT_6X10, MonoTextStyle};

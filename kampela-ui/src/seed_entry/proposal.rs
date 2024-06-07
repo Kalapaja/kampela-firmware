@@ -1,7 +1,7 @@
 #[cfg(not(feature="std"))]
 use alloc::{borrow::ToOwned, string::String, vec::Vec, vec};
 #[cfg(feature="std")]
-use std::{borrow::ToOwned, string::String, vec::Vec, vec, println};
+use std::{borrow::ToOwned, string::String, vec::Vec, vec};
 
 use embedded_graphics::{
     mono_font::{
@@ -75,6 +75,7 @@ pub struct Proposal{
     variants_depth: usize,
     variants: Vec<String>,
     guess: Vec<WordListElement>,
+    guess_depth: usize,
 }
 
 impl Proposal {
@@ -84,13 +85,15 @@ impl Proposal {
             variants: Vec::new(),
             variants_depth: 0,
             guess: Vec::new(),
+            guess_depth: 0,
         }
     }
 
-    fn clear(&mut self) {
+    pub fn clear(&mut self) {
         self.entered = Vec::new();
         self.variants = Vec::new();
         self.guess = Vec::new();
+        self.guess_depth = 0;
     }
     pub fn add_letters(&mut self, letters: Vec<char>) {
         assert!(
@@ -99,7 +102,6 @@ impl Proposal {
         );
         if self.entered.len() < MAX_WORD_LENGTH {
             self.entered.push(letters);
-            self.make_guess();
         }
     }
     
@@ -109,14 +111,13 @@ impl Proposal {
         self.variants.dedup();
 
         if self.variants_depth > self.entered.len() {
-            self.variants_depth = 0;
+            self.variants_depth = self.entered.len();
         }
-        self.make_guess();
     }
 }
 
 impl View for Proposal {
-    type DrawInput<'a> = bool;
+    type DrawInput<'a> = (bool, bool);
     type DrawOutput = ();
     type TapInput<'a> = ();
     type TapOutput = Option<WordListElement>;
@@ -129,12 +130,22 @@ impl View for Proposal {
         PROPOSAL_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<(), D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'_>) -> Result<(), D::Error>
         where 
-            D: DrawTarget<Color = BinaryColor> {
+            D: DrawTarget<Color = BinaryColor>,
+            Self: 'a,
+        {
 
-        if !t {
-            self.make_guess();
+        if t == false {
+            let (on, _) = if n {
+                (BinaryColor::Off, BinaryColor::On)
+            } else {
+                (BinaryColor::On, BinaryColor::Off)
+            };
+
+            if self.guess_depth != self.entered.len() {
+                self.make_guess();
+            }
             let three_guesses = self.guess
                 .iter()
                 .take(3)
@@ -143,7 +154,7 @@ impl View for Proposal {
     
             let character_style = MonoTextStyleBuilder::new()
                 .font(&PROPOSAL_FONT)
-                .text_color(BinaryColor::On)
+                .text_color(on)
                 .underline()
                 .build();
 
@@ -165,7 +176,9 @@ impl View for Proposal {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, point: Point, _: ()) -> Self::TapOutput {
+    fn handle_tap_view<'a>(&mut self, point: Point, _: ()) -> Self::TapOutput
+    where Self: 'a
+    {
         let mut guess_tapped = None;
         for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
             if section.contains(point) {
@@ -237,6 +250,7 @@ impl Proposal {
             self.variants = new_variants;
             self.guess = guess;
         }
+        self.guess_depth = self.entered.len();
     }
 }
 

@@ -1,14 +1,19 @@
 //! This is simulator to develop Kampela UI mocks
 #![cfg(feature="std")]
-use embedded_graphics_core::{
+use embedded_graphics::{
+    geometry::Point,
+    primitives::{Line, Primitive, PrimitiveStyle, Rectangle, PointsIter},
+    Drawable,
     geometry::Size,
     pixelcolor::BinaryColor,
+    Pixel,
 };
+
 use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
 use rand::{rngs::ThreadRng, thread_rng};
-use std::{thread::sleep, time::Duration};
+use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
 
 #[macro_use]
@@ -17,6 +22,13 @@ extern crate lazy_static;
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
 const SLOW_UPDATE_TIME: Duration = Duration::new(1, 0);
+const BLINK_UPDATE_TIME: Duration = Duration::new(0, 5000000);
+const SLOW_UPDATE_ITER: usize = 8;
+const FAST_UPDATE_TIME: Duration = Duration::new(1, 0);
+const ULTRAFAST_UPDATE_TIME: Duration = Duration::new(1, 0);
+const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
+
+const MAX_TOUCH_QUEUE: usize = 2;
 
 pub mod display_def;
 pub use display_def::*;
@@ -31,7 +43,6 @@ mod pin {
     pub mod pinbutton;
 }
 
-mod restore_or_generate;
 pub mod seed_entry{
     pub mod seed_entry;
     pub mod entry;
@@ -41,24 +52,25 @@ pub mod seed_entry{
     pub mod key;
 }
 
-pub mod nav_bar{
-    pub mod nav_bar;
-    pub mod nav_button;
-}
 mod widget {
     pub mod view;
+    pub mod nav_bar{
+        pub mod nav_bar;
+        pub mod nav_button;
+    }
 }
 
 mod backup;
 
 mod uistate;
-use uistate::UIState;
+use uistate::{UIState, UpdateRequest, UpdateRequestMutate};
 
 mod data_state;
 use data_state::{AppStateInit, NFCState, DataInit, StorageState};
 
 mod transaction;
 mod message;
+mod dialog;
 mod qr;
 
 #[derive(Debug)]
@@ -113,7 +125,6 @@ impl HALHandle {
 #[derive(Debug)]
 struct DesktopSimulator {
     pin: PinCode,
-    display: SimulatorDisplay<BinaryColor>,
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     transaction: Option<NfcTransactionData>,
@@ -123,7 +134,6 @@ struct DesktopSimulator {
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
         let pin = [0; 4]; //TODO proper pin initialization
-        let display = SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
         let transaction = match init_state.nfc {
             NFCState::Empty => None,
             NFCState::Transaction => Some(NfcTransactionData{
@@ -134,7 +144,6 @@ impl DesktopSimulator {
         };
         Self {
             pin: pin,
-            display: display,
             entropy: None,
             address: None,
             transaction: transaction,
@@ -146,7 +155,6 @@ impl DesktopSimulator {
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng = ThreadRng;
-    type Display = SimulatorDisplay<BinaryColor>;
     type NfcTransaction = NfcTransactionData;
 
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
@@ -159,10 +167,6 @@ impl Platform for DesktopSimulator {
 
     fn pin_mut(&mut self) -> &mut PinCode {
         &mut self.pin
-    }
-
-    fn display(&mut self) -> &mut Self::Display {
-        &mut self.display
     }
 
     fn store_entropy(&mut self, e: &[u8]) {
@@ -194,30 +198,30 @@ impl Platform for DesktopSimulator {
         self.transaction = Some(transaction);
     }
 
-    fn call(&mut self) -> Option<(String, &mut Self::Display)> {
+    fn call(&mut self) -> Option<String> {
         match self.transaction {
-            Some(ref a) => Some((a.call.to_owned(), &mut self.display)),
+            Some(ref a) => Some(a.call.to_owned()),
             None => None,
         }
     }
 
-    fn extensions(&mut self) -> Option<(String, &mut Self::Display)> {
+    fn extensions(&mut self) -> Option<String> {
         match self.transaction {
-            Some(ref a) => Some((a.extension.to_owned(), &mut self.display)),
+            Some(ref a) => Some(a.extension.to_owned()),
             None => None,
         }
     }
 
-    fn signature(&mut self, h: &mut Self::HAL) -> ([u8; 130], &mut Self::Display) {
+    fn signature(&mut self, h: &mut Self::HAL) -> [u8; 130] {
         match self.transaction {
-            Some(ref a) => (a.signature, &mut self.display),
+            Some(ref a) => a.signature,
             None =>  panic!("qr not ready!"),
         }
     }
 
-    fn address(&mut self) -> (&[u8; 76], &mut Self::Display) {
+    fn address(&mut self) -> &[u8; 76] {
         if let Some(ref a) = self.address {
-            (a, &mut self.display)
+            a
         } else {
             panic!("address qr not ready!");
         }
@@ -238,8 +242,8 @@ fn main() {
 
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state, &mut h);
-
-    let mut state = UIState::new(desktop, &mut h);
+    let display = SimulatorDisplay::new(SCREEN_SIZE);
+    let mut state = UIState::new(desktop, display, &mut h);
 
     // Draw
     let output_settings = OutputSettingsBuilder::new()
@@ -247,8 +251,9 @@ fn main() {
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
     
-    let mut update = uistate::UpdateRequest::new();
-    update.set_slow();
+    let mut update = Some(uistate::UpdateRequest::Slow);
+
+    let mut touches = VecDeque::new();
 
     // event loop:
     //
@@ -257,65 +262,79 @@ fn main() {
     // 3. handle input
     // 4. do internal things
     loop {
+        // touch event
+        if let Some(point) = touches.pop_front() {
+            update.propagate(state.handle_tap(point, &mut h));
+        };
         // display event; it would be delayed
-        let f = update.read_fast();
-        let s = update.read_slow();
-        let p = update.read_part();
-        let uf = update.read_ultrafast();
-        let i = update.read_hidden();
-
-        if i || f || s || p.is_some() || uf {
-            match state.render::<SimulatorDisplay<BinaryColor>>(f || s, &mut h) {
-                Ok(u) => update = u,
+        if let Some(u) = update.take() {
+            sleep(UPDATE_DELAY_TIME);
+            let mut h = HALHandle::new();
+            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
+            match state.render(is_clear_update, &mut h) {
+                Ok(a) => update.propagate(a),
                 Err(e) => println!("{:?}", e),
             };
-        }
 
-        if i {
-            window.update(state.display());
-            println!("skip {} events in hidden update", window.events().count());
-            //no-op for non-EPD
-        }
+            match u {
+                UpdateRequest::Hidden => {
+                    window.update(&state.display);
+                    println!("skip {} events in hidden update", window.events().count());
+                },
+                UpdateRequest::Slow => {
+                    invert_display(&mut state.display);
+                    window.update(&state.display);
+                    sleep(SLOW_UPDATE_TIME);
+                    invert_display(&mut state.display);
+                    window.update(&state.display);
+                    for i in 0..SLOW_UPDATE_ITER {
+                        invert_display(&mut state.display);
+                        window.update(&state.display);
+                        sleep(BLINK_UPDATE_TIME);
+                        invert_display(&mut state.display);
+                        window.update(&state.display);
+                        sleep(BLINK_UPDATE_TIME);
+                    }
 
-        if f {
-            window.update(state.display());
-            println!("skip {} events in fast update", window.events().count());
-            //no-op for non-EPD
+                    window.update(&state.display);
+                    println!("skip {} events in slow update", window.events().count());
+                },
+                UpdateRequest::Fast => {
+                    invert_display(&mut state.display);
+                    window.update(&state.display);
+                    sleep(FAST_UPDATE_TIME);
+                    invert_display(&mut state.display);
+                    window.update(&state.display);
+                    println!("fast update");
+                },
+                UpdateRequest::UltraFast => {
+                    window.update(&state.display);
+                    println!("ultrafast update");
+                    sleep(ULTRAFAST_UPDATE_TIME);
+                },
+                UpdateRequest::Part(a) => {
+                    window.update(&state.display);
+                    println!("part update of area {:?}", a);
+                    sleep(ULTRAFAST_UPDATE_TIME);
+                },
+            }
         }
-
-        if p.is_some() {
-            window.update(state.display());
-            println!("skip {} events in part update", window.events().count());
-            //no-op for non-EPD
-        }
-
-        if uf {
-            window.update(state.display());
-            println!("skip {} events in ultrafast update", window.events().count());
-            //no-op for non-EPD
-        }
-
-        if s {
-            sleep(SLOW_UPDATE_TIME);
-            window.update(state.display());
-            println!("skip {} events in slow update", window.events().count());
-        }
-
         // this collects ui events, do not remove or simulator will crash
-        window.update(state.display());
+        window.update(&state.display);
 
-        // handle input (only pushes are valid in Kampela)
+        // register input (only pushes are valid in Kampela)
         for event in window.events() {
             match event {
                 SimulatorEvent::MouseButtonDown {
                     mouse_btn: _,
                     point,
                 } => {
-                    println!("{}", point);
-                        match state.handle_tap::<SimulatorDisplay<BinaryColor>>(point, &mut h) {
-                            Ok(a) => update = a,
-                            Err(e) => println!("{e}"),
-                        };
+                    if touches.len() < MAX_TOUCH_QUEUE {
+                        touches.push_back(point);
+                        println!("point {} registered", point);
+                    } else {
+                        println!("point {} omitted", point);
+                    }
                 }
                 SimulatorEvent::Quit => return,
                 _ => (),
@@ -324,4 +343,11 @@ fn main() {
 
         //and here is some loop time for other things
     }
+}
+
+fn invert_display(display: &mut SimulatorDisplay<BinaryColor>) {
+    for point in SCREEN_AREA.points() {
+        let dot = Pixel::<BinaryColor>(point, display.get_pixel(point).invert());
+        dot.draw(display);
+    };
 }

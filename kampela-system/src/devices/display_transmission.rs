@@ -9,7 +9,6 @@ use kampela_display_common::display_def::*;
 
 pub const BUFSIZE: usize = 5808;
 const X_ADDRESS_WIDTH: usize = (SCREEN_SIZE_Y / 8) as usize;
-const Y_ADDRESS_WIDTH: usize = (SCREEN_SIZE_X / 8) as usize;
 
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].
 pub fn display_is_busy() -> Result<bool, FreeError> {
@@ -333,7 +332,6 @@ pub struct EPDDataPart<const LEN: usize>{
     position: usize,
     x_start_position: usize,
     x_end_position: usize,
-    y_start_position: usize,
     y_end_position: usize,
     timer: usize,
 }
@@ -353,7 +351,6 @@ impl <const LEN: usize> Operation for EPDDataPart<LEN> {
             state: EPDDataState::Init,
             position: y_start_position * X_ADDRESS_WIDTH as usize + x_start_position,
             x_start_position,
-            y_start_position,
             x_end_position: addresses.1 as usize,
             y_end_position: (SCREEN_SIZE_X - 1) as usize - addresses.3 as usize,
             timer: 0,

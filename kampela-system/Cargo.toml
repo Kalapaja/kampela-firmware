@@ -29,6 +29,8 @@ scale-info = {version = "2.9.0", default-features = false}
 substrate_parser = { git = "https://github.com/Alzymologist/substrate-parser", default-features = false, features = ["embed-display"], rev = "632f621a595fa7161a3352c1f6a05ffcc5f2dcc8" }
 kampela-display-common = { path = "../kampela-display-common" }
 
+primitive-types = {version = "0.12.1", default-features = false}
+
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
 qrcodegen-noheap = {git = "https://github.com/Slesarew/QR-Code-generator", branch = "patch-1"}
 

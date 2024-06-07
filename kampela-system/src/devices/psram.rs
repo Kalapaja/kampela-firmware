@@ -1,8 +1,117 @@
 //! external RAM
 
-use alloc::{format, vec::Vec};
+use alloc::{format, vec::Vec, string::String};
+use primitive_types::H256;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::eusart::*;
+use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
+use crate::in_free;
+
+pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
+    let call_data = read_from_psram(call_psram_access);
+
+    let (
+        checked_metadata_metal,
+        specs,
+        spec_name,
+    ) = read_checked_metadata_metal(metadata_psram_access);
+
+    let mut decoded_call_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        let mut decoding_postition = 0;
+        let decoded_call = decode_as_call_unmarked(
+            &call_data.as_ref(),
+            &mut decoding_postition,
+            &mut external_psram,
+            &checked_metadata_metal,
+        ).unwrap();
+
+        decoded_call_option = Some(decoded_call);
+    });
+    (
+        decoded_call_option.unwrap(),
+        specs,
+        spec_name,
+    )
+}
+
+pub fn psram_decode_extension(
+    extension_psram_access: &PsramAccess,
+    metadata_psram_access: &PsramAccess,
+    genesis_hash_bytes_psram_access: &PsramAccess,
+) -> (Vec<ExtendedData>, ShortSpecs, String) {
+    let extension_data = read_from_psram(extension_psram_access);
+    
+    let (
+        checked_metadata_metal,
+        specs,
+        spec_name
+    ) = read_checked_metadata_metal(metadata_psram_access);
+
+    let genesis_hash = H256(
+        read_from_psram(genesis_hash_bytes_psram_access)
+            .try_into()
+            .expect("static size")
+    );
+
+    let mut decoded_extension_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        let mut decoding_postition = 0;
+        let decoded_extension = decode_extensions_unmarked(
+            &extension_data.as_ref(),
+            &mut decoding_postition,
+            &mut external_psram,
+            &checked_metadata_metal,
+            genesis_hash
+        ).unwrap();
+
+        decoded_extension_option = Some(decoded_extension);
+    });
+    (
+        decoded_extension_option.unwrap(),
+        specs,
+        spec_name,
+    )
+}
+
+fn read_checked_metadata_metal(metadata_psram_access: &PsramAccess) -> (CheckedMetadataMetal, ShortSpecs, String) {
+    let mut checked_metadata_metal_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        checked_metadata_metal_option = Some(
+            CheckedMetadataMetal::from(
+                metadata_psram_access,
+                &mut external_psram
+            ).unwrap()
+        );
+    });
+
+    let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+    let specs = checked_metadata_metal.to_specs();
+    let spec_name = checked_metadata_metal.spec_name_version.spec_name.to_owned();
+    (
+        checked_metadata_metal,
+        specs,
+        spec_name
+    )
+}
+
+pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
+    let mut bytes_option = None;
+    in_free(|peripherals| {
+        bytes_option = Some(
+            psram_read_at_address(
+                peripherals,
+                psram_access.start_address,
+                psram_access.total_len
+            ).unwrap()
+        );
+    });
+    
+    bytes_option.unwrap()
+}
 
 pub fn psram_reset(peripherals: &mut Peripherals) {
     deselect_psram(&mut peripherals.GPIO_S);
@@ -11,7 +120,7 @@ pub fn psram_reset(peripherals: &mut Peripherals) {
     deselect_psram(&mut peripherals.GPIO_S);
     select_psram(&mut peripherals.GPIO_S);
     psram_write_read_byte(peripherals, PSRAM_RESET);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.GPIO_S);
 }
 
 pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
@@ -208,7 +317,7 @@ pub struct PsramAccess {
     pub total_len: usize,
 }
 use core::fmt::{Debug, Display, Formatter, Result as FmtResult};
-use alloc::{borrow::ToOwned, string::String};
+use alloc::borrow::ToOwned;
 
 use frame_metadata::v14::ExtrinsicMetadata;
 use parity_scale_codec::{Decode, DecodeAll, Encode};

@@ -4,6 +4,10 @@ pub mod uistate;
 pub mod platform;
 pub mod widget{
     pub mod view;
+    pub mod nav_bar{
+        pub mod nav_bar;
+        pub mod nav_button;
+    }
 }
 
 pub mod display_def;
@@ -23,14 +27,9 @@ pub mod seed_entry{
     pub mod key;
 }
 
-pub mod nav_bar{
-    pub mod nav_bar;
-    pub mod nav_button;
-}
-
 pub mod backup;
-mod restore_or_generate;
 mod message;
+mod dialog;
 
 pub mod transaction;
 pub mod qr;

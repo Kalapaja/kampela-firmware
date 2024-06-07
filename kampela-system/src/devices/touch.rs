@@ -1,10 +1,13 @@
 //! Async touch panel operations
 //!
 //! This matches devices::touch blocking flow; TODO: replace that flow with this one
+use efm32pg23_fix::Peripherals;
+use cortex_m::asm::delay;
 
-use crate::peripherals::i2c::{acknowledge_i2c_tx, check_i2c_errors, I2CError, mstop_i2c_wait_and_clear, ReadI2C};
+use crate::peripherals::i2c::{acknowledge_i2c_tx, acknowledge_i2c_tx_free, check_i2c_errors, check_i2c_errors_free, I2CError, mstop_i2c_wait_and_clear, mstop_i2c_wait_and_clear_free, ReadI2C};
+use crate::peripherals::gpio_pins::{touch_res_set, touch_res_clear, is_touch_int};
 use crate::parallel::{DELAY, Operation};
-use crate::{in_free, if_in_free};
+use crate::{FreeError, in_free, if_in_free};
 
 pub const FT6X36_REG_CHIPID: u8 = 0xA3;
 pub const LEN_CHIPID: usize = 1;
@@ -249,6 +252,102 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
     Ok(rx_data_collected.try_into().expect("constant size, always fit"))
 }
 */
+
+pub fn touch_detected() -> Result<bool, FreeError> {
+    if_in_free(|peripherals| { //TODO: use Interupt Flag
+        is_touch_int(&mut peripherals.GPIO_S)
+    })
+}
+
+pub fn init_touch(peripherals: &mut Peripherals) {
+    touch_res_set(&mut peripherals.GPIO_S); // datasheet: pulse width >=1ms
+    delay(10000);
+    touch_res_clear(&mut peripherals.GPIO_S);
+    delay(4000000);  // picked up timing
+    // abort previous operations
+    if peripherals
+        .I2C0_S
+        .state
+        .read()
+        .busy()
+        .bit_is_set()
+    {
+        peripherals
+            .I2C0_S
+            .cmd
+            .write(|w_reg| w_reg.abort().set_bit());
+        delay(10000);
+    }
+    // clear command and tx
+    peripherals
+        .I2C0_S
+        .cmd
+        .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
+    delay(10000);
+
+    // clear interrupt flags
+    peripherals
+        .I2C0_S
+        .if_
+        .reset();
+
+    // enable interrupts sources
+    peripherals
+        .I2C0_S
+        .ien
+        .write(|w_reg| 
+            w_reg
+                .nack().set_bit()
+                .ack().set_bit()
+                .mstop().set_bit()
+                .arblost().set_bit()
+                .buserr().set_bit()
+        );
+    // sending device ID
+    peripherals
+        .I2C0_S
+        .cmd
+        .write(|w_reg| w_reg.start().set_bit());
+    delay(10000);
+
+    // i2c transfer sequence
+    check_i2c_errors_free(peripherals).unwrap();
+    // send address `0x38 << 1`, for writing data
+    peripherals
+        .I2C0_S
+        .txdata
+        .write(|w_reg| w_reg.txdata().variant(0b1110000));
+    delay(10000);
+
+    // Send address to write data
+    acknowledge_i2c_tx_free(peripherals).unwrap();
+    peripherals
+        .I2C0_S
+        .txdata
+        .write(|w_reg| w_reg.txdata().variant(0xA4));
+    delay(10000);
+
+    // send data
+    acknowledge_i2c_tx_free(peripherals).unwrap();
+    peripherals
+        .I2C0_S
+        .txdata
+        .write(|w_reg| w_reg.txdata().variant(0x00));
+    delay(10000);
+
+    // stop communication
+    peripherals
+        .I2C0_S
+        .cmd
+        .write(|w_reg| w_reg.stop().set_bit());
+    mstop_i2c_wait_and_clear_free(peripherals).unwrap();
+
+    // cleanup
+    peripherals
+        .I2C0_S
+        .ien
+        .reset();
+}
 
 /// Touchpad driver async state machine; value represents timer counter to counteract hardware line
 /// weirdness - on count to 0 operation is supposed to be executed. Timer check does not capture

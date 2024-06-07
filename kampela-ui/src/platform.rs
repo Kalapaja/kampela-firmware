@@ -1,11 +1,9 @@
 //! Platform definitions
 
 #[cfg(not(feature="std"))]
-use alloc::{format, string::String, vec::Vec};
+use alloc::{string::String, vec::Vec};
 #[cfg(feature="std")]
-use std::{format, string::String, vec::Vec};
-
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::{DrawTarget, Point}};
+use std::{string::String, vec::Vec};
 
 use rand::{CryptoRng, Rng};
 
@@ -13,18 +11,10 @@ use hmac::Hmac;
 use pbkdf2::pbkdf2;
 use sha2::Sha512;
 use schnorrkel::{
-    context::attach_rng,
-    derive::{ChainCode, Derivation},
     keys::Keypair,
-    signing_context,
     ExpansionMode,
     MiniSecretKey,
 };
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
-
-use crate::pin::pin::Pincode;
-use crate::transaction;
-use crate::qr;
 
 pub type PinCode = [u8; 4]; //TODO: consider if it's good password storing type
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
@@ -39,8 +29,6 @@ pub trait Platform {
     /// Sufficiently good random source used everywhere
     type Rng: Rng + Sized + CryptoRng;
 
-    /// Device-specific screen canvas abstraction
-    type Display: DrawTarget<Color = BinaryColor>;
 
     /// Transaction data or addresses for transaction data in psram
     type NfcTransaction;
@@ -53,9 +41,6 @@ pub trait Platform {
 
     /// Device-specific "global" storage and management of pincode state RW
     fn pin_mut(&mut self) -> &mut PinCode;
-
-    /// Getter for canvas
-    fn display(&mut self) -> &mut Self::Display;
 
     /// Put entropy in flash
     fn store_entropy(&mut self, e: &[u8]);
@@ -72,13 +57,13 @@ pub trait Platform {
 
     fn set_transaction(&mut self, transaction: Self::NfcTransaction);
 
-    fn call(&mut self) -> Option<(String, &mut Self::Display)>;
+    fn call(&mut self) -> Option<String>;
 
-    fn extensions(&mut self) -> Option<(String, &mut Self::Display)>;
+    fn extensions(&mut self) -> Option<String>;
 
-    fn signature(&mut self, h: &mut Self::HAL) -> ([u8; 130], &mut Self::Display);
+    fn signature(&mut self, h: &mut Self::HAL) -> [u8; 130];
 
-    fn address(&mut self) -> (&[u8; 76], &mut Self::Display);
+    fn address(&mut self) -> &[u8; 76];
 
     //----derivatives----
 
@@ -88,55 +73,12 @@ pub trait Platform {
         entropy
     }
 
-    /// Getter for seed and canvas
-    fn entropy_display(&mut self) -> Option<(Vec<u8>, &mut <Self as Platform>::Display)> {
-        if let Some(e) = self.entropy() {
-            Some((e, self.display()))
-        } else {
-            None
-        }
-
-    }
-
-    fn draw_transaction(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        if let Some((s, d)) = self.call() {
-            transaction::draw(&s, d)
-        } else {
-            Ok(())
-        }
-    }
-
-    fn draw_extensions(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        if let Some((s, d)) = self.extensions() {
-            transaction::draw(&s, d)
-        } else {
-            Ok(())
-        }
-    }
-
-    fn draw_signature_qr(&mut self, h: &mut Self::HAL) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (s, d) = self.signature(h);
-        qr::draw(&s, d)
-    }
-
-    fn draw_address_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        //let (s, d) = self.address();
-       
-        let line1 = format!("substrate:0x{}", hex::encode(self.public().expect("no entropy stored, no address could be shown")));
-
-        qr::draw(&line1.as_bytes(), self.display())
-    }
-
     fn pair(&self) -> Option<Keypair> {
         match self.entropy() {
             None => None,
             Some(e) => pair_from_entropy(&e),
         }
     }
-
-
-    
-
 }
 
 pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {

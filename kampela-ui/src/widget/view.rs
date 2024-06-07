@@ -50,17 +50,17 @@ impl <'a, D: DrawTarget> Dimensions for DrawView<'a, D> {
 #[derive(Debug)]
 #[derive(Clone, Copy)]
 pub struct Widget {
-    pub area: Rectangle,
+    pub bounds: Rectangle,
     pub absolute_top_left: Point,
 }
 
 impl Widget {
-    pub const fn new(area: Rectangle, parent_absolut_top_left: Point) -> Self {
+    pub const fn new(bounds: Rectangle, parent_absolut_top_left: Point) -> Self {
         Widget{
-            area,
+            bounds,
             absolute_top_left: Point {
-                x: area.top_left.x + parent_absolut_top_left.x,
-                y: area.top_left.y + parent_absolut_top_left.y,
+                x: bounds.top_left.x + parent_absolut_top_left.x,
+                y: bounds.top_left.y + parent_absolut_top_left.y,
             }
         }
     }
@@ -68,7 +68,7 @@ impl Widget {
         Self::new(Rectangle::zero(), Point::zero())
     }
     pub const fn bounding_box_absolute(&self) -> Rectangle {
-        Rectangle::new(self.absolute_top_left, self.area.size)
+        Rectangle::new(self.absolute_top_left, self.bounds.size)
     }
     pub const fn top_left_absolute(&self) -> Point {
         self.absolute_top_left
@@ -77,14 +77,14 @@ impl Widget {
 
 impl Dimensions for Widget {
     fn bounding_box(&self) -> Rectangle {
-        self.area.to_owned()
+        self.bounds.to_owned()
     }
 }
 
 pub trait View {
     type DrawInput<'a> where Self: 'a;
     type DrawOutput;
-    type TapInput<'a>;
+    type TapInput<'a> where Self: 'a;
     type TapOutput;
     /// Getter for area field in Struct
     fn bounding_box(&self) -> Rectangle;
@@ -108,19 +108,23 @@ pub trait View {
 
     fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where 
-        D: DrawTarget<Color = BinaryColor>;
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a;
 
-    fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput;
+    fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput
+    where Self: 'a;
 
     fn draw<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
     where
-        D: DrawTarget<Color = BinaryColor>
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
     {
         let mut window_target = DrawView::new(self.bounding_box(), target);
         self.draw_view(&mut window_target, input)
     }
 
-	fn handle_tap<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Option<Self::TapOutput> {
+	fn handle_tap<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Option<Self::TapOutput>
+    where Self: 'a {
         if self.bounding_box().contains(point) {
             let point_offsetted = Point::new(point.x - self.bounding_box().top_left.x, point.y - self.bounding_box().top_left.y);
             Some(self.handle_tap_view(point_offsetted, input))
@@ -133,10 +137,12 @@ pub trait View {
 pub trait ViewScreen {
     type DrawInput<'a> where Self: 'a;
     type DrawOutput;
-    type TapInput<'a>;
+    type TapInput<'a> where Self: 'a;
     type TapOutput;
     fn draw_screen<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
-        D: DrawTarget<Color = BinaryColor>;
-    fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput);
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a;
+    fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput) 
+    where Self: 'a;
 }

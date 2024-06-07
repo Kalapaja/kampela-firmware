@@ -113,19 +113,20 @@ impl View for Entry {
         ENTRY_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<(), D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<(), D::Error>
         where 
-            D: DrawTarget<Color = BinaryColor> {
-
-        let character_style = if t {
-            MonoTextStyle::new(&ENTRY_FONT, BinaryColor::Off)
+            D: DrawTarget<Color = BinaryColor>,
+            Self: 'a,
+    {
+        let (on, _) = if n {
+            (BinaryColor::Off, BinaryColor::On)
         } else {
-            MonoTextStyle::new(&ENTRY_FONT, BinaryColor::On)
+            (BinaryColor::On, BinaryColor::Off)
         };
 
         if self.maxed {
             let thin_stroke = PrimitiveStyleBuilder::new()
-                .stroke_color(BinaryColor::Off)
+                .stroke_color(on)
                 .stroke_width(2)
                 .stroke_alignment(StrokeAlignment::Inside)
                 .build();
@@ -137,6 +138,7 @@ impl View for Entry {
             self.maxed = false;
         }
 
+        let character_style = MonoTextStyle::new(&ENTRY_FONT, on);
         let textbox_style = TextBoxStyleBuilder::new()
             .alignment(HorizontalAlignment::Left)
             .vertical_alignment(VerticalAlignment::Middle)
@@ -152,6 +154,7 @@ impl View for Entry {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> () {
+    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> ()
+    where Self: 'a {
     }
 }

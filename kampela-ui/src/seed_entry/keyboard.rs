@@ -14,7 +14,7 @@ use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::key::Key;
 
-use crate::nav_bar::nav_bar::NAV_BAR_WIDGET;
+use crate::widget::nav_bar::nav_bar::NAV_BAR_WIDGET;
 
 const TAP_RADIUS_SQUARED: i32 = 169;
 
@@ -22,7 +22,7 @@ const KEYBOARD_HEIGHT: u32 = 84;
 pub const KEYBOARD_AREA: Rectangle = Rectangle{
     top_left: Point{
         x: 0,
-        y: NAV_BAR_WIDGET.area.top_left.y - KEYBOARD_HEIGHT as i32,
+        y: NAV_BAR_WIDGET.bounds.top_left.y - KEYBOARD_HEIGHT as i32,
     },
     size: Size{width: SCREEN_SIZE_X, height: KEYBOARD_HEIGHT}
 };
@@ -79,8 +79,8 @@ const fn get_remove_widget() -> Widget {
     let relative_widget = Widget::new(
         Rectangle{
             top_left: Point{
-                x: KEY_WIDGETS[25].area.top_left.x + KEY_WIDGETS[25].area.size.width as i32,
-                y: KEY_WIDGETS[25].area.top_left.y,
+                x: KEY_WIDGETS[25].bounds.top_left.x + KEY_WIDGETS[25].bounds.size.width as i32,
+                y: KEY_WIDGETS[25].bounds.top_left.y,
             },
             size: Size{
                 width: (KEY_ROWS[0] - KEY_ROWS[2]) as u32 * KEY_SIZE.width / 2,
@@ -92,7 +92,7 @@ const fn get_remove_widget() -> Widget {
     Widget::new(
         Rectangle{
             top_left: relative_widget.top_left_absolute(),
-            size: relative_widget.area.size,
+            size: relative_widget.bounds.size,
         },
         SCREEN_ZERO,
     )
@@ -127,19 +127,23 @@ impl View for Keyboard {
         KEYBOARD_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
         where 
-            D: DrawTarget<Color = BinaryColor> {
+            D: DrawTarget<Color = BinaryColor>,
+            Self: 'a,
+        {
         let mut was_tapped = None;
         for key in self.keys.iter_mut() {
-            if key.draw(target, t)? {
+            if key.draw(target, n)? {
                 was_tapped = Some(key.bounding_box_absolut());
             }
         }
         Ok(was_tapped)
     }
 
-    fn handle_tap_view<'a>(&mut self, p: Point, _: ()) -> Self::TapOutput {
+    fn handle_tap_view<'a>(&mut self, p: Point, _: ()) -> Self::TapOutput
+        where Self: 'a
+    {
         let mut nearest = Vec::new();
 
         for key in self.keys.iter_mut() {

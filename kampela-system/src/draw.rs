@@ -1,7 +1,7 @@
 use bitvec::prelude::{BitArr, Msb0, bitarr};
 
 use efm32pg23_fix::Peripherals;
-use embedded_graphics_core::{
+use embedded_graphics::{
     draw_target::DrawTarget,
     geometry::{Dimensions, Point},
     pixelcolor::BinaryColor,
@@ -14,8 +14,8 @@ use kampela_display_common::display_def::*;
 use qrcodegen_noheap::{QrCode, QrCodeEcc, Version};
 
 use crate::devices::display::{FastDraw, FullDraw, PartDraw, Request};
-use crate::devices::display_transmission::{epaper_deep_sleep, epaper_hw_init_cs};
-use crate::debug_display::{epaper_draw_stuff_differently};
+use crate::devices::display_transmission::{epaper_deep_sleep, display_is_busy};
+use crate::debug_display::epaper_draw_stuff_differently;
 
 const SCREEN_SIZE_VALUE: usize = (SCREEN_SIZE_X*SCREEN_SIZE_Y) as usize;
 
@@ -203,6 +203,7 @@ impl Operation for FrameBuffer {
                 Some(false)
             },
             DisplayState::UpdatingNow => {
+                if display_is_busy() == Ok(true) { return Some(false) };
                 in_free(|peripherals| epaper_deep_sleep(peripherals));
                 self.display_state = DisplayState::Idle;
                 Some(false)

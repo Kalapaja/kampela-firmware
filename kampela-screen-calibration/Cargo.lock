@@ -799,6 +799,7 @@ dependencies = [
  "panic-halt",
  "parity-scale-codec",
  "patches",
+ "primitive-types",
  "qrcodegen-noheap",
  "rand",
  "rand_core 0.6.4",

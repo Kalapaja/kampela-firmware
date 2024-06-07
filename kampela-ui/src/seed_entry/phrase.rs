@@ -26,7 +26,7 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::{WordListElement, phrase_to_entropy};
+use patches::phrase::{words_to_entropy, WordListElement};
 
 use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
 
@@ -56,9 +56,14 @@ pub struct Phrase{
 }
 
 impl Phrase {
-    pub fn new() -> Self {
+    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self {
+        let buffer = if let Some(p) = phrase {
+            p
+        } else {
+            Vec::new()
+        };
         Phrase {
-            buffer: Vec::new(),
+            buffer,
             invalid: false,
         }
     }
@@ -68,25 +73,29 @@ impl Phrase {
     pub fn remove_word(&mut self) {
         if !self.buffer.is_empty() {
             self.buffer.pop();
+        } else {
+            self.set_invalid();
         }
     }
-    pub fn validate(&mut self) -> Option<Vec<u8>> {
-        match phrase_to_entropy(
-            &self
-                .buffer
-                .iter()
-                .map(|a| String::from(a.word()))
-                .collect::<Vec<String>>()
-                .join(" "),
-        ) {
+    pub fn validate(&self) -> Option<Vec<u8>> {
+        match words_to_entropy(&self.buffer) {
             Ok(a) => {
                 Some(a)
             }
             Err(_) => None,
         }
     }
+    pub fn get_phrase(&self) -> &Vec<WordListElement> {
+        &self.buffer
+    }
+    pub fn is_empty(&self) -> bool {
+        self.buffer.is_empty()
+    }
     pub fn is_maxed(&self) -> bool {
         self.buffer.len() >= MAX_PHRASE
+    }
+    pub fn set_invalid(&mut self) {
+        self.invalid = true;
     }
 }
 
@@ -104,11 +113,13 @@ impl View for Phrase {
         PHRASE_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
         where 
-            D: DrawTarget<Color = BinaryColor> {
+            D: DrawTarget<Color = BinaryColor>,
+            Self: 'a,
+        {
         
-        let character_style = if t {
+        let character_style = if n {
             MonoTextStyle::new(&PHRASE_FONT, BinaryColor::Off)
         } else {
             MonoTextStyle::new(&PHRASE_FONT, BinaryColor::On)
@@ -152,6 +163,7 @@ impl View for Phrase {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput {
+    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput
+    where Self: 'a {
     }
 }

@@ -49,9 +49,10 @@ impl View for Pindots {
     fn bounding_box_absolut(&self) -> Rectangle {
         PINDOTS_WIDGET.bounding_box_absolute()
     }
-	fn draw_view<D>(&mut self, target: &mut DrawView<D>, (dots, t): Self::DrawInput<'_>) -> Result<(),D::Error>
+	fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (dots, t): Self::DrawInput<'_>) -> Result<(),D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
     {
         let (on, _) = if t {
             (BinaryColor::Off, BinaryColor::On)
@@ -83,6 +84,7 @@ impl View for Pindots {
         }
         Ok(())
 	}
-    fn handle_tap_view(&mut self, _point: Point, _: ()) {
+    fn handle_tap_view<'a>(&mut self, _point: Point, _: ())
+    where Self: 'a {
     }
 }

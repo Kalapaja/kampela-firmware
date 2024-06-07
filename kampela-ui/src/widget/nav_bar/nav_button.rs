@@ -18,7 +18,7 @@ use embedded_text::{
 
 use crate::widget::view::{View, Widget, DrawView};
 
-const BUTTON_FONT: MonoFont = FONT_10X20;
+pub const BUTTON_FONT: MonoFont = FONT_10X20;
 
 pub struct NavButton {
 	label: &'static str,
@@ -45,8 +45,12 @@ impl View for NavButton {
     fn bounding_box_absolut(&self) -> Rectangle {
         self.widget.bounding_box_absolute()
     }
-	fn draw_view<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut DrawView<D>, t: Self::DrawInput<'_>) -> Result<Self::DrawOutput, D::Error> {
-        let (on, _) = if t {
+	fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput, D::Error>
+    where
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
+    {
+        let (on, _) = if n {
             (BinaryColor::Off, BinaryColor::On)
         } else {
             (BinaryColor::On, BinaryColor::Off)
@@ -73,7 +77,8 @@ impl View for NavButton {
 
         Ok(())
 	}
-    fn handle_tap_view(&mut self, _point: Point, _: ()) -> bool {
+    fn handle_tap_view<'a>(&mut self, _point: Point, _: ()) -> bool
+    where Self: 'a {
         true
     }
 }

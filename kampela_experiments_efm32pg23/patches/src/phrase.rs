@@ -135,14 +135,14 @@ fn sha256_first_byte(input: &[u8]) -> u8 {
     Sha256::digest(input)[0]
 }
 
-pub fn entropy_to_phrase(entropy: &[u8]) -> Result<String, Error> {
+pub fn entropy_to_words(entropy: &[u8]) -> Result<Vec<WordListElement>, Error> {
     check_entropy_length(entropy)?;
     let checksum_byte = sha256_first_byte(entropy);
     let mut entropy_bits: BitVec<u8, Msb0> = BitVec::with_capacity((entropy.len() + 1) * 8);
     entropy_bits.extend_from_bitslice(&BitVec::<u8, Msb0>::from_slice(entropy));
     entropy_bits.extend_from_bitslice(&BitVec::<u8, Msb0>::from_element(checksum_byte));
 
-    let words: Vec<&'static str> = entropy_bits
+    let words = entropy_bits
         .chunks_exact(11usize)
         .map(|chunk| {
             let mut bits11: u16 = 0;
@@ -151,10 +151,32 @@ pub fn entropy_to_phrase(entropy: &[u8]) -> Result<String, Error> {
                     bits11 |= 1 << (10 - i)
                 }
             }
-            get_word(Bits11(bits11))
+            WordListElement {
+                word: WORDLIST_ENGLISH[bits11 as usize],
+                bits11: Bits11::from(bits11),
+            }
         })
         .collect();
-    Ok(words.join(" "))
+    Ok(words)
+}
+
+pub fn words_to_entropy(words: &Vec<WordListElement>) -> Result<Vec<u8>, Error> {
+    let mnemonic_type = MnemonicType::from(words.len())?;
+
+    let mut entropy_bits: BitVec<u8, Msb0> = BitVec::with_capacity(mnemonic_type.total_bits());
+
+    for word in words {
+        entropy_bits.extend_from_bitslice(
+            &BitSlice::<u8, Msb0>::from_slice(&(word.bits11.bits() as u16).to_be_bytes())[5..16],
+        )
+    }
+    bits_to_entropy(entropy_bits, mnemonic_type)
+}
+
+pub fn entropy_to_phrase(entropy: &[u8]) -> Result<String, Error> {
+    let words = entropy_to_words(entropy)?;
+    let phrase = words.iter().map(|word| word.word).collect::<Vec<&str>>().join(" ");
+    Ok(phrase)
 }
 
 pub fn phrase_to_entropy(phrase: &str) -> Result<Vec<u8>, Error> {
@@ -169,7 +191,10 @@ pub fn phrase_to_entropy(phrase: &str) -> Result<Vec<u8>, Error> {
             &BitSlice::<u8, Msb0>::from_slice(&(bits11.bits() as u16).to_be_bytes())[5..16],
         )
     }
+    bits_to_entropy(entropy_bits, mnemonic_type)
+}
 
+fn bits_to_entropy(entropy_bits: BitVec<u8, Msb0>, mnemonic_type: MnemonicType) -> Result<Vec<u8>, Error> {
     let mut entropy = entropy_bits.into_vec();
     let entropy_len = mnemonic_type.entropy_bits() / 8;
 

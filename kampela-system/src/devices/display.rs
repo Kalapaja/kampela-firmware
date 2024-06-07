@@ -2,7 +2,7 @@
 
 use crate::peripherals::usart::*;
 use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
-use crate::{FreeError, if_in_free, in_free};
+use crate::in_free;
 use crate::parallel::Operation;
 use crate::devices::display_transmission::{display_is_busy, EPDCommand, EPDData, EPDDataB, EPDDataPart, BUFSIZE};
 

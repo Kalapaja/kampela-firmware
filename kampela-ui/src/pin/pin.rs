@@ -9,7 +9,7 @@ use embedded_graphics::{
 
 use rand::Rng;
 
-use crate::{uistate::UpdateRequest, widget::view::ViewScreen};
+use crate::{message, uistate::UpdateRequest, widget::view::ViewScreen};
 use crate::uistate::EventResult;
 use crate::widget::view::View;
 use crate::platform::PinCode;
@@ -22,49 +22,72 @@ use crate::pin::{
 pub const PIN_LEN: usize = 4;
 
 #[derive(Debug)]
+enum PinpadState {
+    Initial,
+    Tapped,
+    TappedLast,
+    DrawTapped,
+    DrawWrong,
+    DrawOk,
+}
+
 pub struct Pincode<R> where
     R: Rng + ?Sized
 {
     pinpad: Pinpad<R>,
     pindots: Pindots,
     entered_nums: Vec<u8>,
-    tapped: bool,
+    tapped: PinpadState,
+    pinok: bool,
 }
 
 impl<R> Pincode<R> where
     R: Rng + ?Sized
 {
     pub fn new(rng: &mut R) -> Self {
-
         Self {
             pinpad: Pinpad::new(rng),
             pindots: Pindots::new(),
             entered_nums: Vec::new(),
-            tapped: false,
+            tapped: PinpadState::Initial,
+            pinok: false,
         }
     }
-    fn check_pin(&mut self, pin: &PinCode) -> bool {
-        let r: bool;
+    fn check_pin(&mut self, pin: &PinCode) {
         // TODO: proper attempt counter and pin check
-        if self.entered_nums == pin {
-            r = true
-        } else {
-            r = false
+        if self.entered_nums.len() == pin.len() {
+            if self.entered_nums == pin {
+                self.pinok = true;
+            }
+            self.tapped = PinpadState::TappedLast;
+            self.entered_nums = Vec::new();
         }
-        self.entered_nums = Vec::new();
-        r
     }
     fn push_entered(&mut self, num: u8) {
         if self.entered_nums.len() < PIN_LEN {
             self.entered_nums.push(num);
         }
     }
-    fn reset_tapped(&mut self) -> bool {
-        if self.tapped {
-            self.tapped = false;
-            true
-        } else {
-            false
+    fn switch_tapped(&mut self) -> bool {
+        match self.tapped {
+            PinpadState::Initial => false,
+            PinpadState::Tapped => {
+                self.tapped = PinpadState::DrawTapped;
+                true
+            },
+            PinpadState::TappedLast => {
+                if self.pinok {
+                    self.tapped = PinpadState::DrawOk;
+                } else {
+                    self.tapped = PinpadState::DrawWrong;
+                }
+                true
+            },
+            PinpadState::DrawTapped => {
+                self.tapped = PinpadState::Initial;
+                false
+            },
+            _ => false,
         }
     }
 }
@@ -72,18 +95,30 @@ impl<R> Pincode<R> where
 impl<R> ViewScreen for Pincode<R> where
     R: Rng + ?Sized
 {
-    type DrawInput<'a> = &'a mut R where Self: 'a;
-    type DrawOutput = ();
-    type TapInput<'a> = &'a PinCode;
-    type TapOutput = bool;
-    fn draw_screen<'a, D>(&mut self, target: &mut D, rng: Self::DrawInput<'a>) -> Result<(EventResult, ()), D::Error>
+    type DrawInput<'a> = &'a mut R where R: 'a;
+    type DrawOutput = bool;
+    type TapInput<'a> = &'a PinCode where R: 'a;
+    type TapOutput = ();
+    fn draw_screen<'a, D>(&mut self, target: &mut D, rng: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
     {
-        let mut request = UpdateRequest::new();
+        let mut request = None;
         let state = None;
 
-        let t = self.reset_tapped();
+        if matches!(self.tapped, PinpadState::DrawWrong) {
+            message::draw(target, "Pin is wrong", false)?;
+            request = Some(UpdateRequest::Fast);
+            self.tapped = PinpadState::Initial;
+            return Ok((EventResult {request, state}, false))
+        }
+        if matches!(self.tapped, PinpadState::DrawOk) {
+            message::draw(target, "Pin is Ok", false)?;
+            return Ok((EventResult {request, state}, true))
+        }
+
+        let t = self.switch_tapped();
         let filled = if t {
             PrimitiveStyle::with_fill(BinaryColor::On)
         } else {
@@ -95,28 +130,25 @@ impl<R> ViewScreen for Pincode<R> where
         self.pinpad.draw(target, (rng, t))?;
 
         if t {
-            if self.entered_nums.is_empty() {
-                request.set_fast();
-            } else {
-                request.set_ultrafast();
-            }
+            request = Some(UpdateRequest::UltraFast);
         }
 
-        Ok((EventResult { request, state }, ()))
+        Ok((EventResult { request, state }, false))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, pin: Self::TapInput<'a>) -> (EventResult, Self::TapOutput) {
+    fn handle_tap_screen<'a>(&mut self, point: Point, pin: Self::TapInput<'a>) -> (EventResult, Self::TapOutput)
+    where Self: 'a {
         let state = None;
-        let mut request = UpdateRequest::new();
-        let mut pinok = false;
+        let mut request = None;
+        if !matches!(self.tapped, PinpadState::Initial) { // ignore taps until permutated
+            return (EventResult{ request, state }, ());
+        }
         if let Some(b) = self.pinpad.handle_tap(point, ()) {
-            self.tapped = true;
-            request.set_ultrafast();
+            self.tapped = PinpadState::Tapped;
+            request = Some(UpdateRequest::UltraFast);
             self.push_entered(self.pinpad.buttons[b].num());
-            if self.entered_nums.len() == pin.len() && self.check_pin(pin) {
-                pinok = true;
-            }
+            self.check_pin(pin);
         }
 
-        (EventResult{ request, state }, pinok)
+        (EventResult{ request, state }, ())
     }
 }
