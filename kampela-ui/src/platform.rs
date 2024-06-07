@@ -1,32 +1,22 @@
 //! Platform definitions
 
 #[cfg(not(feature="std"))]
-use alloc::{format, string::String, vec::Vec};
+use alloc::{string::String, vec::Vec};
 #[cfg(feature="std")]
-use std::{format, string::String, vec::Vec};
+use std::{string::String, vec::Vec};
 
-use embedded_graphics::{pixelcolor::BinaryColor, prelude::{DrawTarget, Point}};
 use rand::{CryptoRng, Rng};
 
 use hmac::Hmac;
 use pbkdf2::pbkdf2;
 use sha2::Sha512;
 use schnorrkel::{
-    context::attach_rng,
-    derive::{ChainCode, Derivation},
     keys::Keypair,
-    signing_context,
     ExpansionMode,
     MiniSecretKey,
 };
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
 
-use crate::pin::Pincode;
-use crate::uistate::EventResult;
-use crate::backup::draw_backup_screen;
-use crate::transaction;
-use crate::qr;
-
+pub type PinCode = [u8; 4]; //TODO: consider if it's good password storing type
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
 
 /// Implement this on platform to make crate work
@@ -37,52 +27,43 @@ pub trait Platform {
     type HAL;
 
     /// Sufficiently good random source used everywhere
-    type Rng<'a>: Rng + Sized + CryptoRng;
+    type Rng: Rng + Sized + CryptoRng;
 
-    /// Device-specific screen canvas abstraction
-    type Display: DrawTarget<Color = BinaryColor>;
+
+    /// Transaction data or addresses for transaction data in psram
+    type NfcTransaction;
 
     /// RNG getter
-    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a>;
+    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;
 
     /// Device-specific "global" storage and management of pincode state RO
-    fn pin(&self) -> &Pincode;
+    fn pin(&self) -> &PinCode;
 
     /// Device-specific "global" storage and management of pincode state RW
-    fn pin_mut(&mut self) -> &mut Pincode;
-
-    /// Getter for canvas
-    fn display(&mut self) -> &mut Self::Display;
+    fn pin_mut(&mut self) -> &mut PinCode;
 
     /// Put entropy in flash
-    fn store_entropy(&mut self);
+    fn store_entropy(&mut self, e: &[u8]);
 
     /// Read entropy from flash
     fn read_entropy(&mut self);
-
-    /// Getter for pincode and canvas simultaneously (they should be independent)
-    fn pin_display(&mut self) -> (&mut Pincode, &mut Self::Display);
-
-    /// Set new seed
-    fn set_entropy(&mut self, e: &[u8]);
     
     /// Getter for seed
-    fn entropy(&self) -> &[u8];
+    fn entropy(&self) -> Option<Vec<u8>>;
 
-    /// Getter for seed and canvas
-    fn entropy_display(&mut self) -> (&[u8], &mut Self::Display);
+    fn public(&self) -> Option<[u8; 32]>;
 
     fn set_address(&mut self, addr: [u8; 76]);
 
-    fn set_transaction(&mut self, call: String, extensions: String, signature: [u8; 130]);
+    fn set_transaction(&mut self, transaction: Self::NfcTransaction);
 
-    fn call(&mut self) -> Option<(&str, &mut Self::Display)>;
+    fn call(&mut self) -> Option<String>;
 
-    fn extensions(&mut self) -> Option<(&str, &mut Self::Display)>;
+    fn extensions(&mut self) -> Option<String>;
 
-    fn signature(&mut self) -> (&[u8; 130], &mut Self::Display);
+    fn signature(&mut self, h: &mut Self::HAL) -> [u8; 130];
 
-    fn address(&mut self) -> (&[u8; 76], &mut Self::Display);
+    fn address(&mut self) -> &[u8; 76];
 
     //----derivatives----
 
@@ -92,78 +73,12 @@ pub trait Platform {
         entropy
     }
 
-    fn generate_seed(&mut self, h: &mut Self::HAL) {
-        self.set_entropy(&Self::generate_seed_entropy(h));
-    }
-
-    fn handle_pin_event(&mut self, point: Point, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
-        let (a, b) = self.pin_display();
-        a.handle_event(point, &mut Self::rng(h), b)
-    }
-
-    fn handle_pin_event_repeat(&mut self, point: Point, h: &mut Self::HAL) -> Result<EventResult, <Self::Display as DrawTarget>::Error> {
-        let (a, b) = self.pin_display();
-        a.handle_event_repeat(point, &mut Self::rng(h), b)
-    }
-
-    fn draw_pincode(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (p, d) = self.pin_display();
-        p.draw(d)
-    }
-
-    fn draw_backup(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (s, d) = self.entropy_display();
-        draw_backup_screen(s, d)
-    }
-
-    fn draw_transaction(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        if let Some((s, d)) = self.call() {
-            transaction::draw(s, d)
-        } else {
-            Ok(())
-        }
-    }
-
-    fn draw_extensions(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        if let Some((s, d)) = self.extensions() {
-            transaction::draw(s, d)
-        } else {
-            Ok(())
-        }
-    }
-
-    fn draw_signature_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        let (s, d) = self.signature();
-        qr::draw(s, d)
-    }
-
-    fn draw_address_qr(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        //let (s, d) = self.address();
-       
-        let line1 = format!("substrate:0x{}", hex::encode(self.public().expect("no entropy stored, no address could be shown")));
-
-        qr::draw(&line1.as_bytes(), self.display())
-    }
-
     fn pair(&self) -> Option<Keypair> {
-        let e = self.entropy();
-        if e.is_empty() { None } else {
-            let big_seed = entropy_to_big_seed(&e);
-
-            let mini_secret_bytes = &big_seed[..32];
-
-            Some(
-                MiniSecretKey::from_bytes(mini_secret_bytes)
-                    .unwrap()
-                    .expand_to_keypair(ExpansionMode::Ed25519)
-            )
+        match self.entropy() {
+            None => None,
+            Some(e) => pair_from_entropy(&e),
         }
     }
-
-    fn public(&self) -> Option<[u8; 32]> {
-        self.pair().map(|pair| pair.public.to_bytes())
-    }
-
 }
 
 pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
@@ -178,11 +93,25 @@ pub fn entropy_to_big_seed(entropy: &[u8]) -> [u8; 64] {
     seed
 }
 
-pub struct NfcTransaction {
-    pub decoded_transaction: TransactionUnmarkedParsed,
-    pub data_to_sign: Vec<u8>,
-    pub specs: ShortSpecs,
-    pub spec_name: String,
+
+pub fn pair_from_entropy(e: &[u8]) -> Option<Keypair> {
+    if e.is_empty() { None } else {
+        let big_seed = entropy_to_big_seed(&e);
+
+        let mini_secret_bytes = &big_seed[..32];
+
+        Some(
+            MiniSecretKey::from_bytes(mini_secret_bytes)
+                .unwrap()
+                .expand_to_keypair(ExpansionMode::Ed25519)
+        )
+    }
 }
 
-
+pub fn public_from_entropy(e: &[u8]) -> Option<[u8; 32]> {
+    let pair = pair_from_entropy(e);
+    match pair {
+        None => None,
+        Some(p) => Some(p.public.to_bytes())
+    }
+}

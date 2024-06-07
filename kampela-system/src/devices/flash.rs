@@ -1,7 +1,67 @@
-use efm32pg23_fix::{Peripherals};
+use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
+use crate::devices::se_aes_gcm;
+use crate::in_free;
 use cortex_m::asm::delay;
 
+pub fn store_encoded_entopy(protected: &[u8], public_key: &Option<[u8; 32]>) {
+    // stroring encoded entropy and publilc key
+    let mut payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+    payload[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN].copy_from_slice(protected);
+    payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..].copy_from_slice(&public_key.unwrap_or([0u8; 32]));
+    
+    let mut data = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+    in_free(|peripherals| {
+        flash_wakeup(peripherals);
+
+        flash_unlock(peripherals);
+        flash_erase_page(peripherals, 0);
+        flash_wait_ready(peripherals);
+
+        flash_unlock(peripherals);
+
+        flash_write_page(peripherals, 0, &payload);
+        flash_wait_ready(peripherals);
+
+        flash_read(peripherals, 0, &mut data);
+    });
+    // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
+    if &data[2..] != &payload {
+        panic!("Failed to save seedphrase: {:?} ||| {:?}", &data[2..35], &payload[..33]);
+    }
+}
+
+pub fn read_encoded_entropy() -> (Option<[u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]>, Option<[u8; 32]>) {
+    let mut data = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+    in_free(|peripherals| {
+        // Make sure that flash is ok
+        flash_wakeup(peripherals);
+        flash_wait_ready(peripherals);
+        let fl_id = flash_get_id(peripherals);
+        let fl_len = flash_get_size(peripherals);
+        if (fl_id == 0) || (fl_len == 0) {
+            panic!("Flash error");
+        }
+        flash_read(peripherals, 0, &mut data);
+        flash_sleep(peripherals);
+    });
+    match data[0] {
+        0 => (None, None),
+        16 | 20 | 24 | 28 | 32 => (
+                Some(data[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]
+                    .try_into()
+                    .expect("static length")),
+                Some(data[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..]
+                    .try_into()
+                    .expect("static length"))
+        ),
+        255 => (None, None),
+        _ => {
+            store_encoded_entopy(&[0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN], &None);
+            panic!("Seed storage corrupted! Wiping seed...");
+        },
+    }
+}
 
 #[allow(dead_code)]
 enum FlashCommand {

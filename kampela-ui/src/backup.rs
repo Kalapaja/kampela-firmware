@@ -1,18 +1,21 @@
 //! Screen for seed phrase display
 
+#[cfg(not(feature="std"))]
+use alloc::{vec::Vec, borrow::ToOwned};
+#[cfg(feature="std")]
+use std::{vec::Vec, borrow::ToOwned};
+
 use patches::entropy_to_phrase;
 use embedded_graphics::{
+    draw_target::DrawTarget,
+    geometry::{Point, Size},
+    pixelcolor::BinaryColor,
     mono_font::{
-        ascii::{FONT_8X13_BOLD},
+        ascii::FONT_8X13_BOLD,
         MonoTextStyle,
     },
     primitives::Rectangle,
     Drawable,
-};
-use embedded_graphics_core::{
-    draw_target::DrawTarget,
-    geometry::{Point, Size},
-    pixelcolor::BinaryColor,
 };
 use embedded_text::{
     alignment::{HorizontalAlignment, VerticalAlignment},
@@ -20,28 +23,162 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::display_def::*;
+use crate::{display_def::*, message, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
 
-pub fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(entropy: &[u8], display: &mut D) -> Result<(), D::Error> {
-    let character_style = MonoTextStyle::new(&FONT_8X13_BOLD, BinaryColor::On);
-    let textbox_style = TextBoxStyleBuilder::new()
-        .alignment(HorizontalAlignment::Center)
-        .vertical_alignment(VerticalAlignment::Middle)
-        .build();
-    let header = Rectangle::new(Point::new(0, 4), Size::new(SCREEN_SIZE_X, 24));
-    let body = Rectangle::new(Point::new(0, 28), Size::new(SCREEN_SIZE_X, 100));
-    let bottom = Rectangle::new(Point::new(0, 132), Size::new(SCREEN_SIZE_X, 50));
+use crate::widget::{view::{ViewScreen, View, Widget}, nav_bar::nav_bar::{NavBar, NAV_BAR_WIDGET}};
 
-    match entropy_to_phrase(entropy) {
-        Ok(ref seed) => {
-            TextBox::with_textbox_style("Please write down seed phrase", header, character_style, textbox_style).draw(display)?;
-            TextBox::with_textbox_style(seed, body, character_style, textbox_style).draw(display)?;
-            TextBox::with_textbox_style("touch the screen when done", bottom, character_style, textbox_style).draw(display)?;
+use crate::uistate::{EventResult, UpdateRequest};
+
+const VERTICAL_GAP: u32 = 4;
+
+const HEADER_WIDGET: Widget = Widget::new(
+    Rectangle{
+        top_left: Point{
+            x: 0,
+            y: VERTICAL_GAP as i32,
         },
-        Err(_e) => {
-            TextBox::with_textbox_style("System error! Seed storage corrupted; if this persists, please destroy the device", body, character_style, textbox_style).draw(display)?;
-        },
-    };
+        size: Size{
+            width: SCREEN_SIZE_X,
+            height: 24,
+        }
+    },
+    SCREEN_ZERO
+);
+
+const BODY_TOP_LEFT: Point = Point{
+    x: 0,
+    y: (VERTICAL_GAP + HEADER_WIDGET.bounds.size.height + VERTICAL_GAP) as i32,
+};
+const BODY_WIDGET: Widget = Widget::new(
+    Rectangle{
+        top_left: BODY_TOP_LEFT,
+        size: Size{
+            width: SCREEN_SIZE_X,
+            height: SCREEN_SIZE_Y - BODY_TOP_LEFT.y as u32 - NAV_BAR_WIDGET.bounds.size.height - VERTICAL_GAP ,
+        }
+    },
+    SCREEN_ZERO
+);
+
+enum BackupState {
+    ShowSeed,
+    Message,
+    Storing,
+}
+
+pub struct Backup {
+    state: BackupState,
+    entropy: Vec<u8>,
+    navbar: NavBar,
+    prev_screen: UnitScreen,
+}
+
+impl Backup {
+    pub fn new(e: Vec<u8>, prev_screen: UnitScreen) -> Self {
+        Backup {
+            state: BackupState::ShowSeed,
+            entropy: e,
+            navbar: NavBar::new(("back", "store")),
+            prev_screen,
+        }
+    }
+
+    pub fn get_entropy(&self) -> Vec<u8> {
+        self.entropy.to_owned()
+    }
     
-    Ok(())
+    fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut D) -> Result<(), D::Error> {
+        let character_style = MonoTextStyle::new(&FONT_8X13_BOLD, BinaryColor::On);
+        let textbox_style = TextBoxStyleBuilder::new()
+            .alignment(HorizontalAlignment::Center)
+            .vertical_alignment(VerticalAlignment::Middle)
+            .build();
+    
+        match entropy_to_phrase(&self.entropy) {
+            Ok(ref seed) => {
+                TextBox::with_textbox_style(
+                    "Please write down seed phrase",
+                    HEADER_WIDGET.bounds,
+                    character_style,
+                    textbox_style
+                ).draw(target)?;
+                TextBox::with_textbox_style(
+                    seed,
+                    BODY_WIDGET.bounds,
+                    character_style,
+                    textbox_style
+                ).draw(target)?;
+                self.navbar.draw(target, false)?;
+            },
+            Err(_e) => {
+                TextBox::with_textbox_style(
+                    "System error! Seed storage corrupted; if this persists, please destroy the device",
+                    BODY_WIDGET.bounds,
+                    character_style,
+                    textbox_style
+                ).draw(target)?;
+            },
+        };
+        
+        Ok(())
+    }
+}
+
+impl ViewScreen for Backup {
+    type DrawInput<'a> = ();
+    type DrawOutput = Option<Vec<u8>>;
+    type TapInput<'a> = ();
+    type TapOutput = ();
+
+    fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, Self::DrawOutput), D::Error>
+    where
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
+    {
+        let mut request = None;
+        let mut state = None;
+        let mut entropy = None;
+        
+        match self.state {
+            BackupState::ShowSeed => {
+                self.draw_backup_screen(target)?;
+            },
+            BackupState::Message => {
+                message::draw(target, "Storing into flash...", true)?;
+                request = Some(UpdateRequest::Hidden);
+                self.state = BackupState::Storing;
+            },
+            BackupState::Storing => {
+                entropy = Some(self.entropy.clone());
+                state = Some(UnitScreen::QRAddress);
+                request = Some(UpdateRequest::Slow);
+            },
+        }
+
+        Ok((EventResult { request, state }, entropy))
+    }
+    fn handle_tap_screen<'a>(&mut self, point: Point, _: ()) -> (EventResult, ()) 
+    where
+        Self: 'a
+    {
+        let mut state = None;
+        let mut request = None;
+
+        if matches!(self.state, BackupState::ShowSeed) {
+            if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
+                match c {
+                    NavCommand::Left => {
+                        state = Some(core::mem::take(&mut self.prev_screen));
+                        request = Some(UpdateRequest::Fast);
+                    },
+                    NavCommand::Right => {
+                        self.state = BackupState::Message;
+                        request = Some(UpdateRequest::UltraFast);
+                    }
+                }
+            }
+        }
+
+        (EventResult{ request, state }, ())
+    }
 }

@@ -20,11 +20,12 @@ impl ADC {
 }
 
 impl Operation for ADC {
+    type Init = ();
     type Input<'a> = ();
     type Output = ();
     type StateEnum = ADCState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self{
             state: ADCState::Ready,
             last_value: 0,
