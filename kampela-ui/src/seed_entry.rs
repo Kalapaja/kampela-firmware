@@ -15,11 +15,8 @@ use embedded_graphics::{
     primitives::{
         Circle, PrimitiveStyle, Rectangle,
     },
-    Drawable,
 };
 use embedded_graphics_core::{
-    draw_target::DrawTarget,
-    geometry::{Dimensions, Point, Size},
     pixelcolor::BinaryColor,
 };
 use embedded_text::{
@@ -28,13 +25,12 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::{phrase_to_entropy, wordlist_english, WordListElement};
+use mnemonic_external::{regular::InternalWordList, AsWordList, MAX_SEED_LEN, WordListElement, WordSet};
 
 use crate::uistate::{EventResult, Screen, UpdateRequest};
 use crate::display_def::*;
 
 const WORD_LENGTH: usize = 8;
-const MAX_SEED: usize = 24;
 
 const PHRASE_AREA: Rectangle = Rectangle::new(
     Point::new(GAP as i32, GAP as i32),
@@ -110,7 +106,7 @@ struct KeyButton {
 impl KeyButton {
     pub fn new(label: char, center: Point) -> Self {
         KeyButton {
-            label: label,
+            label,
             area: Circle::with_center(center, KEY_BUTTON_DIAMETER),
         }
     }
@@ -154,54 +150,48 @@ impl KeyButton {
 }
 
 struct SeedBuffer {
-    seed_phrase: Vec<WordListElement>,
+    seed_phrase: WordSet,
     ready: Option<Vec<u8>>,
 }
 
 impl SeedBuffer {
     pub fn new() -> Self {
         SeedBuffer {
-            seed_phrase: Vec::with_capacity(MAX_SEED),
+            seed_phrase: WordSet::new(),
             ready: None,
         }
     }
 
     pub fn len(&self) -> usize {
-        self.seed_phrase.len()
+        self.seed_phrase.bits11_set.len()
     }
 
     pub fn proposed_phrase(&self) -> String {
         self.seed_phrase
+            .bits11_set
             .iter()
-            .map(|a| String::from(a.word()))
+            .map(|a| String::from(InternalWordList::get_word(&InternalWordList, *a).unwrap()))
             .collect::<Vec<String>>()
             .join(" ")
     }
 
     pub fn remove_last(&mut self) -> bool {
-        self.seed_phrase.pop().is_some()
+        self.seed_phrase.bits11_set.pop().is_some()
     }
 
-    pub fn submit_word(&mut self, word: WordListElement) {
-        if self.seed_phrase.len()<MAX_SEED {
-            self.seed_phrase.push(word);
+    pub fn submit_word(&mut self, word: WordListElement<InternalWordList>) {
+        if self.seed_phrase.bits11_set.len() < MAX_SEED_LEN {
+            self.seed_phrase.bits11_set.push(word.bits11);
         }
     }
 
     pub fn validate(&mut self) -> bool {
-        match phrase_to_entropy(
-            &self
-                .seed_phrase
-                .iter()
-                .map(|a| String::from(a.word()))
-                .collect::<Vec<String>>()
-                .join(" "),
-        ) {
+        match self.seed_phrase.to_entropy() {
             Ok(a) => {
                 self.ready = Some(a);
                 true
-            }
-            Err(_) => false,
+            },
+            Err(_) => false
         }
     }
 }
@@ -209,7 +199,7 @@ impl SeedBuffer {
 /// Key entry state for seed phrase recovery screen
 struct Proposal {
     entry: String,
-    guess: Vec<WordListElement>,
+    guess: Vec<WordListElement<InternalWordList>>,
 }
 
 impl Proposal {
@@ -227,8 +217,8 @@ impl Proposal {
     pub fn add_letter(&mut self, letter: char) -> bool {
         let mut new = self.entry.clone();
         new.push(letter);
-        let guess = wordlist_english().get_words_by_prefix(&new);
-        if guess.len() > 0 {
+        let guess = InternalWordList::get_words_by_prefix(&InternalWordList, &new).unwrap();
+        if !guess.is_empty() {
             self.entry = new;
             self.guess = guess;
             true
@@ -246,7 +236,7 @@ impl Proposal {
         self.guess = if self.proposed_len() == 0 {
             Vec::new()
         } else {
-            wordlist_english().get_words_by_prefix(&self.entry)
+            InternalWordList::get_words_by_prefix(&InternalWordList, &self.entry).unwrap()
         };
         true
     }
@@ -255,7 +245,7 @@ impl Proposal {
         self.guess.len()
     }
 
-    pub fn forward_button_action(&mut self) -> Option<WordListElement> {
+    pub fn forward_button_action(&mut self) -> Option<WordListElement<InternalWordList>> {
         if self.guess.len() == 1 {
             let out = self.guess.pop();
             self.clear();
@@ -263,7 +253,7 @@ impl Proposal {
         } else {
             let mut out = None;
             for (index, element) in self.guess.iter().enumerate() {
-                if element.word() == self.entry {
+                if element.word == self.entry {
                     out = Some(self.guess.remove(index));
                     self.clear();
                     break;
@@ -307,7 +297,7 @@ impl SeedEntryState {
         let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
         WORD_AREA.into_styled(clear).draw(fast_display)?;
         TextBox::with_textbox_style(
-            &format!("{}", self.proposal.word()),
+            &self.proposal.word(),
             WORD_AREA,
             character_style,
             textbox_style,
@@ -330,7 +320,7 @@ impl SeedEntryState {
         let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
         PHRASE_AREA.into_styled(clear).draw(fast_display)?;
         let mut proposal = self.seed_phrase.proposed_phrase();
-        if proposal == "" {
+        if proposal.is_empty() {
             proposal = String::from("please enter seed phrase")
         };
         TextBox::with_textbox_style(&proposal, PHRASE_AREA, character_style, textbox_style)
@@ -344,7 +334,7 @@ impl SeedEntryState {
         D: DrawTarget<Color = BinaryColor>,
     {
         let mut out = UpdateRequest::new();
-        if self.proposal.entry.len() > 0 {
+        if !self.proposal.entry.is_empty() {
             self.proposal.remove_letter();
             self.update_entry(fast_display)?;
             out.set_fast();
@@ -366,12 +356,8 @@ impl SeedEntryState {
             self.update_proposal(fast_display)?;
             self.update_entry(fast_display)?;
             out.set_slow();
-        } else {
-            if self.proposal.proposed_len() == 0 {
-                if self.seed_phrase.validate() {
-                    out.set_slow();
-                }
-            }
+        } else if self.proposal.proposed_len() == 0 && self.seed_phrase.validate() {
+            out.set_slow();
         };
         Ok(out)
     }
@@ -424,7 +410,6 @@ impl SeedEntryState {
         let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
         
         BACK_BUTTON_AREA
-            .clone()
             .into_styled(thin_stroke)
             .draw(display)?;
         BACK_BUTTON_TRIANGLE
@@ -440,7 +425,6 @@ impl SeedEntryState {
     {
         let thin_stroke = PrimitiveStyle::with_stroke(BinaryColor::On, 1);
         FORWARD_BUTTON_AREA
-            .clone()
             .into_styled(thin_stroke)
             .draw(display)?;
         FORWARD_BUTTON_TRIANGLE

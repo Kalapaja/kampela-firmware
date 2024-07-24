@@ -1,5 +1,6 @@
 //! This is simulator to develop Kampela UI mocks
-#![cfg(feature="std")]
+#![deny(unused_crate_dependencies)]
+
 use embedded_graphics_core::{
     geometry::Size,
     pixelcolor::BinaryColor,
@@ -11,35 +12,17 @@ use rand::{rngs::ThreadRng, thread_rng};
 use std::{thread::sleep, time::Duration};
 use clap::Parser;
 
-#[macro_use]
-extern crate lazy_static;
-
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
 const SLOW_UPDATE_TIME: Duration = Duration::new(1, 0);
 
-pub mod display_def;
-pub use display_def::*;
-
-mod platform;
-use platform::Platform;
-
-mod pin;
-use pin::Pincode;
-
-mod restore_or_generate;
-mod seed_entry;
-
-mod backup;
-
-mod uistate;
-use uistate::UIState;
-
-mod data_state;
-use data_state::{AppStateInit, NFCState, DataInit, StorageState};
-
-mod transaction;
-mod qr;
+use kampela_ui::{
+    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    display_def::*,
+    pin::Pincode,
+    platform::Platform,
+    uistate::{UIState, UpdateRequest},
+};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -240,7 +223,7 @@ fn main() {
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
     
-    let mut update = uistate::UpdateRequest::new();
+    let mut update = UpdateRequest::new();
     update.set_slow();
 
     // event loop:

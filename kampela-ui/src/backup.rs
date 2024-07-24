@@ -1,6 +1,5 @@
 //! Screen for seed phrase display
 
-use patches::entropy_to_phrase;
 use embedded_graphics::{
     mono_font::{
         ascii::{FONT_8X13_BOLD},
@@ -19,6 +18,7 @@ use embedded_text::{
     style::TextBoxStyleBuilder,
     TextBox,
 };
+use mnemonic_external::{regular::InternalWordList, WordSet};
 
 use crate::display_def::*;
 
@@ -32,7 +32,7 @@ pub fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(entropy: &[u8], di
     let body = Rectangle::new(Point::new(0, 28), Size::new(SCREEN_SIZE_X, 100));
     let bottom = Rectangle::new(Point::new(0, 132), Size::new(SCREEN_SIZE_X, 50));
 
-    match entropy_to_phrase(entropy) {
+    match WordSet::from_entropy(entropy).and_then(|a| a.to_phrase(&InternalWordList)) {
         Ok(ref seed) => {
             TextBox::with_textbox_style("Please write down seed phrase", header, character_style, textbox_style).draw(display)?;
             TextBox::with_textbox_style(seed, body, character_style, textbox_style).draw(display)?;
