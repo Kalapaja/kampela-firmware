@@ -16,6 +16,8 @@ use schnorrkel::{
     MiniSecretKey,
 };
 
+use mnemonic_external::{AsWordList, Bits11, ErrorWordList, WordSet, TOTAL_WORDS};
+
 pub type PinCode = [u8; 4]; //TODO: consider if it's good password storing type
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
 
@@ -32,6 +34,9 @@ pub trait Platform {
 
     /// Transaction data or addresses for transaction data in psram
     type NfcTransaction;
+
+    /// List-set of mnemonic words 
+    type AsWordList: AsWordList + ?Sized;
 
     /// RNG getter
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng;

@@ -52,6 +52,7 @@ dependencies = [
  "kampela-ui",
  "lazy_static",
  "lt-codes",
+ "mnemonic-external",
  "nalgebra",
  "nfca-parser",
  "panic-halt",
@@ -901,8 +902,9 @@ dependencies = [
  "hex",
  "hmac",
  "kampela-display-common",
+ "kampela-system",
  "lazy_static",
- "patches",
+ "mnemonic-external",
  "pbkdf2",
  "qrcodegen-noheap",
  "rand",
@@ -1047,6 +1049,15 @@ name = "micromath"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc4010833aea396656c2f91ee704d51a6f1329ec2ab56ffd00bfd56f7481ea94"
+
+[[package]]
+name = "mnemonic-external"
+version = "0.1.0"
+dependencies = [
+ "bitvec",
+ "kampela-system",
+ "sha2 0.10.7",
+]
 
 [[package]]
 name = "nalgebra"

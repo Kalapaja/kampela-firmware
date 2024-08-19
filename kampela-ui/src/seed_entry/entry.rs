@@ -26,7 +26,7 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::MAX_WORD_LENGTH;
+use mnemonic_external::WORD_MAX_LEN;
 
 use crate::{display_def::*, widget::view::{Widget,View, DrawView}};
 
@@ -75,7 +75,7 @@ impl Entry {
         }
     }
     pub fn add_letter(&mut self, c: char) -> bool {
-        if self.entered.len() < MAX_WORD_LENGTH {
+        if self.entered.len() < WORD_MAX_LEN {
             self.entered.push(c);
             true
         } else {

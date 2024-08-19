@@ -16,8 +16,9 @@ rand_core = { version = "0.6.4", default-features = false }
 rand = { version = "0.8.5", default_features = false }
 schnorrkel = {version = "0.11.2", default-features = false}
 lazy_static = { version = "1.4.0", default_features = false }
-patches = { path = "../kampela_experiments_efm32pg23/patches" }
+mnemonic-external = { path = "../mnemonic-external", default-features = false, features = ["sufficient-memory"] }
 kampela-display-common = { path = "../kampela-display-common" }
+kampela-system = { path = "../kampela-system" }
 clap = { version = "4.2.1", features = ["derive"], optional = true }
 qrcodegen-noheap = {git = "https://github.com/Slesarew/QR-Code-generator", branch = "patch-1"}
 pbkdf2 = {version = "0.11.0", default-features = false}

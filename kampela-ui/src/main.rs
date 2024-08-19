@@ -1,10 +1,8 @@
 //! This is simulator to develop Kampela UI mocks
 #![cfg(feature="std")]
 use embedded_graphics::{
-    geometry::Point,
-    primitives::{Line, Primitive, PrimitiveStyle, Rectangle, PointsIter},
+    primitives::PointsIter,
     Drawable,
-    geometry::Size,
     pixelcolor::BinaryColor,
     Pixel,
 };
@@ -15,6 +13,9 @@ use embedded_graphics_simulator::{
 use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
+
+#[cfg(feature="std")]
+use mnemonic_external::internal::InternalWordList;
 
 #[macro_use]
 extern crate lazy_static;
@@ -156,6 +157,7 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng = ThreadRng;
     type NfcTransaction = NfcTransactionData;
+    type AsWordList = InternalWordList;
 
     fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
         &mut h.rng

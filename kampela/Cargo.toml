@@ -28,6 +28,7 @@ scale-info = {version = "2.9.0", default-features = false}
 substrate_parser = { git = "https://github.com/Alzymologist/substrate-parser", default-features = false, features = ["embed-display"], rev = "632f621a595fa7161a3352c1f6a05ffcc5f2dcc8" }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
 
+mnemonic-external = { path = "../mnemonic-external", default-features = false, features = ["embed"] }
 kampela-system = { path = "../kampela-system" }
 kampela-ui = { path = "../kampela-ui" , default-features = false }
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
@@ -43,5 +44,4 @@ kampela-common = {git = "https://github.com/Kalapaja/kampela-common", default-fe
 
 [profile.release]
 codegen-units = 1
-opt-level = 2
 lto = true

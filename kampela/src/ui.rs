@@ -24,6 +24,8 @@ use schnorrkel::{
     signing_context,
 };
 
+use mnemonic_external::external::ExternalWordList;
+
 const MAX_TOUCH_QUEUE: usize = 2;
 const SIGNING_CTX: &[u8] = b"substrate";
 
@@ -205,6 +207,7 @@ impl Hardware {
 impl Platform for Hardware {
     type HAL = HALHandle;
     type Rng = se_rng::SeRng;
+    type AsWordList = ExternalWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
 

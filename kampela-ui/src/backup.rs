@@ -1,11 +1,11 @@
 //! Screen for seed phrase display
 
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, borrow::ToOwned};
+use alloc::vec::Vec;
+use core::marker::PhantomData;
 #[cfg(feature="std")]
-use std::{vec::Vec, borrow::ToOwned};
+use std::vec::Vec;
 
-use patches::entropy_to_phrase;
 use embedded_graphics::{
     draw_target::DrawTarget,
     geometry::{Point, Size},
@@ -23,7 +23,9 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{display_def::*, message, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
+use mnemonic_external::{AsWordList, WordListElement, WordSet, ErrorWordList};
+
+use crate::{display_def::*, message, platform::Platform, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
 
 use crate::widget::{view::{ViewScreen, View, Widget}, nav_bar::nav_bar::{NavBar, NAV_BAR_WIDGET}};
 
@@ -63,28 +65,38 @@ const BODY_WIDGET: Widget = Widget::new(
 enum BackupState {
     ShowSeed,
     Message,
+    Error,
     Storing,
 }
 
-pub struct Backup {
+pub struct Backup<P> where
+    P: Platform
+{
     state: BackupState,
-    entropy: Vec<u8>,
+    wordlist: Vec<WordListElement>,
     navbar: NavBar,
     prev_screen: UnitScreen,
+    platform_type: PhantomData<P>,
 }
 
-impl Backup {
-    pub fn new(e: Vec<u8>, prev_screen: UnitScreen) -> Self {
+impl<P: Platform> Backup<P> {
+    pub fn new(e: Vec<u8>, prev_screen: UnitScreen) -> Self
+    where <P as Platform>::AsWordList: Sized{
+        let (state, wordlist) = match WordSet::from_entropy(&e).map(|e| e.to_wordlist::<P::AsWordList>().unwrap()) {
+            Ok(w) => (BackupState::ShowSeed, w),
+            Err(_) => (BackupState::Error, Vec::new())
+        };
         Backup {
-            state: BackupState::ShowSeed,
-            entropy: e,
+            state,
+            wordlist,
             navbar: NavBar::new(("back", "store")),
             prev_screen,
+            platform_type: PhantomData::<P>::default(),
         }
     }
 
-    pub fn get_entropy(&self) -> Vec<u8> {
-        self.entropy.to_owned()
+    pub fn get_entropy(&self) -> Result<Vec<u8>, ErrorWordList> {
+        self.wordlist.iter().collect::<WordSet>().to_entropy()
     }
     
     fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut D) -> Result<(), D::Error> {
@@ -94,40 +106,28 @@ impl Backup {
             .vertical_alignment(VerticalAlignment::Middle)
             .build();
     
-        match entropy_to_phrase(&self.entropy) {
-            Ok(ref seed) => {
-                TextBox::with_textbox_style(
-                    "Please write down seed phrase",
-                    HEADER_WIDGET.bounds,
-                    character_style,
-                    textbox_style
-                ).draw(target)?;
-                TextBox::with_textbox_style(
-                    seed,
-                    BODY_WIDGET.bounds,
-                    character_style,
-                    textbox_style
-                ).draw(target)?;
-                self.navbar.draw(target, false)?;
-            },
-            Err(_e) => {
-                TextBox::with_textbox_style(
-                    "System error! Seed storage corrupted; if this persists, please destroy the device",
-                    BODY_WIDGET.bounds,
-                    character_style,
-                    textbox_style
-                ).draw(target)?;
-            },
-        };
+        TextBox::with_textbox_style(
+            "Please write down seed phrase",
+            HEADER_WIDGET.bounds,
+            character_style,
+            textbox_style
+        ).draw(target)?;
+        TextBox::with_textbox_style(
+            &<P::AsWordList>::words_to_phrase(&self.wordlist),
+            BODY_WIDGET.bounds,
+            character_style,
+            textbox_style
+        ).draw(target)?;
+        self.navbar.draw(target, false)?;
         
         Ok(())
     }
 }
 
-impl ViewScreen for Backup {
-    type DrawInput<'a> = ();
+impl<P: Platform> ViewScreen for Backup<P> {
+    type DrawInput<'a> = () where P: 'a;
     type DrawOutput = Option<Vec<u8>>;
-    type TapInput<'a> = ();
+    type TapInput<'a> = () where P: 'a;
     type TapOutput = ();
 
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, Self::DrawOutput), D::Error>
@@ -148,8 +148,15 @@ impl ViewScreen for Backup {
                 request = Some(UpdateRequest::Hidden);
                 self.state = BackupState::Storing;
             },
+            BackupState::Error => {
+                message::draw(
+                    target,
+                    "System error! Seed storage corrupted; if this persists, please destroy the device",
+                    true
+                )?;
+            },
             BackupState::Storing => {
-                entropy = Some(self.entropy.clone());
+                entropy = Some(self.get_entropy().unwrap());
                 state = Some(UnitScreen::QRAddress);
                 request = Some(UpdateRequest::Slow);
             },

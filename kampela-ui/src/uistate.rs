@@ -4,19 +4,20 @@
 mod stdwrap {
     pub use alloc::string::String;
     pub use alloc::borrow::ToOwned;
-    pub use alloc::vec::Vec;
     pub use alloc::boxed::Box;
     pub use alloc::format;
+    pub use alloc::vec::Vec;
 }
 #[cfg(feature="std")]
 mod stdwrap {
     pub use std::string::String;
     pub use std::borrow::ToOwned;
-    pub use std::vec::Vec;
     pub use std::boxed::Box;
     pub use std::format;
+    pub use std::vec::Vec;
 }
 
+use mnemonic_external::WordListElement;
 use stdwrap::*;
 
 use embedded_graphics::{
@@ -32,8 +33,6 @@ use embedded_graphics::{
     Drawable,
 };
 
-use patches::phrase::WordListElement;
-
 use crate::{dialog::Dialog, display_def::*, pin::pin::Pincode, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
 
 use crate::backup::Backup;
@@ -46,7 +45,7 @@ use crate::message;
 
 use rand::Rng;
 
-pub struct EventResult {
+pub struct EventResult{
     pub request: Option<UpdateRequest>,
     pub state: Option<UnitScreen>,
 }
@@ -76,7 +75,7 @@ pub struct UIState<P, D> where
     P: Platform,
     D: DrawTarget<Color = BinaryColor>,
 {
-    screen: Screen<P::Rng>,
+    screen: Screen<P::Rng, P>,
     pub platform: P,
     pub display: D,
     unlocked: bool,
@@ -85,7 +84,7 @@ pub struct UIState<P, D> where
 pub enum UnitScreen {
     OnboardingRestoreOrGenerate,
     OnboardingRestore(Option<Vec<WordListElement>>),
-    OnboardingBackup(Vec<u8>),
+    OnboardingBackup(Option<Vec<u8>>),
     ShowMessage(String),
     ShowDialog(
         &'static str,
@@ -104,11 +103,11 @@ impl Default for UnitScreen {
 }
 
 /// keeps states of screens, initialization can take a lot of memory
-pub enum Screen<R: Rng + ?Sized> {
+pub enum Screen<R: Rng + ?Sized, P: Platform> {
     PinEntry(Pincode<R>, UnitScreen),
     OnboardingRestoreOrGenerate(Dialog),
-    OnboardingRestore(SeedEntry),
-    OnboardingBackup(Backup),
+    OnboardingRestore(SeedEntry<P>),
+    OnboardingBackup(Backup<P>),
     ShowMessage(String, Option<UnitScreen>),
     ShowDialog(Dialog),
     ShowTransaction(Transaction),
@@ -117,12 +116,12 @@ pub enum Screen<R: Rng + ?Sized> {
     Locked,
 }
 
-impl<R: Rng + ?Sized> Screen<R> {
+impl<R: Rng + ?Sized, P: Platform> Screen<R, P> {
     pub fn get_unit(&self) -> Option<UnitScreen> {
         match self {
             Screen::OnboardingRestoreOrGenerate(_) => Some(UnitScreen::OnboardingRestoreOrGenerate),
-            Screen::OnboardingRestore(s) => Some(UnitScreen::OnboardingRestore(Some(s.get_phrase().clone()))),
-            Screen::OnboardingBackup(b) => Some(UnitScreen::OnboardingBackup(b.get_entropy())),
+            Screen::OnboardingRestore(s) => Some(UnitScreen::OnboardingRestore(Some(s.get_phrase().to_owned()))),
+            Screen::OnboardingBackup(b) => Some(UnitScreen::OnboardingBackup(Some(b.get_entropy().unwrap()))),
             Screen::ShowMessage(s, _) => Some(UnitScreen::ShowMessage(s.to_owned())),
             Screen::ShowTransaction(t) => Some(UnitScreen::ShowTransaction(t.get_page())),
             Screen::QRSignature => Some(UnitScreen::QRSignature),
@@ -132,12 +131,13 @@ impl<R: Rng + ?Sized> Screen<R> {
         }
     }
 }
-impl<R: Rng + ?Sized> Default for Screen<R> {
+impl<R: Rng + ?Sized, P: Platform> Default for Screen<R, P> {
     fn default() -> Self {Screen::QRAddress}
 }
 
 impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
-    pub fn new(mut platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self {
+    pub fn new(mut platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self
+        where <P as Platform>::AsWordList: Sized {
         platform.read_entropy();
         let initial_screen: Option<UnitScreen>;
         let unlocked: bool;
@@ -158,7 +158,8 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         state
     }
 
-    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL) {
+    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL)
+        where <P as Platform>::AsWordList: Sized {
         if let Some(s) = s {
             match s {
                 UnitScreen::QRAddress => {
@@ -168,7 +169,11 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     self.screen = Screen::Locked;
                 },
                 UnitScreen::OnboardingBackup(e) => {
-                    self.screen = Screen::OnboardingBackup(Backup::new(e, self.screen.get_unit().expect("Backup returns only to unit screens")));
+                    let entropy = match e {
+                        Some(e) => e,
+                        None => P::generate_seed_entropy(h).to_vec(),
+                    };
+                    self.screen = Screen::OnboardingBackup(Backup::new(entropy, self.screen.get_unit().expect("Backup returns only to unit screens")));
                 },
                 UnitScreen::ShowMessage(m) => {
                     self.screen = Screen::ShowMessage(m, None);
@@ -177,13 +182,12 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     self.screen = Screen::ShowDialog(Dialog::new(message, options, routes, negative));
                 },
                 UnitScreen::OnboardingRestoreOrGenerate => {
-                    let e = P::generate_seed_entropy(h).to_vec();
                     self.screen = Screen::OnboardingRestoreOrGenerate(Dialog::new(
                         "restore or generate?",
                         ("restore", "generate"),
                         (
                             Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingRestore(None))}),
-                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(e))}),
+                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
                         ),
                         false,
                     ))
@@ -215,6 +219,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         point: Point,
         h: &mut <P as Platform>::HAL,
     ) -> Option<UpdateRequest>
+    where <P as Platform>::AsWordList: Sized
     {
         let mut out = None;
         let mut new_screen = None;
@@ -250,7 +255,8 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         self.switch_screen(new_screen, h);
         out
     }
-    pub fn handle_message(&mut self, message: String, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest> {
+    pub fn handle_message(&mut self, message: String, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest>
+        where <P as Platform>::AsWordList: Sized {
         let screen = Some(UnitScreen::ShowMessage(message));
         self.switch_screen(screen, h);
         Some(UpdateRequest::UltraFast)
@@ -258,7 +264,8 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
-    pub fn handle_transaction(&mut self, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest> {
+    pub fn handle_transaction(&mut self, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest>
+        where <P as Platform>::AsWordList: Sized {
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
         let screen = Some(UnitScreen::ShowTransaction(TransactionPage::Call));
@@ -282,6 +289,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         is_clear_update: bool,
         h: &mut <P as Platform>::HAL,
     ) -> Result<Option<UpdateRequest>, <D as DrawTarget>::Error>
+    where <P as Platform>::AsWordList: Sized
     {
         let display = &mut self.display;
         if is_clear_update {

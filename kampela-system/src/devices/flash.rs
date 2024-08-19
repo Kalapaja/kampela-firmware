@@ -1,8 +1,118 @@
+use core::cmp;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
 use crate::devices::se_aes_gcm;
-use crate::in_free;
+use crate::{in_free, free, Mutex, RefCell, lazy_static};
 use cortex_m::asm::delay;
+
+#[derive(Clone, Copy, Debug)]
+pub enum FlashErr {
+    WriteNotMatch
+}
+const WORDLIST_BASE: u32 = 128*256;
+pub const MAX_PROPOSAL: usize = 3;
+
+const CACHE_SIZE: usize = 5;
+#[derive(Copy, Clone)]
+struct CachedChunk {
+    chunk_index: usize,
+    order: usize,
+    cache: [u8; 256]
+}
+lazy_static! {
+    static ref CACHED_CHUNKS: Mutex<[RefCell<CachedChunk>; CACHE_SIZE]> = Mutex::new(
+        [
+            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
+            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
+            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
+            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
+            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
+        ]
+    );
+}
+
+pub fn read_wordlist_chunk(chunk_index: usize, chunk: &mut [u8; 256]) {
+    free(|cs| {
+        let cached_chunks = CACHED_CHUNKS.borrow(cs);
+
+        for c in cached_chunks {
+            let c = c.borrow();
+            if c.chunk_index == chunk_index {
+                return *chunk = c.cache;
+            }
+        }
+        for c in cached_chunks {
+            let mut c = c.borrow_mut();
+            if c.order <= 1 {
+                if let Err(e) = read_data(WORDLIST_BASE + chunk_index as u32 * 256, &mut c.cache) {
+                    panic!("couldn't read from flash wordlist chunk №{}", chunk_index)
+                };
+                c.order = CACHE_SIZE + 1;
+                c.chunk_index = chunk_index;
+                *chunk = c.cache;
+                break
+            }
+        }
+        for c in cached_chunks {
+            let mut c = c.borrow_mut();
+            if c.order > 1 {
+                c.order -= 1;
+            }
+        }
+    })
+}
+
+pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {
+    let mut data = [0u8; N];
+    let mut read_data_chunk = [0u8; 256];
+    let initial_addr = addr / 256 * 256;
+    for (i, chunk) in payload.chunks(256).enumerate() {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+            flash_wait_ready(peripherals);
+    
+            flash_unlock(peripherals);
+    
+            flash_write_page(peripherals, addr, chunk);
+            flash_wait_ready(peripherals);
+    
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * 256;
+        let chunk_len = cmp::min(N - chunk_start, 256);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+
+    if &data != payload {
+        Err(FlashErr::WriteNotMatch)
+    } else {
+        Ok(())
+    }
+}
+
+pub fn read_data(addr: u32, data: &mut [u8]) -> Result<(), FlashErr> {
+    let mut read_data_chunk = [0u8; 256];
+    let initial_addr = addr / 256 * 256;
+    for i in 0..data.len().div_ceil(256) {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+            flash_wait_ready(peripherals);
+
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * 256;
+        let chunk_len = cmp::min(data.len() - chunk_start, 256);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+    Ok(())
+}
 
 pub fn store_encoded_entopy(protected: &[u8], public_key: &Option<[u8; 32]>) {
     // stroring encoded entropy and publilc key
@@ -10,41 +120,16 @@ pub fn store_encoded_entopy(protected: &[u8], public_key: &Option<[u8; 32]>) {
     payload[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN].copy_from_slice(protected);
     payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..].copy_from_slice(&public_key.unwrap_or([0u8; 32]));
     
-    let mut data = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
-    in_free(|peripherals| {
-        flash_wakeup(peripherals);
-
-        flash_unlock(peripherals);
-        flash_erase_page(peripherals, 0);
-        flash_wait_ready(peripherals);
-
-        flash_unlock(peripherals);
-
-        flash_write_page(peripherals, 0, &payload);
-        flash_wait_ready(peripherals);
-
-        flash_read(peripherals, 0, &mut data);
-    });
-    // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
-    if &data[2..] != &payload {
-        panic!("Failed to save seedphrase: {:?} ||| {:?}", &data[2..35], &payload[..33]);
+    if let Err(_) = store_data(0, &payload) {
+        panic!("Failed to save seedphrase");
     }
 }
 
 pub fn read_encoded_entropy() -> (Option<[u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]>, Option<[u8; 32]>) {
     let mut data = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
-    in_free(|peripherals| {
-        // Make sure that flash is ok
-        flash_wakeup(peripherals);
-        flash_wait_ready(peripherals);
-        let fl_id = flash_get_id(peripherals);
-        let fl_len = flash_get_size(peripherals);
-        if (fl_id == 0) || (fl_len == 0) {
-            panic!("Flash error");
-        }
-        flash_read(peripherals, 0, &mut data);
-        flash_sleep(peripherals);
-    });
+    if let Err(_) = read_data(0, &mut data) {
+        panic!("Failed to read seedphrase");
+    }
     match data[0] {
         0 => (None, None),
         16 | 20 | 24 | 28 | 32 => (
@@ -141,6 +226,7 @@ pub fn flash_init(peripherals: &mut Peripherals) {
 
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::SoftReset);
+
     deselect_flash(&mut peripherals.GPIO_S);
     // TODO: check if it's possible to determine readiness instead of using delay
     delay(10000);

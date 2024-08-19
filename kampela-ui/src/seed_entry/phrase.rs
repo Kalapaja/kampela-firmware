@@ -1,7 +1,8 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, string::String};
+use alloc::vec::Vec;
+use core::marker::PhantomData;
 #[cfg(feature="std")]
-use std::{vec::Vec, string::String};
+use std::vec::Vec;
 
 use embedded_graphics::{
     mono_font::{
@@ -26,9 +27,9 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::{words_to_entropy, WordListElement};
+use mnemonic_external::{AsWordList, WordListElement, WordSet};
 
-use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
 
 use super::keyboard::KEYBOARD_AREA;
 
@@ -50,21 +51,26 @@ pub const PHRASE_AREA: Rectangle = Rectangle{
 
 const PHRASE_WIDGET: Widget = Widget::new(PHRASE_AREA, SCREEN_ZERO);
 
-pub struct Phrase{
+pub struct Phrase<P> where
+    P: Platform + ?Sized
+{
     buffer: Vec<WordListElement>,
     invalid: bool,
+    platform_type: PhantomData<P>,
 }
 
-impl Phrase {
-    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self {
-        let buffer = if let Some(p) = phrase {
-            p
+impl<P: Platform> Phrase<P> {
+    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self
+        where <P as Platform>::AsWordList: Sized {
+        let buffer = if let Some(phrase) = phrase {
+            phrase
         } else {
             Vec::new()
         };
         Phrase {
             buffer,
             invalid: false,
+            platform_type: PhantomData::<P>::default(),
         }
     }
     pub fn add_word(&mut self, word: WordListElement) {
@@ -78,12 +84,7 @@ impl Phrase {
         }
     }
     pub fn validate(&self) -> Option<Vec<u8>> {
-        match words_to_entropy(&self.buffer) {
-            Ok(a) => {
-                Some(a)
-            }
-            Err(_) => None,
-        }
+        self.buffer.iter().collect::<WordSet>().to_entropy().ok()
     }
     pub fn get_phrase(&self) -> &Vec<WordListElement> {
         &self.buffer
@@ -99,10 +100,10 @@ impl Phrase {
     }
 }
 
-impl View for Phrase {
-    type DrawInput<'a> = bool;
+impl<P: Platform> View for Phrase<P> {
+    type DrawInput<'a> = bool where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type TapInput<'a> = () where P: 'a;
     type TapOutput = ();
 
     fn bounding_box(&self) -> Rectangle {
@@ -113,7 +114,7 @@ impl View for Phrase {
         PHRASE_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
         where 
             D: DrawTarget<Color = BinaryColor>,
             Self: 'a,
@@ -147,14 +148,8 @@ impl View for Phrase {
             .vertical_alignment(VerticalAlignment::Top)
             .build();
 
-        let text = self.buffer
-            .iter()
-            .map(|a| String::from(a.word()))
-            .collect::<Vec<String>>()
-            .join(" ");
-
         TextBox::with_textbox_style(
-            &text,
+            &<P::AsWordList>::words_to_phrase(&self.buffer),
             area,
             character_style,
             textbox_style,

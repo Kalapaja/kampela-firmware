@@ -752,11 +752,7 @@ impl Operation for UpdateFast {
             },
             UpdateFastState::UpdateC3(ref mut a) => {
                 if display_is_busy() != Ok(false) { return false };
-                if a.advance(()) {
-                    true
-                } else {
-                    false
-                }
+                a.advance(())
             },
         }
     }

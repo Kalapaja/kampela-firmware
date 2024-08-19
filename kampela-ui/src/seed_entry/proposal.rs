@@ -1,5 +1,6 @@
 #[cfg(not(feature="std"))]
 use alloc::{borrow::ToOwned, string::String, vec::Vec, vec};
+use core::marker::PhantomData;
 #[cfg(feature="std")]
 use std::{borrow::ToOwned, string::String, vec::Vec, vec};
 
@@ -19,14 +20,15 @@ use embedded_text::{
     TextBox,
 };
 
-use patches::phrase::{WordListElement, get_words_by_prefix, MAX_WORD_LENGTH};
+use mnemonic_external::{AsWordList, WordListElement};
+use kampela_system::devices::flash::MAX_PROPOSAL;
 
-use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::phrase::PHRASE_AREA;
 
-const MAX_PROPOSAL: usize = 3;
 const PROPOSAL_FONT: MonoFont = FONT_10X20;
+const ENOUGH_DIST_LEN: usize = 4;
 
 const PROPOSAL_SIZE: Size = Size{
     width: SCREEN_SIZE_X,
@@ -70,15 +72,18 @@ const PROPOSAL_SECTIONS: [Rectangle; 3] = [
     },
 ];
 
-pub struct Proposal{
+pub struct Proposal<P> where
+    P: Platform + ?Sized
+{
     pub entered: Vec<Vec<char>>,
     variants_depth: usize,
     variants: Vec<String>,
     guess: Vec<WordListElement>,
     guess_depth: usize,
+    platform_type: PhantomData<P>,
 }
 
-impl Proposal {
+impl<P: Platform> Proposal<P> {
     pub fn new() -> Self {
         Proposal {
             entered: Vec::new(),
@@ -86,6 +91,7 @@ impl Proposal {
             variants_depth: 0,
             guess: Vec::new(),
             guess_depth: 0,
+            platform_type: PhantomData::<P>::default(),
         }
     }
 
@@ -100,7 +106,7 @@ impl Proposal {
             letters.iter().all(|l| l.is_ascii_alphabetic() && l.is_ascii_lowercase()),
             "chars should be alphabetic and lowercase"
         );
-        if self.entered.len() < MAX_WORD_LENGTH {
+        if self.entered.len() < ENOUGH_DIST_LEN {
             self.entered.push(letters);
         }
     }
@@ -116,10 +122,10 @@ impl Proposal {
     }
 }
 
-impl View for Proposal {
-    type DrawInput<'a> = (bool, bool);
+impl<P: Platform> View for Proposal<P> {
+    type DrawInput<'a> = (bool, bool) where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type TapInput<'a> = () where P: 'a;
     type TapOutput = Option<WordListElement>;
 
     fn bounding_box(&self) -> Rectangle {
@@ -130,7 +136,7 @@ impl View for Proposal {
         PROPOSAL_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'_>) -> Result<(), D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'a>) -> Result<(), D::Error>
         where 
             D: DrawTarget<Color = BinaryColor>,
             Self: 'a,
@@ -146,11 +152,6 @@ impl View for Proposal {
             if self.guess_depth != self.entered.len() {
                 self.make_guess();
             }
-            let three_guesses = self.guess
-                .iter()
-                .take(3)
-                .map(|e| e.word())
-                .collect::<Vec<&str>>();
     
             let character_style = MonoTextStyleBuilder::new()
                 .font(&PROPOSAL_FONT)
@@ -162,10 +163,15 @@ impl View for Proposal {
                 .alignment(HorizontalAlignment::Center)
                 .vertical_alignment(VerticalAlignment::Middle)
                 .build();
-    
             for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
+                let text = match self.guess.get(i) {
+                    Some(w) => {
+                        w.word.as_ref()
+                    },
+                    None => "",
+                };
                 TextBox::with_textbox_style(
-                    three_guesses.get(i).unwrap_or(&""),
+                    &text,
                     *section,
                     character_style,
                     textbox_style,
@@ -182,7 +188,9 @@ impl View for Proposal {
         let mut guess_tapped = None;
         for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
             if section.contains(point) {
-                guess_tapped = self.guess.get(i).cloned();
+                if i < self.guess.len() {
+                    guess_tapped = Some(self.guess.swap_remove(i));
+                };
                 self.clear();
             }
         }
@@ -190,7 +198,7 @@ impl View for Proposal {
     }
 }
 
-impl Proposal {
+impl<P: Platform> Proposal<P> {
     fn get_variants(&mut self) -> Variants {
         if self.variants.len() < 2 && self.variants_depth >= self.entered.len() {
             self.variants = Vec::new();
@@ -207,21 +215,20 @@ impl Proposal {
         } else {
             Vec::new()
         };
-
         for v in variants {
             if new_variants.iter().any(|pv| pv == &v) {
                 // skip variants if this is second round
                 continue;
             }
-            
-            let mut g = get_words_by_prefix(&v);
-            if g.len() == 0 {
+            let mut g = P::AsWordList::get_words_by_prefix(&v);
+
+            if g.is_empty() {
                 continue;
             }
             
             new_variants.push(v);
             //ascending sort by length
-            g.sort_by(|a, b| a.word().len().cmp(&b.word().len()));
+            g.sort_by(|a, b| a.word.len().cmp(&b.word.len()));
             guess.append(&mut g);
             // break if there too many guesses to display
             // and if at least found two variants
@@ -234,18 +241,16 @@ impl Proposal {
     }
 
     fn make_guess(&mut self) {
-        let mut guess: Vec<WordListElement> = Vec::new();
+        let mut guess = Vec::<WordListElement>::new();
         let variants = self.get_variants();
-
-        let mut new_variants = Proposal::append_guess(&mut guess, variants,  None);
+        let mut new_variants = Self::append_guess(&mut guess, variants,  None);
         //if guesses too few, repeat with all variants
         if guess.len() < MAX_PROPOSAL && self.variants_depth == 0 {
             self.variants = Vec::new();
             let variants = self.get_variants();
-            new_variants = Proposal::append_guess(&mut guess, variants, Some(new_variants));
+            new_variants = Self::append_guess(&mut guess, variants, Some(new_variants));
             self.variants_depth = self.entered.len(); //sets depth when all variants was obtained for optimization reasons
         }
-
         if guess.len() > 0 {
             self.variants = new_variants;
             self.guess = guess;

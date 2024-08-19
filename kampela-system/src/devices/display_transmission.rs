@@ -148,8 +148,10 @@ impl <const C: u8> Operation for EPDCommand<C> {
                         .status
                         .read()
                         .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
+                        .bit_is_set()
+                ) == Ok(false) {
+                    false
+                } else {
                     in_free(|peripherals| {
                         peripherals
                             .USART0_S
@@ -160,8 +162,6 @@ impl <const C: u8> Operation for EPDCommand<C> {
                         deselect_display(&mut peripherals.GPIO_S);
                     });
                     true
-                } else {
-                    false
                 }
             },
         }
@@ -222,8 +222,10 @@ impl <const B: u8> Operation for EPDDataB<B> {
                         .status
                         .read()
                         .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
+                        .bit_is_set()
+                ) == Ok(false) {
+                    false
+                } else {
                     in_free(|peripherals| {
                         peripherals
                             .USART0_S
@@ -234,8 +236,6 @@ impl <const B: u8> Operation for EPDDataB<B> {
                         deselect_display(&mut peripherals.GPIO_S);
                     });
                     true
-                } else {
-                    false
                 }
             },
         }
@@ -252,6 +252,8 @@ pub struct EPDData<const LEN: usize>{
 pub enum EPDDataState {
     /// State where command is actually sent
     Init,
+    Send,
+    WaitSend,
     /// Receive something to keep protocol running and close connection
     Aftermath,
 }
@@ -286,29 +288,29 @@ impl <const LEN: usize> Operation for EPDData<LEN> {
                 if if_in_free(|peripherals|
                     peripherals.USART0_S.status.read().txbl().bit_is_clear()
                 ) == Ok(false) {
-                    in_free(|peripherals|
-                        peripherals
-                            .USART0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(data[self.position]))
-                            );
-                    if self.position < LEN-1 {
-                        self.position += 1;
-                    } else {
-                        self.change(EPDDataState::Aftermath);
-                    }
+                    self.change(EPDDataState::Send);
                 }
                 false
             },
-            EPDDataState::Aftermath => {
+            EPDDataState::Send => {
+                in_free(|peripherals|
+                    peripherals
+                        .USART0_S
+                        .txdata
+                        .write(|w_reg| w_reg.txdata().variant(data[self.position]))
+                );
+                self.change(EPDDataState::WaitSend);
+                false
+            },
+            EPDDataState::WaitSend => {
                 if if_in_free(|peripherals|
                     peripherals
                         .USART0_S
                         .status
                         .read()
                         .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
+                        .bit_is_set()
+                ) == Ok(true) {
                     in_free(|peripherals| {
                         peripherals
                             .USART0_S
@@ -316,12 +318,21 @@ impl <const LEN: usize> Operation for EPDData<LEN> {
                             .read()
                             .rxdata()
                             .bits();
-                        deselect_display(&mut peripherals.GPIO_S);
                     });
-                    true
-                } else {
-                    false
+                    if self.position < LEN-1 {
+                        self.position += 1;
+                        self.change(EPDDataState::Send);
+                    } else {
+                        self.change(EPDDataState::Aftermath);
+                    }
                 }
+                false
+            },
+            EPDDataState::Aftermath => {
+                in_free(|peripherals| {
+                    deselect_display(&mut peripherals.GPIO_S);
+                });
+                true
             },
         }
     }
@@ -373,13 +384,37 @@ impl <const LEN: usize> Operation for EPDDataPart<LEN> {
                 if if_in_free(|peripherals|
                     peripherals.USART0_S.status.read().txbl().bit_is_clear()
                 ) == Ok(false) {
-                    in_free(|peripherals|
+                    self.change(EPDDataState::Send);
+                }
+                false
+            },
+            EPDDataState::Send => {
+                in_free(|peripherals|
+                    peripherals
+                        .USART0_S
+                        .txdata
+                        .write(|w_reg| w_reg.txdata().variant(data[self.position]))
+                );
+                self.change(EPDDataState::WaitSend);
+                false
+            },
+            EPDDataState::WaitSend => {
+                if if_in_free(|peripherals|
+                    peripherals
+                        .USART0_S
+                        .status
+                        .read()
+                        .txc()
+                        .bit_is_set()
+                ) == Ok(true) {
+                    in_free(|peripherals| {
                         peripherals
                             .USART0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(data[self.position]))
-                    );
-                    
+                            .rxdata
+                            .read()
+                            .rxdata()
+                            .bits();
+                    });
                     if self.position < X_ADDRESS_WIDTH * self.y_end_position + self.x_end_position {
                         let y_position = self.position / X_ADDRESS_WIDTH;
                         let x_position = self.position - y_position * X_ADDRESS_WIDTH;
@@ -389,6 +424,7 @@ impl <const LEN: usize> Operation for EPDDataPart<LEN> {
                         } else {
                             self.position += 1;
                         }
+                        self.change(EPDDataState::Send);
                     } else {
                         self.change(EPDDataState::Aftermath);
                     }
@@ -396,27 +432,10 @@ impl <const LEN: usize> Operation for EPDDataPart<LEN> {
                 false
             },
             EPDDataState::Aftermath => {
-                if if_in_free(|peripherals|
-                    peripherals
-                        .USART0_S
-                        .status
-                        .read()
-                        .txc()
-                        .bit_is_clear()
-                ) == Ok(false) { 
-                    in_free(|peripherals| {
-                        peripherals
-                            .USART0_S
-                            .rxdata
-                            .read()
-                            .rxdata()
-                            .bits();
-                        deselect_display(&mut peripherals.GPIO_S);
-                    });
-                    true
-                } else {
-                    false
-                }
+                in_free(|peripherals| {
+                    deselect_display(&mut peripherals.GPIO_S);
+                });
+                true
             },
         }
     }

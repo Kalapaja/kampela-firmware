@@ -4,3 +4,5 @@
 # firmware build
 # rustfmt
 **/*.rs.bk
+**/*.code-workspace
+.vscode

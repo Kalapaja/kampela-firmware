@@ -1,7 +1,7 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, boxed::Box};
+use alloc::{vec::Vec, boxed::Box, borrow::ToOwned};
 #[cfg(feature="std")]
-use std::{vec::Vec, boxed::Box};
+use std::{vec::Vec, boxed::Box, borrow::ToOwned};
 
 use embedded_graphics::{
     geometry::Point,
@@ -10,9 +10,10 @@ use embedded_graphics::{
     primitives::{Primitive, PrimitiveStyle}
 };
 
-use patches::phrase::WordListElement;
+use mnemonic_external::WordListElement;
 
 use crate::{
+    platform::Platform,
     widget::{
         view::{View, ViewScreen},
         nav_bar::nav_bar::{NavBar, NavCommand}
@@ -35,20 +36,23 @@ enum KeyboardState {
     InitialInverse,
 }
 
-pub struct SeedEntry {
+pub struct SeedEntry<P> where
+    P: Platform
+{
     entry: Entry,
     keyboard: Keyboard,
     remove: Key,
-    proposal: Proposal,
-    phrase: Phrase,
+    proposal: Proposal<P>,
+    phrase: Phrase<P>,
     navbar_entry: NavBar,
     navbar_phrase: NavBar,
     tapped: KeyboardState,
     negative: bool,
 }
 
-impl SeedEntry {
-    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self {
+impl<P: Platform> SeedEntry<P> {
+    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self
+        where <P as Platform>::AsWordList: Sized {
         let mut state = SeedEntry {
             entry: Entry::new(),
             keyboard: Keyboard::new(),
@@ -102,10 +106,10 @@ impl SeedEntry {
     }
 }
 
-impl ViewScreen for SeedEntry {
-    type DrawInput<'a> = ();
+impl<P: Platform> ViewScreen for SeedEntry<P> {
+    type DrawInput<'a> = () where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type TapInput<'a> = () where P: 'a;
     type TapOutput = ();
 
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, ()), D::Error>
@@ -195,13 +199,19 @@ impl ViewScreen for SeedEntry {
                             state = Some(UnitScreen::OnboardingRestoreOrGenerate);
                             request = Some(UpdateRequest::Fast);
                         } else {
-                            let phrase = self.phrase.get_phrase().clone();
+                            let phrase = Some(self.get_phrase().to_owned());
                             state = Some(UnitScreen::ShowDialog(
                                 "Are you sure?\nEntered data will be lost",
                                 ("no", "yes"),
                                 (
-                                    Box::new(|| EventResult { request: Some(UpdateRequest::UltraFast), state: Some(UnitScreen::OnboardingRestore(Some(phrase))) }),
-                                    Box::new(|| EventResult { request: Some(UpdateRequest::UltraFast), state: Some(UnitScreen::OnboardingRestoreOrGenerate) })
+                                    Box::new(|| EventResult {
+                                        request: Some(UpdateRequest::UltraFast),
+                                        state: Some(UnitScreen::OnboardingRestore(phrase))
+                                    }),
+                                    Box::new(|| EventResult {
+                                        request: Some(UpdateRequest::UltraFast),
+                                        state: Some(UnitScreen::OnboardingRestoreOrGenerate)
+                                    })
                                 ),
                                 true,
                             ));
@@ -210,7 +220,7 @@ impl ViewScreen for SeedEntry {
                     },
                     NavCommand::Right => {
                         if let Some(e) = self.phrase.validate() {
-                            state = Some(UnitScreen::OnboardingBackup(e));
+                            state = Some(UnitScreen::OnboardingBackup(Some(e)));
                             request = Some(UpdateRequest::Fast);
                         } else {
                             self.phrase.set_invalid();
