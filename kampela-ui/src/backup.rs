@@ -22,8 +22,7 @@ use embedded_text::{
     style::TextBoxStyleBuilder,
     TextBox,
 };
-
-use mnemonic_external::{AsWordList, WordListElement, WordSet, ErrorWordList};
+use mnemonic_external::{AsWordList, WordListElement, WordSet, Bits11};
 
 use crate::{display_def::*, message, platform::Platform, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
 
@@ -73,7 +72,7 @@ pub struct Backup<P> where
     P: Platform
 {
     state: BackupState,
-    wordlist: Vec<WordListElement>,
+    phrase: Vec<WordListElement<P::AsWordList>>,
     navbar: NavBar,
     prev_screen: UnitScreen,
     platform_type: PhantomData<P>,
@@ -82,21 +81,31 @@ pub struct Backup<P> where
 impl<P: Platform> Backup<P> {
     pub fn new(e: Vec<u8>, prev_screen: UnitScreen) -> Self
     where <P as Platform>::AsWordList: Sized{
-        let (state, wordlist) = match WordSet::from_entropy(&e).map(|e| e.to_wordlist::<P::AsWordList>().unwrap()) {
+        let wordlist = P::get_wordlist();
+        let phrase_result = WordSet::from_entropy(&e).map(|ws| {
+        ws.bits11_set.iter().map(|&b| {
+                WordListElement{ word: wordlist.get_word(b).unwrap(), bits11: b }
+            }).collect()
+        });
+        let (state, phrase) = match phrase_result {
             Ok(w) => (BackupState::ShowSeed, w),
             Err(_) => (BackupState::Error, Vec::new())
         };
         Backup {
             state,
-            wordlist,
+            phrase,
             navbar: NavBar::new(("back", "store")),
             prev_screen,
             platform_type: PhantomData::<P>::default(),
         }
     }
 
-    pub fn get_entropy(&self) -> Result<Vec<u8>, ErrorWordList> {
-        self.wordlist.iter().collect::<WordSet>().to_entropy()
+    pub fn get_entropy(&self) -> Option<Vec<u8>> {
+        WordSet{
+            bits11_set: self.phrase.iter().map(|w| w.bits11).collect::<Vec<Bits11>>()
+        }
+            .to_entropy()
+            .ok()
     }
     
     fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut D) -> Result<(), D::Error> {
@@ -113,7 +122,7 @@ impl<P: Platform> Backup<P> {
             textbox_style
         ).draw(target)?;
         TextBox::with_textbox_style(
-            &<P::AsWordList>::words_to_phrase(&self.wordlist),
+            &self.phrase.iter().map(|w| w.word.as_ref()).collect::<Vec<&str>>().join(" "),
             BODY_WIDGET.bounds,
             character_style,
             textbox_style

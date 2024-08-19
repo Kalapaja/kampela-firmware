@@ -1,11 +1,10 @@
 #[cfg(not(feature = "std"))]
 use alloc::{vec::Vec, string::String};
 
-use crate::error::ErrorWordList;
 //use crate::wordlist::WORDLIST_ENGLISH;
-use crate::{AsWordList, Bits11, WordListElement, TOTAL_WORDS, WORD_MAX_LEN};
+use mnemonic_external::{AsWordList, Bits11, WordListElement, TOTAL_WORDS, WORD_MAX_LEN, error::ErrorWordList};
 
-use kampela_system::devices::flash::{read_wordlist_chunk, MAX_PROPOSAL};
+use crate::devices::flash::{read_wordlist_chunk, MAX_PROPOSAL};
 
 const WORDLIST_STARTS: [usize; 26] = [
     0, 4, 7, 13, 17, 20, 23,
@@ -15,10 +14,10 @@ const WORDLIST_STARTS: [usize; 26] = [
 ];
 const FIRST_WORDLIST_STARTS: u8 = 0x61;
 
-pub struct ExternalWordList;
-impl AsWordList for ExternalWordList {
-
-    fn get_word(bits: Bits11) -> Result<WordListElement, ErrorWordList> {
+pub struct FlashWordList;
+impl AsWordList for FlashWordList {
+    type Word = String;
+    fn get_word(&self, bits: Bits11) -> Result<Self::Word, ErrorWordList> {
         let word_order = bits.bits() as usize;
         let chunk_index = word_order / 32;
         let index_inchunk = word_order - chunk_index * 32;
@@ -30,12 +29,12 @@ impl AsWordList for ExternalWordList {
             let word_bytes = &chunk[index_inchunk * WORD_MAX_LEN..(index_inchunk + 1) * WORD_MAX_LEN].to_vec();
             let word_bytes_stripped = word_bytes.iter().take_while(|&ch| *ch != b' ').cloned().collect();
             let word = String::from_utf8(word_bytes_stripped).unwrap();
-            Ok(WordListElement{word, bits11: bits})
+            Ok(word)
         }
     }
 
-    fn get_words_by_prefix(prefix: &str) -> Vec<WordListElement> {
-        let mut out = Vec::<WordListElement>::new();
+    fn get_words_by_prefix(&self, prefix: &str) -> Result<Vec<WordListElement<Self>>, ErrorWordList> {
+        let mut out = Vec::<WordListElement<Self>>::new();
 
         let first_letter = prefix.as_bytes().get(0).unwrap();
         let start_chunk = WORDLIST_STARTS[(first_letter - FIRST_WORDLIST_STARTS) as usize];
@@ -68,10 +67,10 @@ impl AsWordList for ExternalWordList {
                 }
             }
         }
-        out
+        Ok(out)
     }
 
-    fn bits11_for_word(word: &str) -> Result<Bits11, ErrorWordList> {
+    fn bits11_for_word(&self, word: Self::Word) -> Result<Bits11, ErrorWordList> {
         let first_letter = word.as_bytes().get(0).unwrap();
         let start_chunk = WORDLIST_STARTS[(first_letter - FIRST_WORDLIST_STARTS) as usize];
         let mut matches_max: usize = 0;

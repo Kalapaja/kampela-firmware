@@ -1,6 +1,6 @@
 //! This is simulator to develop Kampela UI mocks
-#![cfg(feature="std")]
-use embedded_graphics::{
+#![deny(unused_crate_dependencies)]
+use embedded_graphics_core::{
     primitives::PointsIter,
     Drawable,
     pixelcolor::BinaryColor,
@@ -13,12 +13,8 @@ use embedded_graphics_simulator::{
 use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
-
-#[cfg(feature="std")]
-use mnemonic_external::internal::InternalWordList;
-
-#[macro_use]
-extern crate lazy_static;
+use substrate_crypto_light::sr25519::Public;
+use mnemonic_external::regular::InternalWordList;
 
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
@@ -31,48 +27,12 @@ const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
-pub mod display_def;
-pub use display_def::*;
-
-mod platform;
-use platform::{public_from_entropy, PinCode, Platform};
-
-mod pin {
-    pub mod pin;
-    pub mod pindots;
-    pub mod pinpad;
-    pub mod pinbutton;
-}
-
-pub mod seed_entry{
-    pub mod seed_entry;
-    pub mod entry;
-    pub mod proposal;
-    pub mod phrase;
-    pub mod keyboard;
-    pub mod key;
-}
-
-mod widget {
-    pub mod view;
-    pub mod nav_bar{
-        pub mod nav_bar;
-        pub mod nav_button;
-    }
-}
-
-mod backup;
-
-mod uistate;
-use uistate::{UIState, UpdateRequest, UpdateRequestMutate};
-
-mod data_state;
-use data_state::{AppStateInit, NFCState, DataInit, StorageState};
-
-mod transaction;
-mod message;
-mod dialog;
-mod qr;
+use kampela_ui::{
+    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    display_def::*,
+    platform::{PinCode, Platform},
+    uistate::{UIState, UpdateRequest, UpdateRequestMutate},
+};
 
 #[derive(Debug)]
 pub struct NfcTransactionData {
@@ -133,8 +93,8 @@ struct DesktopSimulator {
 }
 
 impl DesktopSimulator {
-    pub fn new(init_state: &AppStateInit, h: &mut HALHandle) -> Self {
-        let pin = [0; 4]; //TODO proper pin initialization
+    pub fn new(init_state: &AppStateInit) -> Self {
+        let pin = [0; 4];
         let transaction = match init_state.nfc {
             NFCState::Empty => None,
             NFCState::Transaction => Some(NfcTransactionData{
@@ -144,7 +104,7 @@ impl DesktopSimulator {
             }),
         };
         Self {
-            pin: pin,
+            pin,
             entropy: None,
             address: None,
             transaction: transaction,
@@ -155,11 +115,15 @@ impl DesktopSimulator {
 
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
-    type Rng = ThreadRng;
+    type Rng<'a> = &'a mut ThreadRng;
     type NfcTransaction = NfcTransactionData;
     type AsWordList = InternalWordList;
 
-    fn rng<'a>(h: &'a mut Self::HAL) -> &'a mut Self::Rng {
+    fn get_wordlist<'a>() -> &'a Self::AsWordList {
+        &InternalWordList
+    }
+
+    fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {
         &mut h.rng
     }
 
@@ -181,15 +145,12 @@ impl Platform for DesktopSimulator {
         println!("entropy read from emulated storage: {:?}", &self.entropy);
     }
 
-    fn entropy(&self) -> Option<Vec<u8>> {
-        self.entropy.clone()
+    fn public(&self) -> Option<Public> {
+        self.pair().map(|pair| pair.public())
     }
 
-    fn public(&self) -> Option<[u8; 32]> {
-        match &self.entropy {
-            Some(e) => public_from_entropy(e),
-            None => None,
-        }
+    fn entropy(&self) -> Option<Vec<u8>> {
+        self.entropy.clone()
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -214,7 +175,7 @@ impl Platform for DesktopSimulator {
         }
     }
 
-    fn signature(&mut self, h: &mut Self::HAL) -> [u8; 130] {
+    fn signature(&mut self) -> [u8; 130] {
         match self.transaction {
             Some(ref a) => a.signature,
             None =>  panic!("qr not ready!"),
@@ -241,9 +202,8 @@ fn main() {
     let mut display: SimulatorDisplay<BinaryColor> =
         SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
 */
-
     let mut h = HALHandle::new();
-    let desktop = DesktopSimulator::new(&init_data_state, &mut h);
+    let desktop = DesktopSimulator::new(&init_data_state);
     let display = SimulatorDisplay::new(SCREEN_SIZE);
     let mut state = UIState::new(desktop, display, &mut h);
 
@@ -253,7 +213,7 @@ fn main() {
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
     
-    let mut update = Some(uistate::UpdateRequest::Slow);
+    let mut update = Some(UpdateRequest::Slow);
 
     let mut touches = VecDeque::new();
 
@@ -271,7 +231,6 @@ fn main() {
         // display event; it would be delayed
         if let Some(u) = update.take() {
             sleep(UPDATE_DELAY_TIME);
-            let mut h = HALHandle::new();
             let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
             match state.render(is_clear_update, &mut h) {
                 Ok(a) => update.propagate(a),
@@ -289,7 +248,7 @@ fn main() {
                     sleep(SLOW_UPDATE_TIME);
                     invert_display(&mut state.display);
                     window.update(&state.display);
-                    for i in 0..SLOW_UPDATE_ITER {
+                    for _i in 0..SLOW_UPDATE_ITER {
                         invert_display(&mut state.display);
                         window.update(&state.display);
                         sleep(BLINK_UPDATE_TIME);
@@ -350,6 +309,6 @@ fn main() {
 fn invert_display(display: &mut SimulatorDisplay<BinaryColor>) {
     for point in SCREEN_AREA.points() {
         let dot = Pixel::<BinaryColor>(point, display.get_pixel(point).invert());
-        dot.draw(display);
+        dot.draw(display).unwrap();
     };
 }

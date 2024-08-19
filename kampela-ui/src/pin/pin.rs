@@ -7,12 +7,10 @@ use embedded_graphics::{
     pixelcolor::BinaryColor, prelude::{Drawable, DrawTarget, Point}, primitives::{Primitive, PrimitiveStyle}
 };
 
-use rand::Rng;
-
 use crate::{message, uistate::UpdateRequest, widget::view::ViewScreen};
 use crate::uistate::EventResult;
 use crate::widget::view::View;
-use crate::platform::PinCode;
+use crate::platform::{PinCode, Platform};
 
 use crate::pin::{
     pinpad::Pinpad,
@@ -31,22 +29,22 @@ enum PinpadState {
     DrawOk,
 }
 
-pub struct Pincode<R> where
-    R: Rng + ?Sized
+pub struct Pincode<P> where
+    P: Platform
 {
-    pinpad: Pinpad<R>,
+    pinpad: Pinpad<P>,
     pindots: Pindots,
     entered_nums: Vec<u8>,
     tapped: PinpadState,
     pinok: bool,
 }
 
-impl<R> Pincode<R> where
-    R: Rng + ?Sized
+impl<P> Pincode<P> where
+    P: Platform
 {
-    pub fn new(rng: &mut R) -> Self {
+    pub fn new(h: &mut <P as Platform>::HAL) -> Self {
         Self {
-            pinpad: Pinpad::new(rng),
+            pinpad: Pinpad::new(h),
             pindots: Pindots::new(),
             entered_nums: Vec::new(),
             tapped: PinpadState::Initial,
@@ -92,14 +90,14 @@ impl<R> Pincode<R> where
     }
 }
 
-impl<R> ViewScreen for Pincode<R> where
-    R: Rng + ?Sized
+impl<P> ViewScreen for Pincode<P> where
+    P: Platform
 {
-    type DrawInput<'a> = &'a mut R where R: 'a;
+    type DrawInput<'a> = &'a mut <P as Platform>::HAL where P: 'a;
     type DrawOutput = bool;
-    type TapInput<'a> = &'a PinCode where R: 'a;
+    type TapInput<'a> = &'a PinCode where P: 'a;
     type TapOutput = ();
-    fn draw_screen<'a, D>(&mut self, target: &mut D, rng: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
+    fn draw_screen<'a, D>(&mut self, target: &mut D, h: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
         Self: 'a,
@@ -127,7 +125,7 @@ impl<R> ViewScreen for Pincode<R> where
         target.bounding_box().into_styled(filled).draw(target)?;
         
         self.pindots.draw(target, (self.entered_nums.len(), t))?;
-        self.pinpad.draw(target, (rng, t))?;
+        self.pinpad.draw(target, (t, h))?;
 
         if t {
             request = Some(UpdateRequest::UltraFast);

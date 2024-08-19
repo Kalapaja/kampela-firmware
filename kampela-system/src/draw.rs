@@ -11,7 +11,7 @@ use embedded_graphics::{
 };
 
 use kampela_display_common::display_def::*;
-use qrcodegen_noheap::{QrCode, QrCodeEcc, Version};
+use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
 use crate::devices::display::{FastDraw, FullDraw, PartDraw, Request};
 use crate::devices::display_transmission::{epaper_deep_sleep, display_is_busy};

@@ -1,14 +1,14 @@
 use embedded_graphics::{
-    draw_target::DrawTarget,
-    geometry::Point,
-    pixelcolor::BinaryColor,
     Pixel,
     Drawable,
     primitives::{Primitive, PrimitiveStyle},
+    draw_target::DrawTarget,
+    geometry::Point,
+    pixelcolor::BinaryColor,
 };
 
 use crate::display_def::*;
-use qrcodegen_noheap::{QrCode, QrCodeEcc, Version};
+use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
 pub fn draw<D>(data_to_qr: &[u8], display: &mut D) -> Result<(), D::Error>
 where

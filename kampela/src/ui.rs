@@ -1,50 +1,38 @@
 //! Everything high-level related to interfacing with user
 
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::{collections::VecDeque, string::String, vec::Vec};
+use alloc::{borrow::ToOwned, collections::VecDeque, string::String, vec::Vec};
 use lazy_static::lazy_static;
+use substrate_crypto_light::sr25519::{Pair, Public};
+use embedded_graphics::{
+    prelude::Point,
+    geometry::Dimensions,
+};
 
 use kampela_system::{
     devices::{
         psram::{psram_decode_call, psram_decode_extension, read_from_psram, PsramAccess},
-        se_aes_gcm::{self, decode_entropy, encode_entropy},
+        se_aes_gcm::{decode_entropy, encode_entropy, ProtectedPair},
         se_rng,
         touch::{touch_detected, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
     },
     draw::FrameBuffer,
-    parallel::Operation
+    parallel::Operation,
+    flash_mnemonic::FlashWordList,
 };
 use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
-use kampela_ui::{display_def::*, platform::{public_from_entropy, PinCode, Platform}, uistate::{self, UpdateRequest, UpdateRequestMutate}};
-use embedded_graphics::{geometry::Dimensions, prelude::Point};
-
-use schnorrkel::{
-    context::attach_rng,
-    signing_context,
+use kampela_ui::{
+    display_def::*,
+    platform::{PinCode, Platform},
+    uistate::{UIState, UpdateRequest, UpdateRequestMutate}
 };
 
-use mnemonic_external::external::ExternalWordList;
-
 const MAX_TOUCH_QUEUE: usize = 2;
-const SIGNING_CTX: &[u8] = b"substrate";
-
-pub struct HALHandle {
-    pub rng: se_rng::SeRng,
-}
-
-impl HALHandle {
-    pub fn new() -> Self {
-        let rng = se_rng::SeRng{};
-        Self {
-            rng: rng,
-        }
-    }
-}
 
 /// UI handler
 pub struct UI {
-    pub state: uistate::UIState<Hardware, FrameBuffer>,
+    pub state: UIState<Hardware, FrameBuffer>,
     status: UIStatus,
     touches: VecDeque<Point>,
     touched: bool,
@@ -55,11 +43,10 @@ impl UI {
     /// Start of UI.
     pub fn init() -> Self {
         let hardware = Hardware::new();
-        let mut h = HALHandle::new();
         let display = FrameBuffer::new_white();
-        let state = uistate::UIState::new(hardware, display, &mut h);
+        let state = UIState::new(hardware, display, &mut ());
         return Self {
-            state: state,
+            state,
             status: UIStatus::DisplayOrListen(UIStatusDisplay::Listen),
             touches: VecDeque::new(),
             touched: false,
@@ -119,14 +106,12 @@ impl UI {
 
     fn listen(&mut self) {
         if let Some(point) = self.touches.pop_front() {
-            let mut h = HALHandle::new();
-            self.update_request.propagate(self.state.handle_tap(point, &mut h));
+            self.update_request.propagate(self.state.handle_tap(point, &mut ()));
         }
         // update ui if needed
         if let Some(u) = self.update_request.take() {
-            let mut h = HALHandle::new();
             let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
-            self.update_request.propagate(self.state.render(is_clear_update, &mut h).expect("guaranteed to work, no errors implemented"));
+            self.update_request.propagate(self.state.render(is_clear_update, &mut ()).expect("guaranteed to work, no errors implemented"));
 
             match u {
                 UpdateRequest::Hidden => (),
@@ -145,14 +130,12 @@ impl UI {
     }
 
     pub fn handle_message(&mut self, message: String) {
-        let mut h = HALHandle::new();
-        self.update_request.propagate(self.state.handle_message(message, &mut h));
+        self.update_request.propagate(self.state.handle_message(message, &mut ()));
     }
 
     pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
-        let mut h = HALHandle::new();
         self.state.platform.set_transaction(transaction);
-        self.update_request.propagate(self.state.handle_transaction(&mut h));
+        self.update_request.propagate(self.state.handle_transaction(&mut ()));
     }
 
     pub fn handle_address(&mut self, addr: [u8; 76]) {
@@ -179,25 +162,21 @@ enum UIStatus {
     /// Touch event processing
     TouchOperation(Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>, UIStatusDisplay),
 }
-
 pub struct Hardware {
     pin: PinCode,
-    protected: Option<[u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]>,
-    public_key: Option<[u8; 32]>,
+    protected_pair: Option<ProtectedPair>,
     address: Option<[u8; 76]>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
 
 impl Hardware {
     pub fn new() -> Self {
-        let protected = None;
-        let public_key = None;
+        let protected_pair = None;
         let pin_set = false; // TODO query storage
         let pin = [0; 4];
         Self {
-            pin: pin,
-            protected: protected,
-            public_key: public_key,
+            pin,
+            protected_pair,
             address: None,
             transaction_psram_access: None,
         }
@@ -205,14 +184,17 @@ impl Hardware {
 }
 
 impl Platform for Hardware {
-    type HAL = HALHandle;
-    type Rng = se_rng::SeRng;
-    type AsWordList = ExternalWordList;
+    type HAL = ();
+    type Rng<'c> = se_rng::SeRng;
+    type AsWordList = FlashWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
+    fn get_wordlist<'b>() -> &'b Self::AsWordList {
+        &FlashWordList
+    }
 
-    fn rng<'b>(h: &'b mut HALHandle) -> &'b mut Self::Rng {
-        &mut h.rng
+    fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {
+        se_rng::SeRng{}
     }
 
     fn pin(&self) -> &PinCode {
@@ -224,34 +206,31 @@ impl Platform for Hardware {
     }
 
     fn store_entropy(&mut self, e: &[u8]) {
-        let protected = encode_entropy(e);
-
-        let public_key = public_from_entropy(e);
-
-        store_encoded_entopy(&protected, &public_key);
-        
-        self.public_key = public_key;
-        self.protected = if e.len() != 0 {
-            Some(protected)
+        self.protected_pair = if e.len() != 0 {
+            let protected = encode_entropy(e);
+            let public = Pair::from_entropy_and_pwd(&e, "").unwrap().public();
+            let protected_pair = ProtectedPair{protected, public};
+            store_encoded_entopy(&protected_pair);
+            Some(protected_pair)
         } else {
             None
         }
     }
 
     fn read_entropy(&mut self) {
-        (self.protected, self.public_key) = read_encoded_entropy();
+        self.protected_pair = read_encoded_entropy();
+    }
+
+    fn public(&self) -> Option<Public> {
+        self.protected_pair.as_ref().map(|p| p.public).to_owned()
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
-        if let Some(p) = self.protected {
-            Some(decode_entropy(p))
+        if let Some(p) = &self.protected_pair {
+            Some(decode_entropy(&p.protected))
         } else {
             None
         }
-    }
-
-    fn public(&self) -> Option<[u8; 32]> {
-        self.public_key
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -312,7 +291,7 @@ impl Platform for Hardware {
         Some(extensions)
     }
 
-    fn signature(&mut self, h: &mut Self::HAL) -> [u8; 130] {
+    fn signature(&mut self) -> [u8; 130] {
         let transaction_psram_access = match self.transaction_psram_access {
             Some(ref a) => a,
             None => panic!("qr generation failed")
@@ -326,13 +305,12 @@ impl Platform for Hardware {
         };
         let data_to_sign = read_from_psram(&data_to_sign_psram_access);
 
-        let context = signing_context(SIGNING_CTX);
         let signature = self.pair()
             .expect("entropy should be stored at this point")
-            .sign(attach_rng(context.bytes(&data_to_sign), Self::rng(h)));
+            .sign_external_rng(&data_to_sign, &mut Self::rng(&mut ()));
 
         let mut signature_with_id: [u8; 65] = [1; 65];
-        signature_with_id[1..].copy_from_slice(&signature.to_bytes());
+        signature_with_id[1..].copy_from_slice(&signature.0);
         let signature_with_id_bytes = hex::encode(signature_with_id)
             .into_bytes()
             .try_into()

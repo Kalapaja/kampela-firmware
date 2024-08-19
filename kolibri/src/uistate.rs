@@ -3,11 +3,8 @@
 #[cfg(not(feature = "std"))]
 use alloc::{borrow::ToOwned, format, vec::Vec};
 
-#[cfg(not(feature = "std"))]
-use core::convert::TryInto;
-
 #[cfg(feature = "std")]
-use std::{borrow::ToOwned, convert::TryInto, format, vec::Vec};
+use std::{borrow::ToOwned, format, vec::Vec};
 
 use embedded_graphics::{
     mono_font::{
@@ -36,6 +33,7 @@ use crate::calibration::{MeasuredAffine, SET_LEN};
 use crate::display_def::*;
 
 /// State of UI
+#[derive(Debug)]
 pub enum UIState {
     Crosshair {
         point: Point,

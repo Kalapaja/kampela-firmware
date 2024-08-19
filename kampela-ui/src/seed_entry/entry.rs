@@ -64,14 +64,14 @@ const ENTRY_WIDGET: Widget = Widget::new(ENTRY_AREA, SCREEN_ZERO);
 
 pub struct Entry{
     entered: String,
-    maxed: bool,
+    invalid: bool,
 }
 
 impl Entry {
     pub fn new() -> Self {
         Entry {
             entered: String::new(),
-            maxed: false,
+            invalid: false,
         }
     }
     pub fn add_letter(&mut self, c: char) -> bool {
@@ -79,7 +79,7 @@ impl Entry {
             self.entered.push(c);
             true
         } else {
-            self.maxed = true;
+
             false
         }
     }
@@ -96,6 +96,12 @@ impl Entry {
     }
     pub fn is_empty(&self) -> bool {
         self.entered.is_empty()
+    }
+    pub fn is_maxed(&self) -> bool {
+        self.entered.len() >= WORD_MAX_LEN
+    }
+    pub fn set_invalid(&mut self) {
+        self.invalid = true;
     }
 }
 
@@ -124,7 +130,7 @@ impl View for Entry {
             (BinaryColor::On, BinaryColor::Off)
         };
 
-        if self.maxed {
+        if self.invalid {
             let thin_stroke = PrimitiveStyleBuilder::new()
                 .stroke_color(on)
                 .stroke_width(2)
@@ -135,7 +141,7 @@ impl View for Entry {
                 CornerRadii::new(Size::new(ENTRY_RADIUS, ENTRY_RADIUS))
             );
             rounded.into_styled(thin_stroke).draw(target)?;
-            self.maxed = false;
+            self.invalid = false;
         }
 
         let character_style = MonoTextStyle::new(&ENTRY_FONT, on);

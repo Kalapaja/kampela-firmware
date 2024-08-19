@@ -5,6 +5,8 @@ use core::ptr::addr_of;
 
 use efm32pg23_fix::Peripherals;
 
+use substrate_crypto_light::sr25519::Public;
+
 use crate::peripherals::se_command::{
     se_command_aes_gsm_decrypt, DataTransfer, RxError, SeCommand, SE_COMMAND_AES_GCM_ENCRYPT,
     SE_COMMAND_CREATE_KEY, SE_DATATRANSFER_REALIGN, SE_DATATRANSFER_STOP,
@@ -29,8 +31,17 @@ pub const KEYSPEC: u32 = 0b00001001000000000000000000100000;
 
 pub const TAG_LEN: usize = 16;
 
-pub fn encode_entropy(e: &[u8]) -> [u8; 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN] {
-    let mut protected = [0u8; 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN];
+pub const ENCODED_LEN: usize = 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN;
+
+pub struct Protected(pub [u8; ENCODED_LEN]);
+
+pub struct ProtectedPair {
+    pub protected: Protected, 
+    pub public: Public,
+}
+
+pub fn encode_entropy(e: &[u8]) -> Protected {
+    let mut protected = [0u8; ENCODED_LEN];
 
     let len = e.len();
     // encoding entropy
@@ -57,16 +68,16 @@ pub fn encode_entropy(e: &[u8]) -> [u8; 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFE
         protected[1+SECRET_MAX_LEN+TAG_LEN..].copy_from_slice( unsafe { &KEY_BUFFER });
     });
 
-    protected
+    Protected{ 0: protected }
 }
 
-pub fn decode_entropy(protected: [u8; 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN]) -> Vec<u8> {
+pub fn decode_entropy(protected: &Protected) -> Vec<u8> {
     let recovered_out = Out {
-        data: protected[1..1 + SECRET_MAX_LEN].try_into().expect("static length"),
-        len: protected[0] as usize,
-        tag: protected[1+SECRET_MAX_LEN..1 + SECRET_MAX_LEN + TAG_LEN].try_into().expect("static length"),
+        data: protected.0[1..1 + SECRET_MAX_LEN].try_into().expect("static length"),
+        len: protected.0[0] as usize,
+        tag: protected.0[1+SECRET_MAX_LEN..1 + SECRET_MAX_LEN + TAG_LEN].try_into().expect("static length"),
     };
-    unsafe { KEY_BUFFER = protected[1 + SECRET_MAX_LEN + TAG_LEN..].try_into().expect("static length"); }
+    unsafe { KEY_BUFFER = protected.0[1 + SECRET_MAX_LEN + TAG_LEN..].try_into().expect("static length"); }
 
     let mut entropy = None;
     if recovered_out.len != 0 {

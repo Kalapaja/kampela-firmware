@@ -8,13 +8,15 @@
 //! - [published official open source SDK in C](https://github.com/SiliconLabs/gecko_sdk/tree/gsdk_4.2/platform)
 
 #![no_std]
+#![deny(unused_crate_dependencies)]
 
 extern crate alloc;
 
 pub mod init;
-mod peripherals;
+pub mod peripherals;
 pub mod devices;
 pub mod draw;
+pub mod flash_mnemonic;
 pub mod debug_display;
 pub mod parallel;
 
@@ -33,8 +35,6 @@ lazy_static!{
     pub static ref CORE_PERIPHERALS: Mutex<RefCell<CorePeripherals>> = Mutex::new(RefCell::new(CorePeripherals::take().unwrap()));
     pub static ref PERIPHERALS: Mutex<RefCell<Option<Peripherals>>> = Mutex::new(RefCell::new(None));
 }
-
-use core::ops::FnMut;
 
 /// Mutexed global access to peripherals
 pub fn in_free<F>(mut action: F)

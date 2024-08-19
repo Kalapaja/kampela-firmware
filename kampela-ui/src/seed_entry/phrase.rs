@@ -1,6 +1,5 @@
 #[cfg(not(feature="std"))]
 use alloc::vec::Vec;
-use core::marker::PhantomData;
 #[cfg(feature="std")]
 use std::vec::Vec;
 
@@ -27,7 +26,7 @@ use embedded_text::{
     TextBox,
 };
 
-use mnemonic_external::{AsWordList, WordListElement, WordSet};
+use mnemonic_external::{Bits11, WordListElement, WordSet};
 
 use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
 
@@ -54,26 +53,20 @@ const PHRASE_WIDGET: Widget = Widget::new(PHRASE_AREA, SCREEN_ZERO);
 pub struct Phrase<P> where
     P: Platform + ?Sized
 {
-    buffer: Vec<WordListElement>,
+    buffer: Vec<WordListElement<P::AsWordList>>,
     invalid: bool,
-    platform_type: PhantomData<P>,
 }
 
 impl<P: Platform> Phrase<P> {
-    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self
+    pub fn new(phrase: Option<Vec<WordListElement<P::AsWordList>>>) -> Self
         where <P as Platform>::AsWordList: Sized {
-        let buffer = if let Some(phrase) = phrase {
-            phrase
-        } else {
-            Vec::new()
-        };
+        let buffer = phrase.unwrap_or(Vec::new());
         Phrase {
             buffer,
             invalid: false,
-            platform_type: PhantomData::<P>::default(),
         }
     }
-    pub fn add_word(&mut self, word: WordListElement) {
+    pub fn add_word(&mut self, word: WordListElement<P::AsWordList>) {
         self.buffer.push(word);
     }
     pub fn remove_word(&mut self) {
@@ -84,9 +77,13 @@ impl<P: Platform> Phrase<P> {
         }
     }
     pub fn validate(&self) -> Option<Vec<u8>> {
-        self.buffer.iter().collect::<WordSet>().to_entropy().ok()
+        WordSet{
+            bits11_set: self.buffer.iter().map(|w| w.bits11).collect::<Vec<Bits11>>()
+        }
+            .to_entropy()
+            .ok()
     }
-    pub fn get_phrase(&self) -> &Vec<WordListElement> {
+    pub fn get_phrase(&self) -> &Vec<WordListElement<P::AsWordList>> {
         &self.buffer
     }
     pub fn is_empty(&self) -> bool {
@@ -149,7 +146,7 @@ impl<P: Platform> View for Phrase<P> {
             .build();
 
         TextBox::with_textbox_style(
-            &<P::AsWordList>::words_to_phrase(&self.buffer),
+            &self.buffer.iter().map(|w| w.word.as_ref()).collect::<Vec<&str>>().join(" "),
             area,
             character_style,
             textbox_style,

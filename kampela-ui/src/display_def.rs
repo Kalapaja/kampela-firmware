@@ -2,9 +2,8 @@ use embedded_graphics::{
     primitives::{
         Rectangle, Triangle,
     },
+    geometry::{Point, Size},
 };
-use embedded_graphics_core::geometry::{Point, Size};
-
 pub use kampela_display_common::display_def::*;
 
 pub const GAP: u32 = 4;

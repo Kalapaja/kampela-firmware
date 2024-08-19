@@ -1,7 +1,7 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, boxed::Box, borrow::ToOwned};
+use alloc::{vec::Vec, boxed::Box};
 #[cfg(feature="std")]
-use std::{vec::Vec, boxed::Box, borrow::ToOwned};
+use std::{vec::Vec, boxed::Box};
 
 use embedded_graphics::{
     geometry::Point,
@@ -10,7 +10,7 @@ use embedded_graphics::{
     primitives::{Primitive, PrimitiveStyle}
 };
 
-use mnemonic_external::WordListElement;
+use mnemonic_external::{AsWordList, WordListElement, WordSet};
 
 use crate::{
     platform::Platform,
@@ -51,8 +51,14 @@ pub struct SeedEntry<P> where
 }
 
 impl<P: Platform> SeedEntry<P> {
-    pub fn new(phrase: Option<Vec<WordListElement>>) -> Self
+    pub fn new(buffer: Option<WordSet>) -> Self
         where <P as Platform>::AsWordList: Sized {
+        let phrase = buffer.map(|ws| {
+            let wordlist = P::get_wordlist();
+            ws.bits11_set.iter().map(|&b| {
+                WordListElement{ word: wordlist.get_word(b).unwrap(), bits11: b }
+            }).collect()
+        });
         let mut state = SeedEntry {
             entry: Entry::new(),
             keyboard: Keyboard::new(),
@@ -70,8 +76,13 @@ impl<P: Platform> SeedEntry<P> {
     pub fn get_entropy(&self) -> Option<Vec<u8>> {
         self.phrase.validate()
     }
-    pub fn get_phrase(&self) -> &Vec<WordListElement> {
-        &self.phrase.get_phrase()
+    pub fn get_buffer(&self) -> WordSet {
+        WordSet {
+            bits11_set: self.phrase.get_phrase()
+                .iter()
+                .map(|w| w.bits11)
+                .collect()
+        }
     }
     fn switch_tapped(&mut self) -> bool {
         match self.tapped {
@@ -160,8 +171,12 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
 
         if let Some(Some(c)) = self.keyboard.handle_tap(point, ()) {
             if !self.phrase.is_maxed() {
-                self.entry.add_letter(c[0]);
-                self.proposal.add_letters(c);
+                if !self.entry.is_maxed() {
+                    self.entry.add_letter(c[0]);
+                    self.proposal.add_letters(c);
+                } else {
+                    self.entry.set_invalid();
+                }
             } else {
                 self.phrase.set_invalid();
             }
@@ -199,14 +214,14 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                             state = Some(UnitScreen::OnboardingRestoreOrGenerate);
                             request = Some(UpdateRequest::Fast);
                         } else {
-                            let phrase = Some(self.get_phrase().to_owned());
+                            let buffer = self.get_buffer();
                             state = Some(UnitScreen::ShowDialog(
                                 "Are you sure?\nEntered data will be lost",
                                 ("no", "yes"),
                                 (
                                     Box::new(|| EventResult {
                                         request: Some(UpdateRequest::UltraFast),
-                                        state: Some(UnitScreen::OnboardingRestore(phrase))
+                                        state: Some(UnitScreen::OnboardingRestore(Some(buffer))),
                                     }),
                                     Box::new(|| EventResult {
                                         request: Some(UpdateRequest::UltraFast),
@@ -219,7 +234,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                         }
                     },
                     NavCommand::Right => {
-                        if let Some(e) = self.phrase.validate() {
+                        if let Some(e) = self.get_entropy() {
                             state = Some(UnitScreen::OnboardingBackup(Some(e)));
                             request = Some(UpdateRequest::Fast);
                         } else {

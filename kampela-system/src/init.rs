@@ -56,4 +56,3 @@ pub fn init_peripherals(peripherals: &mut Peripherals, nfc_descriptor_address: *
 
     // TODO: lock GPIO
 }
-

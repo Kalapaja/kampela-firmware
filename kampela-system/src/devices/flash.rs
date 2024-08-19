@@ -1,9 +1,13 @@
+use alloc::collections::VecDeque;
 use core::cmp;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
-use crate::devices::se_aes_gcm;
+use crate::devices::se_aes_gcm::{ ProtectedPair, ENCODED_LEN };
 use crate::{in_free, free, Mutex, RefCell, lazy_static};
 use cortex_m::asm::delay;
+use substrate_crypto_light::sr25519::{ Public, PUBLIC_LEN };
+
+use super::se_aes_gcm::Protected;
 
 #[derive(Clone, Copy, Debug)]
 pub enum FlashErr {
@@ -16,49 +20,30 @@ const CACHE_SIZE: usize = 5;
 #[derive(Copy, Clone)]
 struct CachedChunk {
     chunk_index: usize,
-    order: usize,
     cache: [u8; 256]
 }
 lazy_static! {
-    static ref CACHED_CHUNKS: Mutex<[RefCell<CachedChunk>; CACHE_SIZE]> = Mutex::new(
-        [
-            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
-            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
-            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
-            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
-            RefCell::new(CachedChunk{chunk_index: 65, order: 0, cache: [0u8; 256]}),
-        ]
-    );
+    static ref CACHED_CHUNKS: Mutex<RefCell<VecDeque<CachedChunk>>> = Mutex::new(RefCell::new(VecDeque::with_capacity(CACHE_SIZE)));
 }
 
 pub fn read_wordlist_chunk(chunk_index: usize, chunk: &mut [u8; 256]) {
     free(|cs| {
-        let cached_chunks = CACHED_CHUNKS.borrow(cs);
+        let mut cached_chunks = CACHED_CHUNKS.borrow(cs).borrow_mut();
 
-        for c in cached_chunks {
-            let c = c.borrow();
+        for c in cached_chunks.iter() {
             if c.chunk_index == chunk_index {
                 return *chunk = c.cache;
             }
         }
-        for c in cached_chunks {
-            let mut c = c.borrow_mut();
-            if c.order <= 1 {
-                if let Err(e) = read_data(WORDLIST_BASE + chunk_index as u32 * 256, &mut c.cache) {
-                    panic!("couldn't read from flash wordlist chunk №{}", chunk_index)
-                };
-                c.order = CACHE_SIZE + 1;
-                c.chunk_index = chunk_index;
-                *chunk = c.cache;
-                break
-            }
+        let mut c = CachedChunk { chunk_index, cache: [0; 256]};
+        if let Err(_) = read_data(WORDLIST_BASE + chunk_index as u32 * 256, &mut c.cache) {
+            panic!("couldn't read from flash wordlist chunk №{}", chunk_index)
+        };
+        if cached_chunks.len() >= CACHE_SIZE {
+            cached_chunks.pop_front();
         }
-        for c in cached_chunks {
-            let mut c = c.borrow_mut();
-            if c.order > 1 {
-                c.order -= 1;
-            }
-        }
+        cached_chunks.push_back(c);
+        *chunk = c.cache;
     })
 }
 
@@ -114,35 +99,55 @@ pub fn read_data(addr: u32, data: &mut [u8]) -> Result<(), FlashErr> {
     Ok(())
 }
 
-pub fn store_encoded_entopy(protected: &[u8], public_key: &Option<[u8; 32]>) {
+pub fn erase_data(addr: u32, pages: u32) {
+    let initial_addr = addr / 256 * 256;
+    for i in 0..pages {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+
+            flash_wait_ready(peripherals);
+            flash_sleep(peripherals);
+        });
+    }
+}
+
+pub fn store_encoded_entopy(pair: &ProtectedPair) {
     // stroring encoded entropy and publilc key
-    let mut payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
-    payload[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN].copy_from_slice(protected);
-    payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..].copy_from_slice(&public_key.unwrap_or([0u8; 32]));
+    let mut payload = [0u8; ENCODED_LEN + PUBLIC_LEN];
+    payload[0..ENCODED_LEN].copy_from_slice(&pair.protected.0);
+    payload[ENCODED_LEN..].copy_from_slice(&pair.public.0);
     
     if let Err(_) = store_data(0, &payload) {
         panic!("Failed to save seedphrase");
     }
 }
 
-pub fn read_encoded_entropy() -> (Option<[u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]>, Option<[u8; 32]>) {
-    let mut data = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN + 32];
+pub fn read_encoded_entropy() -> Option<ProtectedPair> {
+    let mut data = [0u8; ENCODED_LEN + PUBLIC_LEN];
     if let Err(_) = read_data(0, &mut data) {
         panic!("Failed to read seedphrase");
     }
     match data[0] {
-        0 => (None, None),
-        16 | 20 | 24 | 28 | 32 => (
-                Some(data[0..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN]
-                    .try_into()
-                    .expect("static length")),
-                Some(data[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN..]
-                    .try_into()
-                    .expect("static length"))
-        ),
-        255 => (None, None),
+        0 => None,
+        16 | 20 | 24 | 28 | 32 => {
+            let protected: [u8; ENCODED_LEN] =
+                data[0..ENCODED_LEN]
+                .try_into()
+                .expect("static length");
+            let public: [u8; PUBLIC_LEN] = data[ENCODED_LEN..]
+                .try_into()
+                .expect("static length");
+            let protected = Protected{0: protected};
+            let public = Public{0: public};
+            Some(ProtectedPair{protected, public})
+        },
+        255 => None,
         _ => {
-            store_encoded_entopy(&[0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN], &None);
+            erase_data(0, 1);
             panic!("Seed storage corrupted! Wiping seed...");
         },
     }

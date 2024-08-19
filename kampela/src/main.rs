@@ -1,6 +1,7 @@
 #![no_main]
 #![no_std]
 #![feature(alloc_error_handler)]
+#![deny(unused_crate_dependencies)]
 
 extern crate alloc;
 extern crate core;
@@ -37,20 +38,6 @@ use core::cell::RefCell;
 use core::ops::DerefMut;
 use cortex_m::interrupt::free;
 use cortex_m::interrupt::Mutex;
-
-//use p256::ecdsa::{signature::{hazmat::PrehashVerifier}, Signature, VerifyingKey};
-//use sha2::Digest;
-//use spki::DecodePublicKey;
-/*
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked};
-use schnorrkel::{
-    context::attach_rng,
-    derive::{ChainCode, Derivation},
-    keys::Keypair,
-    signing_context,
-    ExpansionMode,
-    MiniSecretKey,
-};*/
 
 lazy_static!{
     #[derive(Debug)]
@@ -100,10 +87,6 @@ fn LDMA() {
         else {panic!("can not borrow peripherals in ldma interrupt")}
     });
 }
-
-// const ALICE_KAMPELA_KEY: &[u8] = &[24, 79, 109, 158, 13, 45, 121, 126, 185, 49, 212, 255, 134, 18, 243, 96, 119, 210, 175, 115, 48, 181, 19, 238, 61, 135, 28, 186, 185, 31, 59, 9, 172, 24, 200, 176, 25, 207, 214, 199, 221, 214, 171, 143, 80, 246, 86, 104, 48, 40, 21, 99, 114, 3, 232, 85, 101, 7, 128, 198, 36, 11, 101, 63, 180, 120, 97, 66, 191, 43, 74, 35, 69, 3, 219, 194, 72, 141, 68, 185, 188, 177, 117, 246, 178, 250, 89, 134, 116, 20, 248, 247, 151, 45, 130, 59];
-const SIGNING_CTX: &[u8] = b"substrate";
-
 
 #[entry]
 fn main() -> ! {
@@ -186,7 +169,7 @@ fn main() -> ! {
     //         .expand_to_keypair(ExpansionMode::Ed25519);
 
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public());
+    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public().map(|a| a.0));
     loop {
         adc.advance(());
         let nfc_state = nfc.advance(adc.read());

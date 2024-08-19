@@ -1,0 +1,14 @@
+[package]
+name = "kampela-ui-simulator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.2.1", features = ["derive"] }
+embedded-graphics-core = "0.3.3"
+embedded-graphics-simulator = { version = "0.3.0" }
+mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", default-features = false, features = ["sufficient-memory"], rev = "bbee08893d8d441dad00e616fac36409e5550b41"}
+substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", default-features = false, features = ["sr25519"]}
+
+kampela-ui = {path = "../"}
+rand = { version = "0.8.5" }

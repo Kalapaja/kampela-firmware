@@ -17,7 +17,7 @@ mod stdwrap {
     pub use std::vec::Vec;
 }
 
-use mnemonic_external::WordListElement;
+use mnemonic_external::WordSet;
 use stdwrap::*;
 
 use embedded_graphics::{
@@ -42,8 +42,6 @@ use crate::platform::Platform;
 use crate::seed_entry::seed_entry::SeedEntry;
 
 use crate::message;
-
-use rand::Rng;
 
 pub struct EventResult{
     pub request: Option<UpdateRequest>,
@@ -75,7 +73,7 @@ pub struct UIState<P, D> where
     P: Platform,
     D: DrawTarget<Color = BinaryColor>,
 {
-    screen: Screen<P::Rng, P>,
+    screen: Screen<P>,
     pub platform: P,
     pub display: D,
     unlocked: bool,
@@ -83,7 +81,7 @@ pub struct UIState<P, D> where
 
 pub enum UnitScreen {
     OnboardingRestoreOrGenerate,
-    OnboardingRestore(Option<Vec<WordListElement>>),
+    OnboardingRestore(Option<WordSet>),
     OnboardingBackup(Option<Vec<u8>>),
     ShowMessage(String),
     ShowDialog(
@@ -103,8 +101,8 @@ impl Default for UnitScreen {
 }
 
 /// keeps states of screens, initialization can take a lot of memory
-pub enum Screen<R: Rng + ?Sized, P: Platform> {
-    PinEntry(Pincode<R>, UnitScreen),
+pub enum Screen<P: Platform> {
+    PinEntry(Pincode<P>, UnitScreen),
     OnboardingRestoreOrGenerate(Dialog),
     OnboardingRestore(SeedEntry<P>),
     OnboardingBackup(Backup<P>),
@@ -116,11 +114,11 @@ pub enum Screen<R: Rng + ?Sized, P: Platform> {
     Locked,
 }
 
-impl<R: Rng + ?Sized, P: Platform> Screen<R, P> {
+impl<P: Platform> Screen<P> {
     pub fn get_unit(&self) -> Option<UnitScreen> {
         match self {
             Screen::OnboardingRestoreOrGenerate(_) => Some(UnitScreen::OnboardingRestoreOrGenerate),
-            Screen::OnboardingRestore(s) => Some(UnitScreen::OnboardingRestore(Some(s.get_phrase().to_owned()))),
+            Screen::OnboardingRestore(s) => Some(UnitScreen::OnboardingRestore(Some(s.get_buffer()))),
             Screen::OnboardingBackup(b) => Some(UnitScreen::OnboardingBackup(Some(b.get_entropy().unwrap()))),
             Screen::ShowMessage(s, _) => Some(UnitScreen::ShowMessage(s.to_owned())),
             Screen::ShowTransaction(t) => Some(UnitScreen::ShowTransaction(t.get_page())),
@@ -131,7 +129,7 @@ impl<R: Rng + ?Sized, P: Platform> Screen<R, P> {
         }
     }
 }
-impl<R: Rng + ?Sized, P: Platform> Default for Screen<R, P> {
+impl<P: Platform> Default for Screen<P> {
     fn default() -> Self {Screen::QRAddress}
 }
 
@@ -158,7 +156,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         state
     }
 
-    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL)
+    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL )
         where <P as Platform>::AsWordList: Sized {
         if let Some(s) = s {
             match s {
@@ -192,8 +190,8 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                         false,
                     ))
                 },
-                UnitScreen::OnboardingRestore(e) => {
-                    self.screen = Screen::OnboardingRestore(SeedEntry::new(e));
+                UnitScreen::OnboardingRestore(p) => {
+                    self.screen = Screen::OnboardingRestore(SeedEntry::new(p));
                 },
                 UnitScreen::QRSignature => {
                     if self.unlocked {
@@ -203,7 +201,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                             self.screen = Screen::ShowMessage("Signing...".to_owned(), Some(UnitScreen::QRSignature));
                         }
                     } else {
-                        self.screen = Screen::PinEntry(Pincode::<P::Rng>::new(&mut P::rng(h)), UnitScreen::QRSignature);
+                        self.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::QRSignature);
                     }
                 },
                 UnitScreen::ShowTransaction(p) => {
@@ -301,7 +299,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
 
         match self.screen {
             Screen::PinEntry(ref mut a, _) => {
-                let (res, pinok) = a.draw_screen(display, P::rng(h))?;
+                let (res, pinok) = a.draw_screen(display, h)?;
                 out = res.request;
                 new_screen = res.state;
                 if pinok {
@@ -375,10 +373,10 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 new_screen = res.state;
             },
             Screen::QRSignature => {
-                qr::draw(&self.platform.signature(h), display)?
+                qr::draw(&self.platform.signature(), display)?
             },
             Screen::QRAddress => {
-                let line1 = format!("substrate:0x{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown")));
+                let line1 = format!("substrate:0x{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown").0));
 
                 qr::draw(&line1.as_bytes(), display)?
             },

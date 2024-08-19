@@ -12,7 +12,6 @@ use efm32pg23_fix::{NVIC,Interrupt};
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
-// use substrate_parser::compacts::find_compact;
 use substrate_parser::compacts::find_compact;
 
 use core::ops::DerefMut;
@@ -397,7 +396,7 @@ impl <'a> NfcReceiver<'a> {
                         let mut public_key: Option<Vec<u8>> = None;
                         in_free(|peripherals| {
                             let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
-                            let k = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
+                            let k = psram_read_at_address(peripherals, start_address, 32usize).unwrap();
                             public_key = Some(k);
                         });
                         // TODO: check address differently
@@ -406,7 +405,7 @@ impl <'a> NfcReceiver<'a> {
                                 return Some(Err(NfcError::InvalidAddress))
                             },
                             Some(k) => {
-                                if !k.starts_with(&[1u8]) || (k[1..] != self.public_memory) {
+                                if k != self.public_memory {
                                     return Some(Err(NfcError::InvalidAddress))
                                 }
                             }
