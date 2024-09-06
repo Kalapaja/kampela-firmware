@@ -31,7 +31,7 @@ pub trait Platform {
     /// List-set of mnemonic words 
     type AsWordList: AsWordList;
     // Device-specific wordlist implementation
-    fn get_wordlist<'b>() -> &'b Self::AsWordList;
+    fn get_wordlist() -> Self::AsWordList;
 
     /// RNG getter
     fn rng(h: &mut Self::HAL) -> Self::Rng<'_>;

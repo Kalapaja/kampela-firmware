@@ -1,9 +1,8 @@
-use alloc::collections::VecDeque;
 use core::cmp;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
 use crate::devices::se_aes_gcm::{ ProtectedPair, ENCODED_LEN };
-use crate::{in_free, free, Mutex, RefCell, lazy_static};
+use crate::in_free;
 use cortex_m::asm::delay;
 use substrate_crypto_light::sr25519::{ Public, PUBLIC_LEN };
 
@@ -12,39 +11,6 @@ use super::se_aes_gcm::Protected;
 #[derive(Clone, Copy, Debug)]
 pub enum FlashErr {
     WriteNotMatch
-}
-const WORDLIST_BASE: u32 = 128*256;
-pub const MAX_PROPOSAL: usize = 3;
-
-const CACHE_SIZE: usize = 5;
-#[derive(Copy, Clone)]
-struct CachedChunk {
-    chunk_index: usize,
-    cache: [u8; 256]
-}
-lazy_static! {
-    static ref CACHED_CHUNKS: Mutex<RefCell<VecDeque<CachedChunk>>> = Mutex::new(RefCell::new(VecDeque::with_capacity(CACHE_SIZE)));
-}
-
-pub fn read_wordlist_chunk(chunk_index: usize, chunk: &mut [u8; 256]) {
-    free(|cs| {
-        let mut cached_chunks = CACHED_CHUNKS.borrow(cs).borrow_mut();
-
-        for c in cached_chunks.iter() {
-            if c.chunk_index == chunk_index {
-                return *chunk = c.cache;
-            }
-        }
-        let mut c = CachedChunk { chunk_index, cache: [0; 256]};
-        if let Err(_) = read_data(WORDLIST_BASE + chunk_index as u32 * 256, &mut c.cache) {
-            panic!("couldn't read from flash wordlist chunk №{}", chunk_index)
-        };
-        if cached_chunks.len() >= CACHE_SIZE {
-            cached_chunks.pop_front();
-        }
-        cached_chunks.push_back(c);
-        *chunk = c.cache;
-    })
 }
 
 pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {

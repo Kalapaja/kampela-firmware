@@ -189,8 +189,8 @@ impl Platform for Hardware {
     type AsWordList = FlashWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
-    fn get_wordlist<'b>() -> &'b Self::AsWordList {
-        &FlashWordList
+    fn get_wordlist() -> Self::AsWordList {
+        FlashWordList::new()
     }
 
     fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {

@@ -14,7 +14,7 @@ external-memory-tools = {version = "0.1.1", default-features = false}
 kampela-display-common = { path = "../kampela-display-common" }
 lazy_static = { version = "1.4.0", default_features = false, features = ["spin_no_std"]}
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
-mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", default-features = false, features = ["sufficient-memory"], rev = "bbee08893d8d441dad00e616fac36409e5550b41"}
+mnemonic-external = {git = "https://github.com/Nyoxis/mnemonic-external", default-features = false, features = ["sufficient-memory"]}
 parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
 primitive-types = {version = "0.12.1", default-features = false}
 qrcodegen-no-heap = { version = "1.8.1" }

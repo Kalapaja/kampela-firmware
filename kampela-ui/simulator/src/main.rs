@@ -119,8 +119,8 @@ impl Platform for DesktopSimulator {
     type NfcTransaction = NfcTransactionData;
     type AsWordList = InternalWordList;
 
-    fn get_wordlist<'a>() -> &'a Self::AsWordList {
-        &InternalWordList
+    fn get_wordlist() -> Self::AsWordList {
+        InternalWordList
     }
 
     fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {

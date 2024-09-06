@@ -79,16 +79,18 @@ pub struct Proposal<P> where
     variants: Vec<String>,
     guess: Vec<WordListElement<P::AsWordList>>,
     guess_depth: usize,
+    wordlist: P::AsWordList,
 }
 
 impl<P: Platform> Proposal<P> {
-    pub fn new() -> Self {
+    pub fn new(wordlist: P::AsWordList) -> Self {
         Proposal {
             entered: Vec::new(),
             entered_count: 0,
             variants: Vec::new(),
             guess: Vec::new(),
             guess_depth: 0,
+            wordlist,
         }
     }
 
@@ -130,8 +132,7 @@ impl<P: Platform> Proposal<P> {
 
         let mut new_variants = Vec::new();
         for v in variants {
-            let wordlist = P::get_wordlist();
-            let mut g = wordlist.get_words_by_prefix(&v).unwrap();
+            let mut g = self.wordlist.get_words_by_prefix(&v).unwrap();
 
             if g.is_empty() {
                 continue;

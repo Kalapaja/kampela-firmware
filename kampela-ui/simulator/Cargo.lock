@@ -711,7 +711,7 @@ dependencies = [
 [[package]]
 name = "mnemonic-external"
 version = "0.1.0"
-source = "git+https://github.com/Alzymologist/mnemonic-external?rev=bbee08893d8d441dad00e616fac36409e5550b41#bbee08893d8d441dad00e616fac36409e5550b41"
+source = "git+https://github.com/Nyoxis/mnemonic-external?rev=c01c8606bc6bb97a825087f0d495524ca0ae034b#c01c8606bc6bb97a825087f0d495524ca0ae034b"
 dependencies = [
  "bitvec",
  "sha2",
