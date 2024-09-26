@@ -4,8 +4,5 @@
 # firmware build
 # rustfmt
 **/*.rs.bk
-
-/kampela-system/Cargo.lock
-/kampela-display-common/Cargo.lock
-/kampela-screen-calibration/Cargo.lock
-/kampela-ui/Cargo.lock
+**/*.code-workspace
+.vscode

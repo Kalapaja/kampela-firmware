@@ -16,6 +16,8 @@ pub mod init;
 pub mod peripherals;
 pub mod devices;
 pub mod draw;
+pub mod flash_mnemonic;
+pub mod debug_display;
 pub mod parallel;
 
 use efm32pg23_fix::{CorePeripherals, Peripherals};

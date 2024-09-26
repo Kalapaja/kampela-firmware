@@ -3,12 +3,34 @@
 
 pub mod uistate;
 pub mod platform;
+pub mod widget{
+    pub mod view;
+    pub mod nav_bar{
+        pub mod nav_bar;
+        pub mod nav_button;
+    }
+}
 
 pub mod display_def;
-pub mod pin;
-mod seed_entry;
+pub mod pin{
+    pub mod pin;
+    pub mod pindots;
+    pub mod pinpad;
+    pub mod pinbutton;
+}
+
+pub mod seed_entry{
+    pub mod seed_entry;
+    pub mod entry;
+    pub mod proposal;
+    pub mod phrase;
+    pub mod keyboard;
+    pub mod key;
+}
+
 pub mod backup;
-mod restore_or_generate;
+mod message;
+mod dialog;
 
 pub mod transaction;
 pub mod qr;

@@ -1,31 +1,64 @@
-use alloc::string::String;
 use bitvec::prelude::{BitArr, Msb0, bitarr};
-use cortex_m::asm::delay;
+
 use efm32pg23_fix::Peripherals;
-use embedded_graphics_core::{
+use embedded_graphics::{
     draw_target::DrawTarget,
-    geometry::{Dimensions, Point, Size},
+    geometry::{Dimensions, Point},
     pixelcolor::BinaryColor,
     primitives::rectangle::Rectangle,
+    prelude::Drawable,
     Pixel,
 };
-use embedded_graphics::{
-    Drawable,
-    mono_font::{ascii::FONT_6X10, MonoTextStyle},
-};
-use embedded_text::{
-    alignment::HorizontalAlignment,
-    style::{HeightMode, TextBoxStyleBuilder},
-    TextBox,
-};
+
 use kampela_display_common::display_def::*;
 use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
-use crate::devices::display::{FastDraw, FullDraw, Request, epaper_draw_stuff_differently, epaper_hw_init_cs, epaper_deep_sleep};
+use crate::devices::display::{FastDraw, FullDraw, PartDraw, Request};
+use crate::devices::display_transmission::{epaper_deep_sleep, display_is_busy};
+use crate::debug_display::epaper_draw_stuff_differently;
 
 const SCREEN_SIZE_VALUE: usize = (SCREEN_SIZE_X*SCREEN_SIZE_Y) as usize;
 
 use crate::{in_free, parallel::Operation}; 
+
+// x and y of framebuffer and display RAM address are inversed
+fn refreshable_area_address(refreshable_area: Rectangle) -> (u8, u8, u16, u16) {
+    let x_start_address: u8 = if refreshable_area.top_left.y < 0 {
+        0
+    } else if refreshable_area.top_left.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y / 8 - 1) as u8
+    } else {
+        (refreshable_area.top_left.y / 8) as u8
+    };
+
+    let y_start_address: u16 = if refreshable_area.top_left.x < 0 {
+        (SCREEN_SIZE_X - 1) as u16
+    } else if refreshable_area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
+        0
+    } else {
+        ((SCREEN_SIZE_X - 1) as i32 - refreshable_area.top_left.x) as u16
+    };
+
+    let bottom_right = refreshable_area.top_left + refreshable_area.size;
+    
+    let x_end_address: u8 = if bottom_right.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y / 8 - 1) as u8
+    } else if bottom_right.y < 0 {
+        0
+    } else {
+        ((bottom_right.y / 8 + (bottom_right.y % 8).signum()) - 1) as u8
+    };
+
+    let y_end_address: u16 = if bottom_right.x > (SCREEN_SIZE_X - 1) as i32 {
+        0
+    } else if bottom_right.x < 0 {
+        (SCREEN_SIZE_X - 1) as u16
+    } else {
+        (SCREEN_SIZE_X as i32 - bottom_right.x) as u16
+    };
+
+    (x_start_address, x_end_address, y_start_address, y_end_address)
+}
 
 #[derive(Debug)]
 pub enum DisplayError {}
@@ -34,8 +67,9 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 8000;
-const FULL_REFRESH_POWER: i32 = 12000;
+const FAST_REFRESH_POWER: i32 = 5000;
+const FULL_REFRESH_POWER: i32 = 5000;
+const PART_REFRESH_POWER: i32 = 5000;
 
 /// Virtual display data storage
 type PixelData = BitArr!(for SCREEN_SIZE_VALUE, in u8, Msb0);
@@ -70,18 +104,23 @@ impl FrameBuffer {
     /// Send display data to real EPD; invokes full screen refresh
     ///
     /// this is for cs environment; do not use otherwise
-    fn apply(&self, peripherals: &mut Peripherals) {
+    pub fn apply(&self, peripherals: &mut Peripherals) {
         epaper_draw_stuff_differently(peripherals, self.data.into_inner());
     }
 
     /// Start full display update sequence
     pub fn request_full(&mut self) {
-        self.display_state = DisplayState::FullRequested(Request::<FullDraw>::new());
+        self.display_state = DisplayState::FullRequested;
     }
 
     /// Start partial fast display update sequence
     pub fn request_fast(&mut self) {
-        self.display_state = DisplayState::FastRequested(Request::<FastDraw>::new());
+        self.display_state = DisplayState::FastRequested;
+    }
+
+    /// Start partial fast display update sequence
+    pub fn request_part(&mut self, area: Rectangle) {
+        self.display_state = DisplayState::PartRequested(area);
     }
 }
 
@@ -93,19 +132,25 @@ pub enum DisplayState {
     /// Initial state, where we can change framebuffer. If this was typestate, this would be Zero.
     Idle,
     /// Fast update was requested; waiting for power
-    FastRequested(Request<FastDraw>),
+    FastRequested,
+    FastOperating(Request<FastDraw>),
     /// Slow update was requested; waiting for power
-    FullRequested(Request<FullDraw>),
+    FullRequested,
+    FullOperating(Request<FullDraw>),
+    /// Part update was requested; waiting for power
+    PartRequested(Rectangle),
+    PartOperating(Request<PartDraw>, (u8, u8, u16, u16)),
     /// Display not available due to update cycle
     UpdatingNow,
 }
 
 impl Operation for FrameBuffer {
+    type Init = ();
     type Input<'a> = i32;
-    type Output = bool;
+    type Output = Option<bool>;
     type StateEnum = DisplayState;
 
-    fn new() -> Self {
+    fn new(_: ()) -> Self {
         Self::new_white()
     }
 
@@ -115,30 +160,53 @@ impl Operation for FrameBuffer {
     }
 
     /// Move through display update progress
-    fn advance(&mut self, voltage: i32) -> bool {
-        if self.count() { return false };
+    fn advance(&mut self, voltage: i32) -> Option<bool> {
+        if self.count() { return None };
+
         match self.display_state {
-            DisplayState::Idle => true,
-            DisplayState::FastRequested(ref mut a) => {
+            DisplayState::Idle => Some(true),
+            DisplayState::FastRequested => {
                 if voltage > FAST_REFRESH_POWER {        
-                    if a.advance(&self.data.data) {
-                        self.wind_d(DisplayState::UpdatingNow)
-                    }
+                    self.display_state = DisplayState::FastOperating(Request::<FastDraw>::new(()));
                 };
-                false
+                None
             },
-            DisplayState::FullRequested(ref mut a) => {
+            DisplayState::FastOperating(ref mut a) => {
+                if a.advance(&self.data.data) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
+            },
+            DisplayState::FullRequested => {
                 if voltage > FULL_REFRESH_POWER {
-                    if a.advance(&self.data.data) {
-                        self.wind_d(DisplayState::UpdatingNow)
-                    }
+                    self.display_state = DisplayState::FullOperating(Request::<FullDraw>::new(()));
                 };
-                false
+                None
+            },
+            DisplayState::FullOperating(ref mut a) => {
+                if a.advance(&self.data.data) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
+            },
+            DisplayState::PartRequested(r) => {
+                if voltage > PART_REFRESH_POWER {
+                    let d: (u8, u8, u16, u16) = refreshable_area_address(r);
+                    self.display_state = DisplayState::PartOperating(Request::<PartDraw>::new(()), d);
+                };
+                None
+            },
+            DisplayState::PartOperating(ref mut a, bounds) => {
+                if a.advance((&self.data.data, bounds)) {
+                    self.wind(DisplayState::UpdatingNow, 0)
+                }
+                Some(false)
             },
             DisplayState::UpdatingNow => {
+                if display_is_busy() == Ok(true) { return Some(false) };
                 in_free(|peripherals| epaper_deep_sleep(peripherals));
                 self.display_state = DisplayState::Idle;
-                false
+                Some(false)
             },
         }
     }
@@ -146,10 +214,10 @@ impl Operation for FrameBuffer {
 
 impl Dimensions for FrameBuffer {
     fn bounding_box(&self) -> Rectangle {
-        Rectangle {
-            top_left: SCREEN_ZERO,
-            size: SCREEN_SIZE,
-        }
+            Rectangle {
+                top_left: SCREEN_ZERO,
+                size: SCREEN_SIZE,
+            }
     }
 }
 
@@ -181,53 +249,6 @@ impl DrawTarget for FrameBuffer {
         }
         Ok(())
     }
-}
-
-
-//**** Debug stuff ****//
-
-/// see this <https://github.com/embedded-graphics/embedded-graphics/issues/716>
-fn make_text(peripherals: &mut Peripherals, text: &str) {
-    let mut buffer = FrameBuffer::new_white();
-    let to_print = TextToPrint{line: text};
-    to_print.draw(&mut buffer).unwrap();
-    buffer.apply(peripherals);
-}
-
-struct TextToPrint<'a> {
-    pub line: &'a str,
-}
-
-/// For custom font, see this <https://github.com/embedded-graphics/examples/blob/main/eg-0.7/examples/text-custom-font.rs>
-impl Drawable for TextToPrint<'_> {
-    type Color = BinaryColor;
-    type Output = ();
-    fn draw<D>(
-        &self, 
-        target: &mut D
-    ) -> Result<Self::Output, <D as DrawTarget>::Error>
-    where
-        D: DrawTarget<Color = Self::Color> 
-    {
-        let character_style = MonoTextStyle::new(&FONT_6X10, BinaryColor::On);
-        let textbox_style = TextBoxStyleBuilder::new()
-            .height_mode(HeightMode::FitToText)
-            .alignment(HorizontalAlignment::Left)
-            .paragraph_spacing(5)
-            .build();
-        let bounds = Rectangle::new(Point::zero(), Size::new(SCREEN_SIZE_X, 0));
-        TextBox::with_textbox_style(self.line, bounds, character_style, textbox_style).draw(target)?;
-        Ok(())
-    }
-}
-
-/// Emergency debug function that spits out errors
-/// TODO: replace by power drain in production!
-pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
-    epaper_hw_init_cs(peripherals);
-    make_text(peripherals, &text);
-    delay(10000000);
-    epaper_deep_sleep(peripherals);
 }
 
 pub fn draw_qr(peripherals: &mut Peripherals, data_to_qr: &[u8]) {

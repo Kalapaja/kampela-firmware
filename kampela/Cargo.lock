@@ -11,14 +11,14 @@ dependencies = [
  "efm32pg23_fix",
  "embedded-alloc",
  "embedded-graphics",
+ "hex",
  "kampela-system",
  "kampela-ui",
  "lazy_static",
  "lt-codes",
  "nalgebra",
  "nfca-parser",
- "parity-scale-codec",
- "primitive-types",
+ "substrate-crypto-light",
  "substrate_parser",
 ]
 
@@ -497,16 +497,18 @@ dependencies = [
  "cortex-m",
  "efm32pg23_fix",
  "embedded-graphics",
- "embedded-graphics-core",
  "embedded-text",
  "external-memory-tools",
  "kampela-display-common",
  "lazy_static",
  "lt-codes",
+ "mnemonic-external",
  "parity-scale-codec",
+ "primitive-types",
  "qrcodegen-no-heap",
  "rand_core",
  "scale-info",
+ "substrate-crypto-light",
  "substrate_parser",
 ]
 
@@ -515,7 +517,6 @@ name = "kampela-ui"
 version = "0.1.0"
 dependencies = [
  "embedded-graphics",
- "embedded-graphics-core",
  "embedded-text",
  "hex",
  "kampela-display-common",
@@ -525,7 +526,6 @@ dependencies = [
  "rand",
  "substrate-crypto-light",
  "substrate_parser",
- "ux",
 ]
 
 [[package]]
@@ -602,7 +602,7 @@ checksum = "bc4010833aea396656c2f91ee704d51a6f1329ec2ab56ffd00bfd56f7481ea94"
 [[package]]
 name = "mnemonic-external"
 version = "0.1.0"
-source = "git+https://github.com/Alzymologist/mnemonic-external?rev=bbee08893d8d441dad00e616fac36409e5550b41#bbee08893d8d441dad00e616fac36409e5550b41"
+source = "git+https://github.com/Nyoxis/mnemonic-external#ae1704125f9845d81bfa91e615ad71e1633f107c"
 dependencies = [
  "bitvec",
  "sha2",
@@ -1161,12 +1161,6 @@ name = "unicode-ident"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b"
-
-[[package]]
-name = "ux"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2cb3ff47e36907a6267572c1e398ff32ef78ac5131de8aa272e53846592c207e"
 
 [[package]]
 name = "vcell"

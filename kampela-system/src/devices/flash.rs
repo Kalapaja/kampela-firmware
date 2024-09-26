@@ -1,7 +1,123 @@
-use efm32pg23_fix::{Peripherals};
+use core::cmp;
+use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
+use crate::devices::se_aes_gcm::{ ProtectedPair, ENCODED_LEN };
+use crate::in_free;
 use cortex_m::asm::delay;
+use substrate_crypto_light::sr25519::{ Public, PUBLIC_LEN };
 
+use super::se_aes_gcm::Protected;
+
+#[derive(Clone, Copy, Debug)]
+pub enum FlashErr {
+    WriteNotMatch
+}
+
+pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {
+    let mut data = [0u8; N];
+    let mut read_data_chunk = [0u8; 256];
+    let initial_addr = addr / 256 * 256;
+    for (i, chunk) in payload.chunks(256).enumerate() {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+            flash_wait_ready(peripherals);
+    
+            flash_unlock(peripherals);
+    
+            flash_write_page(peripherals, addr, chunk);
+            flash_wait_ready(peripherals);
+    
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * 256;
+        let chunk_len = cmp::min(N - chunk_start, 256);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+
+    if &data != payload {
+        Err(FlashErr::WriteNotMatch)
+    } else {
+        Ok(())
+    }
+}
+
+pub fn read_data(addr: u32, data: &mut [u8]) -> Result<(), FlashErr> {
+    let mut read_data_chunk = [0u8; 256];
+    let initial_addr = addr / 256 * 256;
+    for i in 0..data.len().div_ceil(256) {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+            flash_wait_ready(peripherals);
+
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * 256;
+        let chunk_len = cmp::min(data.len() - chunk_start, 256);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+    Ok(())
+}
+
+pub fn erase_data(addr: u32, pages: u32) {
+    let initial_addr = addr / 256 * 256;
+    for i in 0..pages {
+        let addr = initial_addr + i as u32 * 256;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+
+            flash_wait_ready(peripherals);
+            flash_sleep(peripherals);
+        });
+    }
+}
+
+pub fn store_encoded_entopy(pair: &ProtectedPair) {
+    // stroring encoded entropy and publilc key
+    let mut payload = [0u8; ENCODED_LEN + PUBLIC_LEN];
+    payload[0..ENCODED_LEN].copy_from_slice(&pair.protected.0);
+    payload[ENCODED_LEN..].copy_from_slice(&pair.public.0);
+    
+    if let Err(_) = store_data(0, &payload) {
+        panic!("Failed to save seedphrase");
+    }
+}
+
+pub fn read_encoded_entropy() -> Option<ProtectedPair> {
+    let mut data = [0u8; ENCODED_LEN + PUBLIC_LEN];
+    if let Err(_) = read_data(0, &mut data) {
+        panic!("Failed to read seedphrase");
+    }
+    match data[0] {
+        0 => None,
+        16 | 20 | 24 | 28 | 32 => {
+            let protected: [u8; ENCODED_LEN] =
+                data[0..ENCODED_LEN]
+                .try_into()
+                .expect("static length");
+            let public: [u8; PUBLIC_LEN] = data[ENCODED_LEN..]
+                .try_into()
+                .expect("static length");
+            let protected = Protected{0: protected};
+            let public = Public{0: public};
+            Some(ProtectedPair{protected, public})
+        },
+        255 => None,
+        _ => {
+            erase_data(0, 1);
+            panic!("Seed storage corrupted! Wiping seed...");
+        },
+    }
+}
 
 #[allow(dead_code)]
 enum FlashCommand {
@@ -81,6 +197,7 @@ pub fn flash_init(peripherals: &mut Peripherals) {
 
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::SoftReset);
+
     deselect_flash(&mut peripherals.GPIO_S);
     // TODO: check if it's possible to determine readiness instead of using delay
     delay(10000);

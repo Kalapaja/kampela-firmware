@@ -1,8 +1,7 @@
 use embedded_graphics::{
     Pixel,
     Drawable,
-};
-use embedded_graphics_core::{
+    primitives::{Primitive, PrimitiveStyle},
     draw_target::DrawTarget,
     geometry::Point,
     pixelcolor::BinaryColor,
@@ -28,6 +27,9 @@ where
         if qr_code.version() == Version::new(18) {2}
         else {SCREEN_SIZE_Y as i32/qr_code.size()}
     };
+
+    let filled = PrimitiveStyle::with_fill(BinaryColor::Off);
+    display.bounding_box().into_styled(filled).draw(display)?;
 
     let size = qr_code.size() * scaling;
     for y in 0..size {
