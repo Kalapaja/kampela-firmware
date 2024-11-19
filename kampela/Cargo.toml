@@ -22,4 +22,5 @@ substrate_parser = {git = "https://github.com/Alzymologist/substrate-parser", de
 
 [profile.release]
 codegen-units = 1
+opt-level = 2
 lto = true
