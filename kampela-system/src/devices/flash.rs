@@ -1,7 +1,111 @@
-use efm32pg23_fix::{Peripherals};
+use core::cmp;
+use efm32pg23_fix::Peripherals;
 use crate::peripherals::usart::*;
+use crate::devices::se_aes_gcm::ENCODED_LEN;
+use crate::in_free;
 use cortex_m::asm::delay;
 
+use super::se_aes_gcm::Protected;
+
+const PAGE_SIZE: usize = 256;
+
+#[derive(Clone, Copy, Debug)]
+pub enum FlashErr {
+    WriteNotMatch
+}
+
+pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {
+    let mut data = [0u8; N];
+    let mut read_data_chunk = [0u8; PAGE_SIZE];
+    let initial_addr = addr / PAGE_SIZE as u32 * PAGE_SIZE as u32;
+    for (i, chunk) in payload.chunks(PAGE_SIZE).enumerate() {
+        let addr = initial_addr + i as u32 * PAGE_SIZE as u32;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+            flash_wait_ready(peripherals);
+    
+            flash_unlock(peripherals);
+    
+            flash_write_page(peripherals, addr, chunk);
+            flash_wait_ready(peripherals);
+    
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * PAGE_SIZE;
+        let chunk_len = cmp::min(N - chunk_start, PAGE_SIZE);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+
+    if &data != payload {
+        Err(FlashErr::WriteNotMatch)
+    } else {
+        Ok(())
+    }
+}
+
+pub fn read_data(addr: u32, data: &mut [u8]) -> Result<(), FlashErr> {
+    let mut read_data_chunk = [0u8; PAGE_SIZE];
+    let initial_addr = addr / PAGE_SIZE as u32 * PAGE_SIZE as u32;
+    for i in 0..data.len().div_ceil(PAGE_SIZE) {
+        let addr = initial_addr + i as u32 * PAGE_SIZE as u32;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+            flash_wait_ready(peripherals);
+
+            flash_read(peripherals, addr, &mut read_data_chunk);
+            flash_sleep(peripherals);
+        });
+        let chunk_start = i * PAGE_SIZE;
+        let chunk_len = cmp::min(data.len() - chunk_start, PAGE_SIZE);
+        data[chunk_start..chunk_start + chunk_len].clone_from_slice(&read_data_chunk[0..chunk_len]);
+    }
+    Ok(())
+}
+
+pub fn erase_data(addr: u32, pages: u32) {
+    let initial_addr = addr / PAGE_SIZE as u32 * PAGE_SIZE as u32;
+    for i in 0..pages {
+        let addr = initial_addr + i as u32 * PAGE_SIZE as u32;
+        in_free(|peripherals| {
+            flash_wakeup(peripherals);
+    
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, addr);
+
+            flash_wait_ready(peripherals);
+            flash_sleep(peripherals);
+        });
+    }
+}
+
+pub fn store_encoded_entopy(protected: &Protected) {
+    // stroring encoded entropy
+    if let Err(_) = store_data(0, &protected.0) {
+        panic!("Failed to save seedphrase");
+    }
+}
+
+pub fn read_encoded_entropy() -> Option<Protected> {
+    let mut data = [0u8; ENCODED_LEN];
+    if let Err(_) = read_data(0, &mut data) {
+        panic!("Failed to read seedphrase");
+    }
+    match data[0] {
+        0 => None,
+        16 | 20 | 24 | 28 | 32 => {
+            Some(Protected{0: data})
+        },
+        255 => None,
+        _ => {
+            erase_data(0, 1);
+            panic!("Seed storage corrupted! Wiping seed...");
+        },
+    }
+}
 
 #[allow(dead_code)]
 enum FlashCommand {
@@ -81,6 +185,7 @@ pub fn flash_init(peripherals: &mut Peripherals) {
 
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::SoftReset);
+
     deselect_flash(&mut peripherals.GPIO_S);
     // TODO: check if it's possible to determine readiness instead of using delay
     delay(10000);
@@ -252,7 +357,7 @@ pub fn flash_write_page(peripherals: &mut Peripherals, addr: u32, data: &[u8]) {
     select_flash(&mut peripherals.GPIO_S);
     flash_cmd(peripherals, FlashCommand::WritePage);
     flash_write_addr!(peripherals, addr);
-    let xfer_len = if 256 < data.len() { 256 } else { data.len() };
+    let xfer_len = if PAGE_SIZE < data.len() { PAGE_SIZE } else { data.len() };
     flash_write_some(peripherals, &data[0..xfer_len]);
     deselect_flash(&mut peripherals.GPIO_S);
 }

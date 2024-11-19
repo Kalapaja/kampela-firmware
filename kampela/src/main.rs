@@ -6,44 +6,38 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
+use alloc::{borrow::ToOwned, format};
 use core::{alloc::Layout, panic::PanicInfo};
 use core::ptr::addr_of;
 use cortex_m::asm::delay;
 use cortex_m_rt::{entry, exception, ExceptionFrame};
 use embedded_alloc::Heap;
 use lazy_static::lazy_static;
-use parity_scale_codec::Decode;
-use primitive_types::H256;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
-use kampela_system::devices::flash::*;
 use kampela_ui::platform::Platform;
 
 mod ui;
 use ui::UI;
 mod nfc;
-use nfc::{BufferStatus, turn_nfc_collector_correctly, NfcCollector, NfcReceiver, NfcResult, process_nfc_payload};
+use nfc::{BufferStatus, NfcReceiver, NfcStateOutput, NfcResult, NfcError};
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
 
 use kampela_system::{
-    PERIPHERALS, CORE_PERIPHERALS, in_free,
-    devices::{power::ADC, psram::{psram_read_at_address, CheckedMetadataMetal, ExternalPsram, PsramAccess}, se_rng::SeRng},
-    draw::burning_tank,
+    PERIPHERALS, CORE_PERIPHERALS,
+    devices::power::ADC,
+    debug_display::burning_tank,
     init::init_peripherals,
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
 };
-use kampela_ui::uistate::Screen;
 
 use core::cell::RefCell;
 use core::ops::DerefMut;
 use cortex_m::interrupt::free;
 use cortex_m::interrupt::Mutex;
-
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked};
 
 lazy_static!{
     #[derive(Debug)]
@@ -165,7 +159,7 @@ fn main() -> ! {
 */
 
     let mut ui = UI::init();
-    let mut adc = ADC::new();
+    let mut adc = ADC::new(());
 
     // hard derivation
     //let junction = DeriveJunction::hard("kampela");
@@ -176,69 +170,82 @@ fn main() -> ! {
 
 
     let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public().map(|a| a.0));
-
     loop {
         adc.advance(());
-        let voltage = adc.read();
-        ui.advance(adc.read());
-        let nfc_result = nfc.advance(voltage);
-        
-        if nfc_result.is_some() {
-            match nfc_result.unwrap() {
-                NfcResult::KampelaStop => {},
-                NfcResult::DisplayAddress => {
-                    /*
-                    // TODO: implement adress
-                    // let mut stuff = [0u8];
-                    let line1 = format!("substrate:0x{}", hex::encode(pair.public.to_bytes()));
-                    // stuff[0..79].copy_from_slice(&line1.as_bytes());
-                    ui.handle_address(line1.as_bytes().try_into().expect("static length"));*/
-                },
-                NfcResult::Transaction(transaction) => {
-                    /*
-                    let carded = transaction.decoded_transaction.card(&transaction.specs, &transaction.spec_name);
-
-                    let call = carded.call.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-                    let extensions = carded.extensions.into_iter().map(|card| card.show()).collect::<Vec<String>>().join("\n");
-
-                    let context = signing_context(SIGNING_CTX);
-                    let signature = pair.sign(attach_rng(context.bytes(&transaction.data_to_sign), &mut SeRng{}));
-                    let mut signature_with_id: [u8; 65] = [1; 65];
-                    signature_with_id[1..].copy_from_slice(&signature.to_bytes());
-                    // let signature_into_qr: [u8; 130] = ;
-
-                    ui.handle_transaction(call, extensions, hex::encode(signature_with_id).into_bytes().try_into().expect("static length"));*/
-                    ui.handle_transaction(transaction);
-
-
-/* // calculate correct hash of the payload
-{
-            let mut hasher = sha2::Sha256::new();
-            in_free(|peripherals| {
-                for shift in 0..nfc_payload.encoded_data.total_len {
-                    let address = nfc_payload.encoded_data.start_address.try_shift(shift).unwrap();
-                    let single_element_vec = psram_read_at_address(peripherals, address, 1usize).unwrap();
-                    if shift == 0 {first_byte = Some(single_element_vec[0])}
-                    hasher.update(&single_element_vec);
+        let nfc_state = nfc.advance(adc.read());
+        if let Some(s) = nfc_state {
+            match s {
+                Err(e) => {
+                    match e {
+                        NfcError::InvalidAddress => {
+                            ui.handle_message("Invalid sender address".to_owned())
+                        }
+                    }
+                    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
+                        adc.advance(());
+                    }
+                    break
                 }
-            });
-            let hash = hasher.finalize();
-
-            // transform signature and verifying key from der-encoding into usable form
-            let signature = Signature::from_der(&nfc_payload.companion_signature).unwrap();
-            let verifying_key = VerifyingKey::from_public_key_der(&nfc_payload.companion_public_key).unwrap();
-
-            // and check
-            assert!(verifying_key
-                .verify_prehash(&hash, &signature)
-                .is_ok());
-
-}
-*/
-
-                },
+                Ok(s) => {
+                    match s {
+                        NfcStateOutput::Operational(i) => {
+                            if i == 1 {
+                                ui.handle_message("Receiving NFC packets...".to_owned());
+                            }
+                            while !ui.advance(adc.read()).is_some_and(|c| c == false) {
+                                adc.advance(());
+                            }
+                        },
+                        NfcStateOutput::Done(r) => {
+                            match r {
+                                NfcResult::Empty => {break},
+                                NfcResult::DisplayAddress => {
+                                    ui.handle_address([0;76]);
+                                    break
+                                },
+                                NfcResult::Transaction(transaction) => {
+                                    ui.handle_transaction(transaction);
+                                    break
+        
+        
+                /* // calculate correct hash of the payload
+                {
+                            let mut hasher = sha2::Sha256::new();
+                            in_free(|peripherals| {
+                                for shift in 0..nfc_payload.encoded_data.total_len {
+                                    let address = nfc_payload.encoded_data.start_address.try_shift(shift).unwrap();
+                                    let single_element_vec = psram_read_at_address(peripherals, address, 1usize).unwrap();
+                                    if shift == 0 {first_byte = Some(single_element_vec[0])}
+                                    hasher.update(&single_element_vec);
+                                }
+                            });
+                            let hash = hasher.finalize();
+        
+                            // transform signature and verifying key from der-encoding into usable form
+                            let signature = Signature::from_der(&nfc_payload.companion_signature).unwrap();
+                            let verifying_key = VerifyingKey::from_public_key_der(&nfc_payload.companion_public_key).unwrap();
+        
+                            // and check
+                            assert!(verifying_key
+                                .verify_prehash(&hash, &signature)
+                                .is_ok());
+        
+                }
+                */
+        
+                                },
+                            }
+                        }
+                    }
+                }
             }
+
+
         }
+    }
+    loop {
+        adc.advance(());
+        ui.advance(adc.read());
     }
 }
 

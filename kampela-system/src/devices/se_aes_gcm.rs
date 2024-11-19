@@ -5,10 +5,13 @@ use core::ptr::addr_of;
 
 use efm32pg23_fix::Peripherals;
 
+use substrate_crypto_light::sr25519::Public;
+
 use crate::peripherals::se_command::{
     se_command_aes_gsm_decrypt, DataTransfer, RxError, SeCommand, SE_COMMAND_AES_GCM_ENCRYPT,
     SE_COMMAND_CREATE_KEY, SE_DATATRANSFER_REALIGN, SE_DATATRANSFER_STOP,
 };
+use crate::in_free;
 
 pub const KEY_META_LEN: usize = 8;
 
@@ -27,6 +30,69 @@ pub const SECRET_MAX_LEN: usize = 33;
 pub const KEYSPEC: u32 = 0b00001001000000000000000000100000;
 
 pub const TAG_LEN: usize = 16;
+
+pub const ENCODED_LEN: usize = 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN;
+
+pub struct Protected(pub [u8; ENCODED_LEN]);
+
+pub struct ProtectedPair {
+    pub protected: Protected, 
+    pub public: Public,
+}
+
+pub fn encode_entropy(e: &[u8]) -> Protected {
+    let mut protected = [0u8; ENCODED_LEN];
+
+    let len = e.len();
+    // encoding entropy
+    in_free(|peripherals| {
+        let out = if len != 0 {
+            create_key(peripherals).unwrap();
+            aes_gcm_encrypt(
+                peripherals,
+                [0; AAD_LEN],
+                [0; IV_LEN],
+                e.to_vec(),
+            ).unwrap()
+        } else {
+            Out{
+                data: [0u8; SECRET_MAX_LEN],
+                len: 0,
+                tag: [0; TAG_LEN]
+            }
+        };
+
+        protected[0] = out.len as u8;
+        protected[1..1+SECRET_MAX_LEN].copy_from_slice(&out.data);
+        protected[1+SECRET_MAX_LEN..1+SECRET_MAX_LEN+TAG_LEN].copy_from_slice(&out.tag);
+        protected[1+SECRET_MAX_LEN+TAG_LEN..].copy_from_slice( unsafe { &KEY_BUFFER });
+    });
+
+    Protected{ 0: protected }
+}
+
+pub fn decode_entropy(protected: &Protected) -> Vec<u8> {
+    let recovered_out = Out {
+        data: protected.0[1..1 + SECRET_MAX_LEN].try_into().expect("static length"),
+        len: protected.0[0] as usize,
+        tag: protected.0[1+SECRET_MAX_LEN..1 + SECRET_MAX_LEN + TAG_LEN].try_into().expect("static length"),
+    };
+    unsafe { KEY_BUFFER = protected.0[1 + SECRET_MAX_LEN + TAG_LEN..].try_into().expect("static length"); }
+
+    let mut entropy = None;
+    if recovered_out.len != 0 {
+        in_free(|peripherals| {
+            let out = aes_gcm_decrypt(
+                peripherals,
+                &recovered_out,
+                [0u8; AAD_LEN],
+                [0u8; IV_LEN],
+            ).unwrap();
+            entropy = Some(out.data[..out.len].to_vec());
+        });
+    }
+    entropy.unwrap()
+}
 
 pub fn create_key(peripherals: &mut Peripherals) -> Result<(), RxError> {
     let command_word = SE_COMMAND_CREATE_KEY;

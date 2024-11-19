@@ -10,14 +10,14 @@ cortex-m-rt = "0.7.2"
 efm32pg23_fix = {path = "../kampela_experiments_efm32pg23/efm32pg23_fix", features = ["critical-section", "rt"]}
 embedded-alloc = "0.5.0" # embedded-alloc required nightly!
 embedded-graphics = "0.7.1"
+hex = {version = "0.4.3", default-features = false, features = ["alloc"]}
 kampela-system = { path = "../kampela-system" }
 kampela-ui = { path = "../kampela-ui" , default-features = false }
 lazy_static = { version = "1.4.0", default-features = false, features = ["spin_no_std"]}
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
-parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
-primitive-types = {version = "0.12.1", default-features = false}
+substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", default-features = false, features = ["sr25519"]}
 substrate_parser = {git = "https://github.com/Alzymologist/substrate-parser", default-features = false, rev = "65de6a4fe207a64f9857247af4e9f7509fa6de4f"}
 
 [profile.release]

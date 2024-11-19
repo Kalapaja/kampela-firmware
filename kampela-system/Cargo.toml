@@ -9,16 +9,18 @@ bitvec = {version = "1.0.1", default-features = false, features = ["alloc"]}
 cortex-m = { version = "0.7.6", features = ["critical-section-single-core"]}
 efm32pg23_fix = {path = "../kampela_experiments_efm32pg23/efm32pg23_fix", features = ["critical-section", "rt"]}
 embedded-graphics = "0.7.1"
-embedded-graphics-core = "0.3.3"
 embedded-text = {version = "0.5.0", default-features = false}
 external-memory-tools = {version = "0.1.1", default-features = false}
 kampela-display-common = { path = "../kampela-display-common" }
 lazy_static = { version = "1.4.0", default_features = false, features = ["spin_no_std"]}
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
+mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", default-features = false}
 parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
+primitive-types = {version = "0.12.1", default-features = false}
 qrcodegen-no-heap = { version = "1.8.1" }
 rand_core = {version = "0.6.4", default-features = false}
 scale-info = {version = "2.9.0", default-features = false}
+substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", default-features = false, features = ["sr25519"]}
 substrate_parser = {git = "https://github.com/Alzymologist/substrate-parser", default-features = false, rev = "65de6a4fe207a64f9857247af4e9f7509fa6de4f"}
 
 [profile.release]
