@@ -1,3 +1,15 @@
+# Compatibility
+
+This version of Kampela firmware is compatible with Siltti v0.10
+
+# Project maturity
+
+This is an early proof of concept prototype, use for development and at your own risk only.
+
+# Security note
+
+Note that deprecated metadata shortening algorithm by Alzymologist Oy is implemented here, as opposed to one deployed in Polkadot ecosystem, thus no on-chain verification is actually happening. Migration is generally considered a trivial task by the community, we welcome PRs with corresponding patch (to all related repositories).
+
 # Prerequisites
 
 ## Archlinux
