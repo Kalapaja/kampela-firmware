@@ -1,7 +1,7 @@
 //! Everything high-level related to interfacing with user
 
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::{borrow::ToOwned, collections::VecDeque, string::String, vec::Vec};
+use alloc::{collections::VecDeque, string::String, vec::Vec};
 use lazy_static::lazy_static;
 use substrate_crypto_light::sr25519::{Pair, Public};
 use embedded_graphics::{
@@ -12,13 +12,10 @@ use embedded_graphics::{
 use kampela_system::{
     devices::{
         psram::{psram_decode_call, psram_decode_extension, read_from_psram, PsramAccess},
-        se_aes_gcm::{decode_entropy, encode_entropy, ProtectedPair},
+        se_aes_gcm::{decode_entropy, encode_entropy, Protected},
         se_rng,
         touch::{touch_detected, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
-    },
-    draw::FrameBuffer,
-    parallel::Operation,
-    flash_mnemonic::FlashWordList,
+    }, draw::FrameBuffer, flash_mnemonic::FlashWordList, parallel::Operation
 };
 use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
@@ -164,19 +161,19 @@ enum UIStatus {
 }
 pub struct Hardware {
     pin: PinCode,
-    protected_pair: Option<ProtectedPair>,
+    protected: Option<Protected>,
     address: Option<[u8; 76]>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
 
 impl Hardware {
     pub fn new() -> Self {
-        let protected_pair = None;
+        let protected = None;
         let pin_set = false; // TODO query storage
         let pin = [0; 4];
         Self {
             pin,
-            protected_pair,
+            protected,
             address: None,
             transaction_psram_access: None,
         }
@@ -206,28 +203,30 @@ impl Platform for Hardware {
     }
 
     fn store_entropy(&mut self, e: &[u8]) {
-        self.protected_pair = if e.len() != 0 {
+        self.protected = if e.len() != 0 {
             let protected = encode_entropy(e);
-            let public = Pair::from_entropy_and_pwd(&e, "").unwrap().public();
-            let protected_pair = ProtectedPair{protected, public};
-            store_encoded_entopy(&protected_pair);
-            Some(protected_pair)
+            store_encoded_entopy(&protected);
+            Some(protected)
         } else {
             None
         }
     }
 
     fn read_entropy(&mut self) {
-        self.protected_pair = read_encoded_entropy();
+        self.protected = read_encoded_entropy();
     }
 
     fn public(&self) -> Option<Public> {
-        self.protected_pair.as_ref().map(|p| p.public).to_owned()
+        if let Some(e) = self.entropy() {
+            Some(Pair::from_entropy_and_pwd(&e, "").unwrap().public())
+        } else {
+            None
+        }
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
-        if let Some(p) = &self.protected_pair {
-            Some(decode_entropy(&p.protected))
+        if let Some(p) = &self.protected {
+            Some(decode_entropy(&p))
         } else {
             None
         }

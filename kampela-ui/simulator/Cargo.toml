@@ -7,8 +7,8 @@ edition = "2021"
 clap = { version = "4.2.1", features = ["derive"] }
 embedded-graphics-core = "0.3.3"
 embedded-graphics-simulator = { version = "0.3.0" }
-mnemonic-external = {git = "https://github.com/Nyoxis/mnemonic-external", default-features = false, features = ["sufficient-memory"]}
-substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", default-features = false, features = ["sr25519"]}
+mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", features = ["sufficient-memory"]}
+substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", features = ["sr25519"]}
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

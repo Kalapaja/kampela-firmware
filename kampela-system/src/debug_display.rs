@@ -33,7 +33,6 @@ use crate::draw::FrameBuffer;
 //**** Debug stuff ****//
 
 /// Emergency debug function that spits out errors
-/// TODO: replace by power drain in production!
 pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
     epaper_hw_init_cs(peripherals);
     make_text(peripherals, &text);

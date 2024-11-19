@@ -10,7 +10,7 @@ use embedded_graphics::{
     primitives::{Primitive, PrimitiveStyle}
 };
 
-use mnemonic_external::WordSet;
+use mnemonic_external::{AsWordList, Bits11, WordListElement, WordSet};
 
 use crate::{
     platform::Platform,
@@ -53,8 +53,14 @@ pub struct SeedEntry<P> where
 impl<P: Platform> SeedEntry<P> {
     pub fn new(buffer: Option<WordSet>) -> Self
         where <P as Platform>::AsWordList: Sized {
-        let mut wordlist = P::get_wordlist();
-        let phrase = buffer.map(|ws| ws.to_wordlist_elements(&mut wordlist).unwrap());
+        let wordlist = P::get_wordlist();
+        let phrase = buffer
+            .map(|ws| {
+                ws.bits11_set
+                    .iter()
+                    .map(|bits| WordListElement{word: wordlist.get_word(*bits).unwrap(), bits11: *bits})
+                    .collect()
+            });
         let mut state = SeedEntry {
             entry: Entry::new(),
             keyboard: Keyboard::new(),
@@ -73,9 +79,12 @@ impl<P: Platform> SeedEntry<P> {
         self.phrase.validate()
     }
     pub fn get_buffer(&self) -> WordSet {
-        self.phrase.get_phrase()
+        WordSet {
+            bits11_set: self.phrase.get_phrase()
             .iter()
-            .collect()
+            .map(|w| w.bits11)
+            .collect::<Vec<Bits11>>()
+        }
     }
     fn switch_tapped(&mut self) -> bool {
         match self.tapped {

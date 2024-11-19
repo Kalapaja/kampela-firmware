@@ -22,7 +22,7 @@ use embedded_text::{
     style::TextBoxStyleBuilder,
     TextBox,
 };
-use mnemonic_external::{WordListElement, WordSet};
+use mnemonic_external::{AsWordList, Bits11, WordListElement, WordSet};
 
 use crate::{display_def::*, message, platform::Platform, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
 
@@ -81,11 +81,15 @@ pub struct Backup<P> where
 impl<P: Platform> Backup<P> {
     pub fn new(e: Vec<u8>, prev_screen: UnitScreen) -> Self
     where <P as Platform>::AsWordList: Sized{
-        let mut wordlist = P::get_wordlist();
+        let wordlist = P::get_wordlist();
         let phrase_result = WordSet::from_entropy(&e)
-            .map(|ws| ws.to_wordlist_elements(&mut wordlist).ok())
-            .ok()
-            .flatten();
+            .map(|ws| {
+                ws.bits11_set
+                    .iter()
+                    .map(|bits| WordListElement{word: wordlist.get_word(*bits).unwrap(), bits11: *bits})
+                    .collect()
+            })
+            .ok();
         let (state, phrase) = match phrase_result {
             Some(w) => (BackupState::ShowSeed, w),
             None => (BackupState::Error, Vec::new())
@@ -100,11 +104,14 @@ impl<P: Platform> Backup<P> {
     }
 
     pub fn get_entropy(&self) -> Option<Vec<u8>> {
-        self.phrase
+        WordSet {
+            bits11_set: self.phrase
             .iter()
-            .collect::<WordSet>()
-            .to_entropy()
-            .ok()
+            .map(|w| w.bits11)
+            .collect::<Vec<Bits11>>()
+        }
+        .to_entropy()
+        .ok()
     }
     
     fn draw_backup_screen<D: DrawTarget<Color = BinaryColor>>(&mut self, target: &mut D) -> Result<(), D::Error> {

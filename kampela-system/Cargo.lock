@@ -519,7 +519,7 @@ checksum = "bc4010833aea396656c2f91ee704d51a6f1329ec2ab56ffd00bfd56f7481ea94"
 [[package]]
 name = "mnemonic-external"
 version = "0.1.0"
-source = "git+https://github.com/Nyoxis/mnemonic-external#ae1704125f9845d81bfa91e615ad71e1633f107c"
+source = "git+https://github.com/Alzymologist/mnemonic-external#ac8b4f027adec591ae16a4e284ca25c0ffda6c3d"
 dependencies = [
  "bitvec",
  "sha2",

@@ -9,7 +9,7 @@ embedded-text = {version = "0.5.0", default-features = false}
 hex = {version = "0.4.3", default-features = false, features = ["alloc"]}
 kampela-display-common = { path = "../kampela-display-common" }
 lazy_static = { version = "1.4.0", default_features = false }
-mnemonic-external = {git = "https://github.com/Nyoxis/mnemonic-external", default-features = false, features = ["sufficient-memory"]}
+mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", default-features = false}
 qrcodegen-no-heap = { version = "1.8.1" }
 rand = { version = "0.8.5", default_features = false }
 substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", default-features = false, features = ["sr25519"]}
