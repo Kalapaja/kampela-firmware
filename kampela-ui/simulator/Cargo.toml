@@ -9,6 +9,9 @@ embedded-graphics-core = "0.3.3"
 embedded-graphics-simulator = { version = "0.3.0" }
 mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", features = ["sufficient-memory"]}
 substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", features = ["sr25519"]}
+crc32fast = "1.4.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

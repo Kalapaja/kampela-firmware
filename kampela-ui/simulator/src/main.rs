@@ -1,20 +1,15 @@
 //! This is simulator to develop Kampela UI mocks
 #![deny(unused_crate_dependencies)]
-use embedded_graphics_core::{
-    primitives::PointsIter,
-    Drawable,
-    pixelcolor::BinaryColor,
-    Pixel,
-};
+use embedded_graphics_core::{pixelcolor::BinaryColor, primitives::PointsIter, Drawable, Pixel};
 
+use clap::Parser;
 use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
+// use mnemonic_external::regular::InternalWordList;
 use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
-use clap::Parser;
 use substrate_crypto_light::sr25519::Public;
-use mnemonic_external::regular::InternalWordList;
 
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
@@ -27,8 +22,18 @@ const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
+mod infernal_wordlist;
+use infernal_wordlist::InfernalWordList;
+
+mod flash_emulation;
+use flash_emulation::FlashData;
+
+use mnemonic_external::AsWordList;
+use mnemonic_external::Bits11;
+use mnemonic_external::WordSet;
+
 use kampela_ui::{
-    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    data_state::{AppStateInit, DataInit, NFCState, StorageState},
     display_def::*,
     platform::{PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
@@ -49,6 +54,12 @@ struct Args {
 
     #[arg(short = 'T')]
     transaction_received: bool,
+
+    #[arg(short, long)]
+    wordlist_path: Option<String>,
+
+    #[arg(short, long)]
+    flash_path: Option<String>,
 }
 
 impl DataInit<Args> for AppStateInit {
@@ -77,9 +88,7 @@ struct HALHandle {
 impl HALHandle {
     pub fn new() -> Self {
         let rng = thread_rng();
-        Self {
-            rng: rng,
-        }
+        Self { rng: rng }
     }
 }
 
@@ -89,15 +98,27 @@ struct DesktopSimulator {
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     transaction: Option<NfcTransactionData>,
-    stored_entropy: Option<Vec<u8>>,
+    flash_data: Option<FlashData>,
 }
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit) -> Self {
-        let pin = [0; 4];
+        let args = Args::parse();
+        let mut flash_data: Option<FlashData> = None;
+        if let Some(path) = args.flash_path {
+            flash_data = Some(FlashData::from_json_file(&path));
+        }
+        let mut pin = [0; 4];
+        if let Some(flash_data) = &flash_data {
+            if let Some(stored_pin) = flash_data.pin {
+                pin = stored_pin;
+                println!("pin read from emulated storage: {:?}", pin);
+            }
+        }
+
         let transaction = match init_state.nfc {
             NFCState::Empty => None,
-            NFCState::Transaction => Some(NfcTransactionData{
+            NFCState::Transaction => Some(NfcTransactionData {
                 call: String::from("Hello, this is a transaction!"),
                 extension: String::from("Hello, this is a transaction!"),
                 signature: [0u8; 130],
@@ -108,7 +129,7 @@ impl DesktopSimulator {
             entropy: None,
             address: None,
             transaction: transaction,
-            stored_entropy: None,
+            flash_data: flash_data,
         }
     }
 }
@@ -117,10 +138,14 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
     type NfcTransaction = NfcTransactionData;
-    type AsWordList = InternalWordList;
+    type AsWordList = InfernalWordList;
 
     fn get_wordlist() -> Self::AsWordList {
-        InternalWordList
+        let args = Args::parse();
+        if let Some(path) = args.wordlist_path {
+            return InfernalWordList::from_file(&path);
+        }
+        return InfernalWordList::new();
     }
 
     fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {
@@ -136,13 +161,44 @@ impl Platform for DesktopSimulator {
     }
 
     fn store_entropy(&mut self, e: &[u8]) {
+        println!("Store entropy: {} bytes {:?}", e.len(), e);
+        let wordset = WordSet::from_entropy(e).unwrap();
+        let wordlist = Self::get_wordlist();
+        println!("Wordset is: {:?}", wordset.to_phrase(&wordlist).unwrap());
+        let args = Args::parse();
+
+        if let Some(path) = args.flash_path {
+            let mut flash_data = FlashData::from_json_file(&path);
+            let mut actual_entropy: [u8; 32] = [0; 32];
+            actual_entropy.copy_from_slice(e);
+            flash_data.entropy = Some(actual_entropy);
+            flash_data.to_json_file(&path);
+            self.flash_data = Some(flash_data);
+            println!("Flash file ({}) updated with entropy", path);
+        }
+
         self.entropy = Some(e.to_vec());
-        println!("entropy stored (not really, this is emulator)");
     }
 
     fn read_entropy(&mut self) {
-        self.entropy = self.stored_entropy.clone();
-        println!("entropy read from emulated storage: {:?}", &self.entropy);
+        if self.flash_data.is_none() {
+            println!("No flash data");
+            return;
+        }
+        if self.flash_data.as_ref().unwrap().entropy.is_none() {
+            println!("No entropy in flash data");
+            return;
+        }
+        let flash_data: &FlashData = self.flash_data.as_ref().unwrap();
+        self.entropy = Some(flash_data.entropy.unwrap().to_vec());
+        let wordlist = Self::get_wordlist();
+        let entropy = self.entropy.as_ref().unwrap();
+        let wordset = WordSet::from_entropy(entropy).unwrap();
+        println!(
+            "entropy read from emulated storage: {:?}",
+            &self.entropy.as_ref().unwrap()
+        );
+        println!("Wordset is: {:?}", wordset.to_phrase(&wordlist).unwrap());
     }
 
     fn public(&self) -> Option<Public> {
@@ -178,7 +234,7 @@ impl Platform for DesktopSimulator {
     fn signature(&mut self) -> [u8; 130] {
         match self.transaction {
             Some(ref a) => a.signature,
-            None =>  panic!("qr not ready!"),
+            None => panic!("qr not ready!"),
         }
     }
 
@@ -191,17 +247,16 @@ impl Platform for DesktopSimulator {
     }
 }
 
-
 fn main() {
     let args = Args::parse();
     let init_data_state = AppStateInit::new(args);
     println!("{:?}", init_data_state);
 
     /*
-    // Prepare
-    let mut display: SimulatorDisplay<BinaryColor> =
-        SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
-*/
+        // Prepare
+        let mut display: SimulatorDisplay<BinaryColor> =
+            SimulatorDisplay::new(Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y));
+    */
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state);
     let display = SimulatorDisplay::new(SCREEN_SIZE);
@@ -211,8 +266,8 @@ fn main() {
     let output_settings = OutputSettingsBuilder::new()
         .theme(BinaryColorTheme::Inverted)
         .build();
-    let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
-    
+    let mut window = Window::new("Kampela Emulator", &output_settings); //.show_static(&display);
+
     let mut update = Some(UpdateRequest::Slow);
 
     let mut touches = VecDeque::new();
@@ -231,7 +286,8 @@ fn main() {
         // display event; it would be delayed
         if let Some(u) = update.take() {
             sleep(UPDATE_DELAY_TIME);
-            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
+            let is_clear_update =
+                matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
             match state.render(is_clear_update, &mut h) {
                 Ok(a) => update.propagate(a),
                 Err(e) => println!("{:?}", e),
@@ -241,7 +297,7 @@ fn main() {
                 UpdateRequest::Hidden => {
                     window.update(&state.display);
                     println!("skip {} events in hidden update", window.events().count());
-                },
+                }
                 UpdateRequest::Slow => {
                     invert_display(&mut state.display);
                     window.update(&state.display);
@@ -259,7 +315,7 @@ fn main() {
 
                     window.update(&state.display);
                     println!("skip {} events in slow update", window.events().count());
-                },
+                }
                 UpdateRequest::Fast => {
                     invert_display(&mut state.display);
                     window.update(&state.display);
@@ -267,17 +323,17 @@ fn main() {
                     invert_display(&mut state.display);
                     window.update(&state.display);
                     println!("fast update");
-                },
+                }
                 UpdateRequest::UltraFast => {
                     window.update(&state.display);
                     println!("ultrafast update");
                     sleep(ULTRAFAST_UPDATE_TIME);
-                },
+                }
                 UpdateRequest::Part(a) => {
                     window.update(&state.display);
                     println!("part update of area {:?}", a);
                     sleep(ULTRAFAST_UPDATE_TIME);
-                },
+                }
             }
         }
         // this collects ui events, do not remove or simulator will crash
@@ -310,5 +366,5 @@ fn invert_display(display: &mut SimulatorDisplay<BinaryColor>) {
     for point in SCREEN_AREA.points() {
         let dot = Pixel::<BinaryColor>(point, display.get_pixel(point).invert());
         dot.draw(display).unwrap();
-    };
+    }
 }

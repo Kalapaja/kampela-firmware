@@ -141,7 +141,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         let unlocked: bool;
         if platform.public().is_none() {
             initial_screen = Some(UnitScreen::OnboardingRestoreOrGenerate);
-            unlocked = true;
+            unlocked = false;
         } else {
             initial_screen = Some(UnitScreen::QRAddress);
             unlocked = false;
@@ -161,7 +161,11 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         if let Some(s) = s {
             match s {
                 UnitScreen::QRAddress => {
-                    self.screen = Screen::QRAddress;
+                    if self.unlocked {
+                        self.screen = Screen::QRAddress;
+                    } else {
+                        self.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::QRAddress);
+                    }
                 },
                 UnitScreen::Locked => {
                     self.screen = Screen::Locked;
@@ -180,15 +184,19 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     self.screen = Screen::ShowDialog(Dialog::new(message, options, routes, negative));
                 },
                 UnitScreen::OnboardingRestoreOrGenerate => {
-                    self.screen = Screen::OnboardingRestoreOrGenerate(Dialog::new(
-                        "restore or generate?",
-                        ("restore", "generate"),
-                        (
-                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingRestore(None))}),
-                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
-                        ),
-                        false,
-                    ))
+                    if self.unlocked {
+                        self.screen = Screen::OnboardingRestoreOrGenerate(Dialog::new(
+                            "restore or generate?",
+                            ("restore", "generate"),
+                            (
+                                Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingRestore(None))}),
+                                Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
+                            ),
+                            false,
+                        ))
+                    } else {
+                        self.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::OnboardingRestoreOrGenerate);
+                    }
                 },
                 UnitScreen::OnboardingRestore(p) => {
                     self.screen = Screen::OnboardingRestore(SeedEntry::new(p));
@@ -385,5 +393,3 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         Ok(out)
     }
 }
-
-
