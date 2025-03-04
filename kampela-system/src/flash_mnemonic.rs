@@ -4,7 +4,7 @@ use alloc::{vec::Vec, string::String, collections::VecDeque};
 use core::cell::RefCell;
 
 //use crate::wordlist::WORDLIST_ENGLISH;
-use mnemonic_external::{AsWordList, Bits11, WordListElement, TOTAL_WORDS, WORD_MAX_LEN, error::ErrorWordList};
+use mnemonic_external::{AsWordList, Bits11, WordListElement, TOTAL_WORDS, WORD_MAX_LEN, error::ErrorMnemonic};
 
 use crate::devices::flash::read_data;
 const WORDLIST_STARTS: [usize; 26] = [
@@ -55,13 +55,13 @@ impl FlashWordList {
 
 impl AsWordList for FlashWordList {
     type Word = String;
-    fn get_word(&self, bits: Bits11) -> Result<Self::Word, ErrorWordList> {
+    fn get_word(&self, bits: Bits11) -> Result<Self::Word, ErrorMnemonic> {
         let word_order = bits.bits() as usize;
         let chunk_index = word_order / 32;
         let index_inchunk = word_order - chunk_index * 32;
         let chunk = self.read_wordlist_chunk(chunk_index);
         if chunk_index >= 64 {
-            Err(ErrorWordList::InvalidWordNumber)
+            Err(ErrorMnemonic::InvalidWordNumber)
         } else {
             let word_bytes = &chunk[index_inchunk * WORD_MAX_LEN..(index_inchunk + 1) * WORD_MAX_LEN].to_vec();
             let word_bytes_stripped = word_bytes.iter().take_while(|&ch| *ch != b' ').cloned().collect();
@@ -70,7 +70,7 @@ impl AsWordList for FlashWordList {
         }
     }
 
-    fn get_words_by_prefix(&self, prefix: &str) -> Result<Vec<WordListElement<Self>>, ErrorWordList> {
+    fn get_words_by_prefix(&self, prefix: &str) -> Result<Vec<WordListElement<Self>>, ErrorMnemonic> {
         let mut out = Vec::<WordListElement<Self>>::new();
 
         let first_letter = prefix.as_bytes().get(0).unwrap();
@@ -106,7 +106,7 @@ impl AsWordList for FlashWordList {
         Ok(out)
     }
 
-    fn bits11_for_word(&self, word: &str) -> Result<Bits11, ErrorWordList> {
+    fn bits11_for_word(&self, word: &str) -> Result<Bits11, ErrorMnemonic> {
         let first_letter = word.as_bytes().get(0).unwrap();
         let start_chunk = WORDLIST_STARTS[(first_letter - FIRST_WORDLIST_STARTS) as usize];
         let mut matches_max: usize = 0;
@@ -129,7 +129,7 @@ impl AsWordList for FlashWordList {
                 }
             }
         }
-        Err(ErrorWordList::NoWord)
+        Err(ErrorMnemonic::NoWord)
     }
 }
 /*
