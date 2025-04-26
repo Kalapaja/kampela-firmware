@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bit 12 - Region 11 Non-Secure"]
     #[inline(always)]
-    #[must_use]
     pub fn esaur11ns(&mut self) -> Esaur11nsW<Esaurtypes1Spec> {
         Esaur11nsW::new(self, 12)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Esaurtypes1Spec {}
 #[doc = "`write(|w| ..)` method takes [`esaurtypes1::W`](W) writer structure"]
 impl crate::Writable for Esaurtypes1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ESAURTYPES1 to value 0"]
-impl crate::Resettable for Esaurtypes1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Esaurtypes1Spec {}

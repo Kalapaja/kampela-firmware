@@ -133,85 +133,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Single FIFO Data Valid Level Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifodvl(&mut self) -> SinglefifodvlW<IenSpec> {
         SinglefifodvlW::new(self, 0)
     }
     #[doc = "Bit 1 - Scan FIFO Data Valid Level Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifodvl(&mut self) -> ScanfifodvlW<IenSpec> {
         ScanfifodvlW::new(self, 1)
     }
     #[doc = "Bit 2 - Single Result Window Compare Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singlecmp(&mut self) -> SinglecmpW<IenSpec> {
         SinglecmpW::new(self, 2)
     }
     #[doc = "Bit 3 - Scan Result Window Compare Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scancmp(&mut self) -> ScancmpW<IenSpec> {
         ScancmpW::new(self, 3)
     }
     #[doc = "Bit 7 - Scan Entry Done Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scanentrydone(&mut self) -> ScanentrydoneW<IenSpec> {
         ScanentrydoneW::new(self, 7)
     }
     #[doc = "Bit 8 - Scan Table Done Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scantabledone(&mut self) -> ScantabledoneW<IenSpec> {
         ScantabledoneW::new(self, 8)
     }
     #[doc = "Bit 9 - Single Conversion Done Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singledone(&mut self) -> SingledoneW<IenSpec> {
         SingledoneW::new(self, 9)
     }
     #[doc = "Bit 12 - Polarity Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn polarityerr(&mut self) -> PolarityerrW<IenSpec> {
         PolarityerrW::new(self, 12)
     }
     #[doc = "Bit 13 - Port Allocation Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn portallocerr(&mut self) -> PortallocerrW<IenSpec> {
         PortallocerrW::new(self, 13)
     }
     #[doc = "Bit 16 - Single FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifoof(&mut self) -> SinglefifoofW<IenSpec> {
         SinglefifoofW::new(self, 16)
     }
     #[doc = "Bit 17 - Scan FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifoof(&mut self) -> ScanfifoofW<IenSpec> {
         ScanfifoofW::new(self, 17)
     }
     #[doc = "Bit 18 - Single FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifouf(&mut self) -> SinglefifoufW<IenSpec> {
         SinglefifoufW::new(self, 18)
     }
     #[doc = "Bit 19 - Scan FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifouf(&mut self) -> ScanfifoufW<IenSpec> {
         ScanfifoufW::new(self, 19)
     }
     #[doc = "Bit 31 - EM2/3 Abort Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn em23aborterror(&mut self) -> Em23aborterrorW<IenSpec> {
         Em23aborterrorW::new(self, 31)
     }
@@ -226,10 +212,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Erase Done Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn erase(&mut self) -> EraseW<IenSpec> {
         EraseW::new(self, 0)
     }
     #[doc = "Bit 1 - Write Done Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn write(&mut self) -> WriteW<IenSpec> {
         WriteW::new(self, 1)
     }
     #[doc = "Bit 2 - write data buffer overflow irq enable"]
     #[inline(always)]
-    #[must_use]
     pub fn wdataov(&mut self) -> WdataovW<IenSpec> {
         WdataovW::new(self, 2)
     }
     #[doc = "Bit 8 - Flash Power Up Seq done irq enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pwrupf(&mut self) -> PwrupfW<IenSpec> {
         PwrupfW::new(self, 8)
     }
     #[doc = "Bit 9 - Flash Power Off Seq done irq enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroff(&mut self) -> PwroffW<IenSpec> {
         PwroffW::new(self, 9)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

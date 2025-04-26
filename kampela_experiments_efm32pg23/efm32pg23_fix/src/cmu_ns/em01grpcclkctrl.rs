@@ -124,7 +124,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    #[must_use]
     pub fn clksel(&mut self) -> ClkselW<Em01grpcclkctrlSpec> {
         ClkselW::new(self, 0)
     }
@@ -139,8 +138,6 @@ impl crate::Readable for Em01grpcclkctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`em01grpcclkctrl::W`](W) writer structure"]
 impl crate::Writable for Em01grpcclkctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EM01GRPCCLKCTRL to value 0x01"]
 impl crate::Resettable for Em01grpcclkctrlSpec {

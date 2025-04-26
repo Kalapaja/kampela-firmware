@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:19 - LCD Segment Allocation"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdsegalloc(&mut self) -> LcdsegallocW<LcdsegSpec> {
         LcdsegallocW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for LcdsegSpec {}
 #[doc = "`write(|w| ..)` method takes [`lcdseg::W`](W) writer structure"]
 impl crate::Writable for LcdsegSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LCDSEG to value 0"]
-impl crate::Resettable for LcdsegSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LcdsegSpec {}

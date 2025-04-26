@@ -108,6 +108,4 @@ impl crate::RegisterSpec for RstcauseSpec {
 #[doc = "`read()` method returns [`rstcause::R`](R) reader structure"]
 impl crate::Readable for RstcauseSpec {}
 #[doc = "`reset()` method sets RSTCAUSE to value 0"]
-impl crate::Resettable for RstcauseSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RstcauseSpec {}

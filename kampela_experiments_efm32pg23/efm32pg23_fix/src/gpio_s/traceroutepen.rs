@@ -61,37 +61,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Serial Wire Viewer Output Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn swvpen(&mut self) -> SwvpenW<TraceroutepenSpec> {
         SwvpenW::new(self, 0)
     }
     #[doc = "Bit 1 - Trace Clk Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn traceclkpen(&mut self) -> TraceclkpenW<TraceroutepenSpec> {
         TraceclkpenW::new(self, 1)
     }
     #[doc = "Bit 2 - Trace Data0 Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tracedata0pen(&mut self) -> Tracedata0penW<TraceroutepenSpec> {
         Tracedata0penW::new(self, 2)
     }
     #[doc = "Bit 3 - Trace Data1 Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tracedata1pen(&mut self) -> Tracedata1penW<TraceroutepenSpec> {
         Tracedata1penW::new(self, 3)
     }
     #[doc = "Bit 4 - Trace Data2 Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tracedata2pen(&mut self) -> Tracedata2penW<TraceroutepenSpec> {
         Tracedata2penW::new(self, 4)
     }
     #[doc = "Bit 5 - Trace Data3 Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tracedata3pen(&mut self) -> Tracedata3penW<TraceroutepenSpec> {
         Tracedata3penW::new(self, 5)
     }
@@ -106,10 +100,6 @@ impl crate::Readable for TraceroutepenSpec {}
 #[doc = "`write(|w| ..)` method takes [`traceroutepen::W`](W) writer structure"]
 impl crate::Writable for TraceroutepenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRACEROUTEPEN to value 0"]
-impl crate::Resettable for TraceroutepenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TraceroutepenSpec {}

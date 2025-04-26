@@ -33,7 +33,6 @@ where
 impl W {
     #[doc = "Bits 0:15 - Configuration Lock Key"]
     #[inline(always)]
-    #[must_use]
     pub fn lockkey(&mut self) -> LockkeyW<WdoglockSpec> {
         LockkeyW::new(self, 0)
     }
@@ -46,8 +45,6 @@ impl crate::RegisterSpec for WdoglockSpec {
 #[doc = "`write(|w| ..)` method takes [`wdoglock::W`](W) writer structure"]
 impl crate::Writable for WdoglockSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets WDOGLOCK to value 0x5257"]
 impl crate::Resettable for WdoglockSpec {

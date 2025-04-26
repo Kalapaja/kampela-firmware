@@ -38,6 +38,4 @@ impl crate::RegisterSpec for RxProtSpec {
 #[doc = "`read()` method returns [`rx_prot::R`](R) reader structure"]
 impl crate::Readable for RxProtSpec {}
 #[doc = "`reset()` method sets RX_PROT to value 0"]
-impl crate::Resettable for RxProtSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxProtSpec {}

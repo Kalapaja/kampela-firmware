@@ -101,31 +101,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DTI Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dten(&mut self) -> DtenW<DtcfgSpec> {
         DtenW::new(self, 0)
     }
     #[doc = "Bit 1 - DTI Automatic Start-up Functionality"]
     #[inline(always)]
-    #[must_use]
     pub fn dtdas(&mut self) -> DtdasW<DtcfgSpec> {
         DtdasW::new(self, 1)
     }
     #[doc = "Bit 9 - DTI Always Run"]
     #[inline(always)]
-    #[must_use]
     pub fn dtar(&mut self) -> DtarW<DtcfgSpec> {
         DtarW::new(self, 9)
     }
     #[doc = "Bit 10 - DTI Fault Action on Timer Stop"]
     #[inline(always)]
-    #[must_use]
     pub fn dtfats(&mut self) -> DtfatsW<DtcfgSpec> {
         DtfatsW::new(self, 10)
     }
     #[doc = "Bit 11 - DTI PRS Source Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtprsen(&mut self) -> DtprsenW<DtcfgSpec> {
         DtprsenW::new(self, 11)
     }
@@ -140,10 +135,6 @@ impl crate::Readable for DtcfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`dtcfg::W`](W) writer structure"]
 impl crate::Writable for DtcfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTCFG to value 0"]
-impl crate::Resettable for DtcfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtcfgSpec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Calibration Ready Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn calrdy(&mut self) -> CalrdyW<IenSpec> {
         CalrdyW::new(self, 0)
     }
     #[doc = "Bit 1 - Calibration Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn calof(&mut self) -> CalofW<IenSpec> {
         CalofW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

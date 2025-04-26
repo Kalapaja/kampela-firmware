@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Linked Structure Sequence Loop Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn loopcnt(&mut self) -> LoopcntW<Ch0LoopSpec> {
         LoopcntW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Ch0LoopSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch0_loop::W`](W) writer structure"]
 impl crate::Writable for Ch0LoopSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH0_LOOP to value 0"]
-impl crate::Resettable for Ch0LoopSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch0LoopSpec {}

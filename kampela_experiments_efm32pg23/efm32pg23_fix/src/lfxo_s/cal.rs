@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:6 - Internal Capacitance Tuning"]
     #[inline(always)]
-    #[must_use]
     pub fn captune(&mut self) -> CaptuneW<CalSpec> {
         CaptuneW::new(self, 0)
     }
     #[doc = "Bits 8:9 - LFXO Startup Gain"]
     #[inline(always)]
-    #[must_use]
     pub fn gain(&mut self) -> GainW<CalSpec> {
         GainW::new(self, 8)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for CalSpec {}
 #[doc = "`write(|w| ..)` method takes [`cal::W`](W) writer structure"]
 impl crate::Writable for CalSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CAL to value 0x0200"]
 impl crate::Resettable for CalSpec {

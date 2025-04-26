@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - COLOUT2 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<KeyscanColout2routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - COLOUT2 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<KeyscanColout2routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for KeyscanColout2routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`keyscan_colout2route::W`](W) writer structure"]
 impl crate::Writable for KeyscanColout2routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets KEYSCAN_COLOUT2ROUTE to value 0"]
-impl crate::Resettable for KeyscanColout2routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for KeyscanColout2routeSpec {}

@@ -3,7 +3,7 @@ use cortex_m::asm::delay;
 
 use crate::peripherals::usart::*;
 use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
-use crate::{FreeError, if_in_free, in_free};
+use crate::{if_in_free, in_free};
 use crate::parallel::{AsyncOperation, Threads};
 
 use crate::devices::display::Bounds;
@@ -11,7 +11,7 @@ use kampela_display_common::display_def::*;
 const X_ADDRESS_WIDTH: usize = (SCREEN_SIZE_Y / 8) as usize;
 
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].
-pub fn display_is_busy() -> Result<bool, FreeError> {
+pub fn display_is_busy() -> bool {
     if_in_free(|peripherals| spi_is_busy(&mut peripherals.gpio_s))
 }
 
@@ -27,7 +27,7 @@ pub fn display_is_busy_cs(peripherals: &mut Peripherals) -> bool {
 pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
     epaper_write_command(peripherals, &[0x10]); // from manual, enter deep sleep
     epaper_write_data(peripherals, &[0x03]); // Deep sleep mode 2, cannot retain RAM data
-    delay(100); // why delay, from where the number?
+    deselect_display(&mut peripherals.gpio_s);
 }
 
 /// EPD init, also should be performed to wake screen from sleep
@@ -36,6 +36,7 @@ pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
 pub fn epaper_hw_init_cs(peripherals: &mut Peripherals) {
     epaper_reset(&mut peripherals.gpio_s);
     while display_is_busy_cs(peripherals) {}
+    select_display(&mut peripherals.gpio_s);
     epaper_write_command(peripherals, &[0x12]);
     delay(10000);
     while display_is_busy_cs(peripherals) {}
@@ -54,8 +55,6 @@ pub fn epaper_reset(gpio: &mut GpioS) {
     delay(10000);
     display_res_clear(gpio);
     delay(5000);
-    deselect_display(gpio); // this is not the default state, should not be here
-    delay(5000);
 }
 
 /// Send command to EPD
@@ -64,28 +63,28 @@ pub fn epaper_reset(gpio: &mut GpioS) {
 pub fn epaper_write_command(peripherals: &mut Peripherals, command_set: &[u8]) {
     // CS clear corresponds to selected chip, see epaper docs
 
-    deselect_display(&mut peripherals.gpio_s);
-    select_display(&mut peripherals.gpio_s); // not necessary if state is known and default at start
+    //deselect_display(&mut peripherals.gpio_s);
+    //select_display(&mut peripherals.gpio_s); // not necessary if state is known and default at start
     
     display_select_command(&mut peripherals.gpio_s);
     for command in command_set.iter() {
         write_to_usart(peripherals, *command);
     }
-    deselect_display(&mut peripherals.gpio_s);
+    //deselect_display(&mut peripherals.gpio_s);
 }
 
 /// Send data to EPD
 ///
 /// for critical section
 pub fn epaper_write_data(peripherals: &mut Peripherals, data_set: &[u8]) {
-    deselect_display(&mut peripherals.gpio_s);
-    select_display(&mut peripherals.gpio_s); // not necessary if state is known and default at start
+    //deselect_display(&mut peripherals.gpio_s);
+    //select_display(&mut peripherals.gpio_s); // not necessary if state is known and default at start
 
     display_select_data(&mut peripherals.gpio_s);
     for data in data_set.iter() {
         write_to_usart(peripherals, *data);
     }
-    deselect_display(&mut peripherals.gpio_s);
+    //deselect_display(&mut peripherals.gpio_s);
     //    display_data_command_clear(peripherals);
 }
 
@@ -129,16 +128,16 @@ impl <const C: u8> AsyncOperation for EPDCommand<C> {
             },
             EPDByteState::Send => {
                 if if_in_free(|peripherals|
-                    peripherals.usart0_s.status().read().txbl().bit_is_set()
-                ) != Ok(true) {
+                    peripherals.usart0_s.status().read().txbl().bit_is_clear()
+                ) {
                     return None
                 }
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
                         .usart0_s
                         .txdata()
-                        .write(|w_reg| unsafe { w_reg.txdata().bits(C) })
-                );
+                        .write(|w_reg| unsafe { w_reg.txdata().bits(C) });
+                });
                 self.threads.change(EPDByteState::WaitSend);
                 Some(false)
             }
@@ -149,8 +148,8 @@ impl <const C: u8> AsyncOperation for EPDCommand<C> {
                         .status()
                         .read()
                         .txc()
-                        .bit_is_set()
-                ) != Ok(true) {
+                        .bit_is_clear()
+                ) {
                     return None
                 }
                 in_free(|peripherals| {
@@ -214,16 +213,16 @@ impl <const LEN: usize> AsyncOperation for EPDData<LEN> {
             },
             EPDDataState::Send => {
                 if if_in_free(|peripherals|
-                    peripherals.usart0_s.status().read().txbl().bit_is_set()
-                ) != Ok(true) {
+                    peripherals.usart0_s.status().read().txbl().bit_is_clear()
+                ) {
                     return None
                 }
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
                         .usart0_s
                         .txdata()
-                        .write(|w_reg| unsafe { w_reg.txdata().bits(data[self.position]) })
-                );
+                        .write(|w_reg| unsafe { w_reg.txdata().bits(data[self.position]) });
+                });
                 self.threads.change(EPDDataState::WaitSend);
                 Some(false)
             },
@@ -234,8 +233,8 @@ impl <const LEN: usize> AsyncOperation for EPDData<LEN> {
                         .status()
                         .read()
                         .txc()
-                        .bit_is_set()
-                ) != Ok(true) {
+                        .bit_is_clear()
+                ) {
                     return None
                 }
                 in_free(|peripherals| {
@@ -309,16 +308,16 @@ impl <const LEN: usize> AsyncOperation for EPDDataBuffer<LEN> {
             },
             EPDDataState::Send => {
                 if if_in_free(|peripherals|
-                    peripherals.usart0_s.status().read().txbl().bit_is_set()
-                ) != Ok(true) {
+                    peripherals.usart0_s.status().read().txbl().bit_is_clear()
+                ) {
                     return None
                 }
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
                         .usart0_s
                         .txdata()
-                        .write(|w_reg| unsafe { w_reg.txdata().bits(data[self.position]) })
-                );
+                        .write(|w_reg| unsafe { w_reg.txdata().bits(data[self.position]) });
+                });
                 self.threads.change(EPDDataState::WaitSend);
                 Some(false)
             },
@@ -329,8 +328,8 @@ impl <const LEN: usize> AsyncOperation for EPDDataBuffer<LEN> {
                         .status()
                         .read()
                         .txc()
-                        .bit_is_set()
-                ) != Ok(true) {
+                        .bit_is_clear()
+                ) {
                     return None
                 }
                 in_free(|peripherals| {

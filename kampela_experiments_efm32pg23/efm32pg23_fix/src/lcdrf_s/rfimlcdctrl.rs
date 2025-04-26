@@ -150,31 +150,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LCD Charge Pump XO Clock Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdcpxoen(&mut self) -> LcdcpxoenW<RfimlcdctrlSpec> {
         LcdcpxoenW::new(self, 0)
     }
     #[doc = "Bit 1 - LCD Charge Pump XO Select"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdcpxosel(&mut self) -> LcdcpxoselW<RfimlcdctrlSpec> {
         LcdcpxoselW::new(self, 1)
     }
     #[doc = "Bit 2 - LCD Charge Pump XO Retime Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdcpxoretimeen(&mut self) -> LcdcpxoretimeenW<RfimlcdctrlSpec> {
         LcdcpxoretimeenW::new(self, 2)
     }
     #[doc = "Bit 3 - LCD Low Noise"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdlownoise(&mut self) -> LcdlownoiseW<RfimlcdctrlSpec> {
         LcdlownoiseW::new(self, 3)
     }
     #[doc = "Bit 4 - LCD Comparator Dout"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdcmpdout(&mut self) -> LcdcmpdoutW<RfimlcdctrlSpec> {
         LcdcmpdoutW::new(self, 4)
     }
@@ -189,10 +184,6 @@ impl crate::Readable for RfimlcdctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`rfimlcdctrl::W`](W) writer structure"]
 impl crate::Writable for RfimlcdctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RFIMLCDCTRL to value 0"]
-impl crate::Resettable for RfimlcdctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RfimlcdctrlSpec {}

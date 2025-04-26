@@ -66,6 +66,4 @@ impl crate::RegisterSpec for Hfrcodpllcal17Spec {
 #[doc = "`read()` method returns [`hfrcodpllcal17::R`](R) reader structure"]
 impl crate::Readable for Hfrcodpllcal17Spec {}
 #[doc = "`reset()` method sets HFRCODPLLCAL17 to value 0"]
-impl crate::Resettable for Hfrcodpllcal17Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Hfrcodpllcal17Spec {}

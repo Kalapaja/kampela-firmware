@@ -8,7 +8,7 @@ use crate::peripherals::{
     eusart::init_eusart, 
     gpio_pins::init_gpio,
     i2c::init_i2c,
-    ldma::{init_ldma, NfcXferBlock},
+    ldma::init_ldma,
     timers::init_timers,
     usart::init_usart,
 };
@@ -17,7 +17,7 @@ use crate::devices::touch::init_touch;
 use crate::devices::flash::{flash_init,flash_sleep};
 
 /// All peripheral initializations
-pub fn init_peripherals(peripherals: &mut Peripherals, nfc_descriptor_address: *const NfcXferBlock) {
+pub fn init_peripherals(peripherals: &mut Peripherals) {
     // first, start clocking
     init_cmu(&mut peripherals.cmu_s);
 
@@ -37,7 +37,7 @@ pub fn init_peripherals(peripherals: &mut Peripherals, nfc_descriptor_address: *
     psram_reset(peripherals);
 
     // Setting up peripherals for NFC capture
-    init_ldma(peripherals, nfc_descriptor_address);
+    init_ldma(peripherals);
     
     // TODO: SET UP NVIC for LDMA!
 

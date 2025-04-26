@@ -19,49 +19,41 @@ pub type SinemodestopW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - DAC Channel 0 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0en(&mut self) -> Ch0enW<CmdSpec> {
         Ch0enW::new(self, 0)
     }
     #[doc = "Bit 1 - DAC Channel 0 Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0dis(&mut self) -> Ch0disW<CmdSpec> {
         Ch0disW::new(self, 1)
     }
     #[doc = "Bit 4 - DAC Channel 1 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1en(&mut self) -> Ch1enW<CmdSpec> {
         Ch1enW::new(self, 4)
     }
     #[doc = "Bit 5 - DAC Channel 1 Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1dis(&mut self) -> Ch1disW<CmdSpec> {
         Ch1disW::new(self, 5)
     }
     #[doc = "Bit 8 - CH0 WFIFO Flush"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0fifoflush(&mut self) -> Ch0fifoflushW<CmdSpec> {
         Ch0fifoflushW::new(self, 8)
     }
     #[doc = "Bit 9 - CH1 WFIFO Flush"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1fifoflush(&mut self) -> Ch1fifoflushW<CmdSpec> {
         Ch1fifoflushW::new(self, 9)
     }
     #[doc = "Bit 10 - Start Sine Wave Generation"]
     #[inline(always)]
-    #[must_use]
     pub fn sinemodestart(&mut self) -> SinemodestartW<CmdSpec> {
         SinemodestartW::new(self, 10)
     }
     #[doc = "Bit 11 - Stop Sine Wave Generation"]
     #[inline(always)]
-    #[must_use]
     pub fn sinemodestop(&mut self) -> SinemodestopW<CmdSpec> {
         SinemodestopW::new(self, 11)
     }
@@ -74,10 +66,6 @@ impl crate::RegisterSpec for CmdSpec {
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CmdSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CmdSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmdSpec {}

@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bits 4:6 - Slew Rate"]
     #[inline(always)]
-    #[must_use]
     pub fn slewrate(&mut self) -> SlewrateW<PortdCtrlSpec> {
         SlewrateW::new(self, 4)
     }
     #[doc = "Bit 12 - Data In Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn dindis(&mut self) -> DindisW<PortdCtrlSpec> {
         DindisW::new(self, 12)
     }
     #[doc = "Bits 20:22 - Slew Rate Alt"]
     #[inline(always)]
-    #[must_use]
     pub fn slewratealt(&mut self) -> SlewratealtW<PortdCtrlSpec> {
         SlewratealtW::new(self, 20)
     }
     #[doc = "Bit 28 - Data In Disable Alt"]
     #[inline(always)]
-    #[must_use]
     pub fn dindisalt(&mut self) -> DindisaltW<PortdCtrlSpec> {
         DindisaltW::new(self, 28)
     }
@@ -76,8 +72,6 @@ impl crate::Readable for PortdCtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`portd_ctrl::W`](W) writer structure"]
 impl crate::Writable for PortdCtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PORTD_CTRL to value 0x0040_0040"]
 impl crate::Resettable for PortdCtrlSpec {

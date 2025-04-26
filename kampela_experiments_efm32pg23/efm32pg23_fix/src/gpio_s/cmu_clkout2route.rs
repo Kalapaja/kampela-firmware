@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - CLKOUT2 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<CmuClkout2routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - CLKOUT2 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<CmuClkout2routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for CmuClkout2routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`cmu_clkout2route::W`](W) writer structure"]
 impl crate::Writable for CmuClkout2routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMU_CLKOUT2ROUTE to value 0"]
-impl crate::Resettable for CmuClkout2routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmuClkout2routeSpec {}

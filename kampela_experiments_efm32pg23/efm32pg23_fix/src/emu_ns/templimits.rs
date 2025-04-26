@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:8 - Temp Low limit"]
     #[inline(always)]
-    #[must_use]
     pub fn templow(&mut self) -> TemplowW<TemplimitsSpec> {
         TemplowW::new(self, 0)
     }
     #[doc = "Bits 16:24 - Temp High limit"]
     #[inline(always)]
-    #[must_use]
     pub fn temphigh(&mut self) -> TemphighW<TemplimitsSpec> {
         TemphighW::new(self, 16)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for TemplimitsSpec {}
 #[doc = "`write(|w| ..)` method takes [`templimits::W`](W) writer structure"]
 impl crate::Writable for TemplimitsSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TEMPLIMITS to value 0x01ff_0000"]
 impl crate::Resettable for TemplimitsSpec {

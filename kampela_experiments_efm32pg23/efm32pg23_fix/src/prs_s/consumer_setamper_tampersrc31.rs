@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - TAMPERSRC31 async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerSetamperTampersrc31Spec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerSetamperTampersrc31Spec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_setamper_tampersrc31::W`](W) writer structure"]
 impl crate::Writable for ConsumerSetamperTampersrc31Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_SETAMPER_TAMPERSRC31 to value 0"]
-impl crate::Resettable for ConsumerSetamperTampersrc31Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerSetamperTampersrc31Spec {}

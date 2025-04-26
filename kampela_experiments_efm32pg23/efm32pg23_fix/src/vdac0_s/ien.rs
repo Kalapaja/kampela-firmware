@@ -97,61 +97,51 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CH0 Conversion Done Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0cd(&mut self) -> Ch0cdW<IenSpec> {
         Ch0cdW::new(self, 0)
     }
     #[doc = "Bit 1 - CH1 Conversion Done Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1cd(&mut self) -> Ch1cdW<IenSpec> {
         Ch1cdW::new(self, 1)
     }
     #[doc = "Bit 4 - CH0 Data Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0of(&mut self) -> Ch0ofW<IenSpec> {
         Ch0ofW::new(self, 4)
     }
     #[doc = "Bit 5 - CH1 Data Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1of(&mut self) -> Ch1ofW<IenSpec> {
         Ch1ofW::new(self, 5)
     }
     #[doc = "Bit 8 - CH0 Data Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0uf(&mut self) -> Ch0ufW<IenSpec> {
         Ch0ufW::new(self, 8)
     }
     #[doc = "Bit 9 - CH1 Data Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1uf(&mut self) -> Ch1ufW<IenSpec> {
         Ch1ufW::new(self, 9)
     }
     #[doc = "Bit 18 - ABUS Allocation Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn abusallocerr(&mut self) -> AbusallocerrW<IenSpec> {
         AbusallocerrW::new(self, 18)
     }
     #[doc = "Bit 20 - CH0 Data Valid Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0dvl(&mut self) -> Ch0dvlW<IenSpec> {
         Ch0dvlW::new(self, 20)
     }
     #[doc = "Bit 21 - CH1 Data Valid Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1dvl(&mut self) -> Ch1dvlW<IenSpec> {
         Ch1dvlW::new(self, 21)
     }
     #[doc = "Bit 26 - ABUS Input Conflict Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn abusinputconflict(&mut self) -> AbusinputconflictW<IenSpec> {
         AbusinputconflictW::new(self, 26)
     }
@@ -166,10 +156,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

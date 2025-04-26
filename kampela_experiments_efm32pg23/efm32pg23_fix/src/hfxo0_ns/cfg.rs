@@ -161,25 +161,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Crystal Oscillator Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CfgSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bit 2 - Enable XI Internal DC Bias"]
     #[inline(always)]
-    #[must_use]
     pub fn enxidcbiasana(&mut self) -> EnxidcbiasanaW<CfgSpec> {
         EnxidcbiasanaW::new(self, 2)
     }
     #[doc = "Bit 3 - Squaring Buffer Schmitt Trigger"]
     #[inline(always)]
-    #[must_use]
     pub fn sqbufschtrgana(&mut self) -> SqbufschtrganaW<CfgSpec> {
         SqbufschtrganaW::new(self, 3)
     }
     #[doc = "Bit 28 - Force Low Frequency Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn forcelftimeout(&mut self) -> ForcelftimeoutW<CfgSpec> {
         ForcelftimeoutW::new(self, 28)
     }
@@ -194,8 +190,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x1000_0000"]
 impl crate::Resettable for CfgSpec {

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for CaltempSpec {
 #[doc = "`read()` method returns [`caltemp::R`](R) reader structure"]
 impl crate::Readable for CaltempSpec {}
 #[doc = "`reset()` method sets CALTEMP to value 0"]
-impl crate::Resettable for CaltempSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CaltempSpec {}

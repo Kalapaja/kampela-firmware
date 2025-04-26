@@ -61,37 +61,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DTI CCn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcc0en(&mut self) -> Dtogcc0enW<DtogenSpec> {
         Dtogcc0enW::new(self, 0)
     }
     #[doc = "Bit 1 - DTI CCn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcc1en(&mut self) -> Dtogcc1enW<DtogenSpec> {
         Dtogcc1enW::new(self, 1)
     }
     #[doc = "Bit 2 - DTI CCn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcc2en(&mut self) -> Dtogcc2enW<DtogenSpec> {
         Dtogcc2enW::new(self, 2)
     }
     #[doc = "Bit 3 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcdti0en(&mut self) -> Dtogcdti0enW<DtogenSpec> {
         Dtogcdti0enW::new(self, 3)
     }
     #[doc = "Bit 4 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcdti1en(&mut self) -> Dtogcdti1enW<DtogenSpec> {
         Dtogcdti1enW::new(self, 4)
     }
     #[doc = "Bit 5 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtogcdti2en(&mut self) -> Dtogcdti2enW<DtogenSpec> {
         Dtogcdti2enW::new(self, 5)
     }
@@ -106,10 +100,6 @@ impl crate::Readable for DtogenSpec {}
 #[doc = "`write(|w| ..)` method takes [`dtogen::W`](W) writer structure"]
 impl crate::Writable for DtogenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTOGEN to value 0"]
-impl crate::Resettable for DtogenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtogenSpec {}

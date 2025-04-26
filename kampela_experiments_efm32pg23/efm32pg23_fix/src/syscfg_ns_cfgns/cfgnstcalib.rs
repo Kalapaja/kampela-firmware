@@ -83,19 +83,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:23 - Ten Milliseconds"]
     #[inline(always)]
-    #[must_use]
     pub fn tenms(&mut self) -> TenmsW<CfgnstcalibSpec> {
         TenmsW::new(self, 0)
     }
     #[doc = "Bit 24 - Skew"]
     #[inline(always)]
-    #[must_use]
     pub fn skew(&mut self) -> SkewW<CfgnstcalibSpec> {
         SkewW::new(self, 24)
     }
     #[doc = "Bit 25 - No Reference"]
     #[inline(always)]
-    #[must_use]
     pub fn noref(&mut self) -> NorefW<CfgnstcalibSpec> {
         NorefW::new(self, 25)
     }
@@ -110,8 +107,6 @@ impl crate::Readable for CfgnstcalibSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfgnstcalib::W`](W) writer structure"]
 impl crate::Writable for CfgnstcalibSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFGNSTCALIB to value 0x0100_4a37"]
 impl crate::Resettable for CfgnstcalibSpec {

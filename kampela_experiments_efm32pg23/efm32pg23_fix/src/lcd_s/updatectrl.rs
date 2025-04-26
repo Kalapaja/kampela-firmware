@@ -195,13 +195,11 @@ impl R {
 impl W {
     #[doc = "Bit 8 - Auto Load"]
     #[inline(always)]
-    #[must_use]
     pub fn autoload(&mut self) -> AutoloadW<UpdatectrlSpec> {
         AutoloadW::new(self, 8)
     }
     #[doc = "Bits 13:16 - Load Address"]
     #[inline(always)]
-    #[must_use]
     pub fn loadaddr(&mut self) -> LoadaddrW<UpdatectrlSpec> {
         LoadaddrW::new(self, 13)
     }
@@ -216,10 +214,6 @@ impl crate::Readable for UpdatectrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`updatectrl::W`](W) writer structure"]
 impl crate::Writable for UpdatectrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets UPDATECTRL to value 0"]
-impl crate::Resettable for UpdatectrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for UpdatectrlSpec {}

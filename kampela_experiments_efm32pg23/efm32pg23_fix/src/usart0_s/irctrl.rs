@@ -165,19 +165,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable IrDA Module"]
     #[inline(always)]
-    #[must_use]
     pub fn iren(&mut self) -> IrenW<IrctrlSpec> {
         IrenW::new(self, 0)
     }
     #[doc = "Bits 1:2 - IrDA TX Pulse Width"]
     #[inline(always)]
-    #[must_use]
     pub fn irpw(&mut self) -> IrpwW<IrctrlSpec> {
         IrpwW::new(self, 1)
     }
     #[doc = "Bit 3 - IrDA RX Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn irfilt(&mut self) -> IrfiltW<IrctrlSpec> {
         IrfiltW::new(self, 3)
     }
@@ -192,10 +189,6 @@ impl crate::Readable for IrctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`irctrl::W`](W) writer structure"]
 impl crate::Writable for IrctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRCTRL to value 0"]
-impl crate::Resettable for IrctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrctrlSpec {}

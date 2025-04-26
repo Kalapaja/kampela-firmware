@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - PPUNS Privilege Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ppunspriv(&mut self) -> PpunsprivW<NsifSpec> {
         PpunsprivW::new(self, 0)
     }
     #[doc = "Bit 2 - PPUNS Instruction Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ppunsinst(&mut self) -> PpunsinstW<NsifSpec> {
         PpunsinstW::new(self, 2)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for NsifSpec {}
 #[doc = "`write(|w| ..)` method takes [`nsif::W`](W) writer structure"]
 impl crate::Writable for NsifSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets NSIF to value 0"]
-impl crate::Resettable for NsifSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for NsifSpec {}

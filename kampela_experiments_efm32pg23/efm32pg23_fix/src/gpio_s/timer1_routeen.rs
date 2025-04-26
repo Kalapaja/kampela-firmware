@@ -61,37 +61,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CC0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn cc0pen(&mut self) -> Cc0penW<Timer1RouteenSpec> {
         Cc0penW::new(self, 0)
     }
     #[doc = "Bit 1 - CC1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn cc1pen(&mut self) -> Cc1penW<Timer1RouteenSpec> {
         Cc1penW::new(self, 1)
     }
     #[doc = "Bit 2 - CC2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn cc2pen(&mut self) -> Cc2penW<Timer1RouteenSpec> {
         Cc2penW::new(self, 2)
     }
     #[doc = "Bit 3 - CDTI0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ccc0pen(&mut self) -> Ccc0penW<Timer1RouteenSpec> {
         Ccc0penW::new(self, 3)
     }
     #[doc = "Bit 4 - CDTI1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ccc1pen(&mut self) -> Ccc1penW<Timer1RouteenSpec> {
         Ccc1penW::new(self, 4)
     }
     #[doc = "Bit 5 - CDTI2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ccc2pen(&mut self) -> Ccc2penW<Timer1RouteenSpec> {
         Ccc2penW::new(self, 5)
     }
@@ -106,10 +100,6 @@ impl crate::Readable for Timer1RouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`timer1_routeen::W`](W) writer structure"]
 impl crate::Writable for Timer1RouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMER1_ROUTEEN to value 0"]
-impl crate::Resettable for Timer1RouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Timer1RouteenSpec {}

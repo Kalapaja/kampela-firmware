@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - CDTI2 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Timer0Cdti2routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - CDTI2 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Timer0Cdti2routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Timer0Cdti2routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`timer0_cdti2route::W`](W) writer structure"]
 impl crate::Writable for Timer0Cdti2routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMER0_CDTI2ROUTE to value 0"]
-impl crate::Resettable for Timer0Cdti2routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Timer0Cdti2routeSpec {}

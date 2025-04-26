@@ -199,31 +199,26 @@ impl R {
 impl W {
     #[doc = "Bit 4 - Polynomial Select"]
     #[inline(always)]
-    #[must_use]
     pub fn polysel(&mut self) -> PolyselW<CtrlSpec> {
         PolyselW::new(self, 4)
     }
     #[doc = "Bit 8 - Byte Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn bytemode(&mut self) -> BytemodeW<CtrlSpec> {
         BytemodeW::new(self, 8)
     }
     #[doc = "Bit 9 - Byte-level Bit Reverse Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn bitreverse(&mut self) -> BitreverseW<CtrlSpec> {
         BitreverseW::new(self, 9)
     }
     #[doc = "Bit 10 - Byte Reverse Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn bytereverse(&mut self) -> BytereverseW<CtrlSpec> {
         BytereverseW::new(self, 10)
     }
     #[doc = "Bit 13 - Auto Init Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn autoinit(&mut self) -> AutoinitW<CtrlSpec> {
         AutoinitW::new(self, 13)
     }
@@ -238,10 +233,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

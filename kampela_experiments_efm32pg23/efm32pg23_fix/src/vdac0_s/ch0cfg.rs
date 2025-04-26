@@ -358,43 +358,36 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel 0 Conversion Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn convmode(&mut self) -> ConvmodeW<Ch0cfgSpec> {
         ConvmodeW::new(self, 0)
     }
     #[doc = "Bit 2 - Channel 0 Power Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn powermode(&mut self) -> PowermodeW<Ch0cfgSpec> {
         PowermodeW::new(self, 2)
     }
     #[doc = "Bits 4:6 - Channel 0 Trigger Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn trigmode(&mut self) -> TrigmodeW<Ch0cfgSpec> {
         TrigmodeW::new(self, 4)
     }
     #[doc = "Bits 8:9 - Channel 0 Refresh Source"]
     #[inline(always)]
-    #[must_use]
     pub fn refreshsource(&mut self) -> RefreshsourceW<Ch0cfgSpec> {
         RefreshsourceW::new(self, 8)
     }
     #[doc = "Bits 11:12 - Channel 0 FIFO Low Watermark"]
     #[inline(always)]
-    #[must_use]
     pub fn fifodvl(&mut self) -> FifodvlW<Ch0cfgSpec> {
         FifodvlW::new(self, 11)
     }
     #[doc = "Bit 14 - Channel 0 High Cap Load Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn highcaploaden(&mut self) -> HighcaploadenW<Ch0cfgSpec> {
         HighcaploadenW::new(self, 14)
     }
     #[doc = "Bit 16 - Channel 0 Keepwarm Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn keepwarm(&mut self) -> KeepwarmW<Ch0cfgSpec> {
         KeepwarmW::new(self, 16)
     }
@@ -409,8 +402,6 @@ impl crate::Readable for Ch0cfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch0cfg::W`](W) writer structure"]
 impl crate::Writable for Ch0cfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH0CFG to value 0x10"]
 impl crate::Resettable for Ch0cfgSpec {

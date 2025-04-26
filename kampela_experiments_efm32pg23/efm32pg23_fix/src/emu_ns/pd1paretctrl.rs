@@ -59,7 +59,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Disable PD1 Partial Retention"]
     #[inline(always)]
-    #[must_use]
     pub fn pd1paretdis(&mut self) -> Pd1paretdisW<Pd1paretctrlSpec> {
         Pd1paretdisW::new(self, 0)
     }
@@ -74,10 +73,6 @@ impl crate::Readable for Pd1paretctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`pd1paretctrl::W`](W) writer structure"]
 impl crate::Writable for Pd1paretctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PD1PARETCTRL to value 0"]
-impl crate::Resettable for Pd1paretctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Pd1paretctrlSpec {}

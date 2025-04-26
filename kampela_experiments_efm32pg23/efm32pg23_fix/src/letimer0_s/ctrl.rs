@@ -628,55 +628,46 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Repeat Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn repmode(&mut self) -> RepmodeW<CtrlSpec> {
         RepmodeW::new(self, 0)
     }
     #[doc = "Bits 2:3 - Underflow Output Action 0"]
     #[inline(always)]
-    #[must_use]
     pub fn ufoa0(&mut self) -> Ufoa0W<CtrlSpec> {
         Ufoa0W::new(self, 2)
     }
     #[doc = "Bits 4:5 - Underflow Output Action 1"]
     #[inline(always)]
-    #[must_use]
     pub fn ufoa1(&mut self) -> Ufoa1W<CtrlSpec> {
         Ufoa1W::new(self, 4)
     }
     #[doc = "Bit 6 - Output 0 Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn opol0(&mut self) -> Opol0W<CtrlSpec> {
         Opol0W::new(self, 6)
     }
     #[doc = "Bit 7 - Output 1 Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn opol1(&mut self) -> Opol1W<CtrlSpec> {
         Opol1W::new(self, 7)
     }
     #[doc = "Bit 8 - Buffered Top"]
     #[inline(always)]
-    #[must_use]
     pub fn buftop(&mut self) -> BuftopW<CtrlSpec> {
         BuftopW::new(self, 8)
     }
     #[doc = "Bit 9 - Compare Value 0 Is Top Value"]
     #[inline(always)]
-    #[must_use]
     pub fn cnttopen(&mut self) -> CnttopenW<CtrlSpec> {
         CnttopenW::new(self, 9)
     }
     #[doc = "Bit 12 - Debug Mode Run Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn debugrun(&mut self) -> DebugrunW<CtrlSpec> {
         DebugrunW::new(self, 12)
     }
     #[doc = "Bits 16:19 - Counter prescaler value"]
     #[inline(always)]
-    #[must_use]
     pub fn cntpresc(&mut self) -> CntprescW<CtrlSpec> {
         CntprescW::new(self, 16)
     }
@@ -691,10 +682,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

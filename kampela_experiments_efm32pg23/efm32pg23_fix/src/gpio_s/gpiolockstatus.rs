@@ -51,6 +51,4 @@ impl crate::RegisterSpec for GpiolockstatusSpec {
 #[doc = "`read()` method returns [`gpiolockstatus::R`](R) reader structure"]
 impl crate::Readable for GpiolockstatusSpec {}
 #[doc = "`reset()` method sets GPIOLOCKSTATUS to value 0"]
-impl crate::Resettable for GpiolockstatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for GpiolockstatusSpec {}

@@ -124,79 +124,66 @@ impl R {
 impl W {
     #[doc = "Bit 0 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif0(&mut self) -> Extif0W<IfSpec> {
         Extif0W::new(self, 0)
     }
     #[doc = "Bit 1 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif1(&mut self) -> Extif1W<IfSpec> {
         Extif1W::new(self, 1)
     }
     #[doc = "Bit 2 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif2(&mut self) -> Extif2W<IfSpec> {
         Extif2W::new(self, 2)
     }
     #[doc = "Bit 3 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif3(&mut self) -> Extif3W<IfSpec> {
         Extif3W::new(self, 3)
     }
     #[doc = "Bit 4 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif4(&mut self) -> Extif4W<IfSpec> {
         Extif4W::new(self, 4)
     }
     #[doc = "Bit 5 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif5(&mut self) -> Extif5W<IfSpec> {
         Extif5W::new(self, 5)
     }
     #[doc = "Bit 6 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif6(&mut self) -> Extif6W<IfSpec> {
         Extif6W::new(self, 6)
     }
     #[doc = "Bit 7 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif7(&mut self) -> Extif7W<IfSpec> {
         Extif7W::new(self, 7)
     }
     #[doc = "Bit 8 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif8(&mut self) -> Extif8W<IfSpec> {
         Extif8W::new(self, 8)
     }
     #[doc = "Bit 9 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif9(&mut self) -> Extif9W<IfSpec> {
         Extif9W::new(self, 9)
     }
     #[doc = "Bit 10 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif10(&mut self) -> Extif10W<IfSpec> {
         Extif10W::new(self, 10)
     }
     #[doc = "Bit 11 - External Pin Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn extif11(&mut self) -> Extif11W<IfSpec> {
         Extif11W::new(self, 11)
     }
     #[doc = "Bits 16:27 - EM4 wake up"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wu(&mut self) -> Em4wuW<IfSpec> {
         Em4wuW::new(self, 16)
     }
@@ -211,10 +198,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

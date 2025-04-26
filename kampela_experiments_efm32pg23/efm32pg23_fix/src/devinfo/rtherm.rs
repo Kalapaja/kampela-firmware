@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RthermSpec {
 #[doc = "`read()` method returns [`rtherm::R`](R) reader structure"]
 impl crate::Readable for RthermSpec {}
 #[doc = "`reset()` method sets RTHERM to value 0"]
-impl crate::Resettable for RthermSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RthermSpec {}

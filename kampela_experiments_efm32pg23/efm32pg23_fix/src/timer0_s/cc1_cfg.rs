@@ -323,37 +323,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - CC Channel Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<Cc1CfgSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bit 4 - Compare Output Initial State"]
     #[inline(always)]
-    #[must_use]
     pub fn coist(&mut self) -> CoistW<Cc1CfgSpec> {
         CoistW::new(self, 4)
     }
     #[doc = "Bits 17:18 - Input Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn insel(&mut self) -> InselW<Cc1CfgSpec> {
         InselW::new(self, 17)
     }
     #[doc = "Bit 19 - PRS Configuration"]
     #[inline(always)]
-    #[must_use]
     pub fn prsconf(&mut self) -> PrsconfW<Cc1CfgSpec> {
         PrsconfW::new(self, 19)
     }
     #[doc = "Bit 20 - Digital Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn filt(&mut self) -> FiltW<Cc1CfgSpec> {
         FiltW::new(self, 20)
     }
     #[doc = "Bit 21 - Input Capture FIFO watermark level"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwl(&mut self) -> IcfwlW<Cc1CfgSpec> {
         IcfwlW::new(self, 21)
     }
@@ -368,10 +362,6 @@ impl crate::Readable for Cc1CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cc1_cfg::W`](W) writer structure"]
 impl crate::Writable for Cc1CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CC1_CFG to value 0"]
-impl crate::Resettable for Cc1CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cc1CfgSpec {}

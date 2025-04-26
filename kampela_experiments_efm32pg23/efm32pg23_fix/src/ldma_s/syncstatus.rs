@@ -17,6 +17,4 @@ impl crate::RegisterSpec for SyncstatusSpec {
 #[doc = "`read()` method returns [`syncstatus::R`](R) reader structure"]
 impl crate::Readable for SyncstatusSpec {}
 #[doc = "`reset()` method sets SYNCSTATUS to value 0"]
-impl crate::Resettable for SyncstatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyncstatusSpec {}

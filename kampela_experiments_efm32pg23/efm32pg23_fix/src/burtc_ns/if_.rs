@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn of(&mut self) -> OfW<IfSpec> {
         OfW::new(self, 0)
     }
     #[doc = "Bit 1 - Compare Match Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn comp(&mut self) -> CompW<IfSpec> {
         CompW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

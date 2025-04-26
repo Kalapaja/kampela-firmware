@@ -422,55 +422,46 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Blink Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn blinken(&mut self) -> BlinkenW<BactrlSpec> {
         BlinkenW::new(self, 0)
     }
     #[doc = "Bit 1 - Blank Display"]
     #[inline(always)]
-    #[must_use]
     pub fn blank(&mut self) -> BlankW<BactrlSpec> {
         BlankW::new(self, 1)
     }
     #[doc = "Bit 2 - Animation Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn aen(&mut self) -> AenW<BactrlSpec> {
         AenW::new(self, 2)
     }
     #[doc = "Bits 3:4 - Animate Register A Shift Control"]
     #[inline(always)]
-    #[must_use]
     pub fn aregasc(&mut self) -> AregascW<BactrlSpec> {
         AregascW::new(self, 3)
     }
     #[doc = "Bits 5:6 - Animate Register B Shift Control"]
     #[inline(always)]
-    #[must_use]
     pub fn aregbsc(&mut self) -> AregbscW<BactrlSpec> {
         AregbscW::new(self, 5)
     }
     #[doc = "Bit 7 - Animate Logic Function Select"]
     #[inline(always)]
-    #[must_use]
     pub fn alogsel(&mut self) -> AlogselW<BactrlSpec> {
         AlogselW::new(self, 7)
     }
     #[doc = "Bit 8 - Frame Counter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fcen(&mut self) -> FcenW<BactrlSpec> {
         FcenW::new(self, 8)
     }
     #[doc = "Bit 9 - Display Counter Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn displaycnten(&mut self) -> DisplaycntenW<BactrlSpec> {
         DisplaycntenW::new(self, 9)
     }
     #[doc = "Bit 28 - Animation Location"]
     #[inline(always)]
-    #[must_use]
     pub fn aloc(&mut self) -> AlocW<BactrlSpec> {
         AlocW::new(self, 28)
     }
@@ -485,10 +476,6 @@ impl crate::Readable for BactrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`bactrl::W`](W) writer structure"]
 impl crate::Writable for BactrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BACTRL to value 0"]
-impl crate::Resettable for BactrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BactrlSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Cc0IcofSpec {
 #[doc = "`read()` method returns [`cc0_icof::R`](R) reader structure"]
 impl crate::Readable for Cc0IcofSpec {}
 #[doc = "`reset()` method sets CC0_ICOF to value 0"]
-impl crate::Resettable for Cc0IcofSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cc0IcofSpec {}

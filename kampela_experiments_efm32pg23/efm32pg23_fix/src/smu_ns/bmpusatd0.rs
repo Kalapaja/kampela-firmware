@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 2 - MCU LDMA secure mode"]
     #[inline(always)]
-    #[must_use]
     pub fn ldma(&mut self) -> LdmaW<Bmpusatd0Spec> {
         LdmaW::new(self, 2)
     }
     #[doc = "Bit 5 - SEEXTDMA secure mode"]
     #[inline(always)]
-    #[must_use]
     pub fn seextdma(&mut self) -> SeextdmaW<Bmpusatd0Spec> {
         SeextdmaW::new(self, 5)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for Bmpusatd0Spec {}
 #[doc = "`write(|w| ..)` method takes [`bmpusatd0::W`](W) writer structure"]
 impl crate::Writable for Bmpusatd0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BMPUSATD0 to value 0x3f"]
 impl crate::Resettable for Bmpusatd0Spec {

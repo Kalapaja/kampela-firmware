@@ -536,31 +536,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - TX Delay Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn txdelay(&mut self) -> TxdelayW<TimingcfgSpec> {
         TxdelayW::new(self, 0)
     }
     #[doc = "Bits 4:6 - Chip Select Setup"]
     #[inline(always)]
-    #[must_use]
     pub fn cssetup(&mut self) -> CssetupW<TimingcfgSpec> {
         CssetupW::new(self, 4)
     }
     #[doc = "Bits 8:10 - Chip Select Hold"]
     #[inline(always)]
-    #[must_use]
     pub fn cshold(&mut self) -> CsholdW<TimingcfgSpec> {
         CsholdW::new(self, 8)
     }
     #[doc = "Bits 12:14 - Inter-Character Spacing"]
     #[inline(always)]
-    #[must_use]
     pub fn ics(&mut self) -> IcsW<TimingcfgSpec> {
         IcsW::new(self, 12)
     }
     #[doc = "Bits 16:19 - Setup Window"]
     #[inline(always)]
-    #[must_use]
     pub fn setupwindow(&mut self) -> SetupwindowW<TimingcfgSpec> {
         SetupwindowW::new(self, 16)
     }
@@ -575,8 +570,6 @@ impl crate::Readable for TimingcfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`timingcfg::W`](W) writer structure"]
 impl crate::Writable for TimingcfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMINGCFG to value 0x0005_0000"]
 impl crate::Resettable for TimingcfgSpec {

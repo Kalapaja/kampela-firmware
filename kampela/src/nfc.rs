@@ -1,23 +1,51 @@
 //! NFC packet collector and decoder
 
+use lazy_static::lazy_static;
 use nfca_parser::frame::Frame;
 
 use kampela_system::{
-    PERIPHERALS, in_free, BUF_THIRD, CH_TIM0,
+    in_free, peripherals::ldma_ch_timer::NfcBuffer, CH_TIM0, NFC_BUF_THIRD, PERIPHERALS
 };
-use cortex_m::interrupt::free;
+use cortex_m::interrupt::{free, CriticalSection, Mutex};
 use substrate_crypto_light::sr25519::PUBLIC_LEN;
-use crate::BUFFER_STATUS;
-use efm32pg23_fix::{NVIC,Interrupt};
+use efm32pg23_fix::{Interrupt, Peripherals, NVIC};
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 use substrate_parser::compacts::find_compact;
 
-use core::ops::DerefMut;
+use core::{cell::RefCell, ops::DerefMut};
 
 pub const FREQ: u16 = 22;
-const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
+const NFC_MIN_VOLTAGE: i32 = 4000; //Affects initiation time, but lower values result in unreliable nfc reception
+
+lazy_static!{
+    #[derive(Debug)]
+    static ref BUFFER_STATUS: Mutex<RefCell<BufferStatus>> = Mutex::new(RefCell::new(BufferStatus::new()));
+}
+
+pub fn ldma_nfc_interrupt() {
+    free(|cs| {
+        let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
+        match buffer_status.pass_if_done7() {
+            Ok(_) => {
+                if !buffer_status.is_write_halted() {
+                    in_free(|peripherals| {
+                        peripherals
+                            .ldma_s
+                            .linkload()
+                            .write(|w_reg| unsafe {
+                                w_reg
+                                    .linkload()
+                                    .bits(1 << CH_TIM0)
+                            });
+                    });
+                }
+            },
+            Err(_) => {}
+        }
+    })
+}
 
 #[derive(Clone, Debug)]
 pub enum BufferStatus {
@@ -108,16 +136,16 @@ impl BufferStatus {
     }
 }
 
-pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[u16; 3*BUF_THIRD]) {
+pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[u16; 3*NFC_BUF_THIRD]) {
     let mut read_from = None;
     free(|cs| {
         let buffer_status = BUFFER_STATUS.borrow(cs).borrow();
         read_from = buffer_status.read_from();
     });
     let decoder_input = match read_from {
-        Some(BufRegion::Reg0) => &nfc_buffer[..BUF_THIRD],
-        Some(BufRegion::Reg1) => &nfc_buffer[BUF_THIRD..2*BUF_THIRD],
-        Some(BufRegion::Reg2) => &nfc_buffer[2*BUF_THIRD..],
+        Some(BufRegion::Reg0) => &nfc_buffer[..NFC_BUF_THIRD],
+        Some(BufRegion::Reg1) => &nfc_buffer[NFC_BUF_THIRD..2*NFC_BUF_THIRD],
+        Some(BufRegion::Reg2) => &nfc_buffer[2*NFC_BUF_THIRD..],
         None => return,
     };
     let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, |frame| frame_selected(&frame));
@@ -139,10 +167,8 @@ pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[
         let was_write_halted = buffer_status.is_write_halted();
         buffer_status.pass_read_done().expect("to do");
         if was_write_halted & ! buffer_status.is_write_halted() {
-            if let Some(ref mut peripherals) = PERIPHERALS.borrow(cs).borrow_mut().deref_mut() {
-                peripherals.ldma_s.linkload().write(|w_reg| unsafe { w_reg.linkload().bits(1 << CH_TIM0) });
-            }
-            else {panic!("can not borrow peripherals, buffer_status: {:?}, got some new frames", buffer_status)}
+            let mut peripherals = PERIPHERALS.borrow(cs).borrow_mut();
+            peripherals.ldma_s.linkload().write(|w_reg| unsafe { w_reg.linkload().bits(1 << CH_TIM0) });
         }
     });
 }
@@ -300,23 +326,23 @@ pub enum NfcStateOutput {
 }
 
 
-pub struct NfcReceiver <'a> {
-    buffer: &'a [u16; 3*BUF_THIRD],
+pub struct NfcReceiver {
+    buffer: NfcBuffer,
     collector: NfcCollector,
     state: NfcState,
 }
 
-impl <'a> NfcReceiver<'a> {
-    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD]) -> Self {
+impl NfcReceiver {
+    pub fn new() -> Self {
         Self {
-            buffer: nfc_buffer,
+            buffer: NfcBuffer::new(),
             collector: NfcCollector::new(),
             state: NfcState::Operational(0),
         }
     }
 
     fn process(&mut self) -> Option<Result<NfcResult, NfcError>> {
-        turn_nfc_collector_correctly(&mut self.collector, self.buffer);
+        turn_nfc_collector_correctly(&mut self.collector, &self.buffer);
 
         match self.collector {
             NfcCollector::Done(ref a) => {

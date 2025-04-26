@@ -74,13 +74,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DCDC/Bypass Mode Control"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CtrlSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bits 4:8 - Ton_max timeout control"]
     #[inline(always)]
-    #[must_use]
     pub fn ipktmaxctrl(&mut self) -> IpktmaxctrlW<CtrlSpec> {
         IpktmaxctrlW::new(self, 4)
     }
@@ -95,8 +93,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0100"]
 impl crate::Resettable for CtrlSpec {

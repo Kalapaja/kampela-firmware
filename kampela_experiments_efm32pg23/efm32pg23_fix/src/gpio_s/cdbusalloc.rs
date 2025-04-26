@@ -423,25 +423,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - CD Bus Even 0"]
     #[inline(always)]
-    #[must_use]
     pub fn cdeven0(&mut self) -> Cdeven0W<CdbusallocSpec> {
         Cdeven0W::new(self, 0)
     }
     #[doc = "Bits 8:11 - CD Bus Even 1"]
     #[inline(always)]
-    #[must_use]
     pub fn cdeven1(&mut self) -> Cdeven1W<CdbusallocSpec> {
         Cdeven1W::new(self, 8)
     }
     #[doc = "Bits 16:19 - CD Bus Odd 0"]
     #[inline(always)]
-    #[must_use]
     pub fn cdodd0(&mut self) -> Cdodd0W<CdbusallocSpec> {
         Cdodd0W::new(self, 16)
     }
     #[doc = "Bits 24:27 - CD Bus Odd 1"]
     #[inline(always)]
-    #[must_use]
     pub fn cdodd1(&mut self) -> Cdodd1W<CdbusallocSpec> {
         Cdodd1W::new(self, 24)
     }
@@ -456,10 +452,6 @@ impl crate::Readable for CdbusallocSpec {}
 #[doc = "`write(|w| ..)` method takes [`cdbusalloc::W`](W) writer structure"]
 impl crate::Writable for CdbusallocSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CDBUSALLOC to value 0"]
-impl crate::Resettable for CdbusallocSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CdbusallocSpec {}

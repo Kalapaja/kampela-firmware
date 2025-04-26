@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LFXO Ready Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rdy(&mut self) -> RdyW<IenSpec> {
         RdyW::new(self, 0)
     }
     #[doc = "Bit 1 - Rising Edge Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn posedge(&mut self) -> PosedgeW<IenSpec> {
         PosedgeW::new(self, 1)
     }
     #[doc = "Bit 2 - Falling Edge Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn negedge(&mut self) -> NegedgeW<IenSpec> {
         NegedgeW::new(self, 2)
     }
     #[doc = "Bit 3 - LFXO Failure Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fail(&mut self) -> FailW<IenSpec> {
         FailW::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

@@ -5,12 +5,12 @@ use crate::in_free;
 
 /// request single ADC measurement
 pub fn request_adc_measure() {
-    in_free(|peripherals|
+    in_free(|peripherals| {
         peripherals
             .iadc0_s
             .cmd()
-            .write(|w_reg| w_reg.singlestart().set_bit())
-    );
+            .write(|w_reg| w_reg.singlestart().set_bit());
+    });
 }
 
 /// read value from ADC

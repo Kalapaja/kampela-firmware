@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - PPUNS Privilege Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ppunspriv(&mut self) -> PpunsprivW<NsienSpec> {
         PpunsprivW::new(self, 0)
     }
     #[doc = "Bit 2 - PPUNS Instruction Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ppunsinst(&mut self) -> PpunsinstW<NsienSpec> {
         PpunsinstW::new(self, 2)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for NsienSpec {}
 #[doc = "`write(|w| ..)` method takes [`nsien::W`](W) writer structure"]
 impl crate::Writable for NsienSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets NSIEN to value 0"]
-impl crate::Resettable for NsienSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for NsienSpec {}

@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - WDOG Timeout Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tout(&mut self) -> ToutW<IenSpec> {
         ToutW::new(self, 0)
     }
     #[doc = "Bit 1 - WDOG Warning Timeout Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn warn(&mut self) -> WarnW<IenSpec> {
         WarnW::new(self, 1)
     }
     #[doc = "Bit 2 - WDOG Window Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn win(&mut self) -> WinW<IenSpec> {
         WinW::new(self, 2)
     }
     #[doc = "Bit 3 - PRS Src0 Event Missing Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pem0(&mut self) -> Pem0W<IenSpec> {
         Pem0W::new(self, 3)
     }
     #[doc = "Bit 4 - PRS Src1 Event Missing Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn pem1(&mut self) -> Pem1W<IenSpec> {
         Pem1W::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

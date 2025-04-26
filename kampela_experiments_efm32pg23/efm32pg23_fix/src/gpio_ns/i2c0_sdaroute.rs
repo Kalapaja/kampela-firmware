@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - SDA port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<I2c0SdarouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - SDA pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<I2c0SdarouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for I2c0SdarouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`i2c0_sdaroute::W`](W) writer structure"]
 impl crate::Writable for I2c0SdarouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets I2C0_SDAROUTE to value 0"]
-impl crate::Resettable for I2c0SdarouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for I2c0SdarouteSpec {}

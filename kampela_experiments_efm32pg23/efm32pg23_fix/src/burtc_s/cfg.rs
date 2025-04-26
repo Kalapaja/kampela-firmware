@@ -370,19 +370,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Debug Mode Run Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn debugrun(&mut self) -> DebugrunW<CfgSpec> {
         DebugrunW::new(self, 0)
     }
     #[doc = "Bit 1 - Compare Channel is Top Value"]
     #[inline(always)]
-    #[must_use]
     pub fn comptop(&mut self) -> ComptopW<CfgSpec> {
         ComptopW::new(self, 1)
     }
     #[doc = "Bits 4:7 - Counter prescaler value."]
     #[inline(always)]
-    #[must_use]
     pub fn cntpresc(&mut self) -> CntprescW<CfgSpec> {
         CntprescW::new(self, 4)
     }
@@ -397,10 +394,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgSpec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - OUT0 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<LetimerOut0routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - OUT0 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<LetimerOut0routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for LetimerOut0routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`letimer_out0route::W`](W) writer structure"]
 impl crate::Writable for LetimerOut0routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LETIMER_OUT0ROUTE to value 0"]
-impl crate::Resettable for LetimerOut0routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LetimerOut0routeSpec {}

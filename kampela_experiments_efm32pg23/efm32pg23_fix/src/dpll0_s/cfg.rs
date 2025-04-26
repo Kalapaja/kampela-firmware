@@ -92,25 +92,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Operating Mode Control"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CfgSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bit 1 - Reference Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn edgesel(&mut self) -> EdgeselW<CfgSpec> {
         EdgeselW::new(self, 1)
     }
     #[doc = "Bit 2 - Automatic Recovery Control"]
     #[inline(always)]
-    #[must_use]
     pub fn autorecover(&mut self) -> AutorecoverW<CfgSpec> {
         AutorecoverW::new(self, 2)
     }
     #[doc = "Bit 6 - Dither Enable Control"]
     #[inline(always)]
-    #[must_use]
     pub fn dithen(&mut self) -> DithenW<CfgSpec> {
         DithenW::new(self, 6)
     }
@@ -125,10 +121,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgSpec {}

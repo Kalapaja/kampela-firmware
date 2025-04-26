@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PortaDinSpec {
 #[doc = "`read()` method returns [`porta_din::R`](R) reader structure"]
 impl crate::Readable for PortaDinSpec {}
 #[doc = "`reset()` method sets PORTA_DIN to value 0"]
-impl crate::Resettable for PortaDinSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortaDinSpec {}

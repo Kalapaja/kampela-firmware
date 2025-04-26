@@ -24,6 +24,4 @@ impl crate::RegisterSpec for Eui48lSpec {
 #[doc = "`read()` method returns [`eui48l::R`](R) reader structure"]
 impl crate::Readable for Eui48lSpec {}
 #[doc = "`reset()` method sets EUI48L to value 0"]
-impl crate::Resettable for Eui48lSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Eui48lSpec {}

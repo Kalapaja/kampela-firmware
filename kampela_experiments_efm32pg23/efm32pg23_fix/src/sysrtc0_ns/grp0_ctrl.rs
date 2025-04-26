@@ -320,37 +320,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Compare 0 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp0en(&mut self) -> Cmp0enW<Grp0CtrlSpec> {
         Cmp0enW::new(self, 0)
     }
     #[doc = "Bit 1 - Compare 1 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp1en(&mut self) -> Cmp1enW<Grp0CtrlSpec> {
         Cmp1enW::new(self, 1)
     }
     #[doc = "Bit 2 - Capture 0 Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cap0en(&mut self) -> Cap0enW<Grp0CtrlSpec> {
         Cap0enW::new(self, 2)
     }
     #[doc = "Bits 3:5 - Compare 0 Compare Match Output Action"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp0cmoa(&mut self) -> Cmp0cmoaW<Grp0CtrlSpec> {
         Cmp0cmoaW::new(self, 3)
     }
     #[doc = "Bits 6:8 - Compare 1 Compare Match Output Action"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp1cmoa(&mut self) -> Cmp1cmoaW<Grp0CtrlSpec> {
         Cmp1cmoaW::new(self, 6)
     }
     #[doc = "Bits 9:10 - Capture 0 Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn cap0edge(&mut self) -> Cap0edgeW<Grp0CtrlSpec> {
         Cap0edgeW::new(self, 9)
     }
@@ -365,10 +359,6 @@ impl crate::Readable for Grp0CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`grp0_ctrl::W`](W) writer structure"]
 impl crate::Writable for Grp0CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GRP0_CTRL to value 0"]
-impl crate::Resettable for Grp0CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Grp0CtrlSpec {}

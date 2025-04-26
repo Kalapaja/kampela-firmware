@@ -735,49 +735,41 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel0(&mut self) -> Extipinsel0W<ExtipinsellSpec> {
         Extipinsel0W::new(self, 0)
     }
     #[doc = "Bits 4:5 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel1(&mut self) -> Extipinsel1W<ExtipinsellSpec> {
         Extipinsel1W::new(self, 4)
     }
     #[doc = "Bits 8:9 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel2(&mut self) -> Extipinsel2W<ExtipinsellSpec> {
         Extipinsel2W::new(self, 8)
     }
     #[doc = "Bits 12:13 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel3(&mut self) -> Extipinsel3W<ExtipinsellSpec> {
         Extipinsel3W::new(self, 12)
     }
     #[doc = "Bits 16:17 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel4(&mut self) -> Extipinsel4W<ExtipinsellSpec> {
         Extipinsel4W::new(self, 16)
     }
     #[doc = "Bits 20:21 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel5(&mut self) -> Extipinsel5W<ExtipinsellSpec> {
         Extipinsel5W::new(self, 20)
     }
     #[doc = "Bits 24:25 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel6(&mut self) -> Extipinsel6W<ExtipinsellSpec> {
         Extipinsel6W::new(self, 24)
     }
     #[doc = "Bits 28:29 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel7(&mut self) -> Extipinsel7W<ExtipinsellSpec> {
         Extipinsel7W::new(self, 28)
     }
@@ -792,10 +784,6 @@ impl crate::Readable for ExtipinsellSpec {}
 #[doc = "`write(|w| ..)` method takes [`extipinsell::W`](W) writer structure"]
 impl crate::Writable for ExtipinsellSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EXTIPINSELL to value 0"]
-impl crate::Resettable for ExtipinsellSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtipinsellSpec {}

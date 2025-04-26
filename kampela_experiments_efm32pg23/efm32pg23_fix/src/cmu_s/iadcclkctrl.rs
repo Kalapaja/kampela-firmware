@@ -85,7 +85,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Clock Select"]
     #[inline(always)]
-    #[must_use]
     pub fn clksel(&mut self) -> ClkselW<IadcclkctrlSpec> {
         ClkselW::new(self, 0)
     }
@@ -100,8 +99,6 @@ impl crate::Readable for IadcclkctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`iadcclkctrl::W`](W) writer structure"]
 impl crate::Writable for IadcclkctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IADCCLKCTRL to value 0x01"]
 impl crate::Resettable for IadcclkctrlSpec {

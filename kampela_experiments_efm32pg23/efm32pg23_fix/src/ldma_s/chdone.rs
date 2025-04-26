@@ -79,49 +79,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone0(&mut self) -> Chdone0W<ChdoneSpec> {
         Chdone0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone1(&mut self) -> Chdone1W<ChdoneSpec> {
         Chdone1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone2(&mut self) -> Chdone2W<ChdoneSpec> {
         Chdone2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone3(&mut self) -> Chdone3W<ChdoneSpec> {
         Chdone3W::new(self, 3)
     }
     #[doc = "Bit 4 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone4(&mut self) -> Chdone4W<ChdoneSpec> {
         Chdone4W::new(self, 4)
     }
     #[doc = "Bit 5 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone5(&mut self) -> Chdone5W<ChdoneSpec> {
         Chdone5W::new(self, 5)
     }
     #[doc = "Bit 6 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone6(&mut self) -> Chdone6W<ChdoneSpec> {
         Chdone6W::new(self, 6)
     }
     #[doc = "Bit 7 - DMA Channel Link done intr flag"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone7(&mut self) -> Chdone7W<ChdoneSpec> {
         Chdone7W::new(self, 7)
     }
@@ -136,10 +128,6 @@ impl crate::Readable for ChdoneSpec {}
 #[doc = "`write(|w| ..)` method takes [`chdone::W`](W) writer structure"]
 impl crate::Writable for ChdoneSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHDONE to value 0"]
-impl crate::Resettable for ChdoneSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChdoneSpec {}

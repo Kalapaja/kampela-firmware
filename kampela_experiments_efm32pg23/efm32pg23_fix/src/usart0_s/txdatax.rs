@@ -15,37 +15,31 @@ pub type RxenatW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bits 0:8 - TX Data"]
     #[inline(always)]
-    #[must_use]
     pub fn txdatax(&mut self) -> TxdataxW<TxdataxSpec> {
         TxdataxW::new(self, 0)
     }
     #[doc = "Bit 11 - Unblock RX After Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn ubrxat(&mut self) -> UbrxatW<TxdataxSpec> {
         UbrxatW::new(self, 11)
     }
     #[doc = "Bit 12 - Set TXTRI After Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn txtriat(&mut self) -> TxtriatW<TxdataxSpec> {
         TxtriatW::new(self, 12)
     }
     #[doc = "Bit 13 - Transmit Data As Break"]
     #[inline(always)]
-    #[must_use]
     pub fn txbreak(&mut self) -> TxbreakW<TxdataxSpec> {
         TxbreakW::new(self, 13)
     }
     #[doc = "Bit 14 - Clear TXEN After Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn txdisat(&mut self) -> TxdisatW<TxdataxSpec> {
         TxdisatW::new(self, 14)
     }
     #[doc = "Bit 15 - Enable RX After Transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn rxenat(&mut self) -> RxenatW<TxdataxSpec> {
         RxenatW::new(self, 15)
     }
@@ -58,10 +52,6 @@ impl crate::RegisterSpec for TxdataxSpec {
 #[doc = "`write(|w| ..)` method takes [`txdatax::W`](W) writer structure"]
 impl crate::Writable for TxdataxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TXDATAX to value 0"]
-impl crate::Resettable for TxdataxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxdataxSpec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - VREGVDD comparator enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vregincmpen(&mut self) -> VregincmpenW<VregvddcmpctrlSpec> {
         VregincmpenW::new(self, 0)
     }
     #[doc = "Bits 1:2 - VREGVDD comparator threshold programming"]
     #[inline(always)]
-    #[must_use]
     pub fn thressel(&mut self) -> ThresselW<VregvddcmpctrlSpec> {
         ThresselW::new(self, 1)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for VregvddcmpctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`vregvddcmpctrl::W`](W) writer structure"]
 impl crate::Writable for VregvddcmpctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets VREGVDDCMPCTRL to value 0x06"]
 impl crate::Resettable for VregvddcmpctrlSpec {

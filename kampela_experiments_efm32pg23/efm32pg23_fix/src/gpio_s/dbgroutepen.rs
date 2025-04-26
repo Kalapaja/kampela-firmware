@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Route Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn swclktckpen(&mut self) -> SwclktckpenW<DbgroutepenSpec> {
         SwclktckpenW::new(self, 0)
     }
     #[doc = "Bit 1 - Route Location 0"]
     #[inline(always)]
-    #[must_use]
     pub fn swdiotmspen(&mut self) -> SwdiotmspenW<DbgroutepenSpec> {
         SwdiotmspenW::new(self, 1)
     }
     #[doc = "Bit 2 - JTAG Test Debug Output Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tdopen(&mut self) -> TdopenW<DbgroutepenSpec> {
         TdopenW::new(self, 2)
     }
     #[doc = "Bit 3 - JTAG Test Debug Input Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tdipen(&mut self) -> TdipenW<DbgroutepenSpec> {
         TdipenW::new(self, 3)
     }
@@ -76,8 +72,6 @@ impl crate::Readable for DbgroutepenSpec {}
 #[doc = "`write(|w| ..)` method takes [`dbgroutepen::W`](W) writer structure"]
 impl crate::Writable for DbgroutepenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DBGROUTEPEN to value 0x0f"]
 impl crate::Resettable for DbgroutepenSpec {

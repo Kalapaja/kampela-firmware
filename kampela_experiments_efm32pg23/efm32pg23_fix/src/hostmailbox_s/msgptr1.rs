@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Pointer"]
     #[inline(always)]
-    #[must_use]
     pub fn ptr(&mut self) -> PtrW<Msgptr1Spec> {
         PtrW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Msgptr1Spec {}
 #[doc = "`write(|w| ..)` method takes [`msgptr1::W`](W) writer structure"]
 impl crate::Writable for Msgptr1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MSGPTR1 to value 0"]
-impl crate::Resettable for Msgptr1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Msgptr1Spec {}

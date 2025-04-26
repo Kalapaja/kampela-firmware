@@ -97,61 +97,51 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Bypass Switch Enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn bypsw(&mut self) -> BypswW<IfSpec> {
         BypswW::new(self, 0)
     }
     #[doc = "Bit 1 - DCDC Warmup Time Done"]
     #[inline(always)]
-    #[must_use]
     pub fn warm(&mut self) -> WarmW<IfSpec> {
         WarmW::new(self, 1)
     }
     #[doc = "Bit 2 - DCDC Running"]
     #[inline(always)]
-    #[must_use]
     pub fn running(&mut self) -> RunningW<IfSpec> {
         RunningW::new(self, 2)
     }
     #[doc = "Bit 3 - VREGIN below threshold"]
     #[inline(always)]
-    #[must_use]
     pub fn vreginlow(&mut self) -> VreginlowW<IfSpec> {
         VreginlowW::new(self, 3)
     }
     #[doc = "Bit 4 - VREGIN above threshold"]
     #[inline(always)]
-    #[must_use]
     pub fn vreginhigh(&mut self) -> VreginhighW<IfSpec> {
         VreginhighW::new(self, 4)
     }
     #[doc = "Bit 5 - DCDC in regulation"]
     #[inline(always)]
-    #[must_use]
     pub fn regulation(&mut self) -> RegulationW<IfSpec> {
         RegulationW::new(self, 5)
     }
     #[doc = "Bit 6 - Ton_max Timeout Reached"]
     #[inline(always)]
-    #[must_use]
     pub fn tmax(&mut self) -> TmaxW<IfSpec> {
         TmaxW::new(self, 6)
     }
     #[doc = "Bit 7 - EM4 Entry Request Error"]
     #[inline(always)]
-    #[must_use]
     pub fn em4err(&mut self) -> Em4errW<IfSpec> {
         Em4errW::new(self, 7)
     }
     #[doc = "Bit 8 - Entered Pulse Pairing mode"]
     #[inline(always)]
-    #[must_use]
     pub fn ppmode(&mut self) -> PpmodeW<IfSpec> {
         PpmodeW::new(self, 8)
     }
     #[doc = "Bit 9 - Entered PFMX mode"]
     #[inline(always)]
-    #[must_use]
     pub fn pfmxmode(&mut self) -> PfmxmodeW<IfSpec> {
         PfmxmodeW::new(self, 9)
     }
@@ -166,10 +156,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

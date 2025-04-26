@@ -165,19 +165,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable IrDA Module"]
     #[inline(always)]
-    #[must_use]
     pub fn irhfen(&mut self) -> IrhfenW<IrhfcfgSpec> {
         IrhfenW::new(self, 0)
     }
     #[doc = "Bits 1:2 - IrDA TX Pulse Width"]
     #[inline(always)]
-    #[must_use]
     pub fn irhfpw(&mut self) -> IrhfpwW<IrhfcfgSpec> {
         IrhfpwW::new(self, 1)
     }
     #[doc = "Bit 3 - IrDA RX Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn irhffilt(&mut self) -> IrhffiltW<IrhfcfgSpec> {
         IrhffiltW::new(self, 3)
     }
@@ -192,10 +189,6 @@ impl crate::Readable for IrhfcfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`irhfcfg::W`](W) writer structure"]
 impl crate::Writable for IrhfcfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IRHFCFG to value 0"]
-impl crate::Resettable for IrhfcfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IrhfcfgSpec {}

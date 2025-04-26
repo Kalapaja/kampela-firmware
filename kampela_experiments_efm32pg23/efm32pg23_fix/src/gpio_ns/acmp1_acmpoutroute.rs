@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - ACMPOUT port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Acmp1AcmpoutrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - ACMPOUT pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Acmp1AcmpoutrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Acmp1AcmpoutrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`acmp1_acmpoutroute::W`](W) writer structure"]
 impl crate::Writable for Acmp1AcmpoutrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ACMP1_ACMPOUTROUTE to value 0"]
-impl crate::Resettable for Acmp1AcmpoutrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Acmp1AcmpoutrouteSpec {}

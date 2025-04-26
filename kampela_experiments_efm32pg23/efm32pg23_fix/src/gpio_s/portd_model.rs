@@ -1489,37 +1489,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode0(&mut self) -> Mode0W<PortdModelSpec> {
         Mode0W::new(self, 0)
     }
     #[doc = "Bits 4:7 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode1(&mut self) -> Mode1W<PortdModelSpec> {
         Mode1W::new(self, 4)
     }
     #[doc = "Bits 8:11 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode2(&mut self) -> Mode2W<PortdModelSpec> {
         Mode2W::new(self, 8)
     }
     #[doc = "Bits 12:15 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode3(&mut self) -> Mode3W<PortdModelSpec> {
         Mode3W::new(self, 12)
     }
     #[doc = "Bits 16:19 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode4(&mut self) -> Mode4W<PortdModelSpec> {
         Mode4W::new(self, 16)
     }
     #[doc = "Bits 20:23 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode5(&mut self) -> Mode5W<PortdModelSpec> {
         Mode5W::new(self, 20)
     }
@@ -1534,10 +1528,6 @@ impl crate::Readable for PortdModelSpec {}
 #[doc = "`write(|w| ..)` method takes [`portd_model::W`](W) writer structure"]
 impl crate::Writable for PortdModelSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PORTD_MODEL to value 0"]
-impl crate::Resettable for PortdModelSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortdModelSpec {}

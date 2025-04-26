@@ -13,31 +13,26 @@ pub type Dtem23fcW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - DTI PRS0 Fault Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn dtprs0fc(&mut self) -> Dtprs0fcW<DtfaultcSpec> {
         Dtprs0fcW::new(self, 0)
     }
     #[doc = "Bit 1 - DTI PRS1 Fault Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn dtprs1fc(&mut self) -> Dtprs1fcW<DtfaultcSpec> {
         Dtprs1fcW::new(self, 1)
     }
     #[doc = "Bit 2 - DTI Debugger Fault Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn dtdbgfc(&mut self) -> DtdbgfcW<DtfaultcSpec> {
         DtdbgfcW::new(self, 2)
     }
     #[doc = "Bit 3 - DTI Lockup Fault Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn dtlockupfc(&mut self) -> DtlockupfcW<DtfaultcSpec> {
         DtlockupfcW::new(self, 3)
     }
     #[doc = "Bit 4 - DTI EM23 Fault Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn dtem23fc(&mut self) -> Dtem23fcW<DtfaultcSpec> {
         Dtem23fcW::new(self, 4)
     }
@@ -50,10 +45,6 @@ impl crate::RegisterSpec for DtfaultcSpec {
 #[doc = "`write(|w| ..)` method takes [`dtfaultc::W`](W) writer structure"]
 impl crate::Writable for DtfaultcSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTFAULTC to value 0"]
-impl crate::Resettable for DtfaultcSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtfaultcSpec {}

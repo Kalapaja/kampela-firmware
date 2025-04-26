@@ -65,7 +65,6 @@ impl R {
 impl W {
     #[doc = "Bit 0 - ICACHERAM Retention control"]
     #[inline(always)]
-    #[must_use]
     pub fn ramretnctrl(&mut self) -> RamretnctrlW<IcacheramretnctrlSpec> {
         RamretnctrlW::new(self, 0)
     }
@@ -80,10 +79,6 @@ impl crate::Readable for IcacheramretnctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`icacheramretnctrl::W`](W) writer structure"]
 impl crate::Writable for IcacheramretnctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ICACHERAMRETNCTRL to value 0"]
-impl crate::Resettable for IcacheramretnctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IcacheramretnctrlSpec {}

@@ -148,49 +148,41 @@ impl R {
 impl W {
     #[doc = "Bits 0:6 - Tuning Value"]
     #[inline(always)]
-    #[must_use]
     pub fn tuning(&mut self) -> TuningW<CalSpec> {
         TuningW::new(self, 0)
     }
     #[doc = "Bits 8:13 - Fine Tuning Value"]
     #[inline(always)]
-    #[must_use]
     pub fn finetuning(&mut self) -> FinetuningW<CalSpec> {
         FinetuningW::new(self, 8)
     }
     #[doc = "Bit 15 - LDO High Power Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn ldohp(&mut self) -> LdohpW<CalSpec> {
         LdohpW::new(self, 15)
     }
     #[doc = "Bits 16:20 - Frequency Range"]
     #[inline(always)]
-    #[must_use]
     pub fn freqrange(&mut self) -> FreqrangeW<CalSpec> {
         FreqrangeW::new(self, 16)
     }
     #[doc = "Bits 21:23 - Comparator Bias Current"]
     #[inline(always)]
-    #[must_use]
     pub fn cmpbias(&mut self) -> CmpbiasW<CalSpec> {
         CmpbiasW::new(self, 21)
     }
     #[doc = "Bits 24:25 - Locally Divide HFRCO Clock Output"]
     #[inline(always)]
-    #[must_use]
     pub fn clkdiv(&mut self) -> ClkdivW<CalSpec> {
         ClkdivW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Comparator Load Select"]
     #[inline(always)]
-    #[must_use]
     pub fn cmpsel(&mut self) -> CmpselW<CalSpec> {
         CmpselW::new(self, 26)
     }
     #[doc = "Bits 28:31 - Tempco Trim on Comparator Current"]
     #[inline(always)]
-    #[must_use]
     pub fn ireftc(&mut self) -> IreftcW<CalSpec> {
         IreftcW::new(self, 28)
     }
@@ -205,8 +197,6 @@ impl crate::Readable for CalSpec {}
 #[doc = "`write(|w| ..)` method takes [`cal::W`](W) writer structure"]
 impl crate::Writable for CalSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CAL to value 0xa868_9f7f"]
 impl crate::Resettable for CalSpec {

@@ -537,37 +537,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Intermediate Startup Core Bias Current"]
     #[inline(always)]
-    #[must_use]
     pub fn corebiasstartupi(&mut self) -> CorebiasstartupiW<XtalcfgSpec> {
         CorebiasstartupiW::new(self, 0)
     }
     #[doc = "Bits 6:11 - Startup Core Bias Current"]
     #[inline(always)]
-    #[must_use]
     pub fn corebiasstartup(&mut self) -> CorebiasstartupW<XtalcfgSpec> {
         CorebiasstartupW::new(self, 6)
     }
     #[doc = "Bits 12:15 - Startup Tuning Capacitance on XI"]
     #[inline(always)]
-    #[must_use]
     pub fn ctunexistartup(&mut self) -> CtunexistartupW<XtalcfgSpec> {
         CtunexistartupW::new(self, 12)
     }
     #[doc = "Bits 16:19 - Startup Tuning Capacitance on XO"]
     #[inline(always)]
-    #[must_use]
     pub fn ctunexostartup(&mut self) -> CtunexostartupW<XtalcfgSpec> {
         CtunexostartupW::new(self, 16)
     }
     #[doc = "Bits 20:23 - Steady State Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn timeoutsteady(&mut self) -> TimeoutsteadyW<XtalcfgSpec> {
         TimeoutsteadyW::new(self, 20)
     }
     #[doc = "Bits 24:27 - Core Bias LSB Change Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn timeoutcblsb(&mut self) -> TimeoutcblsbW<XtalcfgSpec> {
         TimeoutcblsbW::new(self, 24)
     }
@@ -582,8 +576,6 @@ impl crate::Readable for XtalcfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`xtalcfg::W`](W) writer structure"]
 impl crate::Writable for XtalcfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets XTALCFG to value 0x0bb0_0820"]
 impl crate::Resettable for XtalcfgSpec {

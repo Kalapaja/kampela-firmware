@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:8 - Frame Rate Divider"]
     #[inline(always)]
-    #[must_use]
     pub fn frdiv(&mut self) -> FrdivW<FramerateSpec> {
         FrdivW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for FramerateSpec {}
 #[doc = "`write(|w| ..)` method takes [`framerate::W`](W) writer structure"]
 impl crate::Writable for FramerateSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets FRAMERATE to value 0"]
-impl crate::Resettable for FramerateSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for FramerateSpec {}

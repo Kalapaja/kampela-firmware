@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Frame Counter"]
     #[inline(always)]
-    #[must_use]
     pub fn fc(&mut self) -> FcW<IfSpec> {
         FcW::new(self, 0)
     }
     #[doc = "Bit 1 - Display Update Event"]
     #[inline(always)]
-    #[must_use]
     pub fn display(&mut self) -> DisplayW<IfSpec> {
         DisplayW::new(self, 1)
     }
     #[doc = "Bit 2 - Synchronization is Done"]
     #[inline(always)]
-    #[must_use]
     pub fn syncbusydone(&mut self) -> SyncbusydoneW<IfSpec> {
         SyncbusydoneW::new(self, 2)
     }
@@ -61,10 +58,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

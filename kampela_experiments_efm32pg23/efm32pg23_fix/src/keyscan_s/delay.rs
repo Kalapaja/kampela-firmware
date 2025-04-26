@@ -748,19 +748,16 @@ impl R {
 impl W {
     #[doc = "Bits 8:11 - Scan Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn scandly(&mut self) -> ScandlyW<DelaySpec> {
         ScandlyW::new(self, 8)
     }
     #[doc = "Bits 16:19 - Debounce Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn debdly(&mut self) -> DebdlyW<DelaySpec> {
         DebdlyW::new(self, 16)
     }
     #[doc = "Bits 24:27 - Row stable Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn stabdly(&mut self) -> StabdlyW<DelaySpec> {
         StabdlyW::new(self, 24)
     }
@@ -775,10 +772,6 @@ impl crate::Readable for DelaySpec {}
 #[doc = "`write(|w| ..)` method takes [`delay::W`](W) writer structure"]
 impl crate::Writable for DelaySpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DELAY to value 0"]
-impl crate::Resettable for DelaySpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DelaySpec {}

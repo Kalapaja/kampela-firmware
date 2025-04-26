@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Mass Erase Lock"]
     #[inline(always)]
-    #[must_use]
     pub fn melockbit(&mut self) -> MelockbitW<MisclockwordSpec> {
         MelockbitW::new(self, 0)
     }
     #[doc = "Bit 4 - User Data Lock"]
     #[inline(always)]
-    #[must_use]
     pub fn udlockbit(&mut self) -> UdlockbitW<MisclockwordSpec> {
         UdlockbitW::new(self, 4)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for MisclockwordSpec {}
 #[doc = "`write(|w| ..)` method takes [`misclockword::W`](W) writer structure"]
 impl crate::Writable for MisclockwordSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets MISCLOCKWORD to value 0x11"]
 impl crate::Resettable for MisclockwordSpec {

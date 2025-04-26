@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - ADC Less Than or Equal to Threshold"]
     #[inline(always)]
-    #[must_use]
     pub fn adlt(&mut self) -> AdltW<CmpthrSpec> {
         AdltW::new(self, 0)
     }
     #[doc = "Bits 16:31 - ADC Greater Than or Equal to Threshold"]
     #[inline(always)]
-    #[must_use]
     pub fn adgt(&mut self) -> AdgtW<CmpthrSpec> {
         AdgtW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for CmpthrSpec {}
 #[doc = "`write(|w| ..)` method takes [`cmpthr::W`](W) writer structure"]
 impl crate::Writable for CmpthrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMPTHR to value 0"]
-impl crate::Resettable for CmpthrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmpthrSpec {}

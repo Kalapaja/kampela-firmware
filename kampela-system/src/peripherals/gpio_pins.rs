@@ -339,11 +339,11 @@ pub fn enable_touch_int_flag(gpio: &mut GpioS) {
         .modify(|r_reg, w_reg| unsafe { w_reg.extifall().bits(r_reg.extifall().bits() | (1 << 0)) });
     gpio
         .ien()
-        .write(|w_reg| w_reg.extien0().set_bit())
+        .write(|w_reg| w_reg.extien0().set_bit());
 }
 
 pub fn disable_touch_int_flag(gpio: &mut GpioS) {
     gpio
         .ien()
-        .write(|w_reg| w_reg.extien0().clear_bit())
+        .write(|w_reg| w_reg.extien0().clear_bit());
 }

@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LDMA portmap selection"]
     #[inline(always)]
-    #[must_use]
     pub fn ldmaportsel(&mut self) -> LdmaportselW<Dmem0portmapselSpec> {
         LdmaportselW::new(self, 0)
     }
     #[doc = "Bit 1 - SRWAES portmap selection"]
     #[inline(always)]
-    #[must_use]
     pub fn srwaesportsel(&mut self) -> SrwaesportselW<Dmem0portmapselSpec> {
         SrwaesportselW::new(self, 1)
     }
     #[doc = "Bit 2 - AHBSRW portmap selection"]
     #[inline(always)]
-    #[must_use]
     pub fn ahbsrwportsel(&mut self) -> AhbsrwportselW<Dmem0portmapselSpec> {
         AhbsrwportselW::new(self, 2)
     }
     #[doc = "Bit 3 - SRWECA0 portmap selection"]
     #[inline(always)]
-    #[must_use]
     pub fn srweca0portsel(&mut self) -> Srweca0portselW<Dmem0portmapselSpec> {
         Srweca0portselW::new(self, 3)
     }
     #[doc = "Bit 4 - SRWECA1 portmap selection"]
     #[inline(always)]
-    #[must_use]
     pub fn srweca1portsel(&mut self) -> Srweca1portselW<Dmem0portmapselSpec> {
         Srweca1portselW::new(self, 4)
     }
@@ -91,8 +86,6 @@ impl crate::Readable for Dmem0portmapselSpec {}
 #[doc = "`write(|w| ..)` method takes [`dmem0portmapsel::W`](W) writer structure"]
 impl crate::Writable for Dmem0portmapselSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMEM0PORTMAPSEL to value 0x13"]
 impl crate::Resettable for Dmem0portmapselSpec {

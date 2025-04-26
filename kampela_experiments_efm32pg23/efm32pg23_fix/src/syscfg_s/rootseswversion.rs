@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - SW Version"]
     #[inline(always)]
-    #[must_use]
     pub fn swversion(&mut self) -> SwversionW<RootseswversionSpec> {
         SwversionW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for RootseswversionSpec {}
 #[doc = "`write(|w| ..)` method takes [`rootseswversion::W`](W) writer structure"]
 impl crate::Writable for RootseswversionSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROOTSESWVERSION to value 0"]
-impl crate::Resettable for RootseswversionSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RootseswversionSpec {}

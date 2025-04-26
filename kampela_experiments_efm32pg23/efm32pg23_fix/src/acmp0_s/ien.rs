@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Rising edge interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rise(&mut self) -> RiseW<IenSpec> {
         RiseW::new(self, 0)
     }
     #[doc = "Bit 1 - Falling edge interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fall(&mut self) -> FallW<IenSpec> {
         FallW::new(self, 1)
     }
     #[doc = "Bit 2 - ACMP ready interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn acmprdy(&mut self) -> AcmprdyW<IenSpec> {
         AcmprdyW::new(self, 2)
     }
     #[doc = "Bit 3 - Input conflict interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn inputconflict(&mut self) -> InputconflictW<IenSpec> {
         InputconflictW::new(self, 3)
     }
     #[doc = "Bit 4 - Port allocation error interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn portallocerr(&mut self) -> PortallocerrW<IenSpec> {
         PortallocerrW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

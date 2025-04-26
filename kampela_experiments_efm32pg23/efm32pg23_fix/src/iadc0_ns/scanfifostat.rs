@@ -17,6 +17,4 @@ impl crate::RegisterSpec for ScanfifostatSpec {
 #[doc = "`read()` method returns [`scanfifostat::R`](R) reader structure"]
 impl crate::Readable for ScanfifostatSpec {}
 #[doc = "`reset()` method sets SCANFIFOSTAT to value 0"]
-impl crate::Resettable for ScanfifostatSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ScanfifostatSpec {}

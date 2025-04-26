@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Compare Match 0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn comp0(&mut self) -> Comp0W<IenSpec> {
         Comp0W::new(self, 0)
     }
     #[doc = "Bit 1 - Compare Match 1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn comp1(&mut self) -> Comp1W<IenSpec> {
         Comp1W::new(self, 1)
     }
     #[doc = "Bit 2 - Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn uf(&mut self) -> UfW<IenSpec> {
         UfW::new(self, 2)
     }
     #[doc = "Bit 3 - Repeat Counter 0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rep0(&mut self) -> Rep0W<IenSpec> {
         Rep0W::new(self, 3)
     }
     #[doc = "Bit 4 - Repeat Counter 1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rep1(&mut self) -> Rep1W<IenSpec> {
         Rep1W::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

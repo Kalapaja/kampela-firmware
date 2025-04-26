@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - No Key was pressed"]
     #[inline(always)]
-    #[must_use]
     pub fn nokey(&mut self) -> NokeyW<IenSpec> {
         NokeyW::new(self, 0)
     }
     #[doc = "Bit 1 - A Key was pressed"]
     #[inline(always)]
-    #[must_use]
     pub fn key(&mut self) -> KeyW<IenSpec> {
         KeyW::new(self, 1)
     }
     #[doc = "Bit 2 - Completed Scanning"]
     #[inline(always)]
-    #[must_use]
     pub fn scanned(&mut self) -> ScannedW<IenSpec> {
         ScannedW::new(self, 2)
     }
     #[doc = "Bit 3 - Wake up"]
     #[inline(always)]
-    #[must_use]
     pub fn wakeup(&mut self) -> WakeupW<IenSpec> {
         WakeupW::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DECBOD enable"]
     #[inline(always)]
-    #[must_use]
     pub fn decboden(&mut self) -> DecbodenW<DecbodSpec> {
         DecbodenW::new(self, 0)
     }
     #[doc = "Bit 1 - DECBOD Mask"]
     #[inline(always)]
-    #[must_use]
     pub fn decbodmask(&mut self) -> DecbodmaskW<DecbodSpec> {
         DecbodmaskW::new(self, 1)
     }
     #[doc = "Bit 4 - Over Voltage Monitor enable"]
     #[inline(always)]
-    #[must_use]
     pub fn decovmboden(&mut self) -> DecovmbodenW<DecbodSpec> {
         DecovmbodenW::new(self, 4)
     }
     #[doc = "Bit 5 - Over Voltage Monitor Mask"]
     #[inline(always)]
-    #[must_use]
     pub fn decovmbodmask(&mut self) -> DecovmbodmaskW<DecbodSpec> {
         DecovmbodmaskW::new(self, 5)
     }
@@ -76,8 +72,6 @@ impl crate::Readable for DecbodSpec {}
 #[doc = "`write(|w| ..)` method takes [`decbod::W`](W) writer structure"]
 impl crate::Writable for DecbodSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DECBOD to value 0x22"]
 impl crate::Resettable for DecbodSpec {

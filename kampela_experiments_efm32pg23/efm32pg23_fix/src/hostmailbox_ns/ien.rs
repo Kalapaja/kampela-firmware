@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Mailbox Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxien0(&mut self) -> Mboxien0W<IenSpec> {
         Mboxien0W::new(self, 0)
     }
     #[doc = "Bit 1 - Mailbox Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxien1(&mut self) -> Mboxien1W<IenSpec> {
         Mboxien1W::new(self, 1)
     }
     #[doc = "Bit 2 - Mailbox Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxien2(&mut self) -> Mboxien2W<IenSpec> {
         Mboxien2W::new(self, 2)
     }
     #[doc = "Bit 3 - Mailbox Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxien3(&mut self) -> Mboxien3W<IenSpec> {
         Mboxien3W::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

@@ -5,7 +5,6 @@ pub type InputdatabyteW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - Input Data for 8-bit"]
     #[inline(always)]
-    #[must_use]
     pub fn inputdatabyte(&mut self) -> InputdatabyteW<InputdatabyteSpec> {
         InputdatabyteW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for InputdatabyteSpec {
 #[doc = "`write(|w| ..)` method takes [`inputdatabyte::W`](W) writer structure"]
 impl crate::Writable for InputdatabyteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INPUTDATABYTE to value 0"]
-impl crate::Resettable for InputdatabyteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for InputdatabyteSpec {}

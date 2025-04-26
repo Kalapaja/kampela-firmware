@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - ASYNCTRIG async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerVdac0Asynctrigch1Spec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerVdac0Asynctrigch1Spec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_vdac0_asynctrigch1::W`](W) writer structure"]
 impl crate::Writable for ConsumerVdac0Asynctrigch1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_VDAC0_ASYNCTRIGCH1 to value 0"]
-impl crate::Resettable for ConsumerVdac0Asynctrigch1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerVdac0Asynctrigch1Spec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Configure Filter Length for Inputs S0IN"]
     #[inline(always)]
-    #[must_use]
     pub fn filtlen(&mut self) -> FiltlenW<OvsctrlSpec> {
         FiltlenW::new(self, 0)
     }
     #[doc = "Bit 12 - Flutter Remove"]
     #[inline(always)]
-    #[must_use]
     pub fn flutterrm(&mut self) -> FlutterrmW<OvsctrlSpec> {
         FlutterrmW::new(self, 12)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for OvsctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ovsctrl::W`](W) writer structure"]
 impl crate::Writable for OvsctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets OVSCTRL to value 0"]
-impl crate::Resettable for OvsctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for OvsctrlSpec {}

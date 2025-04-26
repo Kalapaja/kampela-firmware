@@ -20,19 +20,20 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::devices::display_transmission::{
+use crate::{devices::display_transmission::{
     display_is_busy_cs,
     epaper_deep_sleep,
     epaper_hw_init_cs,
     epaper_reset,
     epaper_write_command,
     epaper_write_data
-};
+}, draw::PixelBuffer, peripherals::usart::init_usart};
 use crate::draw::FrameBuffer;
 //**** Debug stuff ****//
 
 /// Emergency debug function that spits out errors
 pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
+    init_usart(peripherals);
     epaper_hw_init_cs(peripherals);
     make_text(peripherals, &text);
     delay(10000000);
@@ -41,7 +42,7 @@ pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
 
 /// see this <https://github.com/embedded-graphics/embedded-graphics/issues/716>
 fn make_text(peripherals: &mut Peripherals, text: &str) {
-    let mut buffer = Box::new(FrameBuffer::new_white());
+    let mut buffer = Box::new(PixelBuffer::new_white());
     let to_print = TextToPrint{line: text};
     to_print.draw(buffer.as_mut()).unwrap();
     buffer.apply(peripherals);
@@ -68,7 +69,7 @@ impl Drawable for TextToPrint<'_> {
             .alignment(HorizontalAlignment::Left)
             .paragraph_spacing(5)
             .build();
-        let bounds = Rectangle::new(Point::zero(), Size::new(SCREEN_SIZE_X, 0));
+        let bounds = Rectangle::new(Point::new(0, 6), Size::new(SCREEN_SIZE_X, 0));
         TextBox::with_textbox_style(self.line, bounds, character_style, textbox_style).draw(target)?;
         Ok(())
     }

@@ -102,92 +102,77 @@ impl RegisterBlock {
         &self.rootseswversion
     }
 }
-#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`]
-module"]
+#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
 #[doc(alias = "IPVERSION")]
 pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "No Description"]
 pub mod ipversion;
-#[doc = "IF (rw) register accessor: Read to get system status.\n\nYou can [`read`](crate::Reg::read) this register and get [`if_::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_`]
-module"]
+#[doc = "IF (rw) register accessor: Read to get system status.\n\nYou can [`read`](crate::Reg::read) this register and get [`if_::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_`] module"]
 #[doc(alias = "IF")]
 pub type If = crate::Reg<if_::IfSpec>;
 #[doc = "Read to get system status."]
 pub mod if_;
-#[doc = "IEN (rw) register accessor: Write to enable interrupts.\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`]
-module"]
+#[doc = "IEN (rw) register accessor: Write to enable interrupts.\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`] module"]
 #[doc(alias = "IEN")]
 pub type Ien = crate::Reg<ien::IenSpec>;
 #[doc = "Write to enable interrupts."]
 pub mod ien;
-#[doc = "CHIPREVHW (rw) register accessor: Read to get the hard-wired chip revision.\n\nYou can [`read`](crate::Reg::read) this register and get [`chiprevhw::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chiprevhw::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chiprevhw`]
-module"]
+#[doc = "CHIPREVHW (rw) register accessor: Read to get the hard-wired chip revision.\n\nYou can [`read`](crate::Reg::read) this register and get [`chiprevhw::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chiprevhw::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chiprevhw`] module"]
 #[doc(alias = "CHIPREVHW")]
 pub type Chiprevhw = crate::Reg<chiprevhw::ChiprevhwSpec>;
 #[doc = "Read to get the hard-wired chip revision."]
 pub mod chiprevhw;
-#[doc = "CHIPREV (rw) register accessor: Read to get the chip revision programmed by feature configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`chiprev::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chiprev::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chiprev`]
-module"]
+#[doc = "CHIPREV (rw) register accessor: Read to get the chip revision programmed by feature configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`chiprev::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chiprev::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@chiprev`] module"]
 #[doc(alias = "CHIPREV")]
 pub type Chiprev = crate::Reg<chiprev::ChiprevSpec>;
 #[doc = "Read to get the chip revision programmed by feature configuration."]
 pub mod chiprev;
-#[doc = "CFGSYSTIC (rw) register accessor: Configure the source of the system tick for the M33.\n\nYou can [`read`](crate::Reg::read) this register and get [`cfgsystic::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfgsystic::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfgsystic`]
-module"]
+#[doc = "CFGSYSTIC (rw) register accessor: Configure the source of the system tick for the M33.\n\nYou can [`read`](crate::Reg::read) this register and get [`cfgsystic::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfgsystic::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfgsystic`] module"]
 #[doc(alias = "CFGSYSTIC")]
 pub type Cfgsystic = crate::Reg<cfgsystic::CfgsysticSpec>;
 #[doc = "Configure the source of the system tick for the M33."]
 pub mod cfgsystic;
-#[doc = "CTRL (rw) register accessor: Configure to provide general RAM configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`]
-module"]
+#[doc = "CTRL (rw) register accessor: Configure to provide general RAM configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`] module"]
 #[doc(alias = "CTRL")]
 pub type Ctrl = crate::Reg<ctrl::CtrlSpec>;
 #[doc = "Configure to provide general RAM configuration."]
 pub mod ctrl;
-#[doc = "DMEM0RETNCTRL (rw) register accessor: Configure to provide general RAM retention configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`dmem0retnctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmem0retnctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmem0retnctrl`]
-module"]
+#[doc = "DMEM0RETNCTRL (rw) register accessor: Configure to provide general RAM retention configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`dmem0retnctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmem0retnctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmem0retnctrl`] module"]
 #[doc(alias = "DMEM0RETNCTRL")]
 pub type Dmem0retnctrl = crate::Reg<dmem0retnctrl::Dmem0retnctrlSpec>;
 #[doc = "Configure to provide general RAM retention configuration."]
 pub mod dmem0retnctrl;
-#[doc = "RAMBIASCONF (rw) register accessor: Configure RAM bias configure bits.\n\nYou can [`read`](crate::Reg::read) this register and get [`rambiasconf::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rambiasconf::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rambiasconf`]
-module"]
+#[doc = "RAMBIASCONF (rw) register accessor: Configure RAM bias configure bits.\n\nYou can [`read`](crate::Reg::read) this register and get [`rambiasconf::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rambiasconf::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rambiasconf`] module"]
 #[doc(alias = "RAMBIASCONF")]
 pub type Rambiasconf = crate::Reg<rambiasconf::RambiasconfSpec>;
 #[doc = "Configure RAM bias configure bits."]
 pub mod rambiasconf;
-#[doc = "ICACHERAMRETNCTRL (rw) register accessor: Configure Host ICACHERAM retention configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`icacheramretnctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`icacheramretnctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@icacheramretnctrl`]
-module"]
+#[doc = "ICACHERAMRETNCTRL (rw) register accessor: Configure Host ICACHERAM retention configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`icacheramretnctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`icacheramretnctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@icacheramretnctrl`] module"]
 #[doc(alias = "ICACHERAMRETNCTRL")]
 pub type Icacheramretnctrl = crate::Reg<icacheramretnctrl::IcacheramretnctrlSpec>;
 #[doc = "Configure Host ICACHERAM retention configuration."]
 pub mod icacheramretnctrl;
-#[doc = "DMEM0PORTMAPSEL (rw) register accessor: Configure DMEM0 port remap selection.\n\nYou can [`read`](crate::Reg::read) this register and get [`dmem0portmapsel::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmem0portmapsel::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmem0portmapsel`]
-module"]
+#[doc = "DMEM0PORTMAPSEL (rw) register accessor: Configure DMEM0 port remap selection.\n\nYou can [`read`](crate::Reg::read) this register and get [`dmem0portmapsel::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dmem0portmapsel::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dmem0portmapsel`] module"]
 #[doc(alias = "DMEM0PORTMAPSEL")]
 pub type Dmem0portmapsel = crate::Reg<dmem0portmapsel::Dmem0portmapselSpec>;
 #[doc = "Configure DMEM0 port remap selection."]
 pub mod dmem0portmapsel;
-#[doc = "ROOTDATA0 (rw) register accessor: Generic data space for user to pass to root, e.g., address of struct in mem\n\nYou can [`read`](crate::Reg::read) this register and get [`rootdata0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootdata0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootdata0`]
-module"]
+#[doc = "ROOTDATA0 (rw) register accessor: Generic data space for user to pass to root, e.g., address of struct in mem\n\nYou can [`read`](crate::Reg::read) this register and get [`rootdata0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootdata0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootdata0`] module"]
 #[doc(alias = "ROOTDATA0")]
 pub type Rootdata0 = crate::Reg<rootdata0::Rootdata0Spec>;
 #[doc = "Generic data space for user to pass to root, e.g., address of struct in mem"]
 pub mod rootdata0;
-#[doc = "ROOTDATA1 (rw) register accessor: Generic data space for user to pass to root, e.g., address of struct in mem\n\nYou can [`read`](crate::Reg::read) this register and get [`rootdata1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootdata1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootdata1`]
-module"]
+#[doc = "ROOTDATA1 (rw) register accessor: Generic data space for user to pass to root, e.g., address of struct in mem\n\nYou can [`read`](crate::Reg::read) this register and get [`rootdata1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootdata1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootdata1`] module"]
 #[doc(alias = "ROOTDATA1")]
 pub type Rootdata1 = crate::Reg<rootdata1::Rootdata1Spec>;
 #[doc = "Generic data space for user to pass to root, e.g., address of struct in mem"]
 pub mod rootdata1;
-#[doc = "ROOTLOCKSTATUS (r) register accessor: This register returns the status of the SE managed locks.\n\nYou can [`read`](crate::Reg::read) this register and get [`rootlockstatus::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootlockstatus`]
-module"]
+#[doc = "ROOTLOCKSTATUS (r) register accessor: This register returns the status of the SE managed locks.\n\nYou can [`read`](crate::Reg::read) this register and get [`rootlockstatus::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootlockstatus`] module"]
 #[doc(alias = "ROOTLOCKSTATUS")]
 pub type Rootlockstatus = crate::Reg<rootlockstatus::RootlockstatusSpec>;
 #[doc = "This register returns the status of the SE managed locks."]
 pub mod rootlockstatus;
-#[doc = "ROOTSESWVERSION (rw) register accessor: SE Software version\n\nYou can [`read`](crate::Reg::read) this register and get [`rootseswversion::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootseswversion::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootseswversion`]
-module"]
+#[doc = "ROOTSESWVERSION (rw) register accessor: SE Software version\n\nYou can [`read`](crate::Reg::read) this register and get [`rootseswversion::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootseswversion::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rootseswversion`] module"]
 #[doc(alias = "ROOTSESWVERSION")]
 pub type Rootseswversion = crate::Reg<rootseswversion::RootseswversionSpec>;
 #[doc = "SE Software version"]

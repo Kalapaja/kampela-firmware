@@ -1174,169 +1174,141 @@ impl R {
 impl W {
     #[doc = "Bit 0 - USART Synchronous Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn sync(&mut self) -> SyncW<CtrlSpec> {
         SyncW::new(self, 0)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn loopbk(&mut self) -> LoopbkW<CtrlSpec> {
         LoopbkW::new(self, 1)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ccen(&mut self) -> CcenW<CtrlSpec> {
         CcenW::new(self, 2)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mpm(&mut self) -> MpmW<CtrlSpec> {
         MpmW::new(self, 3)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
-    #[must_use]
     pub fn mpab(&mut self) -> MpabW<CtrlSpec> {
         MpabW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Oversampling"]
     #[inline(always)]
-    #[must_use]
     pub fn ovs(&mut self) -> OvsW<CtrlSpec> {
         OvsW::new(self, 5)
     }
     #[doc = "Bit 8 - Clock Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn clkpol(&mut self) -> ClkpolW<CtrlSpec> {
         ClkpolW::new(self, 8)
     }
     #[doc = "Bit 9 - Clock Edge For Setup/Sample"]
     #[inline(always)]
-    #[must_use]
     pub fn clkpha(&mut self) -> ClkphaW<CtrlSpec> {
         ClkphaW::new(self, 9)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
-    #[must_use]
     pub fn msbf(&mut self) -> MsbfW<CtrlSpec> {
         MsbfW::new(self, 10)
     }
     #[doc = "Bit 11 - Action On Chip Select In Main Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn csma(&mut self) -> CsmaW<CtrlSpec> {
         CsmaW::new(self, 11)
     }
     #[doc = "Bit 12 - TX Buffer Interrupt Level"]
     #[inline(always)]
-    #[must_use]
     pub fn txbil(&mut self) -> TxbilW<CtrlSpec> {
         TxbilW::new(self, 12)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn rxinv(&mut self) -> RxinvW<CtrlSpec> {
         RxinvW::new(self, 13)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn txinv(&mut self) -> TxinvW<CtrlSpec> {
         TxinvW::new(self, 14)
     }
     #[doc = "Bit 15 - Chip Select Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn csinv(&mut self) -> CsinvW<CtrlSpec> {
         CsinvW::new(self, 15)
     }
     #[doc = "Bit 16 - Automatic Chip Select"]
     #[inline(always)]
-    #[must_use]
     pub fn autocs(&mut self) -> AutocsW<CtrlSpec> {
         AutocsW::new(self, 16)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
-    #[must_use]
     pub fn autotri(&mut self) -> AutotriW<CtrlSpec> {
         AutotriW::new(self, 17)
     }
     #[doc = "Bit 18 - SmartCard Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn scmode(&mut self) -> ScmodeW<CtrlSpec> {
         ScmodeW::new(self, 18)
     }
     #[doc = "Bit 19 - SmartCard Retransmit"]
     #[inline(always)]
-    #[must_use]
     pub fn scretrans(&mut self) -> ScretransW<CtrlSpec> {
         ScretransW::new(self, 19)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn skipperrf(&mut self) -> SkipperrfW<CtrlSpec> {
         SkipperrfW::new(self, 20)
     }
     #[doc = "Bit 21 - Bit 8 Default Value"]
     #[inline(always)]
-    #[must_use]
     pub fn bit8dv(&mut self) -> Bit8dvW<CtrlSpec> {
         Bit8dvW::new(self, 21)
     }
     #[doc = "Bit 22 - Halt DMA On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errsdma(&mut self) -> ErrsdmaW<CtrlSpec> {
         ErrsdmaW::new(self, 22)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errsrx(&mut self) -> ErrsrxW<CtrlSpec> {
         ErrsrxW::new(self, 23)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errstx(&mut self) -> ErrstxW<CtrlSpec> {
         ErrstxW::new(self, 24)
     }
     #[doc = "Bit 25 - Synchronous Secondary Setup Early"]
     #[inline(always)]
-    #[must_use]
     pub fn sssearly(&mut self) -> SssearlyW<CtrlSpec> {
         SssearlyW::new(self, 25)
     }
     #[doc = "Bit 28 - Byteswap In Double Accesses"]
     #[inline(always)]
-    #[must_use]
     pub fn byteswap(&mut self) -> ByteswapW<CtrlSpec> {
         ByteswapW::new(self, 28)
     }
     #[doc = "Bit 29 - Always Transmit When RX Not Full"]
     #[inline(always)]
-    #[must_use]
     pub fn autotx(&mut self) -> AutotxW<CtrlSpec> {
         AutotxW::new(self, 29)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn mvdis(&mut self) -> MvdisW<CtrlSpec> {
         MvdisW::new(self, 30)
     }
     #[doc = "Bit 31 - Synchronous Main Sample Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn smsdelay(&mut self) -> SmsdelayW<CtrlSpec> {
         SmsdelayW::new(self, 31)
     }
@@ -1351,10 +1323,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

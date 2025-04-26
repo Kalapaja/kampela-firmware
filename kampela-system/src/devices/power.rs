@@ -45,7 +45,7 @@ impl AsyncOperation for ADC {
                 self.threads.change(ADCState::Request);
             },
             ADCState::Request => {
-                if if_in_free(|peripherals| adc::read_int_flag(peripherals)) == Ok(true) {
+                if if_in_free(|peripherals| adc::read_int_flag(peripherals)) {
                     self.last_value = adc::read_adc();
                     adc::reset_int_flags();
                     adc::request_adc_measure();

@@ -423,25 +423,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - B Bus Even 0"]
     #[inline(always)]
-    #[must_use]
     pub fn beven0(&mut self) -> Beven0W<BbusallocSpec> {
         Beven0W::new(self, 0)
     }
     #[doc = "Bits 8:11 - B Bus Even 1"]
     #[inline(always)]
-    #[must_use]
     pub fn beven1(&mut self) -> Beven1W<BbusallocSpec> {
         Beven1W::new(self, 8)
     }
     #[doc = "Bits 16:19 - B Bus Odd 0"]
     #[inline(always)]
-    #[must_use]
     pub fn bodd0(&mut self) -> Bodd0W<BbusallocSpec> {
         Bodd0W::new(self, 16)
     }
     #[doc = "Bits 24:27 - B Bus Odd 1"]
     #[inline(always)]
-    #[must_use]
     pub fn bodd1(&mut self) -> Bodd1W<BbusallocSpec> {
         Bodd1W::new(self, 24)
     }
@@ -456,10 +452,6 @@ impl crate::Readable for BbusallocSpec {}
 #[doc = "`write(|w| ..)` method takes [`bbusalloc::W`](W) writer structure"]
 impl crate::Writable for BbusallocSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BBUSALLOC to value 0"]
-impl crate::Resettable for BbusallocSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BbusallocSpec {}

@@ -24,6 +24,4 @@ impl crate::RegisterSpec for Iadc0hispdoffsetcal0Spec {
 #[doc = "`read()` method returns [`iadc0hispdoffsetcal0::R`](R) reader structure"]
 impl crate::Readable for Iadc0hispdoffsetcal0Spec {}
 #[doc = "`reset()` method sets IADC0HISPDOFFSETCAL0 to value 0"]
-impl crate::Resettable for Iadc0hispdoffsetcal0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Iadc0hispdoffsetcal0Spec {}

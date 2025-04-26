@@ -98,7 +98,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - DMEM0 blockset retention control"]
     #[inline(always)]
-    #[must_use]
     pub fn ramretnctrl(&mut self) -> RamretnctrlW<Dmem0retnctrlSpec> {
         RamretnctrlW::new(self, 0)
     }
@@ -113,10 +112,6 @@ impl crate::Readable for Dmem0retnctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`dmem0retnctrl::W`](W) writer structure"]
 impl crate::Writable for Dmem0retnctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DMEM0RETNCTRL to value 0"]
-impl crate::Resettable for Dmem0retnctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Dmem0retnctrlSpec {}

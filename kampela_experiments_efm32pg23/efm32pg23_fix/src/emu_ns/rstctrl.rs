@@ -355,37 +355,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable WDOG0 reset"]
     #[inline(always)]
-    #[must_use]
     pub fn wdog0rmode(&mut self) -> Wdog0rmodeW<RstctrlSpec> {
         Wdog0rmodeW::new(self, 0)
     }
     #[doc = "Bit 2 - Enable M33 System reset"]
     #[inline(always)]
-    #[must_use]
     pub fn sysrmode(&mut self) -> SysrmodeW<RstctrlSpec> {
         SysrmodeW::new(self, 2)
     }
     #[doc = "Bit 3 - Enable M33 Lockup reset"]
     #[inline(always)]
-    #[must_use]
     pub fn lockuprmode(&mut self) -> LockuprmodeW<RstctrlSpec> {
         LockuprmodeW::new(self, 3)
     }
     #[doc = "Bit 6 - Enable AVDD BOD reset"]
     #[inline(always)]
-    #[must_use]
     pub fn avddbodrmode(&mut self) -> AvddbodrmodeW<RstctrlSpec> {
         AvddbodrmodeW::new(self, 6)
     }
     #[doc = "Bit 7 - Enable VDDIO0 BOD reset"]
     #[inline(always)]
-    #[must_use]
     pub fn iovdd0bodrmode(&mut self) -> Iovdd0bodrmodeW<RstctrlSpec> {
         Iovdd0bodrmodeW::new(self, 7)
     }
     #[doc = "Bit 10 - Enable DECBOD reset"]
     #[inline(always)]
-    #[must_use]
     pub fn decbodrmode(&mut self) -> DecbodrmodeW<RstctrlSpec> {
         DecbodrmodeW::new(self, 10)
     }
@@ -400,8 +394,6 @@ impl crate::Readable for RstctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`rstctrl::W`](W) writer structure"]
 impl crate::Writable for RstctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RSTCTRL to value 0x0006_0407"]
 impl crate::Resettable for RstctrlSpec {

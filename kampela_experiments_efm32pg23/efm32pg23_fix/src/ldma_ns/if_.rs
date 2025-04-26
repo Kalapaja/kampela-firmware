@@ -88,55 +88,46 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done0(&mut self) -> Done0W<IfSpec> {
         Done0W::new(self, 0)
     }
     #[doc = "Bit 1 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done1(&mut self) -> Done1W<IfSpec> {
         Done1W::new(self, 1)
     }
     #[doc = "Bit 2 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done2(&mut self) -> Done2W<IfSpec> {
         Done2W::new(self, 2)
     }
     #[doc = "Bit 3 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done3(&mut self) -> Done3W<IfSpec> {
         Done3W::new(self, 3)
     }
     #[doc = "Bit 4 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done4(&mut self) -> Done4W<IfSpec> {
         Done4W::new(self, 4)
     }
     #[doc = "Bit 5 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done5(&mut self) -> Done5W<IfSpec> {
         Done5W::new(self, 5)
     }
     #[doc = "Bit 6 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done6(&mut self) -> Done6W<IfSpec> {
         Done6W::new(self, 6)
     }
     #[doc = "Bit 7 - DMA Structure Operation Done"]
     #[inline(always)]
-    #[must_use]
     pub fn done7(&mut self) -> Done7W<IfSpec> {
         Done7W::new(self, 7)
     }
     #[doc = "Bit 31 - Error Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn error(&mut self) -> ErrorW<IfSpec> {
         ErrorW::new(self, 31)
     }
@@ -151,10 +142,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

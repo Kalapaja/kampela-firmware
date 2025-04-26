@@ -5,7 +5,6 @@ pub type SwreqW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - Software Transfer Requests"]
     #[inline(always)]
-    #[must_use]
     pub fn swreq(&mut self) -> SwreqW<SwreqSpec> {
         SwreqW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for SwreqSpec {
 #[doc = "`write(|w| ..)` method takes [`swreq::W`](W) writer structure"]
 impl crate::Writable for SwreqSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SWREQ to value 0"]
-impl crate::Resettable for SwreqSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SwreqSpec {}

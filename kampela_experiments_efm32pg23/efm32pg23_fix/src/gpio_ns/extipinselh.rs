@@ -371,25 +371,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel0(&mut self) -> Extipinsel0W<ExtipinselhSpec> {
         Extipinsel0W::new(self, 0)
     }
     #[doc = "Bits 4:5 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel1(&mut self) -> Extipinsel1W<ExtipinselhSpec> {
         Extipinsel1W::new(self, 4)
     }
     #[doc = "Bits 8:9 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel2(&mut self) -> Extipinsel2W<ExtipinselhSpec> {
         Extipinsel2W::new(self, 8)
     }
     #[doc = "Bits 12:13 - External Interrupt Pin select"]
     #[inline(always)]
-    #[must_use]
     pub fn extipinsel3(&mut self) -> Extipinsel3W<ExtipinselhSpec> {
         Extipinsel3W::new(self, 12)
     }
@@ -404,10 +400,6 @@ impl crate::Readable for ExtipinselhSpec {}
 #[doc = "`write(|w| ..)` method takes [`extipinselh::W`](W) writer structure"]
 impl crate::Writable for ExtipinselhSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EXTIPINSELH to value 0"]
-impl crate::Resettable for ExtipinselhSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtipinselhSpec {}

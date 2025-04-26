@@ -471,37 +471,31 @@ impl R {
 impl W {
     #[doc = "Bit 2 - Output Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn outinv(&mut self) -> OutinvW<Cc0CtrlSpec> {
         OutinvW::new(self, 2)
     }
     #[doc = "Bits 8:9 - Compare Match Output Action"]
     #[inline(always)]
-    #[must_use]
     pub fn cmoa(&mut self) -> CmoaW<Cc0CtrlSpec> {
         CmoaW::new(self, 8)
     }
     #[doc = "Bits 10:11 - Counter Overflow Output Action"]
     #[inline(always)]
-    #[must_use]
     pub fn cofoa(&mut self) -> CofoaW<Cc0CtrlSpec> {
         CofoaW::new(self, 10)
     }
     #[doc = "Bits 12:13 - Counter Underflow Output Action"]
     #[inline(always)]
-    #[must_use]
     pub fn cufoa(&mut self) -> CufoaW<Cc0CtrlSpec> {
         CufoaW::new(self, 12)
     }
     #[doc = "Bits 24:25 - Input Capture Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn icedge(&mut self) -> IcedgeW<Cc0CtrlSpec> {
         IcedgeW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Input Capture Event Control"]
     #[inline(always)]
-    #[must_use]
     pub fn icevctrl(&mut self) -> IcevctrlW<Cc0CtrlSpec> {
         IcevctrlW::new(self, 26)
     }
@@ -516,10 +510,6 @@ impl crate::Readable for Cc0CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`cc0_ctrl::W`](W) writer structure"]
 impl crate::Writable for Cc0CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CC0_CTRL to value 0"]
-impl crate::Resettable for Cc0CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cc0CtrlSpec {}

@@ -98,7 +98,6 @@ impl R {
 impl W {
     #[doc = "Bits 20:21 - Read Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<ReadctrlSpec> {
         ModeW::new(self, 20)
     }
@@ -113,8 +112,6 @@ impl crate::Readable for ReadctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`readctrl::W`](W) writer structure"]
 impl crate::Writable for ReadctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets READCTRL to value 0x0020_0000"]
 impl crate::Resettable for ReadctrlSpec {

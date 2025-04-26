@@ -17,6 +17,4 @@ impl crate::RegisterSpec for SingledataSpec {
 #[doc = "`read()` method returns [`singledata::R`](R) reader structure"]
 impl crate::Readable for SingledataSpec {}
 #[doc = "`reset()` method sets SINGLEDATA to value 0"]
-impl crate::Resettable for SingledataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SingledataSpec {}

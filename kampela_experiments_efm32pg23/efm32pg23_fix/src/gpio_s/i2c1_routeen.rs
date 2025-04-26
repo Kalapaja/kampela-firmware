@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - SCL pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn sclpen(&mut self) -> SclpenW<I2c1RouteenSpec> {
         SclpenW::new(self, 0)
     }
     #[doc = "Bit 1 - SDA pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn sdapen(&mut self) -> SdapenW<I2c1RouteenSpec> {
         SdapenW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for I2c1RouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`i2c1_routeen::W`](W) writer structure"]
 impl crate::Writable for I2c1RouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets I2C1_ROUTEEN to value 0"]
-impl crate::Resettable for I2c1RouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for I2c1RouteenSpec {}

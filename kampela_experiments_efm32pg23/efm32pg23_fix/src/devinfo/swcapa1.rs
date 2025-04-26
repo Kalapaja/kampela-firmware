@@ -38,6 +38,4 @@ impl crate::RegisterSpec for Swcapa1Spec {
 #[doc = "`read()` method returns [`swcapa1::R`](R) reader structure"]
 impl crate::Readable for Swcapa1Spec {}
 #[doc = "`reset()` method sets SWCAPA1 to value 0"]
-impl crate::Resettable for Swcapa1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Swcapa1Spec {}

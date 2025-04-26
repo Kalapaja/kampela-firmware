@@ -17,8 +17,7 @@ pub type BufbiasW<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 #[doc = "Mode Setting\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
-    #[doc = "0: Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\]
-to control VLCD level, and use SPEED to adjust VLCD drive strength."]
+    #[doc = "0: Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\] to control VLCD level, and use SPEED to adjust VLCD drive strength."]
     Stepdown = 0,
     #[doc = "1: Use the charge pump to pump VLCD above VDDX."]
     Chargepump = 1,
@@ -40,8 +39,7 @@ impl ModeR {
             true => Mode::Chargepump,
         }
     }
-    #[doc = "Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\]
-to control VLCD level, and use SPEED to adjust VLCD drive strength."]
+    #[doc = "Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\] to control VLCD level, and use SPEED to adjust VLCD drive strength."]
     #[inline(always)]
     pub fn is_stepdown(&self) -> bool {
         *self == Mode::Stepdown
@@ -58,8 +56,7 @@ impl<'a, REG> ModeW<'a, REG>
 where
     REG: crate::Writable + crate::RegisterSpec,
 {
-    #[doc = "Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\]
-to control VLCD level, and use SPEED to adjust VLCD drive strength."]
+    #[doc = "Use step down control with VLCD less than VDDX. Use VLCD\\[4:0\\] to control VLCD level, and use SPEED to adjust VLCD drive strength."]
     #[inline(always)]
     pub fn stepdown(self) -> &'a mut crate::W<REG> {
         self.variant(Mode::Stepdown)
@@ -298,49 +295,41 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Resistor strength"]
     #[inline(always)]
-    #[must_use]
     pub fn resistor(&mut self) -> ResistorW<BiasctrlSpec> {
         ResistorW::new(self, 0)
     }
     #[doc = "Bits 4:6 - Buffer Drive Strength"]
     #[inline(always)]
-    #[must_use]
     pub fn bufdrv(&mut self) -> BufdrvW<BiasctrlSpec> {
         BufdrvW::new(self, 4)
     }
     #[doc = "Bits 8:9 - Buffer Bias Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn bufbias(&mut self) -> BufbiasW<BiasctrlSpec> {
         BufbiasW::new(self, 8)
     }
     #[doc = "Bit 12 - Mode Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<BiasctrlSpec> {
         ModeW::new(self, 12)
     }
     #[doc = "Bits 16:20 - VLCD voltage level"]
     #[inline(always)]
-    #[must_use]
     pub fn vlcd(&mut self) -> VlcdW<BiasctrlSpec> {
         VlcdW::new(self, 16)
     }
     #[doc = "Bit 22 - VDDX select"]
     #[inline(always)]
-    #[must_use]
     pub fn vddxsel(&mut self) -> VddxselW<BiasctrlSpec> {
         VddxselW::new(self, 22)
     }
     #[doc = "Bit 26 - LCD Gate"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdgate(&mut self) -> LcdgateW<BiasctrlSpec> {
         LcdgateW::new(self, 26)
     }
     #[doc = "Bits 30:31 - DMA Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn dmamode(&mut self) -> DmamodeW<BiasctrlSpec> {
         DmamodeW::new(self, 30)
     }
@@ -355,8 +344,6 @@ impl crate::Readable for BiasctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`biasctrl::W`](W) writer structure"]
 impl crate::Writable for BiasctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BIASCTRL to value 0x001f_0000"]
 impl crate::Resettable for BiasctrlSpec {

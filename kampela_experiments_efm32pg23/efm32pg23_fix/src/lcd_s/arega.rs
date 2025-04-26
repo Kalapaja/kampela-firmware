@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Animation Register A Data"]
     #[inline(always)]
-    #[must_use]
     pub fn arega(&mut self) -> AregaW<AregaSpec> {
         AregaW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for AregaSpec {}
 #[doc = "`write(|w| ..)` method takes [`arega::W`](W) writer structure"]
 impl crate::Writable for AregaSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets AREGA to value 0"]
-impl crate::Resettable for AregaSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AregaSpec {}

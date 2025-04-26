@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - page lock bit"]
     #[inline(always)]
-    #[must_use]
     pub fn lockbit(&mut self) -> LockbitW<Pagelock0Spec> {
         LockbitW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Pagelock0Spec {}
 #[doc = "`write(|w| ..)` method takes [`pagelock0::W`](W) writer structure"]
 impl crate::Writable for Pagelock0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PAGELOCK0 to value 0"]
-impl crate::Resettable for Pagelock0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Pagelock0Spec {}

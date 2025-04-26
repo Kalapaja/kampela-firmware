@@ -523,25 +523,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Clock Output Select 0"]
     #[inline(always)]
-    #[must_use]
     pub fn clkoutsel0(&mut self) -> Clkoutsel0W<ExportclkctrlSpec> {
         Clkoutsel0W::new(self, 0)
     }
     #[doc = "Bits 8:11 - Clock Output Select 1"]
     #[inline(always)]
-    #[must_use]
     pub fn clkoutsel1(&mut self) -> Clkoutsel1W<ExportclkctrlSpec> {
         Clkoutsel1W::new(self, 8)
     }
     #[doc = "Bits 16:19 - Clock Output Select 2"]
     #[inline(always)]
-    #[must_use]
     pub fn clkoutsel2(&mut self) -> Clkoutsel2W<ExportclkctrlSpec> {
         Clkoutsel2W::new(self, 16)
     }
     #[doc = "Bits 24:28 - EXPORTCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn presc(&mut self) -> PrescW<ExportclkctrlSpec> {
         PrescW::new(self, 24)
     }
@@ -556,10 +552,6 @@ impl crate::Readable for ExportclkctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`exportclkctrl::W`](W) writer structure"]
 impl crate::Writable for ExportclkctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EXPORTCLKCTRL to value 0"]
-impl crate::Resettable for ExportclkctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExportclkctrlSpec {}

@@ -19,49 +19,41 @@ pub type ClearpcW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Send start condition"]
     #[inline(always)]
-    #[must_use]
     pub fn start(&mut self) -> StartW<CmdSpec> {
         StartW::new(self, 0)
     }
     #[doc = "Bit 1 - Send stop condition"]
     #[inline(always)]
-    #[must_use]
     pub fn stop(&mut self) -> StopW<CmdSpec> {
         StopW::new(self, 1)
     }
     #[doc = "Bit 2 - Send ACK"]
     #[inline(always)]
-    #[must_use]
     pub fn ack(&mut self) -> AckW<CmdSpec> {
         AckW::new(self, 2)
     }
     #[doc = "Bit 3 - Send NACK"]
     #[inline(always)]
-    #[must_use]
     pub fn nack(&mut self) -> NackW<CmdSpec> {
         NackW::new(self, 3)
     }
     #[doc = "Bit 4 - Continue transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn cont(&mut self) -> ContW<CmdSpec> {
         ContW::new(self, 4)
     }
     #[doc = "Bit 5 - Abort transmission"]
     #[inline(always)]
-    #[must_use]
     pub fn abort(&mut self) -> AbortW<CmdSpec> {
         AbortW::new(self, 5)
     }
     #[doc = "Bit 6 - Clear TX"]
     #[inline(always)]
-    #[must_use]
     pub fn cleartx(&mut self) -> CleartxW<CmdSpec> {
         CleartxW::new(self, 6)
     }
     #[doc = "Bit 7 - Clear Pending Commands"]
     #[inline(always)]
-    #[must_use]
     pub fn clearpc(&mut self) -> ClearpcW<CmdSpec> {
         ClearpcW::new(self, 7)
     }
@@ -74,10 +66,6 @@ impl crate::RegisterSpec for CmdSpec {
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CmdSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CmdSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmdSpec {}

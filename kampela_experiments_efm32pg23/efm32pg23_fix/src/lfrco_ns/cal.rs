@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Frequency Trim"]
     #[inline(always)]
-    #[must_use]
     pub fn freqtrim(&mut self) -> FreqtrimW<CalSpec> {
         FreqtrimW::new(self, 0)
     }
@@ -31,8 +30,6 @@ impl crate::Readable for CalSpec {}
 #[doc = "`write(|w| ..)` method takes [`cal::W`](W) writer structure"]
 impl crate::Writable for CalSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CAL to value 0xa5"]
 impl crate::Resettable for CalSpec {

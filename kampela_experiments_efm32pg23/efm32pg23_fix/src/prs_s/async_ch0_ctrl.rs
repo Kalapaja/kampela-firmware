@@ -324,25 +324,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sigsel(&mut self) -> SigselW<AsyncCh0CtrlSpec> {
         SigselW::new(self, 0)
     }
     #[doc = "Bits 8:14 - Source Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sourcesel(&mut self) -> SourceselW<AsyncCh0CtrlSpec> {
         SourceselW::new(self, 8)
     }
     #[doc = "Bits 16:19 - Function Select"]
     #[inline(always)]
-    #[must_use]
     pub fn fnsel(&mut self) -> FnselW<AsyncCh0CtrlSpec> {
         FnselW::new(self, 16)
     }
     #[doc = "Bits 24:27 - Aux Select"]
     #[inline(always)]
-    #[must_use]
     pub fn auxsel(&mut self) -> AuxselW<AsyncCh0CtrlSpec> {
         AuxselW::new(self, 24)
     }
@@ -357,8 +353,6 @@ impl crate::Readable for AsyncCh0CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`async_ch0_ctrl::W`](W) writer structure"]
 impl crate::Writable for AsyncCh0CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ASYNC_CH0_CTRL to value 0x000c_0000"]
 impl crate::Resettable for AsyncCh0CtrlSpec {

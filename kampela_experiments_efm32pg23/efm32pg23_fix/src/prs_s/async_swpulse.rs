@@ -27,73 +27,61 @@ pub type Ch11pulseW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0pulse(&mut self) -> Ch0pulseW<AsyncSwpulseSpec> {
         Ch0pulseW::new(self, 0)
     }
     #[doc = "Bit 1 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1pulse(&mut self) -> Ch1pulseW<AsyncSwpulseSpec> {
         Ch1pulseW::new(self, 1)
     }
     #[doc = "Bit 2 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch2pulse(&mut self) -> Ch2pulseW<AsyncSwpulseSpec> {
         Ch2pulseW::new(self, 2)
     }
     #[doc = "Bit 3 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch3pulse(&mut self) -> Ch3pulseW<AsyncSwpulseSpec> {
         Ch3pulseW::new(self, 3)
     }
     #[doc = "Bit 4 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch4pulse(&mut self) -> Ch4pulseW<AsyncSwpulseSpec> {
         Ch4pulseW::new(self, 4)
     }
     #[doc = "Bit 5 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch5pulse(&mut self) -> Ch5pulseW<AsyncSwpulseSpec> {
         Ch5pulseW::new(self, 5)
     }
     #[doc = "Bit 6 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch6pulse(&mut self) -> Ch6pulseW<AsyncSwpulseSpec> {
         Ch6pulseW::new(self, 6)
     }
     #[doc = "Bit 7 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch7pulse(&mut self) -> Ch7pulseW<AsyncSwpulseSpec> {
         Ch7pulseW::new(self, 7)
     }
     #[doc = "Bit 8 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch8pulse(&mut self) -> Ch8pulseW<AsyncSwpulseSpec> {
         Ch8pulseW::new(self, 8)
     }
     #[doc = "Bit 9 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch9pulse(&mut self) -> Ch9pulseW<AsyncSwpulseSpec> {
         Ch9pulseW::new(self, 9)
     }
     #[doc = "Bit 10 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch10pulse(&mut self) -> Ch10pulseW<AsyncSwpulseSpec> {
         Ch10pulseW::new(self, 10)
     }
     #[doc = "Bit 11 - Channel pulse"]
     #[inline(always)]
-    #[must_use]
     pub fn ch11pulse(&mut self) -> Ch11pulseW<AsyncSwpulseSpec> {
         Ch11pulseW::new(self, 11)
     }
@@ -106,10 +94,6 @@ impl crate::RegisterSpec for AsyncSwpulseSpec {
 #[doc = "`write(|w| ..)` method takes [`async_swpulse::W`](W) writer structure"]
 impl crate::Writable for AsyncSwpulseSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ASYNC_SWPULSE to value 0"]
-impl crate::Resettable for AsyncSwpulseSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AsyncSwpulseSpec {}

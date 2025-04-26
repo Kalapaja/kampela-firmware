@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 24 - EM23 Wake up Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn em23wakeupdgif(&mut self) -> Em23wakeupdgifW<DgifSpec> {
         Em23wakeupdgifW::new(self, 24)
     }
     #[doc = "Bit 29 - Temperature Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn tempdgif(&mut self) -> TempdgifW<DgifSpec> {
         TempdgifW::new(self, 29)
     }
     #[doc = "Bit 30 - Temperature low Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn templowdgif(&mut self) -> TemplowdgifW<DgifSpec> {
         TemplowdgifW::new(self, 30)
     }
     #[doc = "Bit 31 - Temperature high Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn temphighdgif(&mut self) -> TemphighdgifW<DgifSpec> {
         TemphighdgifW::new(self, 31)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for DgifSpec {}
 #[doc = "`write(|w| ..)` method takes [`dgif::W`](W) writer structure"]
 impl crate::Writable for DgifSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DGIF to value 0"]
-impl crate::Resettable for DgifSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DgifSpec {}

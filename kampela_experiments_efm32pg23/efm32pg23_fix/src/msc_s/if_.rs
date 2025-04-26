@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Host Erase Done Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn erase(&mut self) -> EraseW<IfSpec> {
         EraseW::new(self, 0)
     }
     #[doc = "Bit 1 - Host Write Done Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn write(&mut self) -> WriteW<IfSpec> {
         WriteW::new(self, 1)
     }
     #[doc = "Bit 2 - Host write buffer overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn wdataov(&mut self) -> WdataovW<IfSpec> {
         WdataovW::new(self, 2)
     }
     #[doc = "Bit 8 - Flash Power Up Sequence Complete Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn pwrupf(&mut self) -> PwrupfW<IfSpec> {
         PwrupfW::new(self, 8)
     }
     #[doc = "Bit 9 - Flash Power Off Sequence Complete Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroff(&mut self) -> PwroffW<IfSpec> {
         PwroffW::new(self, 9)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

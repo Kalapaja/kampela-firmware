@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bit 0 - EFP Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn efpif(&mut self) -> EfpifW<EfpifSpec> {
         EfpifW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for EfpifSpec {}
 #[doc = "`write(|w| ..)` method takes [`efpif::W`](W) writer structure"]
 impl crate::Writable for EfpifSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EFPIF to value 0"]
-impl crate::Resettable for EfpifSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EfpifSpec {}

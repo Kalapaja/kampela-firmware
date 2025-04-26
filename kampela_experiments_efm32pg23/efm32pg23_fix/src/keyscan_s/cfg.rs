@@ -258,31 +258,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:17 - Clock Divider"]
     #[inline(always)]
-    #[must_use]
     pub fn clkdiv(&mut self) -> ClkdivW<CfgSpec> {
         ClkdivW::new(self, 0)
     }
     #[doc = "Bit 20 - Single Press"]
     #[inline(always)]
-    #[must_use]
     pub fn singlepress(&mut self) -> SinglepressW<CfgSpec> {
         SinglepressW::new(self, 20)
     }
     #[doc = "Bit 22 - Automatically Start"]
     #[inline(always)]
-    #[must_use]
     pub fn autostart(&mut self) -> AutostartW<CfgSpec> {
         AutostartW::new(self, 22)
     }
     #[doc = "Bits 24:26 - Number of Rows"]
     #[inline(always)]
-    #[must_use]
     pub fn numrows(&mut self) -> NumrowsW<CfgSpec> {
         NumrowsW::new(self, 24)
     }
     #[doc = "Bits 28:30 - Number of Columns"]
     #[inline(always)]
-    #[must_use]
     pub fn numcols(&mut self) -> NumcolsW<CfgSpec> {
         NumcolsW::new(self, 28)
     }
@@ -297,8 +292,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x2501_387f"]
 impl crate::Resettable for CfgSpec {

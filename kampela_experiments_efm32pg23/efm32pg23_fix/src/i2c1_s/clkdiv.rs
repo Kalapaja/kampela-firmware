@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:8 - Clock Divider"]
     #[inline(always)]
-    #[must_use]
     pub fn div(&mut self) -> DivW<ClkdivSpec> {
         DivW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ClkdivSpec {}
 #[doc = "`write(|w| ..)` method takes [`clkdiv::W`](W) writer structure"]
 impl crate::Writable for ClkdivSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKDIV to value 0"]
-impl crate::Resettable for ClkdivSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ClkdivSpec {}

@@ -225,37 +225,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Core Bias Current"]
     #[inline(always)]
-    #[must_use]
     pub fn corebiasana(&mut self) -> CorebiasanaW<XtalctrlSpec> {
         CorebiasanaW::new(self, 0)
     }
     #[doc = "Bits 8:15 - Tuning Capacitance on XI"]
     #[inline(always)]
-    #[must_use]
     pub fn ctunexiana(&mut self) -> CtunexianaW<XtalctrlSpec> {
         CtunexianaW::new(self, 8)
     }
     #[doc = "Bits 16:23 - Tuning Capacitance on XO"]
     #[inline(always)]
-    #[must_use]
     pub fn ctunexoana(&mut self) -> CtunexoanaW<XtalctrlSpec> {
         CtunexoanaW::new(self, 16)
     }
     #[doc = "Bits 24:25 - Fixed Tuning Capacitance"]
     #[inline(always)]
-    #[must_use]
     pub fn ctunefixana(&mut self) -> CtunefixanaW<XtalctrlSpec> {
         CtunefixanaW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Core Degeneration"]
     #[inline(always)]
-    #[must_use]
     pub fn coredgenana(&mut self) -> CoredgenanaW<XtalctrlSpec> {
         CoredgenanaW::new(self, 26)
     }
     #[doc = "Bit 31 - Skip Core Bias Optimization"]
     #[inline(always)]
-    #[must_use]
     pub fn skipcorebiasopt(&mut self) -> SkipcorebiasoptW<XtalctrlSpec> {
         SkipcorebiasoptW::new(self, 31)
     }
@@ -270,8 +264,6 @@ impl crate::Readable for XtalctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`xtalctrl::W`](W) writer structure"]
 impl crate::Writable for XtalctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets XTALCTRL to value 0x033c_3c3c"]
 impl crate::Resettable for XtalctrlSpec {

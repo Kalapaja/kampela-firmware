@@ -223,145 +223,121 @@ impl R {
 impl W {
     #[doc = "Bit 0 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien0(&mut self) -> Extien0W<IenSpec> {
         Extien0W::new(self, 0)
     }
     #[doc = "Bit 1 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien1(&mut self) -> Extien1W<IenSpec> {
         Extien1W::new(self, 1)
     }
     #[doc = "Bit 2 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien2(&mut self) -> Extien2W<IenSpec> {
         Extien2W::new(self, 2)
     }
     #[doc = "Bit 3 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien3(&mut self) -> Extien3W<IenSpec> {
         Extien3W::new(self, 3)
     }
     #[doc = "Bit 4 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien4(&mut self) -> Extien4W<IenSpec> {
         Extien4W::new(self, 4)
     }
     #[doc = "Bit 5 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien5(&mut self) -> Extien5W<IenSpec> {
         Extien5W::new(self, 5)
     }
     #[doc = "Bit 6 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien6(&mut self) -> Extien6W<IenSpec> {
         Extien6W::new(self, 6)
     }
     #[doc = "Bit 7 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien7(&mut self) -> Extien7W<IenSpec> {
         Extien7W::new(self, 7)
     }
     #[doc = "Bit 8 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien8(&mut self) -> Extien8W<IenSpec> {
         Extien8W::new(self, 8)
     }
     #[doc = "Bit 9 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien9(&mut self) -> Extien9W<IenSpec> {
         Extien9W::new(self, 9)
     }
     #[doc = "Bit 10 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien10(&mut self) -> Extien10W<IenSpec> {
         Extien10W::new(self, 10)
     }
     #[doc = "Bit 11 - External Pin Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn extien11(&mut self) -> Extien11W<IenSpec> {
         Extien11W::new(self, 11)
     }
     #[doc = "Bit 16 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien0(&mut self) -> Em4wuien0W<IenSpec> {
         Em4wuien0W::new(self, 16)
     }
     #[doc = "Bit 17 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien1(&mut self) -> Em4wuien1W<IenSpec> {
         Em4wuien1W::new(self, 17)
     }
     #[doc = "Bit 18 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien2(&mut self) -> Em4wuien2W<IenSpec> {
         Em4wuien2W::new(self, 18)
     }
     #[doc = "Bit 19 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien3(&mut self) -> Em4wuien3W<IenSpec> {
         Em4wuien3W::new(self, 19)
     }
     #[doc = "Bit 20 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien4(&mut self) -> Em4wuien4W<IenSpec> {
         Em4wuien4W::new(self, 20)
     }
     #[doc = "Bit 21 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien5(&mut self) -> Em4wuien5W<IenSpec> {
         Em4wuien5W::new(self, 21)
     }
     #[doc = "Bit 22 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien6(&mut self) -> Em4wuien6W<IenSpec> {
         Em4wuien6W::new(self, 22)
     }
     #[doc = "Bit 23 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien7(&mut self) -> Em4wuien7W<IenSpec> {
         Em4wuien7W::new(self, 23)
     }
     #[doc = "Bit 24 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien8(&mut self) -> Em4wuien8W<IenSpec> {
         Em4wuien8W::new(self, 24)
     }
     #[doc = "Bit 25 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien9(&mut self) -> Em4wuien9W<IenSpec> {
         Em4wuien9W::new(self, 25)
     }
     #[doc = "Bit 26 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien10(&mut self) -> Em4wuien10W<IenSpec> {
         Em4wuien10W::new(self, 26)
     }
     #[doc = "Bit 27 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wuien11(&mut self) -> Em4wuien11W<IenSpec> {
         Em4wuien11W::new(self, 27)
     }
@@ -376,10 +352,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

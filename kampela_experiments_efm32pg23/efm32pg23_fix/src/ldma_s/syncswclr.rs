@@ -5,7 +5,6 @@ pub type SyncswclrW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - DMA SYNC Software Trigger Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn syncswclr(&mut self) -> SyncswclrW<SyncswclrSpec> {
         SyncswclrW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for SyncswclrSpec {
 #[doc = "`write(|w| ..)` method takes [`syncswclr::W`](W) writer structure"]
 impl crate::Writable for SyncswclrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYNCSWCLR to value 0"]
-impl crate::Resettable for SyncswclrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyncswclrSpec {}

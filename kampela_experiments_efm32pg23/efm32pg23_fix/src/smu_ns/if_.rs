@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - PPU Privilege Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ppupriv(&mut self) -> PpuprivW<IfSpec> {
         PpuprivW::new(self, 0)
     }
     #[doc = "Bit 2 - PPU Instruction Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ppuinst(&mut self) -> PpuinstW<IfSpec> {
         PpuinstW::new(self, 2)
     }
     #[doc = "Bit 16 - PPU Security Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ppusec(&mut self) -> PpusecW<IfSpec> {
         PpusecW::new(self, 16)
     }
     #[doc = "Bit 17 - BMPU Security Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn bmpusec(&mut self) -> BmpusecW<IfSpec> {
         BmpusecW::new(self, 17)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

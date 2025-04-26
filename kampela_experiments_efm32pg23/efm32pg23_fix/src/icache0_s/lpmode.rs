@@ -94,13 +94,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Low Power Level"]
     #[inline(always)]
-    #[must_use]
     pub fn lplevel(&mut self) -> LplevelW<LpmodeSpec> {
         LplevelW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Low Power Nest Factor"]
     #[inline(always)]
-    #[must_use]
     pub fn nestfactor(&mut self) -> NestfactorW<LpmodeSpec> {
         NestfactorW::new(self, 4)
     }
@@ -115,8 +113,6 @@ impl crate::Readable for LpmodeSpec {}
 #[doc = "`write(|w| ..)` method takes [`lpmode::W`](W) writer structure"]
 impl crate::Writable for LpmodeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LPMODE to value 0x23"]
 impl crate::Resettable for LpmodeSpec {

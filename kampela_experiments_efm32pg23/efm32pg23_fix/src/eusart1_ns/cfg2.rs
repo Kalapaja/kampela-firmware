@@ -284,55 +284,46 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Main mode"]
     #[inline(always)]
-    #[must_use]
     pub fn master(&mut self) -> MasterW<Cfg2Spec> {
         MasterW::new(self, 0)
     }
     #[doc = "Bit 1 - Clock Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn clkpol(&mut self) -> ClkpolW<Cfg2Spec> {
         ClkpolW::new(self, 1)
     }
     #[doc = "Bit 2 - Clock Edge for Setup/Sample"]
     #[inline(always)]
-    #[must_use]
     pub fn clkpha(&mut self) -> ClkphaW<Cfg2Spec> {
         ClkphaW::new(self, 2)
     }
     #[doc = "Bit 3 - Chip Select Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn csinv(&mut self) -> CsinvW<Cfg2Spec> {
         CsinvW::new(self, 3)
     }
     #[doc = "Bit 4 - Always Transmit When RXFIFO Not Full"]
     #[inline(always)]
-    #[must_use]
     pub fn autotx(&mut self) -> AutotxW<Cfg2Spec> {
         AutotxW::new(self, 4)
     }
     #[doc = "Bit 5 - Automatic Chip Select"]
     #[inline(always)]
-    #[must_use]
     pub fn autocs(&mut self) -> AutocsW<Cfg2Spec> {
         AutocsW::new(self, 5)
     }
     #[doc = "Bit 6 - PRS CLK Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn clkprsen(&mut self) -> ClkprsenW<Cfg2Spec> {
         ClkprsenW::new(self, 6)
     }
     #[doc = "Bit 7 - Force Load to Shift Register"]
     #[inline(always)]
-    #[must_use]
     pub fn forceload(&mut self) -> ForceloadW<Cfg2Spec> {
         ForceloadW::new(self, 7)
     }
     #[doc = "Bits 24:31 - Sync Clock Div"]
     #[inline(always)]
-    #[must_use]
     pub fn sdiv(&mut self) -> SdivW<Cfg2Spec> {
         SdivW::new(self, 24)
     }
@@ -347,8 +338,6 @@ impl crate::Readable for Cfg2Spec {}
 #[doc = "`write(|w| ..)` method takes [`cfg2::W`](W) writer structure"]
 impl crate::Writable for Cfg2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG2 to value 0x20"]
 impl crate::Resettable for Cfg2Spec {

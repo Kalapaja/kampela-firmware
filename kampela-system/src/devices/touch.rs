@@ -269,7 +269,7 @@ pub fn is_touch_int() -> bool {
             .read()
             .extif0()
             .bit_is_set()
-    }).unwrap_or(false)
+    })
 }
 
 pub fn enable_touch_int() {
@@ -450,12 +450,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
                 Ok(Some(None))
             },
             ReadState::ClearCommand => {
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
                         .i2c0_s
                         .cmd()
-                        .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit())
-                );
+                        .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
+                });
                 self.threads.change(ReadState::ClearRx);
                 Ok(Some(None))
             },
@@ -467,7 +467,7 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
                         .read()
                         .rxdatav()
                         .bit_is_set()
-                )? {
+                ) {
                     in_free(|peripherals| {
                         let _dummy_data = peripherals
                             .i2c0_s
@@ -504,12 +504,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
             ReadState::PrepareAddress(state) => {
                 match state {
                     None => {
-                        in_free(|peripherals|
+                        in_free(|peripherals| {
                             peripherals
                                 .i2c0_s
                                 .cmd()
-                                .write(|w_reg| w_reg.start().set_bit())
-                        );
+                                .write(|w_reg| w_reg.start().set_bit());
+                        });
                         self.threads.change(ReadState::PrepareAddress(Some(Timer::new(DELAY)))); // setup time 4.7μs
                     },
                     Some(t) => {
@@ -527,12 +527,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
                         // i2c transfer sequence
                         check_i2c_errors()?;
                         // send address `0x38 << 1`, for writing data
-                        in_free(|peripherals|
+                        in_free(|peripherals| {
                             peripherals
                                 .i2c0_s
                                 .txdata()
-                                .write(|w_reg| unsafe { w_reg.txdata().bits(0b1110000) })
-                        );
+                                .write(|w_reg| unsafe { w_reg.txdata().bits(0b1110000) });
+                        });
                         self.threads.change(ReadState::AddressSendId(Some(())));
                     },
                     Some(_) => {
@@ -547,12 +547,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
             ReadState::SendAddress(state) => { //TODO expand this
                 match state {
                     None => {
-                        in_free(|peripherals|
+                        in_free(|peripherals| {
                             peripherals
                                 .i2c0_s
                                 .txdata()
-                                .write(|w_reg| unsafe { w_reg.txdata().bits(POS) })
-                        );
+                                .write(|w_reg| unsafe { w_reg.txdata().bits(POS) });
+                        });
                         self.threads.change(ReadState::SendAddress(Some(WithDelay::Do(()))));
                     },
                     Some(w) => {
@@ -577,12 +577,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
             ReadState::PrepareRead(state) => {
                 match state {
                     None => {
-                        in_free(|peripherals|
+                        in_free(|peripherals| {
                             peripherals
                                 .i2c0_s
                                 .cmd()
-                                .write(|w_reg| w_reg.start().set_bit())
-                        );
+                                .write(|w_reg| w_reg.start().set_bit());
+                        });
                         self.threads.change(ReadState::PrepareRead(Some(Timer::new(DELAY)))); // setup time 4.7μs
                     },
                     Some(t) => {
@@ -599,12 +599,12 @@ impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
                     None => {
                         // i2c transfer sequence
                         check_i2c_errors()?;
-                        in_free(|peripherals|
+                        in_free(|peripherals| {
                             peripherals
                                 .i2c0_s
                                 .txdata()
-                                .write(|w_reg| unsafe {w_reg.txdata().bits(0b1110001) })
-                        );
+                                .write(|w_reg| unsafe {w_reg.txdata().bits(0b1110001) });
+                        });
                         self.threads.change(ReadState::ReadSendId(Some(())));
                     },
                     Some(_) => {
@@ -699,20 +699,20 @@ impl <const LEN: usize> AsyncOperation for ReadLoop<LEN> {
                                 self.value[*i] = b;
                                 *a = ReadI2C::new(());
                                 if *i == LEN-1 {
-                                    in_free(|peripherals| 
+                                    in_free(|peripherals| {
                                         peripherals
                                             .i2c0_s
                                             .cmd()
-                                            .write(|w_reg| w_reg.nack().set_bit())
-                                    );
+                                            .write(|w_reg| w_reg.nack().set_bit());
+                                    });
                                     self.threads.change(ReadLoopState::Aftermath);
                                 } else {
-                                    in_free(|peripherals|
+                                    in_free(|peripherals| {
                                         peripherals
                                             .i2c0_s
                                             .cmd()
-                                            .write(|w_reg| w_reg.ack().set_bit())
-                                    );
+                                            .write(|w_reg| w_reg.ack().set_bit());
+                                    });
                                     *i += 1;
                                 }
                             },
@@ -728,12 +728,12 @@ impl <const LEN: usize> AsyncOperation for ReadLoop<LEN> {
                 Ok(Some(None))
             },
             ReadLoopState::Aftermath => {
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
                         .i2c0_s
                         .cmd()
-                        .write(|w_reg| w_reg.stop().set_bit())
-                );
+                        .write(|w_reg| w_reg.stop().set_bit());
+                });
                 Ok(Some(Some(self.value)))
             },
             ReadLoopState::Error => {

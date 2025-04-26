@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Scratch Register"]
     #[inline(always)]
-    #[must_use]
     pub fn scratch(&mut self) -> ScratchW<Sreg1Spec> {
         ScratchW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Sreg1Spec {}
 #[doc = "`write(|w| ..)` method takes [`sreg1::W`](W) writer structure"]
 impl crate::Writable for Sreg1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SREG1 to value 0"]
-impl crate::Resettable for Sreg1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Sreg1Spec {}

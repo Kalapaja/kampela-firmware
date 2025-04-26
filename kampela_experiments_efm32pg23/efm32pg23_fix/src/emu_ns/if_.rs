@@ -79,49 +79,41 @@ impl R {
 impl W {
     #[doc = "Bit 16 - AVDD BOD Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn avddbod(&mut self) -> AvddbodW<IfSpec> {
         AvddbodW::new(self, 16)
     }
     #[doc = "Bit 17 - VDDIO0 BOD Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn iovdd0bod(&mut self) -> Iovdd0bodW<IfSpec> {
         Iovdd0bodW::new(self, 17)
     }
     #[doc = "Bit 24 - EM23 Wake up Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn em23wakeup(&mut self) -> Em23wakeupW<IfSpec> {
         Em23wakeupW::new(self, 24)
     }
     #[doc = "Bit 25 - Vscale done Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn vscaledone(&mut self) -> VscaledoneW<IfSpec> {
         VscaledoneW::new(self, 25)
     }
     #[doc = "Bit 27 - Temperature Average Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn tempavg(&mut self) -> TempavgW<IfSpec> {
         TempavgW::new(self, 27)
     }
     #[doc = "Bit 29 - Temperature Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn temp(&mut self) -> TempW<IfSpec> {
         TempW::new(self, 29)
     }
     #[doc = "Bit 30 - Temperature low Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn templow(&mut self) -> TemplowW<IfSpec> {
         TemplowW::new(self, 30)
     }
     #[doc = "Bit 31 - Temperature high Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn temphigh(&mut self) -> TemphighW<IfSpec> {
         TemphighW::new(self, 31)
     }
@@ -136,10 +128,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

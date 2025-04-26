@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 12:27 - Moveable Region Boundary"]
     #[inline(always)]
-    #[must_use]
     pub fn esaumrb01(&mut self) -> Esaumrb01W<Esaumrb01Spec> {
         Esaumrb01W::new(self, 12)
     }
@@ -31,8 +30,6 @@ impl crate::Readable for Esaumrb01Spec {}
 #[doc = "`write(|w| ..)` method takes [`esaumrb01::W`](W) writer structure"]
 impl crate::Writable for Esaumrb01Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ESAUMRB01 to value 0x0a00_0000"]
 impl crate::Resettable for Esaumrb01Spec {

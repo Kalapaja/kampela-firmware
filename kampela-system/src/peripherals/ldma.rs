@@ -1,34 +1,52 @@
-use cortex_m::interrupt::free;
 use efm32pg23_fix::Peripherals;
 
-pub const LINK_DESCRIPTORS: u32 = 0b00000111000100000111111111110000;
-pub const CH_TIM0: u8 = 7;
-pub const LINK_1: u32 = 0b00000000000000000000000000010011;
-pub const LINK_2: u32 = 0b11111111111111111111111111100011;
+use super::{ldma_ch_usart::LDMAchUSART0, ldma_ch_usart_rx::LDMAchUSART0Rx};
 
-pub const TIMER0_CC0_ICF: u32 = 0x40048074;
+pub const LINK_TRUE: u32 = 1 << 1;
+pub const LINKMODE_RELATIVE: u32 = 1;
 
-pub const BUF_THIRD: usize = 2048;
+pub const LINKADDR_NEXT: u32 = size_of::<Descriptor>() as u32; // >> 2 for words; << 2 for link_addr 2:31
+pub const LINK_NEXT: u32 = LINKADDR_NEXT | LINK_TRUE | LINKMODE_RELATIVE;
+
+pub const LINKADDR_PREV: u32 = (u32::MIN.wrapping_sub(LINKADDR_NEXT >> 2)).overflowing_shl(2).0;
+pub const LINK_PREV: u32 = LINKADDR_PREV | LINK_TRUE | LINKMODE_RELATIVE;
+
+pub const LINKADDR_ANTE_PREV: u32 = (u32::MIN.wrapping_sub(2 * LINKADDR_NEXT >> 2)).overflowing_shl(2).0;
+pub const LINK_ANTE_PREV: u32 = LINKADDR_ANTE_PREV | LINK_TRUE | LINKMODE_RELATIVE;
+
+pub const LINK_SELF: u32 = LINKMODE_RELATIVE;
+pub const LINK_SELF_NEXT: u32 = LINK_TRUE | LINKMODE_RELATIVE;
+
+pub const STRUCTTYPE_SYNC: u32 = 1;
+pub const STRUCTTYPE_WRI: u32 = 2;
+pub const STRUCTREQ_TRUE: u32 = 1 << 3;
+pub const BLOCKSIZE_2: u32 = 1 << 16;
+pub const BLOCKSIZE_3: u32 = 2 << 16;
+pub const DONEIEN: u32 = 1 << 20;
+pub const REQMODE_ALL: u32 = 1 << 21;
+pub const DECLOOPCNT_TRUE: u32 = 1 << 22;
+pub const IGNORESREQ_TRUE: u32 = 1 << 23;
+pub const SRCINC_NONE: u32 = 3 << 24;
+pub const SIZE_HALFWORD: u32 = 1 << 26;
+pub const DSTINC_NONE: u32 = 3 << 28;
+pub const SRCMODE_RELATIVE: u32 = 1 << 30;
+
+pub struct ChLinkData {
+    pub linkaddr: u32,
+    pub loopcnt: u8,
+    pub ien: bool,
+}
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct NfcXfer {
-    pub descriptors: u32,
+pub struct Descriptor {
+    pub ctrl: u32,
     pub source: u32,
     pub dest: u32,
     pub link: u32,
 }
 
-#[repr(C)]
-#[derive(Debug)]
-pub struct NfcXferBlock {
-    pub block0: NfcXfer,
-    pub block1: NfcXfer,
-    pub block2: NfcXfer,
-}
-
-/// Set up LDMA for NFC capture
-pub fn init_ldma(peripherals: &mut Peripherals, nfc_descriptor_address: *const NfcXferBlock) {
+pub fn init_ldma(peripherals: &mut Peripherals) {
     // set up ldma
     peripherals
         .ldma_s
@@ -69,15 +87,15 @@ pub fn init_ldma(peripherals: &mut Peripherals, nfc_descriptor_address: *const N
         .write(|w_reg| unsafe {
             w_reg
                 .dbghalt().bits(0)
-    });
-    
+        });
+
     peripherals
         .ldma_s
         .reqdis()
         .write(|w_reg| unsafe {
             w_reg
                 .reqdis().bits(0)
-    });
+        });
 
     peripherals
         .ldma_s
@@ -85,97 +103,13 @@ pub fn init_ldma(peripherals: &mut Peripherals, nfc_descriptor_address: *const N
         .write(|w_reg| {
             w_reg
                 .error().set_bit()
-    });
+        });
 
     peripherals
         .ldma_s
         .if_()
         .reset();
 
-    // start ldma transfer
-    peripherals
-        .ldma_s
-        .if_()
-        .modify(|_, w_reg| {
-            w_reg
-                .done7().clear_bit()
-        }
-    );
-
-    peripherals
-        .ldmaxbar_s
-        .ch7_reqsel()
-        .write(|w_reg| unsafe {
-            w_reg
-                .sigsel().bits(0) // _LDMAXBAR_CH_REQSEL_SIGSEL_TIMER0CC0
-                .sourcesel().bits(2) // _LDMAXBAR_CH_REQSEL_SOURCESEL_TIMER0
-        }
-    );
-
-    peripherals
-        .ldma_s
-        .ch7_loop()
-        .write(|w_reg| unsafe {
-            w_reg
-                .loopcnt().bits(0)
-        }
-    );
-
-    peripherals
-        .ldma_s
-        .ch7_cfg()
-        .write(|w_reg| {
-            w_reg
-                .arbslots().one()
-                .srcincsign().positive()
-                .dstincsign().positive()
-        }
-    );
-    
-    peripherals
-        .ldma_s
-        .ch7_link()
-        .write(|w_reg| {
-            w_reg
-                .link().clear_bit();
-            unsafe {
-                w_reg.linkaddr().bits(nfc_descriptor_address as u32 >> 2)
-            }
-        }
-    );
-
-    // there starts a critical section
-    free(|_cs| {
-        peripherals
-            .ldma_s
-            .ien()
-            .write(|w_reg| unsafe {
-                w_reg
-                    .chdone().bits(1 << CH_TIM0)
-            }
-        );
-
-        peripherals
-            .ldma_s
-            .synchwen()
-            .reset(); // default values, i.e. 0 for clr_off, clr_on, set_off, set_on
-
-        peripherals
-            .ldma_s
-            .chdone()
-            .write(|w_reg| {
-                w_reg
-                    .chdone7().clear_bit()
-            }
-        );
-
-        peripherals
-            .ldma_s
-            .linkload()
-            .write(|w_reg| unsafe {
-                w_reg
-                    .linkload().bits(1 << CH_TIM0)
-            }
-        );
-    });
+    LDMAchUSART0::init(peripherals);
+    LDMAchUSART0Rx::init(peripherals);
 }

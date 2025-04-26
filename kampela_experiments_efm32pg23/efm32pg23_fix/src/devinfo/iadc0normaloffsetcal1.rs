@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Iadc0normaloffsetcal1Spec {
 #[doc = "`read()` method returns [`iadc0normaloffsetcal1::R`](R) reader structure"]
 impl crate::Readable for Iadc0normaloffsetcal1Spec {}
 #[doc = "`reset()` method sets IADC0NORMALOFFSETCAL1 to value 0"]
-impl crate::Resettable for Iadc0normaloffsetcal1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Iadc0normaloffsetcal1Spec {}

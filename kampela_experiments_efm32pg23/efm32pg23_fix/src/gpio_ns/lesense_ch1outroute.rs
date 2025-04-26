@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - CH1OUT port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<LesenseCh1outrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - CH1OUT pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<LesenseCh1outrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for LesenseCh1outrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`lesense_ch1outroute::W`](W) writer structure"]
 impl crate::Writable for LesenseCh1outrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LESENSE_CH1OUTROUTE to value 0"]
-impl crate::Resettable for LesenseCh1outrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LesenseCh1outrouteSpec {}

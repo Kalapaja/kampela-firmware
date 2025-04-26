@@ -133,85 +133,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sw0(&mut self) -> Sw0W<IenSpec> {
         Sw0W::new(self, 0)
     }
     #[doc = "Bit 1 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sw1(&mut self) -> Sw1W<IenSpec> {
         Sw1W::new(self, 1)
     }
     #[doc = "Bit 2 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sw2(&mut self) -> Sw2W<IenSpec> {
         Sw2W::new(self, 2)
     }
     #[doc = "Bit 3 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sw3(&mut self) -> Sw3W<IenSpec> {
         Sw3W::new(self, 3)
     }
     #[doc = "Bit 8 - FPU Invalid Operation Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpioc(&mut self) -> FpiocW<IenSpec> {
         FpiocW::new(self, 8)
     }
     #[doc = "Bit 9 - FPU Divide by zero Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpdzc(&mut self) -> FpdzcW<IenSpec> {
         FpdzcW::new(self, 9)
     }
     #[doc = "Bit 10 - FPU Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpufc(&mut self) -> FpufcW<IenSpec> {
         FpufcW::new(self, 10)
     }
     #[doc = "Bit 11 - FPU Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpofc(&mut self) -> FpofcW<IenSpec> {
         FpofcW::new(self, 11)
     }
     #[doc = "Bit 12 - FPU Input denormal Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpidc(&mut self) -> FpidcW<IenSpec> {
         FpidcW::new(self, 12)
     }
     #[doc = "Bit 13 - FPU Inexact Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn fpixc(&mut self) -> FpixcW<IenSpec> {
         FpixcW::new(self, 13)
     }
     #[doc = "Bit 24 - SEQRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn seqramerr1b(&mut self) -> Seqramerr1bW<IenSpec> {
         Seqramerr1bW::new(self, 24)
     }
     #[doc = "Bit 25 - SEQRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn seqramerr2b(&mut self) -> Seqramerr2bW<IenSpec> {
         Seqramerr2bW::new(self, 25)
     }
     #[doc = "Bit 28 - FRCRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn frcramerr1b(&mut self) -> Frcramerr1bW<IenSpec> {
         Frcramerr1bW::new(self, 28)
     }
     #[doc = "Bit 29 - FRCRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn frcramerr2b(&mut self) -> Frcramerr2bW<IenSpec> {
         Frcramerr2bW::new(self, 29)
     }
@@ -226,10 +212,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

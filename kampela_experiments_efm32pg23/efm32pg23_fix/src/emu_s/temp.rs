@@ -31,6 +31,4 @@ impl crate::RegisterSpec for TempSpec {
 #[doc = "`read()` method returns [`temp::R`](R) reader structure"]
 impl crate::Readable for TempSpec {}
 #[doc = "`reset()` method sets TEMP to value 0"]
-impl crate::Resettable for TempSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TempSpec {}

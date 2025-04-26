@@ -214,19 +214,16 @@ impl R {
 impl W {
     #[doc = "Bits 16:17 - Arbitration Slot Number Select"]
     #[inline(always)]
-    #[must_use]
     pub fn arbslots(&mut self) -> ArbslotsW<Ch4CfgSpec> {
         ArbslotsW::new(self, 16)
     }
     #[doc = "Bit 20 - Source Address Increment Sign"]
     #[inline(always)]
-    #[must_use]
     pub fn srcincsign(&mut self) -> SrcincsignW<Ch4CfgSpec> {
         SrcincsignW::new(self, 20)
     }
     #[doc = "Bit 21 - Destination Address Increment Sign"]
     #[inline(always)]
-    #[must_use]
     pub fn dstincsign(&mut self) -> DstincsignW<Ch4CfgSpec> {
         DstincsignW::new(self, 21)
     }
@@ -241,10 +238,6 @@ impl crate::Readable for Ch4CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch4_cfg::W`](W) writer structure"]
 impl crate::Writable for Ch4CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH4_CFG to value 0"]
-impl crate::Resettable for Ch4CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch4CfgSpec {}

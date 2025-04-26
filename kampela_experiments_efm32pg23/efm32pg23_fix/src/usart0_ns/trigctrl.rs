@@ -88,55 +88,46 @@ impl R {
 impl W {
     #[doc = "Bit 4 - Receive Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxten(&mut self) -> RxtenW<TrigctrlSpec> {
         RxtenW::new(self, 4)
     }
     #[doc = "Bit 5 - Transmit Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txten(&mut self) -> TxtenW<TrigctrlSpec> {
         TxtenW::new(self, 5)
     }
     #[doc = "Bit 6 - AUTOTX Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn autotxten(&mut self) -> AutotxtenW<TrigctrlSpec> {
         AutotxtenW::new(self, 6)
     }
     #[doc = "Bit 7 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
-    #[must_use]
     pub fn txarx0en(&mut self) -> Txarx0enW<TrigctrlSpec> {
         Txarx0enW::new(self, 7)
     }
     #[doc = "Bit 8 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
-    #[must_use]
     pub fn txarx1en(&mut self) -> Txarx1enW<TrigctrlSpec> {
         Txarx1enW::new(self, 8)
     }
     #[doc = "Bit 9 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
-    #[must_use]
     pub fn txarx2en(&mut self) -> Txarx2enW<TrigctrlSpec> {
         Txarx2enW::new(self, 9)
     }
     #[doc = "Bit 10 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
-    #[must_use]
     pub fn rxatx0en(&mut self) -> Rxatx0enW<TrigctrlSpec> {
         Rxatx0enW::new(self, 10)
     }
     #[doc = "Bit 11 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
-    #[must_use]
     pub fn rxatx1en(&mut self) -> Rxatx1enW<TrigctrlSpec> {
         Rxatx1enW::new(self, 11)
     }
     #[doc = "Bit 12 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
-    #[must_use]
     pub fn rxatx2en(&mut self) -> Rxatx2enW<TrigctrlSpec> {
         Rxatx2enW::new(self, 12)
     }
@@ -151,10 +142,6 @@ impl crate::Readable for TrigctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`trigctrl::W`](W) writer structure"]
 impl crate::Writable for TrigctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRIGCTRL to value 0"]
-impl crate::Resettable for TrigctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TrigctrlSpec {}

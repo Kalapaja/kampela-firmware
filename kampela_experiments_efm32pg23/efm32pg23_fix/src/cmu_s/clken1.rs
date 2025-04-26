@@ -151,97 +151,81 @@ impl R {
 impl W {
     #[doc = "Bit 8 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn hostmailbox(&mut self) -> HostmailboxW<Clken1Spec> {
         HostmailboxW::new(self, 8)
     }
     #[doc = "Bit 10 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn semailboxhost(&mut self) -> SemailboxhostW<Clken1Spec> {
         SemailboxhostW::new(self, 10)
     }
     #[doc = "Bit 12 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn lcd(&mut self) -> LcdW<Clken1Spec> {
         LcdW::new(self, 12)
     }
     #[doc = "Bit 13 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn keyscan(&mut self) -> KeyscanW<Clken1Spec> {
         KeyscanW::new(self, 13)
     }
     #[doc = "Bit 14 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn smu(&mut self) -> SmuW<Clken1Spec> {
         SmuW::new(self, 14)
     }
     #[doc = "Bit 15 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn icache0(&mut self) -> Icache0W<Clken1Spec> {
         Icache0W::new(self, 15)
     }
     #[doc = "Bit 16 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn msc(&mut self) -> MscW<Clken1Spec> {
         MscW::new(self, 16)
     }
     #[doc = "Bit 17 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn wdog1(&mut self) -> Wdog1W<Clken1Spec> {
         Wdog1W::new(self, 17)
     }
     #[doc = "Bit 18 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn acmp0(&mut self) -> Acmp0W<Clken1Spec> {
         Acmp0W::new(self, 18)
     }
     #[doc = "Bit 19 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn acmp1(&mut self) -> Acmp1W<Clken1Spec> {
         Acmp1W::new(self, 19)
     }
     #[doc = "Bit 20 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn vdac0(&mut self) -> Vdac0W<Clken1Spec> {
         Vdac0W::new(self, 20)
     }
     #[doc = "Bit 21 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn pcnt0(&mut self) -> Pcnt0W<Clken1Spec> {
         Pcnt0W::new(self, 21)
     }
     #[doc = "Bit 22 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart0(&mut self) -> Eusart0W<Clken1Spec> {
         Eusart0W::new(self, 22)
     }
     #[doc = "Bit 23 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart1(&mut self) -> Eusart1W<Clken1Spec> {
         Eusart1W::new(self, 23)
     }
     #[doc = "Bit 24 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart2(&mut self) -> Eusart2W<Clken1Spec> {
         Eusart2W::new(self, 24)
     }
     #[doc = "Bit 27 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn dmem(&mut self) -> DmemW<Clken1Spec> {
         DmemW::new(self, 27)
     }
@@ -256,10 +240,6 @@ impl crate::Readable for Clken1Spec {}
 #[doc = "`write(|w| ..)` method takes [`clken1::W`](W) writer structure"]
 impl crate::Writable for Clken1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKEN1 to value 0"]
-impl crate::Resettable for Clken1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Clken1Spec {}

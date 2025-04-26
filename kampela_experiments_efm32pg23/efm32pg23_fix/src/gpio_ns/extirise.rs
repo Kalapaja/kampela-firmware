@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:11 - EXT Int Rise"]
     #[inline(always)]
-    #[must_use]
     pub fn extirise(&mut self) -> ExtiriseW<ExtiriseSpec> {
         ExtiriseW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ExtiriseSpec {}
 #[doc = "`write(|w| ..)` method takes [`extirise::W`](W) writer structure"]
 impl crate::Writable for ExtiriseSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EXTIRISE to value 0"]
-impl crate::Resettable for ExtiriseSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtiriseSpec {}

@@ -68,13 +68,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sigsel(&mut self) -> SigselW<SyncCh1CtrlSpec> {
         SigselW::new(self, 0)
     }
     #[doc = "Bits 8:14 - Source Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sourcesel(&mut self) -> SourceselW<SyncCh1CtrlSpec> {
         SourceselW::new(self, 8)
     }
@@ -89,10 +87,6 @@ impl crate::Readable for SyncCh1CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`sync_ch1_ctrl::W`](W) writer structure"]
 impl crate::Writable for SyncCh1CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYNC_CH1_CTRL to value 0"]
-impl crate::Resettable for SyncCh1CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyncCh1CtrlSpec {}

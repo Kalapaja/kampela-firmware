@@ -377,7 +377,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 qr::draw(&self.platform.signature(), display)?
             },
             Screen::QRAddress => {
-                let line1 = format!("substrate:0x{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown").0));
+                let line1 = format!("ur:crypto-hdkey/{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown").0));
 
                 qr::draw(&line1.as_bytes(), display)?
             },

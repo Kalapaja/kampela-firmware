@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - SCLK port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Usart0ClkrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - SCLK pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Usart0ClkrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Usart0ClkrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`usart0_clkroute::W`](W) writer structure"]
 impl crate::Writable for Usart0ClkrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets USART0_CLKROUTE to value 0"]
-impl crate::Resettable for Usart0ClkrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Usart0ClkrouteSpec {}

@@ -7,13 +7,11 @@ pub type Cleareccaddr1W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Clear ECCERRADDR0"]
     #[inline(always)]
-    #[must_use]
     pub fn cleareccaddr0(&mut self) -> Cleareccaddr0W<CmdSpec> {
         Cleareccaddr0W::new(self, 0)
     }
     #[doc = "Bit 1 - Clear ECCERRADDR1"]
     #[inline(always)]
-    #[must_use]
     pub fn cleareccaddr1(&mut self) -> Cleareccaddr1W<CmdSpec> {
         Cleareccaddr1W::new(self, 1)
     }
@@ -26,10 +24,6 @@ impl crate::RegisterSpec for CmdSpec {
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CmdSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CmdSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmdSpec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn syncseten(&mut self) -> SyncsetenW<SynchwenSpec> {
         SyncsetenW::new(self, 0)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn syncclren(&mut self) -> SyncclrenW<SynchwenSpec> {
         SyncclrenW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for SynchwenSpec {}
 #[doc = "`write(|w| ..)` method takes [`synchwen::W`](W) writer structure"]
 impl crate::Writable for SynchwenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYNCHWEN to value 0"]
-impl crate::Resettable for SynchwenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SynchwenSpec {}

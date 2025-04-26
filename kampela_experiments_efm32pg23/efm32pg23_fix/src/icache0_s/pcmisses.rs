@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PcmissesSpec {
 #[doc = "`read()` method returns [`pcmisses::R`](R) reader structure"]
 impl crate::Readable for PcmissesSpec {}
 #[doc = "`reset()` method sets PCMISSES to value 0"]
-impl crate::Resettable for PcmissesSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PcmissesSpec {}

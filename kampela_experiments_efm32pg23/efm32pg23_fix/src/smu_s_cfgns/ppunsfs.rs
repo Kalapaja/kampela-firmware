@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PpunsfsSpec {
 #[doc = "`read()` method returns [`ppunsfs::R`](R) reader structure"]
 impl crate::Readable for PpunsfsSpec {}
 #[doc = "`reset()` method sets PPUNSFS to value 0"]
-impl crate::Resettable for PpunsfsSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PpunsfsSpec {}

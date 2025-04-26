@@ -205,133 +205,111 @@ impl R {
 impl W {
     #[doc = "Bit 0 - SYSRTC Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn sysrtc(&mut self) -> SysrtcW<Ppupatd1Spec> {
         SysrtcW::new(self, 0)
     }
     #[doc = "Bit 1 - LCD Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lcd(&mut self) -> LcdW<Ppupatd1Spec> {
         LcdW::new(self, 1)
     }
     #[doc = "Bit 2 - KEYSCAN Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn keyscan(&mut self) -> KeyscanW<Ppupatd1Spec> {
         KeyscanW::new(self, 2)
     }
     #[doc = "Bit 3 - DMEM Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn dmem(&mut self) -> DmemW<Ppupatd1Spec> {
         DmemW::new(self, 3)
     }
     #[doc = "Bit 4 - LCDRF Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lcdrf(&mut self) -> LcdrfW<Ppupatd1Spec> {
         LcdrfW::new(self, 4)
     }
     #[doc = "Bit 7 - SMU Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn smu(&mut self) -> SmuW<Ppupatd1Spec> {
         SmuW::new(self, 7)
     }
     #[doc = "Bit 8 - SMUCFGNS Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn smucfgns(&mut self) -> SmucfgnsW<Ppupatd1Spec> {
         SmucfgnsW::new(self, 8)
     }
     #[doc = "Bit 9 - LETIMER0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn letimer0(&mut self) -> Letimer0W<Ppupatd1Spec> {
         Letimer0W::new(self, 9)
     }
     #[doc = "Bit 10 - IADC0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn iadc0(&mut self) -> Iadc0W<Ppupatd1Spec> {
         Iadc0W::new(self, 10)
     }
     #[doc = "Bit 11 - ACMP0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn acmp0(&mut self) -> Acmp0W<Ppupatd1Spec> {
         Acmp0W::new(self, 11)
     }
     #[doc = "Bit 12 - ACMP1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn acmp1(&mut self) -> Acmp1W<Ppupatd1Spec> {
         Acmp1W::new(self, 12)
     }
     #[doc = "Bit 13 - AMUXCP0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn amuxcp0(&mut self) -> Amuxcp0W<Ppupatd1Spec> {
         Amuxcp0W::new(self, 13)
     }
     #[doc = "Bit 14 - VDAC0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn vdac0(&mut self) -> Vdac0W<Ppupatd1Spec> {
         Vdac0W::new(self, 14)
     }
     #[doc = "Bit 15 - PCNT Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn pcnt(&mut self) -> PcntW<Ppupatd1Spec> {
         PcntW::new(self, 15)
     }
     #[doc = "Bit 16 - LESENSE Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lesense(&mut self) -> LesenseW<Ppupatd1Spec> {
         LesenseW::new(self, 16)
     }
     #[doc = "Bit 17 - HFRCO1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hfrco1(&mut self) -> Hfrco1W<Ppupatd1Spec> {
         Hfrco1W::new(self, 17)
     }
     #[doc = "Bit 18 - HFXO0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hfxo0(&mut self) -> Hfxo0W<Ppupatd1Spec> {
         Hfxo0W::new(self, 18)
     }
     #[doc = "Bit 19 - I2C0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn i2c0(&mut self) -> I2c0W<Ppupatd1Spec> {
         I2c0W::new(self, 19)
     }
     #[doc = "Bit 20 - WDOG0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn wdog0(&mut self) -> Wdog0W<Ppupatd1Spec> {
         Wdog0W::new(self, 20)
     }
     #[doc = "Bit 21 - WDOG1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn wdog1(&mut self) -> Wdog1W<Ppupatd1Spec> {
         Wdog1W::new(self, 21)
     }
     #[doc = "Bit 22 - EUSART0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart0(&mut self) -> Eusart0W<Ppupatd1Spec> {
         Eusart0W::new(self, 22)
     }
     #[doc = "Bit 23 - SEMAILBOX Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn semailbox(&mut self) -> SemailboxW<Ppupatd1Spec> {
         SemailboxW::new(self, 23)
     }
@@ -346,8 +324,6 @@ impl crate::Readable for Ppupatd1Spec {}
 #[doc = "`write(|w| ..)` method takes [`ppupatd1::W`](W) writer structure"]
 impl crate::Writable for Ppupatd1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PPUPATD1 to value 0x01ff_ffff"]
 impl crate::Resettable for Ppupatd1Spec {

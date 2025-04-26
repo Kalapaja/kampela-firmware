@@ -142,91 +142,76 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn of(&mut self) -> OfW<IfSpec> {
         OfW::new(self, 0)
     }
     #[doc = "Bit 1 - Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn uf(&mut self) -> UfW<IfSpec> {
         UfW::new(self, 1)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn dirchg(&mut self) -> DirchgW<IfSpec> {
         DirchgW::new(self, 2)
     }
     #[doc = "Bit 4 - Capture Compare Channel 0 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cc0(&mut self) -> Cc0W<IfSpec> {
         Cc0W::new(self, 4)
     }
     #[doc = "Bit 5 - Capture Compare Channel 1 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cc1(&mut self) -> Cc1W<IfSpec> {
         Cc1W::new(self, 5)
     }
     #[doc = "Bit 6 - Capture Compare Channel 2 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cc2(&mut self) -> Cc2W<IfSpec> {
         Cc2W::new(self, 6)
     }
     #[doc = "Bit 16 - Input Capture Watermark Level Full"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull0(&mut self) -> Icfwlfull0W<IfSpec> {
         Icfwlfull0W::new(self, 16)
     }
     #[doc = "Bit 17 - Input Capture Watermark Level Full"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull1(&mut self) -> Icfwlfull1W<IfSpec> {
         Icfwlfull1W::new(self, 17)
     }
     #[doc = "Bit 18 - Input Capture Watermark Level Full"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull2(&mut self) -> Icfwlfull2W<IfSpec> {
         Icfwlfull2W::new(self, 18)
     }
     #[doc = "Bit 20 - Input Capture FIFO overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof0(&mut self) -> Icfof0W<IfSpec> {
         Icfof0W::new(self, 20)
     }
     #[doc = "Bit 21 - Input Capture FIFO overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof1(&mut self) -> Icfof1W<IfSpec> {
         Icfof1W::new(self, 21)
     }
     #[doc = "Bit 22 - Input Capture FIFO overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof2(&mut self) -> Icfof2W<IfSpec> {
         Icfof2W::new(self, 22)
     }
     #[doc = "Bit 24 - Input capture FIFO underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf0(&mut self) -> Icfuf0W<IfSpec> {
         Icfuf0W::new(self, 24)
     }
     #[doc = "Bit 25 - Input capture FIFO underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf1(&mut self) -> Icfuf1W<IfSpec> {
         Icfuf1W::new(self, 25)
     }
     #[doc = "Bit 26 - Input capture FIFO underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf2(&mut self) -> Icfuf2W<IfSpec> {
         Icfuf2W::new(self, 26)
     }
@@ -241,10 +226,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

@@ -163,13 +163,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - EM23 Peak Current Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn ipkval(&mut self) -> IpkvalW<Em23ctrl0Spec> {
         IpkvalW::new(self, 0)
     }
     #[doc = "Bits 8:9 - EM23 Drive Speed Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn drvspeed(&mut self) -> DrvspeedW<Em23ctrl0Spec> {
         DrvspeedW::new(self, 8)
     }
@@ -184,8 +182,6 @@ impl crate::Readable for Em23ctrl0Spec {}
 #[doc = "`write(|w| ..)` method takes [`em23ctrl0::W`](W) writer structure"]
 impl crate::Writable for Em23ctrl0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EM23CTRL0 to value 0x0103"]
 impl crate::Resettable for Em23ctrl0Spec {

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:9 - CH0 Output Hold Time"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0outholdtime(&mut self) -> Ch0outholdtimeW<OuttimercfgSpec> {
         Ch0outholdtimeW::new(self, 0)
     }
     #[doc = "Bits 15:24 - CH1 Output Hold Time"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1outholdtime(&mut self) -> Ch1outholdtimeW<OuttimercfgSpec> {
         Ch1outholdtimeW::new(self, 15)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for OuttimercfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`outtimercfg::W`](W) writer structure"]
 impl crate::Writable for OuttimercfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets OUTTIMERCFG to value 0"]
-impl crate::Resettable for OuttimercfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for OuttimercfgSpec {}

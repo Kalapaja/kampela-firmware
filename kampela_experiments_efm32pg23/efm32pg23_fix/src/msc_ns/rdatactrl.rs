@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 1 - Automatic Invalidate Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn afdis(&mut self) -> AfdisW<RdatactrlSpec> {
         AfdisW::new(self, 1)
     }
     #[doc = "Bit 12 - Flash dout pipeline buffer enable"]
     #[inline(always)]
-    #[must_use]
     pub fn doutbufen(&mut self) -> DoutbufenW<RdatactrlSpec> {
         DoutbufenW::new(self, 12)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for RdatactrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`rdatactrl::W`](W) writer structure"]
 impl crate::Writable for RdatactrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RDATACTRL to value 0x1000"]
 impl crate::Resettable for RdatactrlSpec {

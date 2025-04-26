@@ -269,25 +269,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Timer comparator 2."]
     #[inline(always)]
-    #[must_use]
     pub fn tcmpval(&mut self) -> TcmpvalW<Timecmp2Spec> {
         TcmpvalW::new(self, 0)
     }
     #[doc = "Bits 16:18 - Timer start source"]
     #[inline(always)]
-    #[must_use]
     pub fn tstart(&mut self) -> TstartW<Timecmp2Spec> {
         TstartW::new(self, 16)
     }
     #[doc = "Bits 20:22 - Source used to disable comparator 2"]
     #[inline(always)]
-    #[must_use]
     pub fn tstop(&mut self) -> TstopW<Timecmp2Spec> {
         TstopW::new(self, 20)
     }
     #[doc = "Bit 24 - Restart Timer on TCMP2"]
     #[inline(always)]
-    #[must_use]
     pub fn restarten(&mut self) -> RestartenW<Timecmp2Spec> {
         RestartenW::new(self, 24)
     }
@@ -302,10 +298,6 @@ impl crate::Readable for Timecmp2Spec {}
 #[doc = "`write(|w| ..)` method takes [`timecmp2::W`](W) writer structure"]
 impl crate::Writable for Timecmp2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMECMP2 to value 0"]
-impl crate::Resettable for Timecmp2Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Timecmp2Spec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:11 - Factor M"]
     #[inline(always)]
-    #[must_use]
     pub fn m(&mut self) -> MW<Cfg1Spec> {
         MW::new(self, 0)
     }
     #[doc = "Bits 16:27 - Factor N"]
     #[inline(always)]
-    #[must_use]
     pub fn n(&mut self) -> NW<Cfg1Spec> {
         NW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Cfg1Spec {}
 #[doc = "`write(|w| ..)` method takes [`cfg1::W`](W) writer structure"]
 impl crate::Writable for Cfg1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG1 to value 0"]
-impl crate::Resettable for Cfg1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cfg1Spec {}

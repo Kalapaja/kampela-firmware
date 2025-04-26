@@ -160,103 +160,86 @@ impl R {
 impl W {
     #[doc = "Bit 0 - TX Complete Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txc(&mut self) -> TxcW<IenSpec> {
         TxcW::new(self, 0)
     }
     #[doc = "Bit 1 - TX Buffer Level Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txbl(&mut self) -> TxblW<IenSpec> {
         TxblW::new(self, 1)
     }
     #[doc = "Bit 2 - RX Data Valid Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxdatav(&mut self) -> RxdatavW<IenSpec> {
         RxdatavW::new(self, 2)
     }
     #[doc = "Bit 3 - RX Buffer Full Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<IenSpec> {
         RxfullW::new(self, 3)
     }
     #[doc = "Bit 4 - RX Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxof(&mut self) -> RxofW<IenSpec> {
         RxofW::new(self, 4)
     }
     #[doc = "Bit 5 - RX Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxuf(&mut self) -> RxufW<IenSpec> {
         RxufW::new(self, 5)
     }
     #[doc = "Bit 6 - TX Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txof(&mut self) -> TxofW<IenSpec> {
         TxofW::new(self, 6)
     }
     #[doc = "Bit 7 - TX Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txuf(&mut self) -> TxufW<IenSpec> {
         TxufW::new(self, 7)
     }
     #[doc = "Bit 8 - Parity Error Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn perr(&mut self) -> PerrW<IenSpec> {
         PerrW::new(self, 8)
     }
     #[doc = "Bit 9 - Framing Error Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ferr(&mut self) -> FerrW<IenSpec> {
         FerrW::new(self, 9)
     }
     #[doc = "Bit 10 - Multi-Processor Address Frame Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn mpaf(&mut self) -> MpafW<IenSpec> {
         MpafW::new(self, 10)
     }
     #[doc = "Bit 11 - Chip-Select In Main Mode Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ssm(&mut self) -> SsmW<IenSpec> {
         SsmW::new(self, 11)
     }
     #[doc = "Bit 12 - Collision Check Fail Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ccf(&mut self) -> CcfW<IenSpec> {
         CcfW::new(self, 12)
     }
     #[doc = "Bit 13 - TX Idle Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txidle(&mut self) -> TxidleW<IenSpec> {
         TxidleW::new(self, 13)
     }
     #[doc = "Bit 14 - Timer comparator 0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tcmp0(&mut self) -> Tcmp0W<IenSpec> {
         Tcmp0W::new(self, 14)
     }
     #[doc = "Bit 15 - Timer comparator 1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tcmp1(&mut self) -> Tcmp1W<IenSpec> {
         Tcmp1W::new(self, 15)
     }
     #[doc = "Bit 16 - Timer comparator 2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tcmp2(&mut self) -> Tcmp2W<IenSpec> {
         Tcmp2W::new(self, 16)
     }
@@ -271,10 +254,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

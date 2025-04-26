@@ -17,6 +17,4 @@ impl crate::RegisterSpec for DatabyterevSpec {
 #[doc = "`read()` method returns [`databyterev::R`](R) reader structure"]
 impl crate::Readable for DatabyterevSpec {}
 #[doc = "`reset()` method sets DATABYTEREV to value 0"]
-impl crate::Resettable for DatabyterevSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DatabyterevSpec {}

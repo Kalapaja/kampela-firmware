@@ -142,91 +142,76 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn of(&mut self) -> OfW<IenSpec> {
         OfW::new(self, 0)
     }
     #[doc = "Bit 1 - Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn uf(&mut self) -> UfW<IenSpec> {
         UfW::new(self, 1)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dirchg(&mut self) -> DirchgW<IenSpec> {
         DirchgW::new(self, 2)
     }
     #[doc = "Bit 4 - CC0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cc0(&mut self) -> Cc0W<IenSpec> {
         Cc0W::new(self, 4)
     }
     #[doc = "Bit 5 - CC1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cc1(&mut self) -> Cc1W<IenSpec> {
         Cc1W::new(self, 5)
     }
     #[doc = "Bit 6 - CC2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cc2(&mut self) -> Cc2W<IenSpec> {
         Cc2W::new(self, 6)
     }
     #[doc = "Bit 16 - ICFWLFULL0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull0(&mut self) -> Icfwlfull0W<IenSpec> {
         Icfwlfull0W::new(self, 16)
     }
     #[doc = "Bit 17 - ICFWLFULL1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull1(&mut self) -> Icfwlfull1W<IenSpec> {
         Icfwlfull1W::new(self, 17)
     }
     #[doc = "Bit 18 - ICFWLFULL2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfwlfull2(&mut self) -> Icfwlfull2W<IenSpec> {
         Icfwlfull2W::new(self, 18)
     }
     #[doc = "Bit 20 - ICFOF0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof0(&mut self) -> Icfof0W<IenSpec> {
         Icfof0W::new(self, 20)
     }
     #[doc = "Bit 21 - ICFOF1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof1(&mut self) -> Icfof1W<IenSpec> {
         Icfof1W::new(self, 21)
     }
     #[doc = "Bit 22 - ICFOF2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfof2(&mut self) -> Icfof2W<IenSpec> {
         Icfof2W::new(self, 22)
     }
     #[doc = "Bit 24 - ICFUF0 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf0(&mut self) -> Icfuf0W<IenSpec> {
         Icfuf0W::new(self, 24)
     }
     #[doc = "Bit 25 - ICFUF1 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf1(&mut self) -> Icfuf1W<IenSpec> {
         Icfuf1W::new(self, 25)
     }
     #[doc = "Bit 26 - ICFUF2 Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn icfuf2(&mut self) -> Icfuf2W<IenSpec> {
         Icfuf2W::new(self, 26)
     }
@@ -241,10 +226,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

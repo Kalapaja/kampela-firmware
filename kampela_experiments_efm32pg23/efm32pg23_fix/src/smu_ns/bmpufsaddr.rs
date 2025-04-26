@@ -17,6 +17,4 @@ impl crate::RegisterSpec for BmpufsaddrSpec {
 #[doc = "`read()` method returns [`bmpufsaddr::R`](R) reader structure"]
 impl crate::Readable for BmpufsaddrSpec {}
 #[doc = "`reset()` method sets BMPUFSADDR to value 0"]
-impl crate::Resettable for BmpufsaddrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for BmpufsaddrSpec {}

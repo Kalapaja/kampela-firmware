@@ -280,19 +280,16 @@ impl R {
 impl W {
     #[doc = "Bits 18:19 - PRS Start Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn prsstartmode(&mut self) -> PrsstartmodeW<PrsmodeSpec> {
         PrsstartmodeW::new(self, 18)
     }
     #[doc = "Bits 22:23 - PRS Stop Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn prsstopmode(&mut self) -> PrsstopmodeW<PrsmodeSpec> {
         PrsstopmodeW::new(self, 22)
     }
     #[doc = "Bits 26:27 - PRS Clear Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn prsclearmode(&mut self) -> PrsclearmodeW<PrsmodeSpec> {
         PrsclearmodeW::new(self, 26)
     }
@@ -307,10 +304,6 @@ impl crate::Readable for PrsmodeSpec {}
 #[doc = "`write(|w| ..)` method takes [`prsmode::W`](W) writer structure"]
 impl crate::Writable for PrsmodeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PRSMODE to value 0"]
-impl crate::Resettable for PrsmodeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PrsmodeSpec {}

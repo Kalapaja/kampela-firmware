@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - OUT0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn out0pen(&mut self) -> Out0penW<LetimerRouteenSpec> {
         Out0penW::new(self, 0)
     }
     #[doc = "Bit 1 - OUT1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn out1pen(&mut self) -> Out1penW<LetimerRouteenSpec> {
         Out1penW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for LetimerRouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`letimer_routeen::W`](W) writer structure"]
 impl crate::Writable for LetimerRouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LETIMER_ROUTEEN to value 0"]
-impl crate::Resettable for LetimerRouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LetimerRouteenSpec {}

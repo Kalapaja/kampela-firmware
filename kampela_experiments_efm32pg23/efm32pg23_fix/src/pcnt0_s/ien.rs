@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Underflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn uf(&mut self) -> UfW<IenSpec> {
         UfW::new(self, 0)
     }
     #[doc = "Bit 1 - Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn of(&mut self) -> OfW<IenSpec> {
         OfW::new(self, 1)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn dircng(&mut self) -> DircngW<IenSpec> {
         DircngW::new(self, 2)
     }
     #[doc = "Bit 3 - Auxiliary Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn auxof(&mut self) -> AuxofW<IenSpec> {
         AuxofW::new(self, 3)
     }
     #[doc = "Bit 4 - Oversampling Quad State Err Int Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn oqsterr(&mut self) -> OqsterrW<IenSpec> {
         OqsterrW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

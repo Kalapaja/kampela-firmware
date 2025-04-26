@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Data"]
     #[inline(always)]
-    #[must_use]
     pub fn data(&mut self) -> DataW<Rootnsdata1Spec> {
         DataW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Rootnsdata1Spec {}
 #[doc = "`write(|w| ..)` method takes [`rootnsdata1::W`](W) writer structure"]
 impl crate::Writable for Rootnsdata1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ROOTNSDATA1 to value 0"]
-impl crate::Resettable for Rootnsdata1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Rootnsdata1Spec {}

@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CLKOUT0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn clkout0pen(&mut self) -> Clkout0penW<CmuRouteenSpec> {
         Clkout0penW::new(self, 0)
     }
     #[doc = "Bit 1 - CLKOUT1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn clkout1pen(&mut self) -> Clkout1penW<CmuRouteenSpec> {
         Clkout1penW::new(self, 1)
     }
     #[doc = "Bit 2 - CLKOUT2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn clkout2pen(&mut self) -> Clkout2penW<CmuRouteenSpec> {
         Clkout2penW::new(self, 2)
     }
@@ -61,10 +58,6 @@ impl crate::Readable for CmuRouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`cmu_routeen::W`](W) writer structure"]
 impl crate::Writable for CmuRouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMU_ROUTEEN to value 0"]
-impl crate::Resettable for CmuRouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmuRouteenSpec {}

@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:19 - COM2 Segment Data Low"]
     #[inline(always)]
-    #[must_use]
     pub fn segd2(&mut self) -> Segd2W<Segd2Spec> {
         Segd2W::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Segd2Spec {}
 #[doc = "`write(|w| ..)` method takes [`segd2::W`](W) writer structure"]
 impl crate::Writable for Segd2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SEGD2 to value 0"]
-impl crate::Resettable for Segd2Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Segd2Spec {}

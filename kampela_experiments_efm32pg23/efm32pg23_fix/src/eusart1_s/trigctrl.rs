@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Receive Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxten(&mut self) -> RxtenW<TrigctrlSpec> {
         RxtenW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txten(&mut self) -> TxtenW<TrigctrlSpec> {
         TxtenW::new(self, 1)
     }
     #[doc = "Bit 2 - AUTOTX Trigger Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn autotxten(&mut self) -> AutotxtenW<TrigctrlSpec> {
         AutotxtenW::new(self, 2)
     }
@@ -61,10 +58,6 @@ impl crate::Readable for TrigctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`trigctrl::W`](W) writer structure"]
 impl crate::Writable for TrigctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRIGCTRL to value 0"]
-impl crate::Resettable for TrigctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TrigctrlSpec {}

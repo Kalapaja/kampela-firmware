@@ -196,127 +196,106 @@ impl R {
 impl W {
     #[doc = "Bit 0 - START condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn start(&mut self) -> StartW<IfSpec> {
         StartW::new(self, 0)
     }
     #[doc = "Bit 1 - Repeated START condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rstart(&mut self) -> RstartW<IfSpec> {
         RstartW::new(self, 1)
     }
     #[doc = "Bit 2 - Address Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn addr(&mut self) -> AddrW<IfSpec> {
         AddrW::new(self, 2)
     }
     #[doc = "Bit 3 - Transfer Completed Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txc(&mut self) -> TxcW<IfSpec> {
         TxcW::new(self, 3)
     }
     #[doc = "Bit 4 - Transmit Buffer Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txbl(&mut self) -> TxblW<IfSpec> {
         TxblW::new(self, 4)
     }
     #[doc = "Bit 5 - Receive Data Valid Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxdatav(&mut self) -> RxdatavW<IfSpec> {
         RxdatavW::new(self, 5)
     }
     #[doc = "Bit 6 - Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ack(&mut self) -> AckW<IfSpec> {
         AckW::new(self, 6)
     }
     #[doc = "Bit 7 - Not Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn nack(&mut self) -> NackW<IfSpec> {
         NackW::new(self, 7)
     }
     #[doc = "Bit 8 - Leader STOP Condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn mstop(&mut self) -> MstopW<IfSpec> {
         MstopW::new(self, 8)
     }
     #[doc = "Bit 9 - Arbitration Lost Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn arblost(&mut self) -> ArblostW<IfSpec> {
         ArblostW::new(self, 9)
     }
     #[doc = "Bit 10 - Bus Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn buserr(&mut self) -> BuserrW<IfSpec> {
         BuserrW::new(self, 10)
     }
     #[doc = "Bit 11 - Bus Held Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn bushold(&mut self) -> BusholdW<IfSpec> {
         BusholdW::new(self, 11)
     }
     #[doc = "Bit 12 - Transmit Buffer Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txof(&mut self) -> TxofW<IfSpec> {
         TxofW::new(self, 12)
     }
     #[doc = "Bit 13 - Receive Buffer Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxuf(&mut self) -> RxufW<IfSpec> {
         RxufW::new(self, 13)
     }
     #[doc = "Bit 14 - Bus Idle Timeout Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn bito(&mut self) -> BitoW<IfSpec> {
         BitoW::new(self, 14)
     }
     #[doc = "Bit 15 - Clock Low Timeout Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn clto(&mut self) -> CltoW<IfSpec> {
         CltoW::new(self, 15)
     }
     #[doc = "Bit 16 - Follower STOP condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn sstop(&mut self) -> SstopW<IfSpec> {
         SstopW::new(self, 16)
     }
     #[doc = "Bit 17 - Receive Buffer Full Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<IfSpec> {
         RxfullW::new(self, 17)
     }
     #[doc = "Bit 18 - Clock Low Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn clerr(&mut self) -> ClerrW<IfSpec> {
         ClerrW::new(self, 18)
     }
     #[doc = "Bit 19 - SCL Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn sclerr(&mut self) -> SclerrW<IfSpec> {
         SclerrW::new(self, 19)
     }
     #[doc = "Bit 20 - SDA Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn sdaerr(&mut self) -> SdaerrW<IfSpec> {
         SdaerrW::new(self, 20)
     }
@@ -331,10 +310,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

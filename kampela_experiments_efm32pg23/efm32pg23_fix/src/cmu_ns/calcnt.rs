@@ -17,6 +17,4 @@ impl crate::RegisterSpec for CalcntSpec {
 #[doc = "`read()` method returns [`calcnt::R`](R) reader structure"]
 impl crate::Readable for CalcntSpec {}
 #[doc = "`reset()` method sets CALCNT to value 0"]
-impl crate::Resettable for CalcntSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CalcntSpec {}

@@ -17,6 +17,4 @@ impl crate::RegisterSpec for AuxcntSpec {
 #[doc = "`read()` method returns [`auxcnt::R`](R) reader structure"]
 impl crate::Readable for AuxcntSpec {}
 #[doc = "`reset()` method sets AUXCNT to value 0"]
-impl crate::Resettable for AuxcntSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AuxcntSpec {}

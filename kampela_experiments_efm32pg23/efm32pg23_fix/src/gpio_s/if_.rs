@@ -101,6 +101,4 @@ impl crate::RegisterSpec for IfSpec {
 #[doc = "`read()` method returns [`if_::R`](R) reader structure"]
 impl crate::Readable for IfSpec {}
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

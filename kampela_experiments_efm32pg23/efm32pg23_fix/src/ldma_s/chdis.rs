@@ -5,7 +5,6 @@ pub type ChdisW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - DMA Channel disable"]
     #[inline(always)]
-    #[must_use]
     pub fn chdis(&mut self) -> ChdisW<ChdisSpec> {
         ChdisW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for ChdisSpec {
 #[doc = "`write(|w| ..)` method takes [`chdis::W`](W) writer structure"]
 impl crate::Writable for ChdisSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHDIS to value 0"]
-impl crate::Resettable for ChdisSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChdisSpec {}

@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:9 - DTI Prescaler Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn dtpresc(&mut self) -> DtprescW<DttimecfgSpec> {
         DtprescW::new(self, 0)
     }
     #[doc = "Bits 10:15 - DTI Rise-time"]
     #[inline(always)]
-    #[must_use]
     pub fn dtriset(&mut self) -> DtrisetW<DttimecfgSpec> {
         DtrisetW::new(self, 10)
     }
     #[doc = "Bits 16:21 - DTI Fall-time"]
     #[inline(always)]
-    #[must_use]
     pub fn dtfallt(&mut self) -> DtfalltW<DttimecfgSpec> {
         DtfalltW::new(self, 16)
     }
@@ -61,10 +58,6 @@ impl crate::Readable for DttimecfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`dttimecfg::W`](W) writer structure"]
 impl crate::Writable for DttimecfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTTIMECFG to value 0"]
-impl crate::Resettable for DttimecfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DttimecfgSpec {}

@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ovf(&mut self) -> OvfW<Grp0IfSpec> {
         OvfW::new(self, 0)
     }
     #[doc = "Bit 1 - Compare 0 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp0(&mut self) -> Cmp0W<Grp0IfSpec> {
         Cmp0W::new(self, 1)
     }
     #[doc = "Bit 2 - Compare 1 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp1(&mut self) -> Cmp1W<Grp0IfSpec> {
         Cmp1W::new(self, 2)
     }
     #[doc = "Bit 3 - Capture 0 Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn cap0(&mut self) -> Cap0W<Grp0IfSpec> {
         Cap0W::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for Grp0IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`grp0_if::W`](W) writer structure"]
 impl crate::Writable for Grp0IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GRP0_IF to value 0"]
-impl crate::Resettable for Grp0IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Grp0IfSpec {}

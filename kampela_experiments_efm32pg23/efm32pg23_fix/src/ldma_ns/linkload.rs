@@ -5,7 +5,6 @@ pub type LinkloadW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - DMA Link Loads"]
     #[inline(always)]
-    #[must_use]
     pub fn linkload(&mut self) -> LinkloadW<LinkloadSpec> {
         LinkloadW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for LinkloadSpec {
 #[doc = "`write(|w| ..)` method takes [`linkload::W`](W) writer structure"]
 impl crate::Writable for LinkloadSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LINKLOAD to value 0"]
-impl crate::Resettable for LinkloadSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LinkloadSpec {}

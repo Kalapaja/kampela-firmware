@@ -31,6 +31,4 @@ impl crate::RegisterSpec for RxdataxpSpec {
 #[doc = "`read()` method returns [`rxdataxp::R`](R) reader structure"]
 impl crate::Readable for RxdataxpSpec {}
 #[doc = "`reset()` method sets RXDATAXP to value 0"]
-impl crate::Resettable for RxdataxpSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxdataxpSpec {}

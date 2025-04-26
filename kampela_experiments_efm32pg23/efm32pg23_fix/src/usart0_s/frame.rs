@@ -384,19 +384,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Data-Bit Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn databits(&mut self) -> DatabitsW<FrameSpec> {
         DatabitsW::new(self, 0)
     }
     #[doc = "Bits 8:9 - Parity-Bit Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn parity(&mut self) -> ParityW<FrameSpec> {
         ParityW::new(self, 8)
     }
     #[doc = "Bits 12:13 - Stop-Bit Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn stopbits(&mut self) -> StopbitsW<FrameSpec> {
         StopbitsW::new(self, 12)
     }
@@ -411,8 +408,6 @@ impl crate::Readable for FrameSpec {}
 #[doc = "`write(|w| ..)` method takes [`frame::W`](W) writer structure"]
 impl crate::Writable for FrameSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets FRAME to value 0x1005"]
 impl crate::Resettable for FrameSpec {

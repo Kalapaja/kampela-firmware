@@ -579,25 +579,21 @@ impl R {
 impl W {
     #[doc = "Bits 16:18 - TX frame start delay"]
     #[inline(always)]
-    #[must_use]
     pub fn txdelay(&mut self) -> TxdelayW<TimingSpec> {
         TxdelayW::new(self, 16)
     }
     #[doc = "Bits 20:22 - Chip Select Setup"]
     #[inline(always)]
-    #[must_use]
     pub fn cssetup(&mut self) -> CssetupW<TimingSpec> {
         CssetupW::new(self, 20)
     }
     #[doc = "Bits 24:26 - Inter-character spacing"]
     #[inline(always)]
-    #[must_use]
     pub fn ics(&mut self) -> IcsW<TimingSpec> {
         IcsW::new(self, 24)
     }
     #[doc = "Bits 28:30 - Chip Select Hold"]
     #[inline(always)]
-    #[must_use]
     pub fn cshold(&mut self) -> CsholdW<TimingSpec> {
         CsholdW::new(self, 28)
     }
@@ -612,10 +608,6 @@ impl crate::Readable for TimingSpec {}
 #[doc = "`write(|w| ..)` method takes [`timing::W`](W) writer structure"]
 impl crate::Writable for TimingSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMING to value 0"]
-impl crate::Resettable for TimingSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TimingSpec {}

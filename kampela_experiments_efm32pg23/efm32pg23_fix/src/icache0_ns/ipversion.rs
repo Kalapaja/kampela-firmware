@@ -17,6 +17,4 @@ impl crate::RegisterSpec for IpversionSpec {
 #[doc = "`read()` method returns [`ipversion::R`](R) reader structure"]
 impl crate::Readable for IpversionSpec {}
 #[doc = "`reset()` method sets IPVERSION to value 0"]
-impl crate::Resettable for IpversionSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IpversionSpec {}

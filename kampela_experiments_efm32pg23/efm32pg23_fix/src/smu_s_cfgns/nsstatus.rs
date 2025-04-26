@@ -51,6 +51,4 @@ impl crate::RegisterSpec for NsstatusSpec {
 #[doc = "`read()` method returns [`nsstatus::R`](R) reader structure"]
 impl crate::Readable for NsstatusSpec {}
 #[doc = "`reset()` method sets NSSTATUS to value 0"]
-impl crate::Resettable for NsstatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for NsstatusSpec {}

@@ -5,7 +5,6 @@ pub type InputdataW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     #[doc = "Bits 0:31 - Input Data for 32-bit"]
     #[inline(always)]
-    #[must_use]
     pub fn inputdata(&mut self) -> InputdataW<InputdataSpec> {
         InputdataW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for InputdataSpec {
 #[doc = "`write(|w| ..)` method takes [`inputdata::W`](W) writer structure"]
 impl crate::Writable for InputdataSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INPUTDATA to value 0"]
-impl crate::Resettable for InputdataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for InputdataSpec {}

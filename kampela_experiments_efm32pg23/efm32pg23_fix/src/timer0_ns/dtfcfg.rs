@@ -143,37 +143,31 @@ impl R {
 impl W {
     #[doc = "Bits 16:17 - DTI Fault Action"]
     #[inline(always)]
-    #[must_use]
     pub fn dtfa(&mut self) -> DtfaW<DtfcfgSpec> {
         DtfaW::new(self, 16)
     }
     #[doc = "Bit 24 - DTI PRS 0 Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtprs0fen(&mut self) -> Dtprs0fenW<DtfcfgSpec> {
         Dtprs0fenW::new(self, 24)
     }
     #[doc = "Bit 25 - DTI PRS 1 Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtprs1fen(&mut self) -> Dtprs1fenW<DtfcfgSpec> {
         Dtprs1fenW::new(self, 25)
     }
     #[doc = "Bit 26 - DTI Debugger Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtdbgfen(&mut self) -> DtdbgfenW<DtfcfgSpec> {
         DtdbgfenW::new(self, 26)
     }
     #[doc = "Bit 27 - DTI Lockup Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtlockupfen(&mut self) -> DtlockupfenW<DtfcfgSpec> {
         DtlockupfenW::new(self, 27)
     }
     #[doc = "Bit 28 - DTI EM23 Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn dtem23fen(&mut self) -> Dtem23fenW<DtfcfgSpec> {
         Dtem23fenW::new(self, 28)
     }
@@ -188,10 +182,6 @@ impl crate::Readable for DtfcfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`dtfcfg::W`](W) writer structure"]
 impl crate::Writable for DtfcfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTFCFG to value 0"]
-impl crate::Resettable for DtfcfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtfcfgSpec {}

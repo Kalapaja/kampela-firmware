@@ -17,6 +17,4 @@ impl crate::RegisterSpec for ChstatusSpec {
 #[doc = "`read()` method returns [`chstatus::R`](R) reader structure"]
 impl crate::Readable for ChstatusSpec {}
 #[doc = "`reset()` method sets CHSTATUS to value 0"]
-impl crate::Resettable for ChstatusSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChstatusSpec {}

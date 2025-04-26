@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Invalid Address Bus Fault Response Enabl"]
     #[inline(always)]
-    #[must_use]
     pub fn addrfaulten(&mut self) -> AddrfaultenW<CtrlSpec> {
         AddrfaultenW::new(self, 0)
     }
     #[doc = "Bit 1 - Disabled Clkbus Bus Fault Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn clkdisfaulten(&mut self) -> ClkdisfaultenW<CtrlSpec> {
         ClkdisfaultenW::new(self, 1)
     }
     #[doc = "Bit 5 - Two bit ECC error bus fault response ena"]
     #[inline(always)]
-    #[must_use]
     pub fn rameccerrfaulten(&mut self) -> RameccerrfaultenW<CtrlSpec> {
         RameccerrfaultenW::new(self, 5)
     }
@@ -61,8 +58,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x23"]
 impl crate::Resettable for CtrlSpec {

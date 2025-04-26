@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LFXO Ready Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rdy(&mut self) -> RdyW<IfSpec> {
         RdyW::new(self, 0)
     }
     #[doc = "Bit 1 - Rising Edge Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn posedge(&mut self) -> PosedgeW<IfSpec> {
         PosedgeW::new(self, 1)
     }
     #[doc = "Bit 2 - Falling Edge Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn negedge(&mut self) -> NegedgeW<IfSpec> {
         NegedgeW::new(self, 2)
     }
     #[doc = "Bit 3 - LFXO Failure Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn fail(&mut self) -> FailW<IfSpec> {
         FailW::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

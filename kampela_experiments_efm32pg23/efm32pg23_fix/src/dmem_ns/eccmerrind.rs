@@ -24,6 +24,4 @@ impl crate::RegisterSpec for EccmerrindSpec {
 #[doc = "`read()` method returns [`eccmerrind::R`](R) reader structure"]
 impl crate::Readable for EccmerrindSpec {}
 #[doc = "`reset()` method sets ECCMERRIND to value 0"]
-impl crate::Resettable for EccmerrindSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EccmerrindSpec {}

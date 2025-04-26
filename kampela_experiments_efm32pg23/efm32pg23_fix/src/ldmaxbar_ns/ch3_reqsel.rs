@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Signal Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sigsel(&mut self) -> SigselW<Ch3ReqselSpec> {
         SigselW::new(self, 0)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
-    #[must_use]
     pub fn sourcesel(&mut self) -> SourceselW<Ch3ReqselSpec> {
         SourceselW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Ch3ReqselSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch3_reqsel::W`](W) writer structure"]
 impl crate::Writable for Ch3ReqselSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH3_REQSEL to value 0"]
-impl crate::Resettable for Ch3ReqselSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch3ReqselSpec {}

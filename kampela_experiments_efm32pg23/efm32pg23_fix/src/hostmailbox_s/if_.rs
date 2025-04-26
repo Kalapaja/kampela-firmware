@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Mailbox Interupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxif0(&mut self) -> Mboxif0W<IfSpec> {
         Mboxif0W::new(self, 0)
     }
     #[doc = "Bit 1 - Mailbox Interupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxif1(&mut self) -> Mboxif1W<IfSpec> {
         Mboxif1W::new(self, 1)
     }
     #[doc = "Bit 2 - Mailbox Interupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxif2(&mut self) -> Mboxif2W<IfSpec> {
         Mboxif2W::new(self, 2)
     }
     #[doc = "Bit 3 - Mailbox Interupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn mboxif3(&mut self) -> Mboxif3W<IfSpec> {
         Mboxif3W::new(self, 3)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

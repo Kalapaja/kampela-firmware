@@ -103,19 +103,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - EM4 entry request"]
     #[inline(always)]
-    #[must_use]
     pub fn em4entry(&mut self) -> Em4entryW<Em4ctrlSpec> {
         Em4entryW::new(self, 0)
     }
     #[doc = "Bits 4:5 - EM4 IO retention mode"]
     #[inline(always)]
-    #[must_use]
     pub fn em4ioretmode(&mut self) -> Em4ioretmodeW<Em4ctrlSpec> {
         Em4ioretmodeW::new(self, 4)
     }
     #[doc = "Bit 8 - Set BOD3SENSE as EM4 wakeup"]
     #[inline(always)]
-    #[must_use]
     pub fn bod3senseem4wu(&mut self) -> Bod3senseem4wuW<Em4ctrlSpec> {
         Bod3senseem4wuW::new(self, 8)
     }
@@ -130,10 +127,6 @@ impl crate::Readable for Em4ctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`em4ctrl::W`](W) writer structure"]
 impl crate::Writable for Em4ctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EM4CTRL to value 0"]
-impl crate::Resettable for Em4ctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Em4ctrlSpec {}

@@ -525,85 +525,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Freeze BUFOUT Controls"]
     #[inline(always)]
-    #[must_use]
     pub fn bufoutfreeze(&mut self) -> BufoutfreezeW<CtrlSpec> {
         BufoutfreezeW::new(self, 0)
     }
     #[doc = "Bit 2 - Keep Warm"]
     #[inline(always)]
-    #[must_use]
     pub fn keepwarm(&mut self) -> KeepwarmW<CtrlSpec> {
         KeepwarmW::new(self, 2)
     }
     #[doc = "Bit 3 - On-demand During EM23"]
     #[inline(always)]
-    #[must_use]
     pub fn em23ondemand(&mut self) -> Em23ondemandW<CtrlSpec> {
         Em23ondemandW::new(self, 3)
     }
     #[doc = "Bit 4 - Force XI Pin to Ground"]
     #[inline(always)]
-    #[must_use]
     pub fn forcexi2gndana(&mut self) -> Forcexi2gndanaW<CtrlSpec> {
         Forcexi2gndanaW::new(self, 4)
     }
     #[doc = "Bit 5 - Force XO Pin to Ground"]
     #[inline(always)]
-    #[must_use]
     pub fn forcexo2gndana(&mut self) -> Forcexo2gndanaW<CtrlSpec> {
         Forcexo2gndanaW::new(self, 5)
     }
     #[doc = "Bit 6 - Force Tuning Cap to Max Value"]
     #[inline(always)]
-    #[must_use]
     pub fn forcectunemax(&mut self) -> ForcectunemaxW<CtrlSpec> {
         ForcectunemaxW::new(self, 6)
     }
     #[doc = "Bits 8:11 - PRS Status 0 Output Select"]
     #[inline(always)]
-    #[must_use]
     pub fn prsstatussel0(&mut self) -> Prsstatussel0W<CtrlSpec> {
         Prsstatussel0W::new(self, 8)
     }
     #[doc = "Bits 12:15 - PRS Status 1 Output Select"]
     #[inline(always)]
-    #[must_use]
     pub fn prsstatussel1(&mut self) -> Prsstatussel1W<CtrlSpec> {
         Prsstatussel1W::new(self, 12)
     }
     #[doc = "Bit 16 - Force Digital Clock Request"]
     #[inline(always)]
-    #[must_use]
     pub fn forceen(&mut self) -> ForceenW<CtrlSpec> {
         ForceenW::new(self, 16)
     }
     #[doc = "Bit 17 - Force PRS Oscillator Request"]
     #[inline(always)]
-    #[must_use]
     pub fn forceenprs(&mut self) -> ForceenprsW<CtrlSpec> {
         ForceenprsW::new(self, 17)
     }
     #[doc = "Bit 18 - Force BUFOUT Request"]
     #[inline(always)]
-    #[must_use]
     pub fn forceenbufout(&mut self) -> ForceenbufoutW<CtrlSpec> {
         ForceenbufoutW::new(self, 18)
     }
     #[doc = "Bit 24 - Disable On-demand For Digital Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn disondemand(&mut self) -> DisondemandW<CtrlSpec> {
         DisondemandW::new(self, 24)
     }
     #[doc = "Bit 25 - Disable On-demand For PRS"]
     #[inline(always)]
-    #[must_use]
     pub fn disondemandprs(&mut self) -> DisondemandprsW<CtrlSpec> {
         DisondemandprsW::new(self, 25)
     }
     #[doc = "Bit 26 - Disable On-demand For BUFOUT"]
     #[inline(always)]
-    #[must_use]
     pub fn disondemandbufout(&mut self) -> DisondemandbufoutW<CtrlSpec> {
         DisondemandbufoutW::new(self, 26)
     }
@@ -618,8 +604,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0700_0040"]
 impl crate::Resettable for CtrlSpec {

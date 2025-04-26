@@ -16,14 +16,12 @@ impl RegisterBlock {
         &self.sreg1
     }
 }
-#[doc = "SREG0 (rw) register accessor: Used for SIMCTRL Pointer in Verification Environment\n\nYou can [`read`](crate::Reg::read) this register and get [`sreg0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sreg0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sreg0`]
-module"]
+#[doc = "SREG0 (rw) register accessor: Used for SIMCTRL Pointer in Verification Environment\n\nYou can [`read`](crate::Reg::read) this register and get [`sreg0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sreg0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sreg0`] module"]
 #[doc(alias = "SREG0")]
 pub type Sreg0 = crate::Reg<sreg0::Sreg0Spec>;
 #[doc = "Used for SIMCTRL Pointer in Verification Environment"]
 pub mod sreg0;
-#[doc = "SREG1 (rw) register accessor: Used for SIMCTRL Data Access in Verification Environment\n\nYou can [`read`](crate::Reg::read) this register and get [`sreg1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sreg1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sreg1`]
-module"]
+#[doc = "SREG1 (rw) register accessor: Used for SIMCTRL Data Access in Verification Environment\n\nYou can [`read`](crate::Reg::read) this register and get [`sreg1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sreg1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sreg1`] module"]
 #[doc(alias = "SREG1")]
 pub type Sreg1 = crate::Reg<sreg1::Sreg1Spec>;
 #[doc = "Used for SIMCTRL Data Access in Verification Environment"]

@@ -286,187 +286,156 @@ impl R {
 impl W {
     #[doc = "Bit 1 - EMU Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn emu(&mut self) -> EmuW<Ppusatd0Spec> {
         EmuW::new(self, 1)
     }
     #[doc = "Bit 2 - CMU Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn cmu(&mut self) -> CmuW<Ppusatd0Spec> {
         CmuW::new(self, 2)
     }
     #[doc = "Bit 3 - HFRCO0 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hfrco0(&mut self) -> Hfrco0W<Ppusatd0Spec> {
         Hfrco0W::new(self, 3)
     }
     #[doc = "Bit 4 - FSRCO Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn fsrco(&mut self) -> FsrcoW<Ppusatd0Spec> {
         FsrcoW::new(self, 4)
     }
     #[doc = "Bit 5 - DPLL0 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn dpll0(&mut self) -> Dpll0W<Ppusatd0Spec> {
         Dpll0W::new(self, 5)
     }
     #[doc = "Bit 6 - LFXO Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lfxo(&mut self) -> LfxoW<Ppusatd0Spec> {
         LfxoW::new(self, 6)
     }
     #[doc = "Bit 7 - LFRCO Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lfrco(&mut self) -> LfrcoW<Ppusatd0Spec> {
         LfrcoW::new(self, 7)
     }
     #[doc = "Bit 8 - ULFRCO Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ulfrco(&mut self) -> UlfrcoW<Ppusatd0Spec> {
         UlfrcoW::new(self, 8)
     }
     #[doc = "Bit 9 - MSC Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn msc(&mut self) -> MscW<Ppusatd0Spec> {
         MscW::new(self, 9)
     }
     #[doc = "Bit 10 - ICACHE0 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn icache0(&mut self) -> Icache0W<Ppusatd0Spec> {
         Icache0W::new(self, 10)
     }
     #[doc = "Bit 11 - PRS Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn prs(&mut self) -> PrsW<Ppusatd0Spec> {
         PrsW::new(self, 11)
     }
     #[doc = "Bit 12 - GPIO Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn gpio(&mut self) -> GpioW<Ppusatd0Spec> {
         GpioW::new(self, 12)
     }
     #[doc = "Bit 13 - LDMA Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ldma(&mut self) -> LdmaW<Ppusatd0Spec> {
         LdmaW::new(self, 13)
     }
     #[doc = "Bit 14 - LDMAXBAR Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ldmaxbar(&mut self) -> LdmaxbarW<Ppusatd0Spec> {
         LdmaxbarW::new(self, 14)
     }
     #[doc = "Bit 15 - TIMER0 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer0(&mut self) -> Timer0W<Ppusatd0Spec> {
         Timer0W::new(self, 15)
     }
     #[doc = "Bit 16 - TIMER1 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer1(&mut self) -> Timer1W<Ppusatd0Spec> {
         Timer1W::new(self, 16)
     }
     #[doc = "Bit 17 - TIMER2 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer2(&mut self) -> Timer2W<Ppusatd0Spec> {
         Timer2W::new(self, 17)
     }
     #[doc = "Bit 18 - TIMER3 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer3(&mut self) -> Timer3W<Ppusatd0Spec> {
         Timer3W::new(self, 18)
     }
     #[doc = "Bit 19 - TIMER4 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer4(&mut self) -> Timer4W<Ppusatd0Spec> {
         Timer4W::new(self, 19)
     }
     #[doc = "Bit 20 - USART0 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn usart0(&mut self) -> Usart0W<Ppusatd0Spec> {
         Usart0W::new(self, 20)
     }
     #[doc = "Bit 21 - BURTC Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn burtc(&mut self) -> BurtcW<Ppusatd0Spec> {
         BurtcW::new(self, 21)
     }
     #[doc = "Bit 22 - I2C1 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn i2c1(&mut self) -> I2c1W<Ppusatd0Spec> {
         I2c1W::new(self, 22)
     }
     #[doc = "Bit 23 - CHIPTESTCTRL Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn chiptestctrl(&mut self) -> ChiptestctrlW<Ppusatd0Spec> {
         ChiptestctrlW::new(self, 23)
     }
     #[doc = "Bit 24 - SYSCFGCFGNS Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn syscfgcfgns(&mut self) -> SyscfgcfgnsW<Ppusatd0Spec> {
         SyscfgcfgnsW::new(self, 24)
     }
     #[doc = "Bit 25 - SYSCFG Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn syscfg(&mut self) -> SyscfgW<Ppusatd0Spec> {
         SyscfgW::new(self, 25)
     }
     #[doc = "Bit 26 - BURAM Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn buram(&mut self) -> BuramW<Ppusatd0Spec> {
         BuramW::new(self, 26)
     }
     #[doc = "Bit 27 - GPCRC Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn gpcrc(&mut self) -> GpcrcW<Ppusatd0Spec> {
         GpcrcW::new(self, 27)
     }
     #[doc = "Bit 28 - DCDC Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn dcdc(&mut self) -> DcdcW<Ppusatd0Spec> {
         DcdcW::new(self, 28)
     }
     #[doc = "Bit 29 - HOSTMAILBOX Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hostmailbox(&mut self) -> HostmailboxW<Ppusatd0Spec> {
         HostmailboxW::new(self, 29)
     }
     #[doc = "Bit 30 - EUSART1 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart1(&mut self) -> Eusart1W<Ppusatd0Spec> {
         Eusart1W::new(self, 30)
     }
     #[doc = "Bit 31 - EUSART2 Secure Access"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart2(&mut self) -> Eusart2W<Ppusatd0Spec> {
         Eusart2W::new(self, 31)
     }
@@ -481,8 +450,6 @@ impl crate::Readable for Ppusatd0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ppusatd0::W`](W) writer structure"]
 impl crate::Writable for Ppusatd0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PPUSATD0 to value 0xffff_ffff"]
 impl crate::Resettable for Ppusatd0Spec {

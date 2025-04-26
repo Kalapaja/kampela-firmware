@@ -17,6 +17,4 @@ impl crate::RegisterSpec for EmutempSpec {
 #[doc = "`read()` method returns [`emutemp::R`](R) reader structure"]
 impl crate::Readable for EmutempSpec {}
 #[doc = "`reset()` method sets EMUTEMP to value 0"]
-impl crate::Resettable for EmutempSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EmutempSpec {}

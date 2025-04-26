@@ -151,97 +151,81 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CH0OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0outpen(&mut self) -> Ch0outpenW<LesenseRouteenSpec> {
         Ch0outpenW::new(self, 0)
     }
     #[doc = "Bit 1 - CH1OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1outpen(&mut self) -> Ch1outpenW<LesenseRouteenSpec> {
         Ch1outpenW::new(self, 1)
     }
     #[doc = "Bit 2 - CH2OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch2outpen(&mut self) -> Ch2outpenW<LesenseRouteenSpec> {
         Ch2outpenW::new(self, 2)
     }
     #[doc = "Bit 3 - CH3OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch3outpen(&mut self) -> Ch3outpenW<LesenseRouteenSpec> {
         Ch3outpenW::new(self, 3)
     }
     #[doc = "Bit 4 - CH4OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch4outpen(&mut self) -> Ch4outpenW<LesenseRouteenSpec> {
         Ch4outpenW::new(self, 4)
     }
     #[doc = "Bit 5 - CH5OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch5outpen(&mut self) -> Ch5outpenW<LesenseRouteenSpec> {
         Ch5outpenW::new(self, 5)
     }
     #[doc = "Bit 6 - CH6OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch6outpen(&mut self) -> Ch6outpenW<LesenseRouteenSpec> {
         Ch6outpenW::new(self, 6)
     }
     #[doc = "Bit 7 - CH7OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch7outpen(&mut self) -> Ch7outpenW<LesenseRouteenSpec> {
         Ch7outpenW::new(self, 7)
     }
     #[doc = "Bit 8 - CH8OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch8outpen(&mut self) -> Ch8outpenW<LesenseRouteenSpec> {
         Ch8outpenW::new(self, 8)
     }
     #[doc = "Bit 9 - CH9OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch9outpen(&mut self) -> Ch9outpenW<LesenseRouteenSpec> {
         Ch9outpenW::new(self, 9)
     }
     #[doc = "Bit 10 - CH10OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch10outpen(&mut self) -> Ch10outpenW<LesenseRouteenSpec> {
         Ch10outpenW::new(self, 10)
     }
     #[doc = "Bit 11 - CH11OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch11outpen(&mut self) -> Ch11outpenW<LesenseRouteenSpec> {
         Ch11outpenW::new(self, 11)
     }
     #[doc = "Bit 12 - CH12OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch12outpen(&mut self) -> Ch12outpenW<LesenseRouteenSpec> {
         Ch12outpenW::new(self, 12)
     }
     #[doc = "Bit 13 - CH13OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch13outpen(&mut self) -> Ch13outpenW<LesenseRouteenSpec> {
         Ch13outpenW::new(self, 13)
     }
     #[doc = "Bit 14 - CH14OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch14outpen(&mut self) -> Ch14outpenW<LesenseRouteenSpec> {
         Ch14outpenW::new(self, 14)
     }
     #[doc = "Bit 15 - CH15OUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn ch15outpen(&mut self) -> Ch15outpenW<LesenseRouteenSpec> {
         Ch15outpenW::new(self, 15)
     }
@@ -256,10 +240,6 @@ impl crate::Readable for LesenseRouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`lesense_routeen::W`](W) writer structure"]
 impl crate::Writable for LesenseRouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets LESENSE_ROUTEEN to value 0"]
-impl crate::Resettable for LesenseRouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for LesenseRouteenSpec {}

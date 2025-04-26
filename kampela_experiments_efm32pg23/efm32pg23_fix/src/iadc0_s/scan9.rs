@@ -339,37 +339,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Negative Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn pinneg(&mut self) -> PinnegW<Scan9Spec> {
         PinnegW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Negative Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn portneg(&mut self) -> PortnegW<Scan9Spec> {
         PortnegW::new(self, 4)
     }
     #[doc = "Bits 8:11 - Positive Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn pinpos(&mut self) -> PinposW<Scan9Spec> {
         PinposW::new(self, 8)
     }
     #[doc = "Bits 12:15 - Positive Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn portpos(&mut self) -> PortposW<Scan9Spec> {
         PortposW::new(self, 12)
     }
     #[doc = "Bit 16 - Configuration Group Select"]
     #[inline(always)]
-    #[must_use]
     pub fn cfg(&mut self) -> CfgW<Scan9Spec> {
         CfgW::new(self, 16)
     }
     #[doc = "Bit 17 - Comparison Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp(&mut self) -> CmpW<Scan9Spec> {
         CmpW::new(self, 17)
     }
@@ -384,10 +378,6 @@ impl crate::Readable for Scan9Spec {}
 #[doc = "`write(|w| ..)` method takes [`scan9::W`](W) writer structure"]
 impl crate::Writable for Scan9Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SCAN9 to value 0"]
-impl crate::Resettable for Scan9Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Scan9Spec {}

@@ -5,7 +5,6 @@ pub type TxheaderW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl W {
     #[doc = "Bits 0:31 - TXHEADER"]
     #[inline(always)]
-    #[must_use]
     pub fn txheader(&mut self) -> TxheaderW<TxHeaderSpec> {
         TxheaderW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for TxHeaderSpec {
 #[doc = "`write(|w| ..)` method takes [`tx_header::W`](W) writer structure"]
 impl crate::Writable for TxHeaderSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TX_HEADER to value 0"]
-impl crate::Resettable for TxHeaderSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxHeaderSpec {}

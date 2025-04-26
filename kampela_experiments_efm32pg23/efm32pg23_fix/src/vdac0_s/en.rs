@@ -72,7 +72,6 @@ impl R {
 impl W {
     #[doc = "Bit 0 - VDAC Module Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn en(&mut self) -> EnW<EnSpec> {
         EnW::new(self, 0)
     }
@@ -87,10 +86,6 @@ impl crate::Readable for EnSpec {}
 #[doc = "`write(|w| ..)` method takes [`en::W`](W) writer structure"]
 impl crate::Writable for EnSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EN to value 0"]
-impl crate::Resettable for EnSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for EnSpec {}

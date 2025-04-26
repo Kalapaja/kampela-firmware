@@ -5,7 +5,6 @@ pub type ChenW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - Channel Enables"]
     #[inline(always)]
-    #[must_use]
     pub fn chen(&mut self) -> ChenW<ChenSpec> {
         ChenW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for ChenSpec {
 #[doc = "`write(|w| ..)` method takes [`chen::W`](W) writer structure"]
 impl crate::Writable for ChenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHEN to value 0"]
-impl crate::Resettable for ChenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChenSpec {}

@@ -33,7 +33,6 @@ where
 impl W {
     #[doc = "Bits 0:15 - DTI Lock Key"]
     #[inline(always)]
-    #[must_use]
     pub fn dtilockkey(&mut self) -> DtilockkeyW<DtlockSpec> {
         DtilockkeyW::new(self, 0)
     }
@@ -46,10 +45,6 @@ impl crate::RegisterSpec for DtlockSpec {
 #[doc = "`write(|w| ..)` method takes [`dtlock::W`](W) writer structure"]
 impl crate::Writable for DtlockSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTLOCK to value 0"]
-impl crate::Resettable for DtlockSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtlockSpec {}

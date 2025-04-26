@@ -5,7 +5,6 @@ pub type ReqclearW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - DMA Request Clear"]
     #[inline(always)]
-    #[must_use]
     pub fn reqclear(&mut self) -> ReqclearW<ReqclearSpec> {
         ReqclearW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for ReqclearSpec {
 #[doc = "`write(|w| ..)` method takes [`reqclear::W`](W) writer structure"]
 impl crate::Writable for ReqclearSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets REQCLEAR to value 0"]
-impl crate::Resettable for ReqclearSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ReqclearSpec {}

@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 24:28 - Number of Fixed Priority Channels"]
     #[inline(always)]
-    #[must_use]
     pub fn numfixed(&mut self) -> NumfixedW<CtrlSpec> {
         NumfixedW::new(self, 24)
     }
     #[doc = "Bit 31 - Reset DMA controller"]
     #[inline(always)]
-    #[must_use]
     pub fn corerst(&mut self) -> CorerstW<CtrlSpec> {
         CorerstW::new(self, 31)
     }
@@ -46,8 +44,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x1e00_0000"]
 impl crate::Resettable for CtrlSpec {

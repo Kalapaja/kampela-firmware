@@ -169,109 +169,91 @@ impl R {
 impl W {
     #[doc = "Bit 0 - TX Complete Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txc(&mut self) -> TxcW<IfSpec> {
         TxcW::new(self, 0)
     }
     #[doc = "Bit 1 - TX FIFO Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txfl(&mut self) -> TxflW<IfSpec> {
         TxflW::new(self, 1)
     }
     #[doc = "Bit 2 - RX FIFO Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfl(&mut self) -> RxflW<IfSpec> {
         RxflW::new(self, 2)
     }
     #[doc = "Bit 3 - RX FIFO Full Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<IfSpec> {
         RxfullW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxof(&mut self) -> RxofW<IfSpec> {
         RxofW::new(self, 4)
     }
     #[doc = "Bit 5 - RX FIFO Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxuf(&mut self) -> RxufW<IfSpec> {
         RxufW::new(self, 5)
     }
     #[doc = "Bit 6 - TX FIFO Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txof(&mut self) -> TxofW<IfSpec> {
         TxofW::new(self, 6)
     }
     #[doc = "Bit 7 - TX FIFO Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txuf(&mut self) -> TxufW<IfSpec> {
         TxufW::new(self, 7)
     }
     #[doc = "Bit 8 - Parity Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn perr(&mut self) -> PerrW<IfSpec> {
         PerrW::new(self, 8)
     }
     #[doc = "Bit 9 - Framing Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ferr(&mut self) -> FerrW<IfSpec> {
         FerrW::new(self, 9)
     }
     #[doc = "Bit 10 - Multi-Processor Address Frame Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn mpaf(&mut self) -> MpafW<IfSpec> {
         MpafW::new(self, 10)
     }
     #[doc = "Bit 11 - Load Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn loaderr(&mut self) -> LoaderrW<IfSpec> {
         LoaderrW::new(self, 11)
     }
     #[doc = "Bit 12 - Collision Check Fail Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ccf(&mut self) -> CcfW<IfSpec> {
         CcfW::new(self, 12)
     }
     #[doc = "Bit 13 - TX Idle Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn txidle(&mut self) -> TxidleW<IfSpec> {
         TxidleW::new(self, 13)
     }
     #[doc = "Bit 18 - Start Frame Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn startf(&mut self) -> StartfW<IfSpec> {
         StartfW::new(self, 18)
     }
     #[doc = "Bit 19 - Signal Frame Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn sigf(&mut self) -> SigfW<IfSpec> {
         SigfW::new(self, 19)
     }
     #[doc = "Bit 24 - Auto Baud Complete Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn autobauddone(&mut self) -> AutobauddoneW<IfSpec> {
         AutobauddoneW::new(self, 24)
     }
     #[doc = "Bit 25 - RX Timeout Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rxto(&mut self) -> RxtoW<IfSpec> {
         RxtoW::new(self, 25)
     }
@@ -286,10 +268,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

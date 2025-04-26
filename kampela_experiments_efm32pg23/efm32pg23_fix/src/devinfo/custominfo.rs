@@ -17,6 +17,4 @@ impl crate::RegisterSpec for CustominfoSpec {
 #[doc = "`read()` method returns [`custominfo::R`](R) reader structure"]
 impl crate::Readable for CustominfoSpec {}
 #[doc = "`reset()` method sets CUSTOMINFO to value 0"]
-impl crate::Resettable for CustominfoSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CustominfoSpec {}

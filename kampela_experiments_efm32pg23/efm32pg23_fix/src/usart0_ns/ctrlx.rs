@@ -257,37 +257,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
-    #[must_use]
     pub fn dbghalt(&mut self) -> DbghaltW<CtrlxSpec> {
         DbghaltW::new(self, 0)
     }
     #[doc = "Bit 1 - CTS Pin Inversion"]
     #[inline(always)]
-    #[must_use]
     pub fn ctsinv(&mut self) -> CtsinvW<CtrlxSpec> {
         CtsinvW::new(self, 1)
     }
     #[doc = "Bit 2 - CTS Function enabled"]
     #[inline(always)]
-    #[must_use]
     pub fn ctsen(&mut self) -> CtsenW<CtrlxSpec> {
         CtsenW::new(self, 2)
     }
     #[doc = "Bit 3 - RTS Pin Inversion"]
     #[inline(always)]
-    #[must_use]
     pub fn rtsinv(&mut self) -> RtsinvW<CtrlxSpec> {
         RtsinvW::new(self, 3)
     }
     #[doc = "Bit 7 - PRS RX Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxprsen(&mut self) -> RxprsenW<CtrlxSpec> {
         RxprsenW::new(self, 7)
     }
     #[doc = "Bit 15 - PRS CLK Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn clkprsen(&mut self) -> ClkprsenW<CtrlxSpec> {
         ClkprsenW::new(self, 15)
     }
@@ -302,10 +296,6 @@ impl crate::Readable for CtrlxSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrlx::W`](W) writer structure"]
 impl crate::Writable for CtrlxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRLX to value 0"]
-impl crate::Resettable for CtrlxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlxSpec {}

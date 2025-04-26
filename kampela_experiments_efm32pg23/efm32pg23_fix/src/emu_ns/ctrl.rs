@@ -188,43 +188,36 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable debugging in EM2"]
     #[inline(always)]
-    #[must_use]
     pub fn em2dbgen(&mut self) -> Em2dbgenW<CtrlSpec> {
         Em2dbgenW::new(self, 0)
     }
     #[doc = "Bit 3 - Averaged Temperature samples num"]
     #[inline(always)]
-    #[must_use]
     pub fn tempavgnum(&mut self) -> TempavgnumW<CtrlSpec> {
         TempavgnumW::new(self, 3)
     }
     #[doc = "Bits 8:9 - EM2/EM3 Vscale"]
     #[inline(always)]
-    #[must_use]
     pub fn em23vscale(&mut self) -> Em23vscaleW<CtrlSpec> {
         Em23vscaleW::new(self, 8)
     }
     #[doc = "Bit 16 - Enable flash on demand wakeup"]
     #[inline(always)]
-    #[must_use]
     pub fn flashpwrupondemand(&mut self) -> FlashpwrupondemandW<CtrlSpec> {
         FlashpwrupondemandW::new(self, 16)
     }
     #[doc = "Bit 29 - EFP Direct Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn efpdirectmodeen(&mut self) -> EfpdirectmodeenW<CtrlSpec> {
         EfpdirectmodeenW::new(self, 29)
     }
     #[doc = "Bit 30 - EFP drives DECOUPLE"]
     #[inline(always)]
-    #[must_use]
     pub fn efpdrvdecouple(&mut self) -> EfpdrvdecoupleW<CtrlSpec> {
         EfpdrvdecoupleW::new(self, 30)
     }
     #[doc = "Bit 31 - EFP drives DVDD"]
     #[inline(always)]
-    #[must_use]
     pub fn efpdrvdvdd(&mut self) -> EfpdrvdvddW<CtrlSpec> {
         EfpdrvdvddW::new(self, 31)
     }
@@ -239,8 +232,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0200"]
 impl crate::Resettable for CtrlSpec {

@@ -169,109 +169,91 @@ impl R {
 impl W {
     #[doc = "Bit 0 - TX Complete Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txc(&mut self) -> TxcW<IenSpec> {
         TxcW::new(self, 0)
     }
     #[doc = "Bit 1 - TX FIFO Level Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txfl(&mut self) -> TxflW<IenSpec> {
         TxflW::new(self, 1)
     }
     #[doc = "Bit 2 - RX FIFO Level Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfl(&mut self) -> RxflW<IenSpec> {
         RxflW::new(self, 2)
     }
     #[doc = "Bit 3 - RX FIFO Full Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfull(&mut self) -> RxfullW<IenSpec> {
         RxfullW::new(self, 3)
     }
     #[doc = "Bit 4 - RX FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxof(&mut self) -> RxofW<IenSpec> {
         RxofW::new(self, 4)
     }
     #[doc = "Bit 5 - RX FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxuf(&mut self) -> RxufW<IenSpec> {
         RxufW::new(self, 5)
     }
     #[doc = "Bit 6 - TX FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txof(&mut self) -> TxofW<IenSpec> {
         TxofW::new(self, 6)
     }
     #[doc = "Bit 7 - TX FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txuf(&mut self) -> TxufW<IenSpec> {
         TxufW::new(self, 7)
     }
     #[doc = "Bit 8 - Parity Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn perr(&mut self) -> PerrW<IenSpec> {
         PerrW::new(self, 8)
     }
     #[doc = "Bit 9 - Framing Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ferr(&mut self) -> FerrW<IenSpec> {
         FerrW::new(self, 9)
     }
     #[doc = "Bit 10 - Multi-Processor Addr Frame Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mpaf(&mut self) -> MpafW<IenSpec> {
         MpafW::new(self, 10)
     }
     #[doc = "Bit 11 - Load Error Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn loaderr(&mut self) -> LoaderrW<IenSpec> {
         LoaderrW::new(self, 11)
     }
     #[doc = "Bit 12 - Collision Check Fail Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ccf(&mut self) -> CcfW<IenSpec> {
         CcfW::new(self, 12)
     }
     #[doc = "Bit 13 - TX IDLE Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn txidle(&mut self) -> TxidleW<IenSpec> {
         TxidleW::new(self, 13)
     }
     #[doc = "Bit 18 - Start Frame Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn startf(&mut self) -> StartfW<IenSpec> {
         StartfW::new(self, 18)
     }
     #[doc = "Bit 19 - Signal Frame Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sigf(&mut self) -> SigfW<IenSpec> {
         SigfW::new(self, 19)
     }
     #[doc = "Bit 24 - Auto Baud Complete Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn autobauddone(&mut self) -> AutobauddoneW<IenSpec> {
         AutobauddoneW::new(self, 24)
     }
     #[doc = "Bit 25 - RX Timeout Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxto(&mut self) -> RxtoW<IenSpec> {
         RxtoW::new(self, 25)
     }
@@ -286,10 +268,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

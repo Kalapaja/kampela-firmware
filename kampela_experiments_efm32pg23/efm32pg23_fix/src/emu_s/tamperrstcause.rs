@@ -17,6 +17,4 @@ impl crate::RegisterSpec for TamperrstcauseSpec {
 #[doc = "`read()` method returns [`tamperrstcause::R`](R) reader structure"]
 impl crate::Readable for TamperrstcauseSpec {}
 #[doc = "`reset()` method sets TAMPERRSTCAUSE to value 0"]
-impl crate::Resettable for TamperrstcauseSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TamperrstcauseSpec {}

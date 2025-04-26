@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - CC2 async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerTimer3Cc2Spec> {
         PrsselW::new(self, 0)
     }
     #[doc = "Bits 8:9 - CC2 sync channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn sprssel(&mut self) -> SprsselW<ConsumerTimer3Cc2Spec> {
         SprsselW::new(self, 8)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for ConsumerTimer3Cc2Spec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_timer3_cc2::W`](W) writer structure"]
 impl crate::Writable for ConsumerTimer3Cc2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_TIMER3_CC2 to value 0"]
-impl crate::Resettable for ConsumerTimer3Cc2Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerTimer3Cc2Spec {}

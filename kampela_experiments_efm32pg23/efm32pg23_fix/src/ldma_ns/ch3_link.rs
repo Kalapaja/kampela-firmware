@@ -66,13 +66,11 @@ impl R {
 impl W {
     #[doc = "Bit 1 - Link Next Structure"]
     #[inline(always)]
-    #[must_use]
     pub fn link(&mut self) -> LinkW<Ch3LinkSpec> {
         LinkW::new(self, 1)
     }
     #[doc = "Bits 2:31 - Link Structure Address"]
     #[inline(always)]
-    #[must_use]
     pub fn linkaddr(&mut self) -> LinkaddrW<Ch3LinkSpec> {
         LinkaddrW::new(self, 2)
     }
@@ -87,10 +85,6 @@ impl crate::Readable for Ch3LinkSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch3_link::W`](W) writer structure"]
 impl crate::Writable for Ch3LinkSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH3_LINK to value 0"]
-impl crate::Resettable for Ch3LinkSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch3LinkSpec {}

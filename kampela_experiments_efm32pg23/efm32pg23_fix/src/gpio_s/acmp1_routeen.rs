@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bit 0 - ACMPOUT pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn acmpoutpen(&mut self) -> AcmpoutpenW<Acmp1RouteenSpec> {
         AcmpoutpenW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Acmp1RouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`acmp1_routeen::W`](W) writer structure"]
 impl crate::Writable for Acmp1RouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ACMP1_ROUTEEN to value 0"]
-impl crate::Resettable for Acmp1RouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Acmp1RouteenSpec {}

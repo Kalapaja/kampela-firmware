@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Power down Flash macro when enter EM1"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroffonem1entry(&mut self) -> Pwroffonem1entryW<PwrctrlSpec> {
         Pwroffonem1entryW::new(self, 0)
     }
     #[doc = "Bit 1 - Power down Flash macro when enter EM1P"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroffonem1pentry(&mut self) -> Pwroffonem1pentryW<PwrctrlSpec> {
         Pwroffonem1pentryW::new(self, 1)
     }
     #[doc = "Bit 4 - POWER down flash again in EM1/EM1p"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroffentryagain(&mut self) -> PwroffentryagainW<PwrctrlSpec> {
         PwroffentryagainW::new(self, 4)
     }
     #[doc = "Bits 16:23 - Power down delay"]
     #[inline(always)]
-    #[must_use]
     pub fn pwroffdly(&mut self) -> PwroffdlyW<PwrctrlSpec> {
         PwroffdlyW::new(self, 16)
     }
@@ -76,8 +72,6 @@ impl crate::Readable for PwrctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`pwrctrl::W`](W) writer structure"]
 impl crate::Writable for PwrctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PWRCTRL to value 0x0010_0002"]
 impl crate::Resettable for PwrctrlSpec {

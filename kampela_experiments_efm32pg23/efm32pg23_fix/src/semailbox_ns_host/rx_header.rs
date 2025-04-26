@@ -17,6 +17,4 @@ impl crate::RegisterSpec for RxHeaderSpec {
 #[doc = "`read()` method returns [`rx_header::R`](R) reader structure"]
 impl crate::Readable for RxHeaderSpec {}
 #[doc = "`reset()` method sets RX_HEADER to value 0"]
-impl crate::Resettable for RxHeaderSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxHeaderSpec {}

@@ -288,31 +288,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Count Direction Determined By S1"]
     #[inline(always)]
-    #[must_use]
     pub fn s1cdir(&mut self) -> S1cdirW<CtrlSpec> {
         S1cdirW::new(self, 0)
     }
     #[doc = "Bit 1 - Non-Quadrature Mode Counter Direction Co"]
     #[inline(always)]
-    #[must_use]
     pub fn cntdir(&mut self) -> CntdirW<CtrlSpec> {
         CntdirW::new(self, 1)
     }
     #[doc = "Bit 2 - Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn edge(&mut self) -> EdgeW<CtrlSpec> {
         EdgeW::new(self, 2)
     }
     #[doc = "Bits 4:5 - Controls When the Counter Counts"]
     #[inline(always)]
-    #[must_use]
     pub fn cntev(&mut self) -> CntevW<CtrlSpec> {
         CntevW::new(self, 4)
     }
     #[doc = "Bits 6:7 - Controls When the Aux Counter Counts"]
     #[inline(always)]
-    #[must_use]
     pub fn auxcntev(&mut self) -> AuxcntevW<CtrlSpec> {
         AuxcntevW::new(self, 6)
     }
@@ -327,10 +322,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

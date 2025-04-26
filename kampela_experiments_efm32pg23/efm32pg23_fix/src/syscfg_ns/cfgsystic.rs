@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bit 0 - SysTick External Clock Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn systicextclken(&mut self) -> SysticextclkenW<CfgsysticSpec> {
         SysticextclkenW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for CfgsysticSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfgsystic::W`](W) writer structure"]
 impl crate::Writable for CfgsysticSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFGSYSTIC to value 0"]
-impl crate::Resettable for CfgsysticSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgsysticSpec {}

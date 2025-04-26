@@ -38,6 +38,4 @@ impl crate::RegisterSpec for TxProtSpec {
 #[doc = "`read()` method returns [`tx_prot::R`](R) reader structure"]
 impl crate::Readable for TxProtSpec {}
 #[doc = "`reset()` method sets TX_PROT to value 0"]
-impl crate::Resettable for TxProtSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxProtSpec {}

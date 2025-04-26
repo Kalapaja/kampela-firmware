@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 16:27 - EM4 Wake-Up Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn em4wupol(&mut self) -> Em4wupolW<Em4wupolSpec> {
         Em4wupolW::new(self, 16)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Em4wupolSpec {}
 #[doc = "`write(|w| ..)` method takes [`em4wupol::W`](W) writer structure"]
 impl crate::Writable for Em4wupolSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EM4WUPOL to value 0"]
-impl crate::Resettable for Em4wupolSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Em4wupolSpec {}

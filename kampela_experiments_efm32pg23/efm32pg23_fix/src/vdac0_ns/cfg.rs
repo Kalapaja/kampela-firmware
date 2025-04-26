@@ -644,79 +644,66 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Differential Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn diff(&mut self) -> DiffW<CfgSpec> {
         DiffW::new(self, 0)
     }
     #[doc = "Bit 1 - Sine Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn sinemode(&mut self) -> SinemodeW<CfgSpec> {
         SinemodeW::new(self, 1)
     }
     #[doc = "Bit 2 - Sine Wave Reset When inactive"]
     #[inline(always)]
-    #[must_use]
     pub fn sinereset(&mut self) -> SineresetW<CfgSpec> {
         SineresetW::new(self, 2)
     }
     #[doc = "Bit 3 - Channel 0 Start Reset Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0prescrst(&mut self) -> Ch0prescrstW<CfgSpec> {
         Ch0prescrstW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Reference Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn refrsel(&mut self) -> RefrselW<CfgSpec> {
         RefrselW::new(self, 4)
     }
     #[doc = "Bits 7:13 - Prescaler Setting for DAC clock"]
     #[inline(always)]
-    #[must_use]
     pub fn presc(&mut self) -> PrescW<CfgSpec> {
         PrescW::new(self, 7)
     }
     #[doc = "Bits 16:18 - Internal Timer Overflow Period"]
     #[inline(always)]
-    #[must_use]
     pub fn timerovrflowperiod(&mut self) -> TimerovrflowperiodW<CfgSpec> {
         TimerovrflowperiodW::new(self, 16)
     }
     #[doc = "Bits 20:22 - Refresh Timer Overflow Period"]
     #[inline(always)]
-    #[must_use]
     pub fn refreshperiod(&mut self) -> RefreshperiodW<CfgSpec> {
         RefreshperiodW::new(self, 20)
     }
     #[doc = "Bit 24 - Bias Keepwarm Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn biaskeepwarm(&mut self) -> BiaskeepwarmW<CfgSpec> {
         BiaskeepwarmW::new(self, 24)
     }
     #[doc = "Bit 25 - VDAC DMA Wakeup"]
     #[inline(always)]
-    #[must_use]
     pub fn dmawu(&mut self) -> DmawuW<CfgSpec> {
         DmawuW::new(self, 25)
     }
     #[doc = "Bit 26 - Always allow clk_dac"]
     #[inline(always)]
-    #[must_use]
     pub fn ondemandclk(&mut self) -> OndemandclkW<CfgSpec> {
         OndemandclkW::new(self, 26)
     }
     #[doc = "Bit 27 - Debug Halt"]
     #[inline(always)]
-    #[must_use]
     pub fn dbghalt(&mut self) -> DbghaltW<CfgSpec> {
         DbghaltW::new(self, 27)
     }
     #[doc = "Bits 28:30 - DAC Warmup Time"]
     #[inline(always)]
-    #[must_use]
     pub fn warmuptime(&mut self) -> WarmuptimeW<CfgSpec> {
         WarmuptimeW::new(self, 28)
     }
@@ -731,8 +718,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x2000_0000"]
 impl crate::Resettable for CfgSpec {

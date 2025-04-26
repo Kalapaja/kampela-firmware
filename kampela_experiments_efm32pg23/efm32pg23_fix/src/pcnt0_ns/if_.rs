@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Underflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn uf(&mut self) -> UfW<IfSpec> {
         UfW::new(self, 0)
     }
     #[doc = "Bit 1 - Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn of(&mut self) -> OfW<IfSpec> {
         OfW::new(self, 1)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn dircng(&mut self) -> DircngW<IfSpec> {
         DircngW::new(self, 2)
     }
     #[doc = "Bit 3 - Auxiliary Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn auxof(&mut self) -> AuxofW<IfSpec> {
         AuxofW::new(self, 3)
     }
     #[doc = "Bit 4 - Oversampling Quad State Err Int Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn oqsterr(&mut self) -> OqsterrW<IfSpec> {
         OqsterrW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

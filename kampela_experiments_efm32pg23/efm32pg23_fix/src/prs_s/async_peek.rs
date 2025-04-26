@@ -94,6 +94,4 @@ impl crate::RegisterSpec for AsyncPeekSpec {
 #[doc = "`read()` method returns [`async_peek::R`](R) reader structure"]
 impl crate::Readable for AsyncPeekSpec {}
 #[doc = "`reset()` method sets ASYNC_PEEK to value 0"]
-impl crate::Resettable for AsyncPeekSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AsyncPeekSpec {}

@@ -115,73 +115,61 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Digital Clock Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn rdy(&mut self) -> RdyW<IenSpec> {
         RdyW::new(self, 0)
     }
     #[doc = "Bit 1 - Core Bias Optimization Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn corebiasoptrdy(&mut self) -> CorebiasoptrdyW<IenSpec> {
         CorebiasoptrdyW::new(self, 1)
     }
     #[doc = "Bit 2 - PRS Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn prsrdy(&mut self) -> PrsrdyW<IenSpec> {
         PrsrdyW::new(self, 2)
     }
     #[doc = "Bit 3 - BUFOUT Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn bufoutrdy(&mut self) -> BufoutrdyW<IenSpec> {
         BufoutrdyW::new(self, 3)
     }
     #[doc = "Bit 15 - BUFOUT FROZEN Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn bufoutfrozen(&mut self) -> BufoutfrozenW<IenSpec> {
         BufoutfrozenW::new(self, 15)
     }
     #[doc = "Bit 20 - PRS Requset Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn prserr(&mut self) -> PrserrW<IenSpec> {
         PrserrW::new(self, 20)
     }
     #[doc = "Bit 21 - BUFOUT Request Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn bufouterr(&mut self) -> BufouterrW<IenSpec> {
         BufouterrW::new(self, 21)
     }
     #[doc = "Bit 27 - BUFOUT Freeze Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn bufoutfreezeerr(&mut self) -> BufoutfreezeerrW<IenSpec> {
         BufoutfreezeerrW::new(self, 27)
     }
     #[doc = "Bit 28 - BUFOUT Did Not Start Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn bufoutdnserr(&mut self) -> BufoutdnserrW<IenSpec> {
         BufoutdnserrW::new(self, 28)
     }
     #[doc = "Bit 29 - Did Not Start Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn dnserr(&mut self) -> DnserrW<IenSpec> {
         DnserrW::new(self, 29)
     }
     #[doc = "Bit 30 - Low Frequency Timeout Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn lftimeouterr(&mut self) -> LftimeouterrW<IenSpec> {
         LftimeouterrW::new(self, 30)
     }
     #[doc = "Bit 31 - Core Bias Optimization Error Interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn corebiasopterr(&mut self) -> CorebiasopterrW<IenSpec> {
         CorebiasopterrW::new(self, 31)
     }
@@ -196,10 +184,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

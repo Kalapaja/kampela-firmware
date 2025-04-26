@@ -7,13 +7,11 @@ pub type CalstopW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Calibration Start"]
     #[inline(always)]
-    #[must_use]
     pub fn calstart(&mut self) -> CalstartW<CalcmdSpec> {
         CalstartW::new(self, 0)
     }
     #[doc = "Bit 1 - Calibration Stop"]
     #[inline(always)]
-    #[must_use]
     pub fn calstop(&mut self) -> CalstopW<CalcmdSpec> {
         CalstopW::new(self, 1)
     }
@@ -26,10 +24,6 @@ impl crate::RegisterSpec for CalcmdSpec {
 #[doc = "`write(|w| ..)` method takes [`calcmd::W`](W) writer structure"]
 impl crate::Writable for CalcmdSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CALCMD to value 0"]
-impl crate::Resettable for CalcmdSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CalcmdSpec {}

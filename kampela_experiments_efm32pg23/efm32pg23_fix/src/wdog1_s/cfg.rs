@@ -912,73 +912,61 @@ impl R {
 impl W {
     #[doc = "Bit 0 - WDOG Clear Source"]
     #[inline(always)]
-    #[must_use]
     pub fn clrsrc(&mut self) -> ClrsrcW<CfgSpec> {
         ClrsrcW::new(self, 0)
     }
     #[doc = "Bit 1 - EM1 Run"]
     #[inline(always)]
-    #[must_use]
     pub fn em1run(&mut self) -> Em1runW<CfgSpec> {
         Em1runW::new(self, 1)
     }
     #[doc = "Bit 2 - EM2 Run"]
     #[inline(always)]
-    #[must_use]
     pub fn em2run(&mut self) -> Em2runW<CfgSpec> {
         Em2runW::new(self, 2)
     }
     #[doc = "Bit 3 - EM3 Run"]
     #[inline(always)]
-    #[must_use]
     pub fn em3run(&mut self) -> Em3runW<CfgSpec> {
         Em3runW::new(self, 3)
     }
     #[doc = "Bit 4 - EM4 Block"]
     #[inline(always)]
-    #[must_use]
     pub fn em4block(&mut self) -> Em4blockW<CfgSpec> {
         Em4blockW::new(self, 4)
     }
     #[doc = "Bit 5 - Debug Mode Run"]
     #[inline(always)]
-    #[must_use]
     pub fn debugrun(&mut self) -> DebugrunW<CfgSpec> {
         DebugrunW::new(self, 5)
     }
     #[doc = "Bit 8 - WDOG Reset Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn wdogrstdis(&mut self) -> WdogrstdisW<CfgSpec> {
         WdogrstdisW::new(self, 8)
     }
     #[doc = "Bit 9 - PRS Src0 Missing Event WDOG Reset"]
     #[inline(always)]
-    #[must_use]
     pub fn prs0missrsten(&mut self) -> Prs0missrstenW<CfgSpec> {
         Prs0missrstenW::new(self, 9)
     }
     #[doc = "Bit 10 - PRS Src1 Missing Event WDOG Reset"]
     #[inline(always)]
-    #[must_use]
     pub fn prs1missrsten(&mut self) -> Prs1missrstenW<CfgSpec> {
         Prs1missrstenW::new(self, 10)
     }
     #[doc = "Bits 16:19 - WDOG Timeout Period Select"]
     #[inline(always)]
-    #[must_use]
     pub fn persel(&mut self) -> PerselW<CfgSpec> {
         PerselW::new(self, 16)
     }
     #[doc = "Bits 24:25 - WDOG Warning Period Select"]
     #[inline(always)]
-    #[must_use]
     pub fn warnsel(&mut self) -> WarnselW<CfgSpec> {
         WarnselW::new(self, 24)
     }
     #[doc = "Bits 28:30 - WDOG Illegal Window Select"]
     #[inline(always)]
-    #[must_use]
     pub fn winsel(&mut self) -> WinselW<CfgSpec> {
         WinselW::new(self, 28)
     }
@@ -993,8 +981,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x000f_0000"]
 impl crate::Resettable for CfgSpec {

@@ -103,6 +103,4 @@ impl crate::RegisterSpec for ExtinfoSpec {
 #[doc = "`read()` method returns [`extinfo::R`](R) reader structure"]
 impl crate::Readable for ExtinfoSpec {}
 #[doc = "`reset()` method sets EXTINFO to value 0"]
-impl crate::Resettable for ExtinfoSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ExtinfoSpec {}

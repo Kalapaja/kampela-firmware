@@ -198,19 +198,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Timer Rising Input Edge Action"]
     #[inline(always)]
-    #[must_use]
     pub fn risea(&mut self) -> RiseaW<CtrlSpec> {
         RiseaW::new(self, 0)
     }
     #[doc = "Bits 2:3 - Timer Falling Input Edge Action"]
     #[inline(always)]
-    #[must_use]
     pub fn falla(&mut self) -> FallaW<CtrlSpec> {
         FallaW::new(self, 2)
     }
     #[doc = "Bit 4 - 2x Count Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn x2cnt(&mut self) -> X2cntW<CtrlSpec> {
         X2cntW::new(self, 4)
     }
@@ -225,10 +222,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

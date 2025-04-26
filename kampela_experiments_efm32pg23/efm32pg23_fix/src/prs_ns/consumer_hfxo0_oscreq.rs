@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - OSC async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerHfxo0OscreqSpec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerHfxo0OscreqSpec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_hfxo0_oscreq::W`](W) writer structure"]
 impl crate::Writable for ConsumerHfxo0OscreqSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_HFXO0_OSCREQ to value 0"]
-impl crate::Resettable for ConsumerHfxo0OscreqSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerHfxo0OscreqSpec {}

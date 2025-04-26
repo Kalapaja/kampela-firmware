@@ -246,25 +246,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LFXO AGC Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn agc(&mut self) -> AgcW<CfgSpec> {
         AgcW::new(self, 0)
     }
     #[doc = "Bit 1 - LFXO High Amplitude Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn highampl(&mut self) -> HighamplW<CfgSpec> {
         HighamplW::new(self, 1)
     }
     #[doc = "Bits 4:5 - LFXO Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CfgSpec> {
         ModeW::new(self, 4)
     }
     #[doc = "Bits 8:10 - LFXO Start-up Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn timeout(&mut self) -> TimeoutW<CfgSpec> {
         TimeoutW::new(self, 8)
     }
@@ -279,8 +275,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x0701"]
 impl crate::Resettable for CfgSpec {

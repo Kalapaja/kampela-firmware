@@ -111,7 +111,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - RAM Bias Control"]
     #[inline(always)]
-    #[must_use]
     pub fn rambiasctrl(&mut self) -> RambiasctrlW<RambiasconfSpec> {
         RambiasctrlW::new(self, 0)
     }
@@ -126,8 +125,6 @@ impl crate::Readable for RambiasconfSpec {}
 #[doc = "`write(|w| ..)` method takes [`rambiasconf::W`](W) writer structure"]
 impl crate::Writable for RambiasconfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RAMBIASCONF to value 0x02"]
 impl crate::Resettable for RambiasconfSpec {

@@ -116,19 +116,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - ASTATE top cnt"]
     #[inline(always)]
-    #[must_use]
     pub fn astatetop(&mut self) -> AstatetopW<BacfgSpec> {
         AstatetopW::new(self, 0)
     }
     #[doc = "Bits 16:17 - Frame Counter Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn fcpresc(&mut self) -> FcprescW<BacfgSpec> {
         FcprescW::new(self, 16)
     }
     #[doc = "Bits 18:23 - Frame Counter Top"]
     #[inline(always)]
-    #[must_use]
     pub fn fctop(&mut self) -> FctopW<BacfgSpec> {
         FctopW::new(self, 18)
     }
@@ -143,8 +140,6 @@ impl crate::Readable for BacfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`bacfg::W`](W) writer structure"]
 impl crate::Writable for BacfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BACFG to value 0x07"]
 impl crate::Resettable for BacfgSpec {

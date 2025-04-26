@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Output Compare Value"]
     #[inline(always)]
-    #[must_use]
     pub fn oc(&mut self) -> OcW<Cc1OcSpec> {
         OcW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Cc1OcSpec {}
 #[doc = "`write(|w| ..)` method takes [`cc1_oc::W`](W) writer structure"]
 impl crate::Writable for Cc1OcSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CC1_OC to value 0"]
-impl crate::Resettable for Cc1OcSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cc1OcSpec {}

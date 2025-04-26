@@ -1141,61 +1141,51 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
-    #[must_use]
     pub fn dbghalt(&mut self) -> DbghaltW<Cfg1Spec> {
         DbghaltW::new(self, 0)
     }
     #[doc = "Bit 1 - Clear-to-send Invert Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ctsinv(&mut self) -> CtsinvW<Cfg1Spec> {
         CtsinvW::new(self, 1)
     }
     #[doc = "Bit 2 - Clear-to-send Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ctsen(&mut self) -> CtsenW<Cfg1Spec> {
         CtsenW::new(self, 2)
     }
     #[doc = "Bit 3 - Request-to-send Invert Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rtsinv(&mut self) -> RtsinvW<Cfg1Spec> {
         RtsinvW::new(self, 3)
     }
     #[doc = "Bits 4:6 - RX Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn rxtimeout(&mut self) -> RxtimeoutW<Cfg1Spec> {
         RxtimeoutW::new(self, 4)
     }
     #[doc = "Bit 11 - Start Frame Unblock Receiver"]
     #[inline(always)]
-    #[must_use]
     pub fn sfubrx(&mut self) -> SfubrxW<Cfg1Spec> {
         SfubrxW::new(self, 11)
     }
     #[doc = "Bit 15 - PRS RX Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn rxprsen(&mut self) -> RxprsenW<Cfg1Spec> {
         RxprsenW::new(self, 15)
     }
     #[doc = "Bits 16:19 - TX FIFO Interrupt Watermark"]
     #[inline(always)]
-    #[must_use]
     pub fn txfiw(&mut self) -> TxfiwW<Cfg1Spec> {
         TxfiwW::new(self, 16)
     }
     #[doc = "Bits 22:25 - Request-to-send RX FIFO Watermark"]
     #[inline(always)]
-    #[must_use]
     pub fn rtsrxfw(&mut self) -> RtsrxfwW<Cfg1Spec> {
         RtsrxfwW::new(self, 22)
     }
     #[doc = "Bits 27:30 - RX FIFO Interrupt Watermark"]
     #[inline(always)]
-    #[must_use]
     pub fn rxfiw(&mut self) -> RxfiwW<Cfg1Spec> {
         RxfiwW::new(self, 27)
     }
@@ -1210,10 +1200,6 @@ impl crate::Readable for Cfg1Spec {}
 #[doc = "`write(|w| ..)` method takes [`cfg1::W`](W) writer structure"]
 impl crate::Writable for Cfg1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG1 to value 0"]
-impl crate::Resettable for Cfg1Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cfg1Spec {}

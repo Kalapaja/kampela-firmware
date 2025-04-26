@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - TXINTEN"]
     #[inline(always)]
-    #[must_use]
     pub fn txinten(&mut self) -> TxintenW<ConfigurationSpec> {
         TxintenW::new(self, 0)
     }
     #[doc = "Bit 1 - RXINTEN"]
     #[inline(always)]
-    #[must_use]
     pub fn rxinten(&mut self) -> RxintenW<ConfigurationSpec> {
         RxintenW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for ConfigurationSpec {}
 #[doc = "`write(|w| ..)` method takes [`configuration::W`](W) writer structure"]
 impl crate::Writable for ConfigurationSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONFIGURATION to value 0"]
-impl crate::Resettable for ConfigurationSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConfigurationSpec {}

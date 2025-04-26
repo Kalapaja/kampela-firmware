@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PchitsSpec {
 #[doc = "`read()` method returns [`pchits::R`](R) reader structure"]
 impl crate::Readable for PchitsSpec {}
 #[doc = "`reset()` method sets PCHITS to value 0"]
-impl crate::Resettable for PchitsSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PchitsSpec {}

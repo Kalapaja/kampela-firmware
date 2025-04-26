@@ -34,19 +34,16 @@ impl R {
 impl W {
     #[doc = "Bit 0 - AVDD BOD enable"]
     #[inline(always)]
-    #[must_use]
     pub fn avddboden(&mut self) -> AvddbodenW<Bod3senseSpec> {
         AvddbodenW::new(self, 0)
     }
     #[doc = "Bit 1 - VDDIO0 BOD enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vddio0boden(&mut self) -> Vddio0bodenW<Bod3senseSpec> {
         Vddio0bodenW::new(self, 1)
     }
     #[doc = "Bit 2 - VDDIO1 BOD enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vddio1boden(&mut self) -> Vddio1bodenW<Bod3senseSpec> {
         Vddio1bodenW::new(self, 2)
     }
@@ -61,10 +58,6 @@ impl crate::Readable for Bod3senseSpec {}
 #[doc = "`write(|w| ..)` method takes [`bod3sense::W`](W) writer structure"]
 impl crate::Writable for Bod3senseSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BOD3SENSE to value 0"]
-impl crate::Resettable for Bod3senseSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Bod3senseSpec {}

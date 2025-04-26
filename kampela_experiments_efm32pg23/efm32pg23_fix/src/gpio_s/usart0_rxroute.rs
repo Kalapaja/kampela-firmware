@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - RX port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Usart0RxrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - RX pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Usart0RxrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Usart0RxrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`usart0_rxroute::W`](W) writer structure"]
 impl crate::Writable for Usart0RxrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets USART0_RXROUTE to value 0"]
-impl crate::Resettable for Usart0RxrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Usart0RxrouteSpec {}

@@ -931,85 +931,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Soft Reset the internal state registers"]
     #[inline(always)]
-    #[must_use]
     pub fn corerst(&mut self) -> CorerstW<CtrlSpec> {
         CorerstW::new(self, 0)
     }
     #[doc = "Bit 1 - Addressable as Follower"]
     #[inline(always)]
-    #[must_use]
     pub fn slave(&mut self) -> SlaveW<CtrlSpec> {
         SlaveW::new(self, 1)
     }
     #[doc = "Bit 2 - Automatic Acknowledge"]
     #[inline(always)]
-    #[must_use]
     pub fn autoack(&mut self) -> AutoackW<CtrlSpec> {
         AutoackW::new(self, 2)
     }
     #[doc = "Bit 3 - Automatic STOP when Empty"]
     #[inline(always)]
-    #[must_use]
     pub fn autose(&mut self) -> AutoseW<CtrlSpec> {
         AutoseW::new(self, 3)
     }
     #[doc = "Bit 4 - Automatic STOP on NACK"]
     #[inline(always)]
-    #[must_use]
     pub fn autosn(&mut self) -> AutosnW<CtrlSpec> {
         AutosnW::new(self, 4)
     }
     #[doc = "Bit 5 - Arbitration Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn arbdis(&mut self) -> ArbdisW<CtrlSpec> {
         ArbdisW::new(self, 5)
     }
     #[doc = "Bit 6 - General Call Address Match Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn gcamen(&mut self) -> GcamenW<CtrlSpec> {
         GcamenW::new(self, 6)
     }
     #[doc = "Bit 7 - TX Buffer Interrupt Level"]
     #[inline(always)]
-    #[must_use]
     pub fn txbil(&mut self) -> TxbilW<CtrlSpec> {
         TxbilW::new(self, 7)
     }
     #[doc = "Bits 8:9 - Clock Low High Ratio"]
     #[inline(always)]
-    #[must_use]
     pub fn clhr(&mut self) -> ClhrW<CtrlSpec> {
         ClhrW::new(self, 8)
     }
     #[doc = "Bits 12:13 - Bus Idle Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn bito(&mut self) -> BitoW<CtrlSpec> {
         BitoW::new(self, 12)
     }
     #[doc = "Bit 15 - Go Idle on Bus Idle Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn gibito(&mut self) -> GibitoW<CtrlSpec> {
         GibitoW::new(self, 15)
     }
     #[doc = "Bits 16:18 - Clock Low Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn clto(&mut self) -> CltoW<CtrlSpec> {
         CltoW::new(self, 16)
     }
     #[doc = "Bit 20 - SCL Monitor Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sclmonen(&mut self) -> SclmonenW<CtrlSpec> {
         SclmonenW::new(self, 20)
     }
     #[doc = "Bit 21 - SDA Monitor Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn sdamonen(&mut self) -> SdamonenW<CtrlSpec> {
         SdamonenW::new(self, 21)
     }
@@ -1024,10 +1010,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

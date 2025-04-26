@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - ASYNCH4 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Prs0Asynch4routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - ASYNCH4 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Prs0Asynch4routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Prs0Asynch4routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`prs0_asynch4route::W`](W) writer structure"]
 impl crate::Writable for Prs0Asynch4routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PRS0_ASYNCH4ROUTE to value 0"]
-impl crate::Resettable for Prs0Asynch4routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Prs0Asynch4routeSpec {}

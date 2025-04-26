@@ -133,85 +133,71 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Single FIFO Data Valid Level"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifodvl(&mut self) -> SinglefifodvlW<IfSpec> {
         SinglefifodvlW::new(self, 0)
     }
     #[doc = "Bit 1 - Scan FIFO Data Valid Level"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifodvl(&mut self) -> ScanfifodvlW<IfSpec> {
         ScanfifodvlW::new(self, 1)
     }
     #[doc = "Bit 2 - Single Result Window Compare"]
     #[inline(always)]
-    #[must_use]
     pub fn singlecmp(&mut self) -> SinglecmpW<IfSpec> {
         SinglecmpW::new(self, 2)
     }
     #[doc = "Bit 3 - Scan Result Window Compare"]
     #[inline(always)]
-    #[must_use]
     pub fn scancmp(&mut self) -> ScancmpW<IfSpec> {
         ScancmpW::new(self, 3)
     }
     #[doc = "Bit 7 - Scan Entry Done"]
     #[inline(always)]
-    #[must_use]
     pub fn scanentrydone(&mut self) -> ScanentrydoneW<IfSpec> {
         ScanentrydoneW::new(self, 7)
     }
     #[doc = "Bit 8 - Scan Table Done"]
     #[inline(always)]
-    #[must_use]
     pub fn scantabledone(&mut self) -> ScantabledoneW<IfSpec> {
         ScantabledoneW::new(self, 8)
     }
     #[doc = "Bit 9 - Single Conversion Done"]
     #[inline(always)]
-    #[must_use]
     pub fn singledone(&mut self) -> SingledoneW<IfSpec> {
         SingledoneW::new(self, 9)
     }
     #[doc = "Bit 12 - Polarity Error"]
     #[inline(always)]
-    #[must_use]
     pub fn polarityerr(&mut self) -> PolarityerrW<IfSpec> {
         PolarityerrW::new(self, 12)
     }
     #[doc = "Bit 13 - Port Allocation Error"]
     #[inline(always)]
-    #[must_use]
     pub fn portallocerr(&mut self) -> PortallocerrW<IfSpec> {
         PortallocerrW::new(self, 13)
     }
     #[doc = "Bit 16 - Single FIFO Overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifoof(&mut self) -> SinglefifoofW<IfSpec> {
         SinglefifoofW::new(self, 16)
     }
     #[doc = "Bit 17 - Scan FIFO Overflow"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifoof(&mut self) -> ScanfifoofW<IfSpec> {
         ScanfifoofW::new(self, 17)
     }
     #[doc = "Bit 18 - Single FIFO Underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn singlefifouf(&mut self) -> SinglefifoufW<IfSpec> {
         SinglefifoufW::new(self, 18)
     }
     #[doc = "Bit 19 - Scan FIFO Underflow"]
     #[inline(always)]
-    #[must_use]
     pub fn scanfifouf(&mut self) -> ScanfifoufW<IfSpec> {
         ScanfifoufW::new(self, 19)
     }
     #[doc = "Bit 31 - EM2/3 Abort Error"]
     #[inline(always)]
-    #[must_use]
     pub fn em23aborterror(&mut self) -> Em23aborterrorW<IfSpec> {
         Em23aborterrorW::new(self, 31)
     }
@@ -226,10 +212,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

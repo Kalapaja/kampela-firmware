@@ -785,97 +785,81 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Synchronous Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn sync(&mut self) -> SyncW<Cfg0Spec> {
         SyncW::new(self, 0)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn loopbk(&mut self) -> LoopbkW<Cfg0Spec> {
         LoopbkW::new(self, 1)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ccen(&mut self) -> CcenW<Cfg0Spec> {
         CcenW::new(self, 2)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mpm(&mut self) -> MpmW<Cfg0Spec> {
         MpmW::new(self, 3)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
-    #[must_use]
     pub fn mpab(&mut self) -> MpabW<Cfg0Spec> {
         MpabW::new(self, 4)
     }
     #[doc = "Bits 5:7 - Oversampling"]
     #[inline(always)]
-    #[must_use]
     pub fn ovs(&mut self) -> OvsW<Cfg0Spec> {
         OvsW::new(self, 5)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
-    #[must_use]
     pub fn msbf(&mut self) -> MsbfW<Cfg0Spec> {
         MsbfW::new(self, 10)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn rxinv(&mut self) -> RxinvW<Cfg0Spec> {
         RxinvW::new(self, 13)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
-    #[must_use]
     pub fn txinv(&mut self) -> TxinvW<Cfg0Spec> {
         TxinvW::new(self, 14)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
-    #[must_use]
     pub fn autotri(&mut self) -> AutotriW<Cfg0Spec> {
         AutotriW::new(self, 17)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
-    #[must_use]
     pub fn skipperrf(&mut self) -> SkipperrfW<Cfg0Spec> {
         SkipperrfW::new(self, 20)
     }
     #[doc = "Bit 22 - Halt DMA Read On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errsdma(&mut self) -> ErrsdmaW<Cfg0Spec> {
         ErrsdmaW::new(self, 22)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errsrx(&mut self) -> ErrsrxW<Cfg0Spec> {
         ErrsrxW::new(self, 23)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
-    #[must_use]
     pub fn errstx(&mut self) -> ErrstxW<Cfg0Spec> {
         ErrstxW::new(self, 24)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
-    #[must_use]
     pub fn mvdis(&mut self) -> MvdisW<Cfg0Spec> {
         MvdisW::new(self, 30)
     }
     #[doc = "Bit 31 - AUTOBAUD detection enable"]
     #[inline(always)]
-    #[must_use]
     pub fn autobauden(&mut self) -> AutobaudenW<Cfg0Spec> {
         AutobaudenW::new(self, 31)
     }
@@ -890,10 +874,6 @@ impl crate::Readable for Cfg0Spec {}
 #[doc = "`write(|w| ..)` method takes [`cfg0::W`](W) writer structure"]
 impl crate::Writable for Cfg0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG0 to value 0"]
-impl crate::Resettable for Cfg0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Cfg0Spec {}

@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Destination Data Address"]
     #[inline(always)]
-    #[must_use]
     pub fn dstaddr(&mut self) -> DstaddrW<Ch3DstSpec> {
         DstaddrW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Ch3DstSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch3_dst::W`](W) writer structure"]
 impl crate::Writable for Ch3DstSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH3_DST to value 0"]
-impl crate::Resettable for Ch3DstSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch3DstSpec {}

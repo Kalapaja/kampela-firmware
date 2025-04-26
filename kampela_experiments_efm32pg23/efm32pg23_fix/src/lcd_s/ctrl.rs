@@ -308,25 +308,21 @@ impl R {
 impl W {
     #[doc = "Bits 1:2 - Update Data Control"]
     #[inline(always)]
-    #[must_use]
     pub fn udctrl(&mut self) -> UdctrlW<CtrlSpec> {
         UdctrlW::new(self, 1)
     }
     #[doc = "Bit 16 - Direct Segment Control"]
     #[inline(always)]
-    #[must_use]
     pub fn dsc(&mut self) -> DscW<CtrlSpec> {
         DscW::new(self, 16)
     }
     #[doc = "Bits 18:20 - Warmup Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn warmupdly(&mut self) -> WarmupdlyW<CtrlSpec> {
         WarmupdlyW::new(self, 18)
     }
     #[doc = "Bits 24:30 - Presclae"]
     #[inline(always)]
-    #[must_use]
     pub fn prescale(&mut self) -> PrescaleW<CtrlSpec> {
         PrescaleW::new(self, 24)
     }
@@ -341,8 +337,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0010_0000"]
 impl crate::Resettable for CtrlSpec {

@@ -2291,25 +2291,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Positive Input Select"]
     #[inline(always)]
-    #[must_use]
     pub fn possel(&mut self) -> PosselW<InputctrlSpec> {
         PosselW::new(self, 0)
     }
     #[doc = "Bits 8:15 - Negative Input Select"]
     #[inline(always)]
-    #[must_use]
     pub fn negsel(&mut self) -> NegselW<InputctrlSpec> {
         NegselW::new(self, 8)
     }
     #[doc = "Bits 16:21 - VREF division"]
     #[inline(always)]
-    #[must_use]
     pub fn vrefdiv(&mut self) -> VrefdivW<InputctrlSpec> {
         VrefdivW::new(self, 16)
     }
     #[doc = "Bits 28:30 - Capacitive Sense Mode Internal Resistor"]
     #[inline(always)]
-    #[must_use]
     pub fn csressel(&mut self) -> CsresselW<InputctrlSpec> {
         CsresselW::new(self, 28)
     }
@@ -2324,10 +2320,6 @@ impl crate::Readable for InputctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`inputctrl::W`](W) writer structure"]
 impl crate::Writable for InputctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets INPUTCTRL to value 0"]
-impl crate::Resettable for InputctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for InputctrlSpec {}

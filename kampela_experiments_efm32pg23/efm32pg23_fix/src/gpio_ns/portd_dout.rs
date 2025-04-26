@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Data output"]
     #[inline(always)]
-    #[must_use]
     pub fn dout(&mut self) -> DoutW<PortdDoutSpec> {
         DoutW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for PortdDoutSpec {}
 #[doc = "`write(|w| ..)` method takes [`portd_dout::W`](W) writer structure"]
 impl crate::Writable for PortdDoutSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PORTD_DOUT to value 0"]
-impl crate::Resettable for PortdDoutSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortdDoutSpec {}

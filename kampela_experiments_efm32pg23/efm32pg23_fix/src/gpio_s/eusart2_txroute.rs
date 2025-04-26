@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - TX port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Eusart2TxrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - TX pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Eusart2TxrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Eusart2TxrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`eusart2_txroute::W`](W) writer structure"]
 impl crate::Writable for Eusart2TxrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EUSART2_TXROUTE to value 0"]
-impl crate::Resettable for Eusart2TxrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Eusart2TxrouteSpec {}

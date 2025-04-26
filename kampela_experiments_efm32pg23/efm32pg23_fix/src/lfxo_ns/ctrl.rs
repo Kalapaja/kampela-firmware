@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - LFXO Force Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn forceen(&mut self) -> ForceenW<CtrlSpec> {
         ForceenW::new(self, 0)
     }
     #[doc = "Bit 1 - LFXO Disable On-demand requests"]
     #[inline(always)]
-    #[must_use]
     pub fn disondemand(&mut self) -> DisondemandW<CtrlSpec> {
         DisondemandW::new(self, 1)
     }
     #[doc = "Bit 4 - LFXO Failure Detection Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn faildeten(&mut self) -> FaildetenW<CtrlSpec> {
         FaildetenW::new(self, 4)
     }
     #[doc = "Bit 5 - LFXO Failure Detection EM4WU Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn faildetem4wuen(&mut self) -> Faildetem4wuenW<CtrlSpec> {
         Faildetem4wuenW::new(self, 5)
     }
@@ -76,8 +72,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x02"]
 impl crate::Resettable for CtrlSpec {

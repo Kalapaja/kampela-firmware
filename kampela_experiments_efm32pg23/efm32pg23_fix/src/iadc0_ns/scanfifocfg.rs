@@ -334,25 +334,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Alignment"]
     #[inline(always)]
-    #[must_use]
     pub fn alignment(&mut self) -> AlignmentW<ScanfifocfgSpec> {
         AlignmentW::new(self, 0)
     }
     #[doc = "Bit 3 - Show ID"]
     #[inline(always)]
-    #[must_use]
     pub fn showid(&mut self) -> ShowidW<ScanfifocfgSpec> {
         ShowidW::new(self, 3)
     }
     #[doc = "Bits 4:6 - Data Valid Level"]
     #[inline(always)]
-    #[must_use]
     pub fn dvl(&mut self) -> DvlW<ScanfifocfgSpec> {
         DvlW::new(self, 4)
     }
     #[doc = "Bit 8 - Scan FIFO DMA Wakeup"]
     #[inline(always)]
-    #[must_use]
     pub fn dmawufifoscan(&mut self) -> DmawufifoscanW<ScanfifocfgSpec> {
         DmawufifoscanW::new(self, 8)
     }
@@ -367,8 +363,6 @@ impl crate::Readable for ScanfifocfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`scanfifocfg::W`](W) writer structure"]
 impl crate::Writable for ScanfifocfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SCANFIFOCFG to value 0x30"]
 impl crate::Resettable for ScanfifocfgSpec {

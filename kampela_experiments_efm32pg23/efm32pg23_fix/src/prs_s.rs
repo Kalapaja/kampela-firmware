@@ -610,617 +610,517 @@ impl RegisterBlock {
         &self.consumer_wdog1_src1
     }
 }
-#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`]
-module"]
+#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
 #[doc(alias = "IPVERSION")]
 pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "No Description"]
 pub mod ipversion;
-#[doc = "ASYNC_SWPULSE (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_swpulse::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_swpulse`]
-module"]
+#[doc = "ASYNC_SWPULSE (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_swpulse::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_swpulse`] module"]
 #[doc(alias = "ASYNC_SWPULSE")]
 pub type AsyncSwpulse = crate::Reg<async_swpulse::AsyncSwpulseSpec>;
 #[doc = "No Description"]
 pub mod async_swpulse;
-#[doc = "ASYNC_SWLEVEL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_swlevel::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_swlevel::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_swlevel`]
-module"]
+#[doc = "ASYNC_SWLEVEL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_swlevel::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_swlevel::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_swlevel`] module"]
 #[doc(alias = "ASYNC_SWLEVEL")]
 pub type AsyncSwlevel = crate::Reg<async_swlevel::AsyncSwlevelSpec>;
 #[doc = "No Description"]
 pub mod async_swlevel;
-#[doc = "ASYNC_PEEK (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_peek::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_peek`]
-module"]
+#[doc = "ASYNC_PEEK (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_peek::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_peek`] module"]
 #[doc(alias = "ASYNC_PEEK")]
 pub type AsyncPeek = crate::Reg<async_peek::AsyncPeekSpec>;
 #[doc = "No Description"]
 pub mod async_peek;
-#[doc = "SYNC_PEEK (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_peek::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_peek`]
-module"]
+#[doc = "SYNC_PEEK (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_peek::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_peek`] module"]
 #[doc(alias = "SYNC_PEEK")]
 pub type SyncPeek = crate::Reg<sync_peek::SyncPeekSpec>;
 #[doc = "No Description"]
 pub mod sync_peek;
-#[doc = "ASYNC_CH0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch0_ctrl`]
-module"]
+#[doc = "ASYNC_CH0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch0_ctrl`] module"]
 #[doc(alias = "ASYNC_CH0_CTRL")]
 pub type AsyncCh0Ctrl = crate::Reg<async_ch0_ctrl::AsyncCh0CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch0_ctrl;
-#[doc = "ASYNC_CH1_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch1_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch1_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch1_ctrl`]
-module"]
+#[doc = "ASYNC_CH1_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch1_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch1_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch1_ctrl`] module"]
 #[doc(alias = "ASYNC_CH1_CTRL")]
 pub type AsyncCh1Ctrl = crate::Reg<async_ch1_ctrl::AsyncCh1CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch1_ctrl;
-#[doc = "ASYNC_CH2_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch2_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch2_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch2_ctrl`]
-module"]
+#[doc = "ASYNC_CH2_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch2_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch2_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch2_ctrl`] module"]
 #[doc(alias = "ASYNC_CH2_CTRL")]
 pub type AsyncCh2Ctrl = crate::Reg<async_ch2_ctrl::AsyncCh2CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch2_ctrl;
-#[doc = "ASYNC_CH3_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch3_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch3_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch3_ctrl`]
-module"]
+#[doc = "ASYNC_CH3_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch3_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch3_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch3_ctrl`] module"]
 #[doc(alias = "ASYNC_CH3_CTRL")]
 pub type AsyncCh3Ctrl = crate::Reg<async_ch3_ctrl::AsyncCh3CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch3_ctrl;
-#[doc = "ASYNC_CH4_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch4_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch4_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch4_ctrl`]
-module"]
+#[doc = "ASYNC_CH4_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch4_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch4_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch4_ctrl`] module"]
 #[doc(alias = "ASYNC_CH4_CTRL")]
 pub type AsyncCh4Ctrl = crate::Reg<async_ch4_ctrl::AsyncCh4CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch4_ctrl;
-#[doc = "ASYNC_CH5_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch5_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch5_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch5_ctrl`]
-module"]
+#[doc = "ASYNC_CH5_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch5_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch5_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch5_ctrl`] module"]
 #[doc(alias = "ASYNC_CH5_CTRL")]
 pub type AsyncCh5Ctrl = crate::Reg<async_ch5_ctrl::AsyncCh5CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch5_ctrl;
-#[doc = "ASYNC_CH6_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch6_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch6_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch6_ctrl`]
-module"]
+#[doc = "ASYNC_CH6_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch6_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch6_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch6_ctrl`] module"]
 #[doc(alias = "ASYNC_CH6_CTRL")]
 pub type AsyncCh6Ctrl = crate::Reg<async_ch6_ctrl::AsyncCh6CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch6_ctrl;
-#[doc = "ASYNC_CH7_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch7_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch7_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch7_ctrl`]
-module"]
+#[doc = "ASYNC_CH7_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch7_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch7_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch7_ctrl`] module"]
 #[doc(alias = "ASYNC_CH7_CTRL")]
 pub type AsyncCh7Ctrl = crate::Reg<async_ch7_ctrl::AsyncCh7CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch7_ctrl;
-#[doc = "ASYNC_CH8_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch8_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch8_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch8_ctrl`]
-module"]
+#[doc = "ASYNC_CH8_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch8_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch8_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch8_ctrl`] module"]
 #[doc(alias = "ASYNC_CH8_CTRL")]
 pub type AsyncCh8Ctrl = crate::Reg<async_ch8_ctrl::AsyncCh8CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch8_ctrl;
-#[doc = "ASYNC_CH9_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch9_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch9_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch9_ctrl`]
-module"]
+#[doc = "ASYNC_CH9_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch9_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch9_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch9_ctrl`] module"]
 #[doc(alias = "ASYNC_CH9_CTRL")]
 pub type AsyncCh9Ctrl = crate::Reg<async_ch9_ctrl::AsyncCh9CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch9_ctrl;
-#[doc = "ASYNC_CH10_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch10_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch10_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch10_ctrl`]
-module"]
+#[doc = "ASYNC_CH10_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch10_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch10_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch10_ctrl`] module"]
 #[doc(alias = "ASYNC_CH10_CTRL")]
 pub type AsyncCh10Ctrl = crate::Reg<async_ch10_ctrl::AsyncCh10CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch10_ctrl;
-#[doc = "ASYNC_CH11_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch11_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch11_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch11_ctrl`]
-module"]
+#[doc = "ASYNC_CH11_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`async_ch11_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`async_ch11_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@async_ch11_ctrl`] module"]
 #[doc(alias = "ASYNC_CH11_CTRL")]
 pub type AsyncCh11Ctrl = crate::Reg<async_ch11_ctrl::AsyncCh11CtrlSpec>;
 #[doc = "No Description"]
 pub mod async_ch11_ctrl;
-#[doc = "SYNC_CH0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch0_ctrl`]
-module"]
+#[doc = "SYNC_CH0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch0_ctrl`] module"]
 #[doc(alias = "SYNC_CH0_CTRL")]
 pub type SyncCh0Ctrl = crate::Reg<sync_ch0_ctrl::SyncCh0CtrlSpec>;
 #[doc = "No Description"]
 pub mod sync_ch0_ctrl;
-#[doc = "SYNC_CH1_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch1_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch1_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch1_ctrl`]
-module"]
+#[doc = "SYNC_CH1_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch1_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch1_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch1_ctrl`] module"]
 #[doc(alias = "SYNC_CH1_CTRL")]
 pub type SyncCh1Ctrl = crate::Reg<sync_ch1_ctrl::SyncCh1CtrlSpec>;
 #[doc = "No Description"]
 pub mod sync_ch1_ctrl;
-#[doc = "SYNC_CH2_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch2_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch2_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch2_ctrl`]
-module"]
+#[doc = "SYNC_CH2_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch2_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch2_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch2_ctrl`] module"]
 #[doc(alias = "SYNC_CH2_CTRL")]
 pub type SyncCh2Ctrl = crate::Reg<sync_ch2_ctrl::SyncCh2CtrlSpec>;
 #[doc = "No Description"]
 pub mod sync_ch2_ctrl;
-#[doc = "SYNC_CH3_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch3_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch3_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch3_ctrl`]
-module"]
+#[doc = "SYNC_CH3_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch3_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch3_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@sync_ch3_ctrl`] module"]
 #[doc(alias = "SYNC_CH3_CTRL")]
 pub type SyncCh3Ctrl = crate::Reg<sync_ch3_ctrl::SyncCh3CtrlSpec>;
 #[doc = "No Description"]
 pub mod sync_ch3_ctrl;
-#[doc = "CONSUMER_CMU_CALDN (rw) register accessor: CALDN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_cmu_caldn::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_cmu_caldn::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_cmu_caldn`]
-module"]
+#[doc = "CONSUMER_CMU_CALDN (rw) register accessor: CALDN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_cmu_caldn::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_cmu_caldn::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_cmu_caldn`] module"]
 #[doc(alias = "CONSUMER_CMU_CALDN")]
 pub type ConsumerCmuCaldn = crate::Reg<consumer_cmu_caldn::ConsumerCmuCaldnSpec>;
 #[doc = "CALDN consumer register"]
 pub mod consumer_cmu_caldn;
-#[doc = "CONSUMER_CMU_CALUP (rw) register accessor: CALUP Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_cmu_calup::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_cmu_calup::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_cmu_calup`]
-module"]
+#[doc = "CONSUMER_CMU_CALUP (rw) register accessor: CALUP Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_cmu_calup::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_cmu_calup::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_cmu_calup`] module"]
 #[doc(alias = "CONSUMER_CMU_CALUP")]
 pub type ConsumerCmuCalup = crate::Reg<consumer_cmu_calup::ConsumerCmuCalupSpec>;
 #[doc = "CALUP Consumer register"]
 pub mod consumer_cmu_calup;
-#[doc = "CONSUMER_EUSART0_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_clk`]
-module"]
+#[doc = "CONSUMER_EUSART0_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_clk`] module"]
 #[doc(alias = "CONSUMER_EUSART0_CLK")]
 pub type ConsumerEusart0Clk = crate::Reg<consumer_eusart0_clk::ConsumerEusart0ClkSpec>;
 #[doc = "CLK consumer register"]
 pub mod consumer_eusart0_clk;
-#[doc = "CONSUMER_EUSART0_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_rx`]
-module"]
+#[doc = "CONSUMER_EUSART0_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_rx`] module"]
 #[doc(alias = "CONSUMER_EUSART0_RX")]
 pub type ConsumerEusart0Rx = crate::Reg<consumer_eusart0_rx::ConsumerEusart0RxSpec>;
 #[doc = "RX Consumer register"]
 pub mod consumer_eusart0_rx;
-#[doc = "CONSUMER_EUSART0_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_trigger`]
-module"]
+#[doc = "CONSUMER_EUSART0_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart0_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart0_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart0_trigger`] module"]
 #[doc(alias = "CONSUMER_EUSART0_TRIGGER")]
 pub type ConsumerEusart0Trigger = crate::Reg<consumer_eusart0_trigger::ConsumerEusart0TriggerSpec>;
 #[doc = "TRIGGER Consumer register"]
 pub mod consumer_eusart0_trigger;
-#[doc = "CONSUMER_EUSART1_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_clk`]
-module"]
+#[doc = "CONSUMER_EUSART1_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_clk`] module"]
 #[doc(alias = "CONSUMER_EUSART1_CLK")]
 pub type ConsumerEusart1Clk = crate::Reg<consumer_eusart1_clk::ConsumerEusart1ClkSpec>;
 #[doc = "CLK consumer register"]
 pub mod consumer_eusart1_clk;
-#[doc = "CONSUMER_EUSART1_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_rx`]
-module"]
+#[doc = "CONSUMER_EUSART1_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_rx`] module"]
 #[doc(alias = "CONSUMER_EUSART1_RX")]
 pub type ConsumerEusart1Rx = crate::Reg<consumer_eusart1_rx::ConsumerEusart1RxSpec>;
 #[doc = "RX Consumer register"]
 pub mod consumer_eusart1_rx;
-#[doc = "CONSUMER_EUSART1_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_trigger`]
-module"]
+#[doc = "CONSUMER_EUSART1_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart1_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart1_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart1_trigger`] module"]
 #[doc(alias = "CONSUMER_EUSART1_TRIGGER")]
 pub type ConsumerEusart1Trigger = crate::Reg<consumer_eusart1_trigger::ConsumerEusart1TriggerSpec>;
 #[doc = "TRIGGER Consumer register"]
 pub mod consumer_eusart1_trigger;
-#[doc = "CONSUMER_EUSART2_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_clk`]
-module"]
+#[doc = "CONSUMER_EUSART2_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_clk`] module"]
 #[doc(alias = "CONSUMER_EUSART2_CLK")]
 pub type ConsumerEusart2Clk = crate::Reg<consumer_eusart2_clk::ConsumerEusart2ClkSpec>;
 #[doc = "CLK consumer register"]
 pub mod consumer_eusart2_clk;
-#[doc = "CONSUMER_EUSART2_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_rx`]
-module"]
+#[doc = "CONSUMER_EUSART2_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_rx`] module"]
 #[doc(alias = "CONSUMER_EUSART2_RX")]
 pub type ConsumerEusart2Rx = crate::Reg<consumer_eusart2_rx::ConsumerEusart2RxSpec>;
 #[doc = "RX Consumer register"]
 pub mod consumer_eusart2_rx;
-#[doc = "CONSUMER_EUSART2_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_trigger`]
-module"]
+#[doc = "CONSUMER_EUSART2_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_eusart2_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_eusart2_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_eusart2_trigger`] module"]
 #[doc(alias = "CONSUMER_EUSART2_TRIGGER")]
 pub type ConsumerEusart2Trigger = crate::Reg<consumer_eusart2_trigger::ConsumerEusart2TriggerSpec>;
 #[doc = "TRIGGER Consumer register"]
 pub mod consumer_eusart2_trigger;
-#[doc = "CONSUMER_IADC0_SCANTRIGGER (rw) register accessor: SCAN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_iadc0_scantrigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_iadc0_scantrigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_iadc0_scantrigger`]
-module"]
+#[doc = "CONSUMER_IADC0_SCANTRIGGER (rw) register accessor: SCAN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_iadc0_scantrigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_iadc0_scantrigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_iadc0_scantrigger`] module"]
 #[doc(alias = "CONSUMER_IADC0_SCANTRIGGER")]
 pub type ConsumerIadc0Scantrigger =
     crate::Reg<consumer_iadc0_scantrigger::ConsumerIadc0ScantriggerSpec>;
 #[doc = "SCAN consumer register"]
 pub mod consumer_iadc0_scantrigger;
-#[doc = "CONSUMER_IADC0_SINGLETRIGGER (rw) register accessor: SINGLE Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_iadc0_singletrigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_iadc0_singletrigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_iadc0_singletrigger`]
-module"]
+#[doc = "CONSUMER_IADC0_SINGLETRIGGER (rw) register accessor: SINGLE Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_iadc0_singletrigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_iadc0_singletrigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_iadc0_singletrigger`] module"]
 #[doc(alias = "CONSUMER_IADC0_SINGLETRIGGER")]
 pub type ConsumerIadc0Singletrigger =
     crate::Reg<consumer_iadc0_singletrigger::ConsumerIadc0SingletriggerSpec>;
 #[doc = "SINGLE Consumer register"]
 pub mod consumer_iadc0_singletrigger;
-#[doc = "CONSUMER_LDMAXBAR_DMAREQ0 (rw) register accessor: DMAREQ0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_ldmaxbar_dmareq0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_ldmaxbar_dmareq0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_ldmaxbar_dmareq0`]
-module"]
+#[doc = "CONSUMER_LDMAXBAR_DMAREQ0 (rw) register accessor: DMAREQ0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_ldmaxbar_dmareq0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_ldmaxbar_dmareq0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_ldmaxbar_dmareq0`] module"]
 #[doc(alias = "CONSUMER_LDMAXBAR_DMAREQ0")]
 pub type ConsumerLdmaxbarDmareq0 =
     crate::Reg<consumer_ldmaxbar_dmareq0::ConsumerLdmaxbarDmareq0Spec>;
 #[doc = "DMAREQ0 consumer register"]
 pub mod consumer_ldmaxbar_dmareq0;
-#[doc = "CONSUMER_LDMAXBAR_DMAREQ1 (rw) register accessor: DMAREQ1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_ldmaxbar_dmareq1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_ldmaxbar_dmareq1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_ldmaxbar_dmareq1`]
-module"]
+#[doc = "CONSUMER_LDMAXBAR_DMAREQ1 (rw) register accessor: DMAREQ1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_ldmaxbar_dmareq1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_ldmaxbar_dmareq1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_ldmaxbar_dmareq1`] module"]
 #[doc(alias = "CONSUMER_LDMAXBAR_DMAREQ1")]
 pub type ConsumerLdmaxbarDmareq1 =
     crate::Reg<consumer_ldmaxbar_dmareq1::ConsumerLdmaxbarDmareq1Spec>;
 #[doc = "DMAREQ1 Consumer register"]
 pub mod consumer_ldmaxbar_dmareq1;
-#[doc = "CONSUMER_LESENSE_START (rw) register accessor: START Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_lesense_start::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_lesense_start::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_lesense_start`]
-module"]
+#[doc = "CONSUMER_LESENSE_START (rw) register accessor: START Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_lesense_start::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_lesense_start::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_lesense_start`] module"]
 #[doc(alias = "CONSUMER_LESENSE_START")]
 pub type ConsumerLesenseStart = crate::Reg<consumer_lesense_start::ConsumerLesenseStartSpec>;
 #[doc = "START Consumer register"]
 pub mod consumer_lesense_start;
-#[doc = "CONSUMER_LETIMER0_CLEAR (rw) register accessor: CLEAR consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_clear::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_clear::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_clear`]
-module"]
+#[doc = "CONSUMER_LETIMER0_CLEAR (rw) register accessor: CLEAR consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_clear::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_clear::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_clear`] module"]
 #[doc(alias = "CONSUMER_LETIMER0_CLEAR")]
 pub type ConsumerLetimer0Clear = crate::Reg<consumer_letimer0_clear::ConsumerLetimer0ClearSpec>;
 #[doc = "CLEAR consumer register"]
 pub mod consumer_letimer0_clear;
-#[doc = "CONSUMER_LETIMER0_START (rw) register accessor: START Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_start::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_start::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_start`]
-module"]
+#[doc = "CONSUMER_LETIMER0_START (rw) register accessor: START Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_start::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_start::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_start`] module"]
 #[doc(alias = "CONSUMER_LETIMER0_START")]
 pub type ConsumerLetimer0Start = crate::Reg<consumer_letimer0_start::ConsumerLetimer0StartSpec>;
 #[doc = "START Consumer register"]
 pub mod consumer_letimer0_start;
-#[doc = "CONSUMER_LETIMER0_STOP (rw) register accessor: STOP Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_stop::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_stop::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_stop`]
-module"]
+#[doc = "CONSUMER_LETIMER0_STOP (rw) register accessor: STOP Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_letimer0_stop::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_letimer0_stop::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_letimer0_stop`] module"]
 #[doc(alias = "CONSUMER_LETIMER0_STOP")]
 pub type ConsumerLetimer0Stop = crate::Reg<consumer_letimer0_stop::ConsumerLetimer0StopSpec>;
 #[doc = "STOP Consumer register"]
 pub mod consumer_letimer0_stop;
-#[doc = "CONSUMER_PCNT0_S0IN (rw) register accessor: S0IN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_pcnt0_s0in::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_pcnt0_s0in::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_pcnt0_s0in`]
-module"]
+#[doc = "CONSUMER_PCNT0_S0IN (rw) register accessor: S0IN consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_pcnt0_s0in::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_pcnt0_s0in::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_pcnt0_s0in`] module"]
 #[doc(alias = "CONSUMER_PCNT0_S0IN")]
 pub type ConsumerPcnt0S0in = crate::Reg<consumer_pcnt0_s0in::ConsumerPcnt0S0inSpec>;
 #[doc = "S0IN consumer register"]
 pub mod consumer_pcnt0_s0in;
-#[doc = "CONSUMER_PCNT0_S1IN (rw) register accessor: S1IN Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_pcnt0_s1in::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_pcnt0_s1in::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_pcnt0_s1in`]
-module"]
+#[doc = "CONSUMER_PCNT0_S1IN (rw) register accessor: S1IN Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_pcnt0_s1in::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_pcnt0_s1in::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_pcnt0_s1in`] module"]
 #[doc(alias = "CONSUMER_PCNT0_S1IN")]
 pub type ConsumerPcnt0S1in = crate::Reg<consumer_pcnt0_s1in::ConsumerPcnt0S1inSpec>;
 #[doc = "S1IN Consumer register"]
 pub mod consumer_pcnt0_s1in;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC25 (rw) register accessor: TAMPERSRC25 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc25::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc25::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc25`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC25 (rw) register accessor: TAMPERSRC25 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc25::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc25::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc25`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC25")]
 pub type ConsumerSetamperTampersrc25 =
     crate::Reg<consumer_setamper_tampersrc25::ConsumerSetamperTampersrc25Spec>;
 #[doc = "TAMPERSRC25 consumer register"]
 pub mod consumer_setamper_tampersrc25;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC26 (rw) register accessor: TAMPERSRC26 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc26::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc26::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc26`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC26 (rw) register accessor: TAMPERSRC26 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc26::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc26::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc26`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC26")]
 pub type ConsumerSetamperTampersrc26 =
     crate::Reg<consumer_setamper_tampersrc26::ConsumerSetamperTampersrc26Spec>;
 #[doc = "TAMPERSRC26 Consumer register"]
 pub mod consumer_setamper_tampersrc26;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC27 (rw) register accessor: TAMPERSRC27 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc27::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc27::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc27`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC27 (rw) register accessor: TAMPERSRC27 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc27::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc27::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc27`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC27")]
 pub type ConsumerSetamperTampersrc27 =
     crate::Reg<consumer_setamper_tampersrc27::ConsumerSetamperTampersrc27Spec>;
 #[doc = "TAMPERSRC27 Consumer register"]
 pub mod consumer_setamper_tampersrc27;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC28 (rw) register accessor: TAMPERSRC28 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc28::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc28::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc28`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC28 (rw) register accessor: TAMPERSRC28 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc28::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc28::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc28`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC28")]
 pub type ConsumerSetamperTampersrc28 =
     crate::Reg<consumer_setamper_tampersrc28::ConsumerSetamperTampersrc28Spec>;
 #[doc = "TAMPERSRC28 Consumer register"]
 pub mod consumer_setamper_tampersrc28;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC29 (rw) register accessor: TAMPERSRC29 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc29::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc29::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc29`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC29 (rw) register accessor: TAMPERSRC29 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc29::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc29::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc29`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC29")]
 pub type ConsumerSetamperTampersrc29 =
     crate::Reg<consumer_setamper_tampersrc29::ConsumerSetamperTampersrc29Spec>;
 #[doc = "TAMPERSRC29 Consumer register"]
 pub mod consumer_setamper_tampersrc29;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC30 (rw) register accessor: TAMPERSRC30 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc30::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc30::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc30`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC30 (rw) register accessor: TAMPERSRC30 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc30::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc30::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc30`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC30")]
 pub type ConsumerSetamperTampersrc30 =
     crate::Reg<consumer_setamper_tampersrc30::ConsumerSetamperTampersrc30Spec>;
 #[doc = "TAMPERSRC30 Consumer register"]
 pub mod consumer_setamper_tampersrc30;
-#[doc = "CONSUMER_SETAMPER_TAMPERSRC31 (rw) register accessor: TAMPERSRC31 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc31::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc31::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc31`]
-module"]
+#[doc = "CONSUMER_SETAMPER_TAMPERSRC31 (rw) register accessor: TAMPERSRC31 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_setamper_tampersrc31::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_setamper_tampersrc31::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_setamper_tampersrc31`] module"]
 #[doc(alias = "CONSUMER_SETAMPER_TAMPERSRC31")]
 pub type ConsumerSetamperTampersrc31 =
     crate::Reg<consumer_setamper_tampersrc31::ConsumerSetamperTampersrc31Spec>;
 #[doc = "TAMPERSRC31 Consumer register"]
 pub mod consumer_setamper_tampersrc31;
-#[doc = "CONSUMER_SYSRTC0_IN0 (rw) register accessor: IN0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_sysrtc0_in0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_sysrtc0_in0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_sysrtc0_in0`]
-module"]
+#[doc = "CONSUMER_SYSRTC0_IN0 (rw) register accessor: IN0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_sysrtc0_in0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_sysrtc0_in0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_sysrtc0_in0`] module"]
 #[doc(alias = "CONSUMER_SYSRTC0_IN0")]
 pub type ConsumerSysrtc0In0 = crate::Reg<consumer_sysrtc0_in0::ConsumerSysrtc0In0Spec>;
 #[doc = "IN0 consumer register"]
 pub mod consumer_sysrtc0_in0;
-#[doc = "CONSUMER_SYSRTC0_IN1 (rw) register accessor: IN1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_sysrtc0_in1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_sysrtc0_in1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_sysrtc0_in1`]
-module"]
+#[doc = "CONSUMER_SYSRTC0_IN1 (rw) register accessor: IN1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_sysrtc0_in1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_sysrtc0_in1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_sysrtc0_in1`] module"]
 #[doc(alias = "CONSUMER_SYSRTC0_IN1")]
 pub type ConsumerSysrtc0In1 = crate::Reg<consumer_sysrtc0_in1::ConsumerSysrtc0In1Spec>;
 #[doc = "IN1 Consumer register"]
 pub mod consumer_sysrtc0_in1;
-#[doc = "CONSUMER_HFXO0_OSCREQ (rw) register accessor: OSCREQ consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_hfxo0_oscreq::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_hfxo0_oscreq::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_hfxo0_oscreq`]
-module"]
+#[doc = "CONSUMER_HFXO0_OSCREQ (rw) register accessor: OSCREQ consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_hfxo0_oscreq::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_hfxo0_oscreq::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_hfxo0_oscreq`] module"]
 #[doc(alias = "CONSUMER_HFXO0_OSCREQ")]
 pub type ConsumerHfxo0Oscreq = crate::Reg<consumer_hfxo0_oscreq::ConsumerHfxo0OscreqSpec>;
 #[doc = "OSCREQ consumer register"]
 pub mod consumer_hfxo0_oscreq;
-#[doc = "CONSUMER_HFXO0_TIMEOUT (rw) register accessor: TIMEOUT Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_hfxo0_timeout::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_hfxo0_timeout::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_hfxo0_timeout`]
-module"]
+#[doc = "CONSUMER_HFXO0_TIMEOUT (rw) register accessor: TIMEOUT Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_hfxo0_timeout::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_hfxo0_timeout::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_hfxo0_timeout`] module"]
 #[doc(alias = "CONSUMER_HFXO0_TIMEOUT")]
 pub type ConsumerHfxo0Timeout = crate::Reg<consumer_hfxo0_timeout::ConsumerHfxo0TimeoutSpec>;
 #[doc = "TIMEOUT Consumer register"]
 pub mod consumer_hfxo0_timeout;
-#[doc = "CONSUMER_CORE_CTIIN0 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin0`]
-module"]
+#[doc = "CONSUMER_CORE_CTIIN0 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin0`] module"]
 #[doc(alias = "CONSUMER_CORE_CTIIN0")]
 pub type ConsumerCoreCtiin0 = crate::Reg<consumer_core_ctiin0::ConsumerCoreCtiin0Spec>;
 #[doc = "CTI Consumer Register"]
 pub mod consumer_core_ctiin0;
-#[doc = "CONSUMER_CORE_CTIIN1 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin1`]
-module"]
+#[doc = "CONSUMER_CORE_CTIIN1 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin1`] module"]
 #[doc(alias = "CONSUMER_CORE_CTIIN1")]
 pub type ConsumerCoreCtiin1 = crate::Reg<consumer_core_ctiin1::ConsumerCoreCtiin1Spec>;
 #[doc = "CTI Consumer Register"]
 pub mod consumer_core_ctiin1;
-#[doc = "CONSUMER_CORE_CTIIN2 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin2`]
-module"]
+#[doc = "CONSUMER_CORE_CTIIN2 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin2`] module"]
 #[doc(alias = "CONSUMER_CORE_CTIIN2")]
 pub type ConsumerCoreCtiin2 = crate::Reg<consumer_core_ctiin2::ConsumerCoreCtiin2Spec>;
 #[doc = "CTI Consumer Register"]
 pub mod consumer_core_ctiin2;
-#[doc = "CONSUMER_CORE_CTIIN3 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin3`]
-module"]
+#[doc = "CONSUMER_CORE_CTIIN3 (rw) register accessor: CTI Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_ctiin3::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_ctiin3::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_ctiin3`] module"]
 #[doc(alias = "CONSUMER_CORE_CTIIN3")]
 pub type ConsumerCoreCtiin3 = crate::Reg<consumer_core_ctiin3::ConsumerCoreCtiin3Spec>;
 #[doc = "CTI Consumer Register"]
 pub mod consumer_core_ctiin3;
-#[doc = "CONSUMER_CORE_M33RXEV (rw) register accessor: M33 Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_m33rxev::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_m33rxev::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_m33rxev`]
-module"]
+#[doc = "CONSUMER_CORE_M33RXEV (rw) register accessor: M33 Consumer Register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_core_m33rxev::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_core_m33rxev::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_core_m33rxev`] module"]
 #[doc(alias = "CONSUMER_CORE_M33RXEV")]
 pub type ConsumerCoreM33rxev = crate::Reg<consumer_core_m33rxev::ConsumerCoreM33rxevSpec>;
 #[doc = "M33 Consumer Register"]
 pub mod consumer_core_m33rxev;
-#[doc = "CONSUMER_TIMER0_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc0`]
-module"]
+#[doc = "CONSUMER_TIMER0_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc0`] module"]
 #[doc(alias = "CONSUMER_TIMER0_CC0")]
 pub type ConsumerTimer0Cc0 = crate::Reg<consumer_timer0_cc0::ConsumerTimer0Cc0Spec>;
 #[doc = "CC0 consumer register"]
 pub mod consumer_timer0_cc0;
-#[doc = "CONSUMER_TIMER0_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc1`]
-module"]
+#[doc = "CONSUMER_TIMER0_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc1`] module"]
 #[doc(alias = "CONSUMER_TIMER0_CC1")]
 pub type ConsumerTimer0Cc1 = crate::Reg<consumer_timer0_cc1::ConsumerTimer0Cc1Spec>;
 #[doc = "CC1 Consumer register"]
 pub mod consumer_timer0_cc1;
-#[doc = "CONSUMER_TIMER0_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc2`]
-module"]
+#[doc = "CONSUMER_TIMER0_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_cc2`] module"]
 #[doc(alias = "CONSUMER_TIMER0_CC2")]
 pub type ConsumerTimer0Cc2 = crate::Reg<consumer_timer0_cc2::ConsumerTimer0Cc2Spec>;
 #[doc = "CC2 Consumer register"]
 pub mod consumer_timer0_cc2;
-#[doc = "CONSUMER_TIMER0_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dti`]
-module"]
+#[doc = "CONSUMER_TIMER0_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dti`] module"]
 #[doc(alias = "CONSUMER_TIMER0_DTI")]
 pub type ConsumerTimer0Dti = crate::Reg<consumer_timer0_dti::ConsumerTimer0DtiSpec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer0_dti;
-#[doc = "CONSUMER_TIMER0_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dtifs1`]
-module"]
+#[doc = "CONSUMER_TIMER0_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dtifs1`] module"]
 #[doc(alias = "CONSUMER_TIMER0_DTIFS1")]
 pub type ConsumerTimer0Dtifs1 = crate::Reg<consumer_timer0_dtifs1::ConsumerTimer0Dtifs1Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer0_dtifs1;
-#[doc = "CONSUMER_TIMER0_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dtifs2`]
-module"]
+#[doc = "CONSUMER_TIMER0_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer0_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer0_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer0_dtifs2`] module"]
 #[doc(alias = "CONSUMER_TIMER0_DTIFS2")]
 pub type ConsumerTimer0Dtifs2 = crate::Reg<consumer_timer0_dtifs2::ConsumerTimer0Dtifs2Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer0_dtifs2;
-#[doc = "CONSUMER_TIMER1_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc0`]
-module"]
+#[doc = "CONSUMER_TIMER1_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc0`] module"]
 #[doc(alias = "CONSUMER_TIMER1_CC0")]
 pub type ConsumerTimer1Cc0 = crate::Reg<consumer_timer1_cc0::ConsumerTimer1Cc0Spec>;
 #[doc = "CC0 consumer register"]
 pub mod consumer_timer1_cc0;
-#[doc = "CONSUMER_TIMER1_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc1`]
-module"]
+#[doc = "CONSUMER_TIMER1_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc1`] module"]
 #[doc(alias = "CONSUMER_TIMER1_CC1")]
 pub type ConsumerTimer1Cc1 = crate::Reg<consumer_timer1_cc1::ConsumerTimer1Cc1Spec>;
 #[doc = "CC1 Consumer register"]
 pub mod consumer_timer1_cc1;
-#[doc = "CONSUMER_TIMER1_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc2`]
-module"]
+#[doc = "CONSUMER_TIMER1_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_cc2`] module"]
 #[doc(alias = "CONSUMER_TIMER1_CC2")]
 pub type ConsumerTimer1Cc2 = crate::Reg<consumer_timer1_cc2::ConsumerTimer1Cc2Spec>;
 #[doc = "CC2 Consumer register"]
 pub mod consumer_timer1_cc2;
-#[doc = "CONSUMER_TIMER1_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dti`]
-module"]
+#[doc = "CONSUMER_TIMER1_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dti`] module"]
 #[doc(alias = "CONSUMER_TIMER1_DTI")]
 pub type ConsumerTimer1Dti = crate::Reg<consumer_timer1_dti::ConsumerTimer1DtiSpec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer1_dti;
-#[doc = "CONSUMER_TIMER1_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dtifs1`]
-module"]
+#[doc = "CONSUMER_TIMER1_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dtifs1`] module"]
 #[doc(alias = "CONSUMER_TIMER1_DTIFS1")]
 pub type ConsumerTimer1Dtifs1 = crate::Reg<consumer_timer1_dtifs1::ConsumerTimer1Dtifs1Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer1_dtifs1;
-#[doc = "CONSUMER_TIMER1_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dtifs2`]
-module"]
+#[doc = "CONSUMER_TIMER1_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer1_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer1_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer1_dtifs2`] module"]
 #[doc(alias = "CONSUMER_TIMER1_DTIFS2")]
 pub type ConsumerTimer1Dtifs2 = crate::Reg<consumer_timer1_dtifs2::ConsumerTimer1Dtifs2Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer1_dtifs2;
-#[doc = "CONSUMER_TIMER2_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc0`]
-module"]
+#[doc = "CONSUMER_TIMER2_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc0`] module"]
 #[doc(alias = "CONSUMER_TIMER2_CC0")]
 pub type ConsumerTimer2Cc0 = crate::Reg<consumer_timer2_cc0::ConsumerTimer2Cc0Spec>;
 #[doc = "CC0 consumer register"]
 pub mod consumer_timer2_cc0;
-#[doc = "CONSUMER_TIMER2_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc1`]
-module"]
+#[doc = "CONSUMER_TIMER2_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc1`] module"]
 #[doc(alias = "CONSUMER_TIMER2_CC1")]
 pub type ConsumerTimer2Cc1 = crate::Reg<consumer_timer2_cc1::ConsumerTimer2Cc1Spec>;
 #[doc = "CC1 Consumer register"]
 pub mod consumer_timer2_cc1;
-#[doc = "CONSUMER_TIMER2_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc2`]
-module"]
+#[doc = "CONSUMER_TIMER2_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_cc2`] module"]
 #[doc(alias = "CONSUMER_TIMER2_CC2")]
 pub type ConsumerTimer2Cc2 = crate::Reg<consumer_timer2_cc2::ConsumerTimer2Cc2Spec>;
 #[doc = "CC2 Consumer register"]
 pub mod consumer_timer2_cc2;
-#[doc = "CONSUMER_TIMER2_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dti`]
-module"]
+#[doc = "CONSUMER_TIMER2_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dti`] module"]
 #[doc(alias = "CONSUMER_TIMER2_DTI")]
 pub type ConsumerTimer2Dti = crate::Reg<consumer_timer2_dti::ConsumerTimer2DtiSpec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer2_dti;
-#[doc = "CONSUMER_TIMER2_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dtifs1`]
-module"]
+#[doc = "CONSUMER_TIMER2_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dtifs1`] module"]
 #[doc(alias = "CONSUMER_TIMER2_DTIFS1")]
 pub type ConsumerTimer2Dtifs1 = crate::Reg<consumer_timer2_dtifs1::ConsumerTimer2Dtifs1Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer2_dtifs1;
-#[doc = "CONSUMER_TIMER2_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dtifs2`]
-module"]
+#[doc = "CONSUMER_TIMER2_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer2_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer2_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer2_dtifs2`] module"]
 #[doc(alias = "CONSUMER_TIMER2_DTIFS2")]
 pub type ConsumerTimer2Dtifs2 = crate::Reg<consumer_timer2_dtifs2::ConsumerTimer2Dtifs2Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer2_dtifs2;
-#[doc = "CONSUMER_TIMER3_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc0`]
-module"]
+#[doc = "CONSUMER_TIMER3_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc0`] module"]
 #[doc(alias = "CONSUMER_TIMER3_CC0")]
 pub type ConsumerTimer3Cc0 = crate::Reg<consumer_timer3_cc0::ConsumerTimer3Cc0Spec>;
 #[doc = "CC0 consumer register"]
 pub mod consumer_timer3_cc0;
-#[doc = "CONSUMER_TIMER3_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc1`]
-module"]
+#[doc = "CONSUMER_TIMER3_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc1`] module"]
 #[doc(alias = "CONSUMER_TIMER3_CC1")]
 pub type ConsumerTimer3Cc1 = crate::Reg<consumer_timer3_cc1::ConsumerTimer3Cc1Spec>;
 #[doc = "CC1 Consumer register"]
 pub mod consumer_timer3_cc1;
-#[doc = "CONSUMER_TIMER3_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc2`]
-module"]
+#[doc = "CONSUMER_TIMER3_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_cc2`] module"]
 #[doc(alias = "CONSUMER_TIMER3_CC2")]
 pub type ConsumerTimer3Cc2 = crate::Reg<consumer_timer3_cc2::ConsumerTimer3Cc2Spec>;
 #[doc = "CC2 Consumer register"]
 pub mod consumer_timer3_cc2;
-#[doc = "CONSUMER_TIMER3_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dti`]
-module"]
+#[doc = "CONSUMER_TIMER3_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dti`] module"]
 #[doc(alias = "CONSUMER_TIMER3_DTI")]
 pub type ConsumerTimer3Dti = crate::Reg<consumer_timer3_dti::ConsumerTimer3DtiSpec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer3_dti;
-#[doc = "CONSUMER_TIMER3_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dtifs1`]
-module"]
+#[doc = "CONSUMER_TIMER3_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dtifs1`] module"]
 #[doc(alias = "CONSUMER_TIMER3_DTIFS1")]
 pub type ConsumerTimer3Dtifs1 = crate::Reg<consumer_timer3_dtifs1::ConsumerTimer3Dtifs1Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer3_dtifs1;
-#[doc = "CONSUMER_TIMER3_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dtifs2`]
-module"]
+#[doc = "CONSUMER_TIMER3_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer3_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer3_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer3_dtifs2`] module"]
 #[doc(alias = "CONSUMER_TIMER3_DTIFS2")]
 pub type ConsumerTimer3Dtifs2 = crate::Reg<consumer_timer3_dtifs2::ConsumerTimer3Dtifs2Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer3_dtifs2;
-#[doc = "CONSUMER_TIMER4_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc0`]
-module"]
+#[doc = "CONSUMER_TIMER4_CC0 (rw) register accessor: CC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc0`] module"]
 #[doc(alias = "CONSUMER_TIMER4_CC0")]
 pub type ConsumerTimer4Cc0 = crate::Reg<consumer_timer4_cc0::ConsumerTimer4Cc0Spec>;
 #[doc = "CC0 consumer register"]
 pub mod consumer_timer4_cc0;
-#[doc = "CONSUMER_TIMER4_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc1`]
-module"]
+#[doc = "CONSUMER_TIMER4_CC1 (rw) register accessor: CC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc1`] module"]
 #[doc(alias = "CONSUMER_TIMER4_CC1")]
 pub type ConsumerTimer4Cc1 = crate::Reg<consumer_timer4_cc1::ConsumerTimer4Cc1Spec>;
 #[doc = "CC1 Consumer register"]
 pub mod consumer_timer4_cc1;
-#[doc = "CONSUMER_TIMER4_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc2`]
-module"]
+#[doc = "CONSUMER_TIMER4_CC2 (rw) register accessor: CC2 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_cc2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_cc2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_cc2`] module"]
 #[doc(alias = "CONSUMER_TIMER4_CC2")]
 pub type ConsumerTimer4Cc2 = crate::Reg<consumer_timer4_cc2::ConsumerTimer4Cc2Spec>;
 #[doc = "CC2 Consumer register"]
 pub mod consumer_timer4_cc2;
-#[doc = "CONSUMER_TIMER4_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dti`]
-module"]
+#[doc = "CONSUMER_TIMER4_DTI (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dti::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dti::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dti`] module"]
 #[doc(alias = "CONSUMER_TIMER4_DTI")]
 pub type ConsumerTimer4Dti = crate::Reg<consumer_timer4_dti::ConsumerTimer4DtiSpec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer4_dti;
-#[doc = "CONSUMER_TIMER4_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dtifs1`]
-module"]
+#[doc = "CONSUMER_TIMER4_DTIFS1 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dtifs1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dtifs1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dtifs1`] module"]
 #[doc(alias = "CONSUMER_TIMER4_DTIFS1")]
 pub type ConsumerTimer4Dtifs1 = crate::Reg<consumer_timer4_dtifs1::ConsumerTimer4Dtifs1Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer4_dtifs1;
-#[doc = "CONSUMER_TIMER4_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dtifs2`]
-module"]
+#[doc = "CONSUMER_TIMER4_DTIFS2 (rw) register accessor: DTI Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_timer4_dtifs2::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_timer4_dtifs2::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_timer4_dtifs2`] module"]
 #[doc(alias = "CONSUMER_TIMER4_DTIFS2")]
 pub type ConsumerTimer4Dtifs2 = crate::Reg<consumer_timer4_dtifs2::ConsumerTimer4Dtifs2Spec>;
 #[doc = "DTI Consumer register"]
 pub mod consumer_timer4_dtifs2;
-#[doc = "CONSUMER_USART0_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_clk`]
-module"]
+#[doc = "CONSUMER_USART0_CLK (rw) register accessor: CLK consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_clk::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_clk::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_clk`] module"]
 #[doc(alias = "CONSUMER_USART0_CLK")]
 pub type ConsumerUsart0Clk = crate::Reg<consumer_usart0_clk::ConsumerUsart0ClkSpec>;
 #[doc = "CLK consumer register"]
 pub mod consumer_usart0_clk;
-#[doc = "CONSUMER_USART0_IR (rw) register accessor: IR Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_ir::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_ir::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_ir`]
-module"]
+#[doc = "CONSUMER_USART0_IR (rw) register accessor: IR Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_ir::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_ir::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_ir`] module"]
 #[doc(alias = "CONSUMER_USART0_IR")]
 pub type ConsumerUsart0Ir = crate::Reg<consumer_usart0_ir::ConsumerUsart0IrSpec>;
 #[doc = "IR Consumer register"]
 pub mod consumer_usart0_ir;
-#[doc = "CONSUMER_USART0_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_rx`]
-module"]
+#[doc = "CONSUMER_USART0_RX (rw) register accessor: RX Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_rx::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_rx::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_rx`] module"]
 #[doc(alias = "CONSUMER_USART0_RX")]
 pub type ConsumerUsart0Rx = crate::Reg<consumer_usart0_rx::ConsumerUsart0RxSpec>;
 #[doc = "RX Consumer register"]
 pub mod consumer_usart0_rx;
-#[doc = "CONSUMER_USART0_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_trigger`]
-module"]
+#[doc = "CONSUMER_USART0_TRIGGER (rw) register accessor: TRIGGER Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_usart0_trigger::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_usart0_trigger::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_usart0_trigger`] module"]
 #[doc(alias = "CONSUMER_USART0_TRIGGER")]
 pub type ConsumerUsart0Trigger = crate::Reg<consumer_usart0_trigger::ConsumerUsart0TriggerSpec>;
 #[doc = "TRIGGER Consumer register"]
 pub mod consumer_usart0_trigger;
-#[doc = "CONSUMER_VDAC0_ASYNCTRIGCH0 (rw) register accessor: ASYNCTRIG consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_asynctrigch0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_asynctrigch0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_asynctrigch0`]
-module"]
+#[doc = "CONSUMER_VDAC0_ASYNCTRIGCH0 (rw) register accessor: ASYNCTRIG consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_asynctrigch0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_asynctrigch0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_asynctrigch0`] module"]
 #[doc(alias = "CONSUMER_VDAC0_ASYNCTRIGCH0")]
 pub type ConsumerVdac0Asynctrigch0 =
     crate::Reg<consumer_vdac0_asynctrigch0::ConsumerVdac0Asynctrigch0Spec>;
 #[doc = "ASYNCTRIG consumer register"]
 pub mod consumer_vdac0_asynctrigch0;
-#[doc = "CONSUMER_VDAC0_ASYNCTRIGCH1 (rw) register accessor: ASYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_asynctrigch1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_asynctrigch1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_asynctrigch1`]
-module"]
+#[doc = "CONSUMER_VDAC0_ASYNCTRIGCH1 (rw) register accessor: ASYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_asynctrigch1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_asynctrigch1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_asynctrigch1`] module"]
 #[doc(alias = "CONSUMER_VDAC0_ASYNCTRIGCH1")]
 pub type ConsumerVdac0Asynctrigch1 =
     crate::Reg<consumer_vdac0_asynctrigch1::ConsumerVdac0Asynctrigch1Spec>;
 #[doc = "ASYNCTRIG Consumer register"]
 pub mod consumer_vdac0_asynctrigch1;
-#[doc = "CONSUMER_VDAC0_SYNCTRIGCH0 (rw) register accessor: SYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_synctrigch0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_synctrigch0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_synctrigch0`]
-module"]
+#[doc = "CONSUMER_VDAC0_SYNCTRIGCH0 (rw) register accessor: SYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_synctrigch0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_synctrigch0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_synctrigch0`] module"]
 #[doc(alias = "CONSUMER_VDAC0_SYNCTRIGCH0")]
 pub type ConsumerVdac0Synctrigch0 =
     crate::Reg<consumer_vdac0_synctrigch0::ConsumerVdac0Synctrigch0Spec>;
 #[doc = "SYNCTRIG Consumer register"]
 pub mod consumer_vdac0_synctrigch0;
-#[doc = "CONSUMER_VDAC0_SYNCTRIGCH1 (rw) register accessor: SYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_synctrigch1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_synctrigch1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_synctrigch1`]
-module"]
+#[doc = "CONSUMER_VDAC0_SYNCTRIGCH1 (rw) register accessor: SYNCTRIG Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_vdac0_synctrigch1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_vdac0_synctrigch1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_vdac0_synctrigch1`] module"]
 #[doc(alias = "CONSUMER_VDAC0_SYNCTRIGCH1")]
 pub type ConsumerVdac0Synctrigch1 =
     crate::Reg<consumer_vdac0_synctrigch1::ConsumerVdac0Synctrigch1Spec>;
 #[doc = "SYNCTRIG Consumer register"]
 pub mod consumer_vdac0_synctrigch1;
-#[doc = "CONSUMER_WDOG0_SRC0 (rw) register accessor: SRC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog0_src0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog0_src0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog0_src0`]
-module"]
+#[doc = "CONSUMER_WDOG0_SRC0 (rw) register accessor: SRC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog0_src0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog0_src0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog0_src0`] module"]
 #[doc(alias = "CONSUMER_WDOG0_SRC0")]
 pub type ConsumerWdog0Src0 = crate::Reg<consumer_wdog0_src0::ConsumerWdog0Src0Spec>;
 #[doc = "SRC0 consumer register"]
 pub mod consumer_wdog0_src0;
-#[doc = "CONSUMER_WDOG0_SRC1 (rw) register accessor: SRC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog0_src1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog0_src1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog0_src1`]
-module"]
+#[doc = "CONSUMER_WDOG0_SRC1 (rw) register accessor: SRC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog0_src1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog0_src1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog0_src1`] module"]
 #[doc(alias = "CONSUMER_WDOG0_SRC1")]
 pub type ConsumerWdog0Src1 = crate::Reg<consumer_wdog0_src1::ConsumerWdog0Src1Spec>;
 #[doc = "SRC1 Consumer register"]
 pub mod consumer_wdog0_src1;
-#[doc = "CONSUMER_WDOG1_SRC0 (rw) register accessor: SRC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog1_src0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog1_src0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog1_src0`]
-module"]
+#[doc = "CONSUMER_WDOG1_SRC0 (rw) register accessor: SRC0 consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog1_src0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog1_src0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog1_src0`] module"]
 #[doc(alias = "CONSUMER_WDOG1_SRC0")]
 pub type ConsumerWdog1Src0 = crate::Reg<consumer_wdog1_src0::ConsumerWdog1Src0Spec>;
 #[doc = "SRC0 consumer register"]
 pub mod consumer_wdog1_src0;
-#[doc = "CONSUMER_WDOG1_SRC1 (rw) register accessor: SRC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog1_src1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog1_src1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog1_src1`]
-module"]
+#[doc = "CONSUMER_WDOG1_SRC1 (rw) register accessor: SRC1 Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_wdog1_src1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_wdog1_src1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@consumer_wdog1_src1`] module"]
 #[doc(alias = "CONSUMER_WDOG1_SRC1")]
 pub type ConsumerWdog1Src1 = crate::Reg<consumer_wdog1_src1::ConsumerWdog1Src1Spec>;
 #[doc = "SRC1 Consumer register"]

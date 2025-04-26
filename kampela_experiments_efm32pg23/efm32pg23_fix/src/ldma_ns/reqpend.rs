@@ -17,6 +17,4 @@ impl crate::RegisterSpec for ReqpendSpec {
 #[doc = "`read()` method returns [`reqpend::R`](R) reader structure"]
 impl crate::Readable for ReqpendSpec {}
 #[doc = "`reset()` method sets REQPEND to value 0"]
-impl crate::Resettable for ReqpendSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ReqpendSpec {}

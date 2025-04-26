@@ -748,19 +748,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode0(&mut self) -> Mode0W<PortaModehSpec> {
         Mode0W::new(self, 0)
     }
     #[doc = "Bits 4:7 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode1(&mut self) -> Mode1W<PortaModehSpec> {
         Mode1W::new(self, 4)
     }
     #[doc = "Bits 8:11 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode2(&mut self) -> Mode2W<PortaModehSpec> {
         Mode2W::new(self, 8)
     }
@@ -775,10 +772,6 @@ impl crate::Readable for PortaModehSpec {}
 #[doc = "`write(|w| ..)` method takes [`porta_modeh::W`](W) writer structure"]
 impl crate::Writable for PortaModehSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PORTA_MODEH to value 0"]
-impl crate::Resettable for PortaModehSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortaModehSpec {}

@@ -417,43 +417,36 @@ impl R {
 impl W {
     #[doc = "Bit 0 - EM23 Wakeup on Conversion"]
     #[inline(always)]
-    #[must_use]
     pub fn em23wuconvert(&mut self) -> Em23wuconvertW<CtrlSpec> {
         Em23wuconvertW::new(self, 0)
     }
     #[doc = "Bit 1 - ADC_CLK Suspend - PRS0"]
     #[inline(always)]
-    #[must_use]
     pub fn adcclksuspend0(&mut self) -> Adcclksuspend0W<CtrlSpec> {
         Adcclksuspend0W::new(self, 1)
     }
     #[doc = "Bit 2 - ADC_CLK Suspend - PRS1"]
     #[inline(always)]
-    #[must_use]
     pub fn adcclksuspend1(&mut self) -> Adcclksuspend1W<CtrlSpec> {
         Adcclksuspend1W::new(self, 2)
     }
     #[doc = "Bit 3 - Debug Halt"]
     #[inline(always)]
-    #[must_use]
     pub fn dbghalt(&mut self) -> DbghaltW<CtrlSpec> {
         DbghaltW::new(self, 3)
     }
     #[doc = "Bits 4:5 - Warmup Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn warmupmode(&mut self) -> WarmupmodeW<CtrlSpec> {
         WarmupmodeW::new(self, 4)
     }
     #[doc = "Bits 16:22 - Time Base"]
     #[inline(always)]
-    #[must_use]
     pub fn timebase(&mut self) -> TimebaseW<CtrlSpec> {
         TimebaseW::new(self, 16)
     }
     #[doc = "Bits 28:30 - High Speed Clock Rate"]
     #[inline(always)]
-    #[must_use]
     pub fn hsclkrate(&mut self) -> HsclkrateW<CtrlSpec> {
         HsclkrateW::new(self, 28)
     }
@@ -468,10 +461,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CtrlSpec {}

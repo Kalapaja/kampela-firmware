@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 8:9 - SYNCTRIG sync channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn sprssel(&mut self) -> SprsselW<ConsumerVdac0Synctrigch0Spec> {
         SprsselW::new(self, 8)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerVdac0Synctrigch0Spec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_vdac0_synctrigch0::W`](W) writer structure"]
 impl crate::Writable for ConsumerVdac0Synctrigch0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_VDAC0_SYNCTRIGCH0 to value 0"]
-impl crate::Resettable for ConsumerVdac0Synctrigch0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerVdac0Synctrigch0Spec {}

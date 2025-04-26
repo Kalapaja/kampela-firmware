@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Latch based Retention register"]
     #[inline(always)]
-    #[must_use]
     pub fn retreg(&mut self) -> RetregW<Ret24RegSpec> {
         RetregW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Ret24RegSpec {}
 #[doc = "`write(|w| ..)` method takes [`ret24_reg::W`](W) writer structure"]
 impl crate::Writable for Ret24RegSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets RET24_REG to value 0"]
-impl crate::Resettable for Ret24RegSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ret24RegSpec {}

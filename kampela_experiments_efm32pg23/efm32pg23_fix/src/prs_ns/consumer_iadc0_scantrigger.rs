@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - SCAN async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerIadc0ScantriggerSpec> {
         PrsselW::new(self, 0)
     }
     #[doc = "Bits 8:9 - SCAN sync channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn sprssel(&mut self) -> SprsselW<ConsumerIadc0ScantriggerSpec> {
         SprsselW::new(self, 8)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for ConsumerIadc0ScantriggerSpec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_iadc0_scantrigger::W`](W) writer structure"]
 impl crate::Writable for ConsumerIadc0ScantriggerSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_IADC0_SCANTRIGGER to value 0"]
-impl crate::Resettable for ConsumerIadc0ScantriggerSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerIadc0ScantriggerSpec {}

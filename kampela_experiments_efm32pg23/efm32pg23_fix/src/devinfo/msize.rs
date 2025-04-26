@@ -24,6 +24,4 @@ impl crate::RegisterSpec for MsizeSpec {
 #[doc = "`read()` method returns [`msize::R`](R) reader structure"]
 impl crate::Readable for MsizeSpec {}
 #[doc = "`reset()` method sets MSIZE to value 0"]
-impl crate::Resettable for MsizeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for MsizeSpec {}

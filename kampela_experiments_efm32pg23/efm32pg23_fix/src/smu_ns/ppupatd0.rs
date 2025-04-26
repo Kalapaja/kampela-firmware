@@ -286,187 +286,156 @@ impl R {
 impl W {
     #[doc = "Bit 1 - EMU Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn emu(&mut self) -> EmuW<Ppupatd0Spec> {
         EmuW::new(self, 1)
     }
     #[doc = "Bit 2 - CMU Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn cmu(&mut self) -> CmuW<Ppupatd0Spec> {
         CmuW::new(self, 2)
     }
     #[doc = "Bit 3 - HFRCO0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hfrco0(&mut self) -> Hfrco0W<Ppupatd0Spec> {
         Hfrco0W::new(self, 3)
     }
     #[doc = "Bit 4 - FSRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn fsrco(&mut self) -> FsrcoW<Ppupatd0Spec> {
         FsrcoW::new(self, 4)
     }
     #[doc = "Bit 5 - DPLL0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn dpll0(&mut self) -> Dpll0W<Ppupatd0Spec> {
         Dpll0W::new(self, 5)
     }
     #[doc = "Bit 6 - LFXO Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lfxo(&mut self) -> LfxoW<Ppupatd0Spec> {
         LfxoW::new(self, 6)
     }
     #[doc = "Bit 7 - LFRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn lfrco(&mut self) -> LfrcoW<Ppupatd0Spec> {
         LfrcoW::new(self, 7)
     }
     #[doc = "Bit 8 - ULFRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ulfrco(&mut self) -> UlfrcoW<Ppupatd0Spec> {
         UlfrcoW::new(self, 8)
     }
     #[doc = "Bit 9 - MSC Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn msc(&mut self) -> MscW<Ppupatd0Spec> {
         MscW::new(self, 9)
     }
     #[doc = "Bit 10 - ICACHE0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn icache0(&mut self) -> Icache0W<Ppupatd0Spec> {
         Icache0W::new(self, 10)
     }
     #[doc = "Bit 11 - PRS Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn prs(&mut self) -> PrsW<Ppupatd0Spec> {
         PrsW::new(self, 11)
     }
     #[doc = "Bit 12 - GPIO Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn gpio(&mut self) -> GpioW<Ppupatd0Spec> {
         GpioW::new(self, 12)
     }
     #[doc = "Bit 13 - LDMA Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ldma(&mut self) -> LdmaW<Ppupatd0Spec> {
         LdmaW::new(self, 13)
     }
     #[doc = "Bit 14 - LDMAXBAR Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn ldmaxbar(&mut self) -> LdmaxbarW<Ppupatd0Spec> {
         LdmaxbarW::new(self, 14)
     }
     #[doc = "Bit 15 - TIMER0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer0(&mut self) -> Timer0W<Ppupatd0Spec> {
         Timer0W::new(self, 15)
     }
     #[doc = "Bit 16 - TIMER1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer1(&mut self) -> Timer1W<Ppupatd0Spec> {
         Timer1W::new(self, 16)
     }
     #[doc = "Bit 17 - TIMER2 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer2(&mut self) -> Timer2W<Ppupatd0Spec> {
         Timer2W::new(self, 17)
     }
     #[doc = "Bit 18 - TIMER3 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer3(&mut self) -> Timer3W<Ppupatd0Spec> {
         Timer3W::new(self, 18)
     }
     #[doc = "Bit 19 - TIMER4 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn timer4(&mut self) -> Timer4W<Ppupatd0Spec> {
         Timer4W::new(self, 19)
     }
     #[doc = "Bit 20 - USART0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn usart0(&mut self) -> Usart0W<Ppupatd0Spec> {
         Usart0W::new(self, 20)
     }
     #[doc = "Bit 21 - BURTC Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn burtc(&mut self) -> BurtcW<Ppupatd0Spec> {
         BurtcW::new(self, 21)
     }
     #[doc = "Bit 22 - I2C1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn i2c1(&mut self) -> I2c1W<Ppupatd0Spec> {
         I2c1W::new(self, 22)
     }
     #[doc = "Bit 23 - CHIPTESTCTRL Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn chiptestctrl(&mut self) -> ChiptestctrlW<Ppupatd0Spec> {
         ChiptestctrlW::new(self, 23)
     }
     #[doc = "Bit 24 - SYSCFGCFGNS Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn syscfgcfgns(&mut self) -> SyscfgcfgnsW<Ppupatd0Spec> {
         SyscfgcfgnsW::new(self, 24)
     }
     #[doc = "Bit 25 - SYSCFG Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn syscfg(&mut self) -> SyscfgW<Ppupatd0Spec> {
         SyscfgW::new(self, 25)
     }
     #[doc = "Bit 26 - BURAM Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn buram(&mut self) -> BuramW<Ppupatd0Spec> {
         BuramW::new(self, 26)
     }
     #[doc = "Bit 27 - GPCRC Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn gpcrc(&mut self) -> GpcrcW<Ppupatd0Spec> {
         GpcrcW::new(self, 27)
     }
     #[doc = "Bit 28 - DCDC Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn dcdc(&mut self) -> DcdcW<Ppupatd0Spec> {
         DcdcW::new(self, 28)
     }
     #[doc = "Bit 29 - HOSTMAILBOX Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn hostmailbox(&mut self) -> HostmailboxW<Ppupatd0Spec> {
         HostmailboxW::new(self, 29)
     }
     #[doc = "Bit 30 - EUSART1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart1(&mut self) -> Eusart1W<Ppupatd0Spec> {
         Eusart1W::new(self, 30)
     }
     #[doc = "Bit 31 - EUSART2 Privileged Access"]
     #[inline(always)]
-    #[must_use]
     pub fn eusart2(&mut self) -> Eusart2W<Ppupatd0Spec> {
         Eusart2W::new(self, 31)
     }
@@ -481,8 +450,6 @@ impl crate::Readable for Ppupatd0Spec {}
 #[doc = "`write(|w| ..)` method takes [`ppupatd0::W`](W) writer structure"]
 impl crate::Writable for Ppupatd0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PPUPATD0 to value 0xffff_ffff"]
 impl crate::Resettable for Ppupatd0Spec {

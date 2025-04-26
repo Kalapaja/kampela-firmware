@@ -116,19 +116,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:5 - Chip Revision Major value"]
     #[inline(always)]
-    #[must_use]
     pub fn major(&mut self) -> MajorW<ChiprevSpec> {
         MajorW::new(self, 0)
     }
     #[doc = "Bits 6:11 - Chip Family value"]
     #[inline(always)]
-    #[must_use]
     pub fn family(&mut self) -> FamilyW<ChiprevSpec> {
         FamilyW::new(self, 6)
     }
     #[doc = "Bits 12:19 - Chip Revision Minor value"]
     #[inline(always)]
-    #[must_use]
     pub fn minor(&mut self) -> MinorW<ChiprevSpec> {
         MinorW::new(self, 12)
     }
@@ -143,10 +140,6 @@ impl crate::Readable for ChiprevSpec {}
 #[doc = "`write(|w| ..)` method takes [`chiprev::W`](W) writer structure"]
 impl crate::Writable for ChiprevSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CHIPREV to value 0"]
-impl crate::Resettable for ChiprevSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ChiprevSpec {}

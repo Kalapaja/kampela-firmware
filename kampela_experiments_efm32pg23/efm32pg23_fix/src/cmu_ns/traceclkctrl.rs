@@ -85,7 +85,6 @@ impl R {
 impl W {
     #[doc = "Bits 4:5 - TRACECLK Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn presc(&mut self) -> PrescW<TraceclkctrlSpec> {
         PrescW::new(self, 4)
     }
@@ -100,10 +99,6 @@ impl crate::Readable for TraceclkctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`traceclkctrl::W`](W) writer structure"]
 impl crate::Writable for TraceclkctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRACECLKCTRL to value 0"]
-impl crate::Resettable for TraceclkctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TraceclkctrlSpec {}

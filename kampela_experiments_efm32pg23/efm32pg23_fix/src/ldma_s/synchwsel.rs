@@ -137,13 +137,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn syncsetedge(&mut self) -> SyncsetedgeW<SynchwselSpec> {
         SyncsetedgeW::new(self, 0)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Edge Select"]
     #[inline(always)]
-    #[must_use]
     pub fn syncclredge(&mut self) -> SyncclredgeW<SynchwselSpec> {
         SyncclredgeW::new(self, 16)
     }
@@ -158,10 +156,6 @@ impl crate::Readable for SynchwselSpec {}
 #[doc = "`write(|w| ..)` method takes [`synchwsel::W`](W) writer structure"]
 impl crate::Writable for SynchwselSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYNCHWSEL to value 0"]
-impl crate::Resettable for SynchwselSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SynchwselSpec {}

@@ -7,22 +7,21 @@ extern crate alloc;
 extern crate core;
 
 use alloc::{borrow::ToOwned, boxed::Box, format};
-use core::{alloc::Layout, cell::RefCell, ops::DerefMut, panic::PanicInfo, ptr::addr_of};
+use core::{alloc::Layout, ops::DerefMut, panic::PanicInfo};
 use cortex_m::{interrupt::{free, Mutex}, asm::delay};
 use cortex_m_rt::{entry, exception, ExceptionFrame};
 
 use embedded_alloc::Heap;
-use lazy_static::lazy_static;
 
 use kampela_system::{
-    debug_display::burning_tank, devices::{power::ADC, touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}}, init::init_peripherals, parallel::{AsyncOperation, Threads}, NfcXfer, NfcXferBlock, BUF_THIRD, CH_TIM0, CORE_PERIPHERALS, LINK_1, LINK_2, LINK_DESCRIPTORS, PERIPHERALS, TIMER0_CC0_ICF
+    debug_display::burning_tank, devices::{power::ADC, touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}}, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma_ch_usart::ldma_display_interrupt, ldma_ch_usart_rx::ldma_display_rx_interrupt}, CORE_PERIPHERALS, PERIPHERALS
 };
-use efm32pg23_fix::{interrupt, Interrupt, Peripherals, NVIC, SYST};
+use efm32pg23_fix::{Interrupt, interrupt, Peripherals, NVIC, SYST};
 
 mod ui;
 use ui::{UIOperationThreads, UI};
 mod nfc;
-use nfc::{BufferStatus, NfcReceiver, NfcStateOutput, NfcResult, NfcError};
+use nfc::{ldma_nfc_interrupt, NfcError, NfcReceiver, NfcResult, NfcStateOutput};
 mod touch;
 use touch::Touches;
 
@@ -35,11 +34,6 @@ static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP
 
 unsafe fn init_heap() {
     HEAP.init(HEAP_MEM.as_ptr() as usize, HEAP_SIZE)
-}
-
-lazy_static!{
-    #[derive(Debug)]
-    static ref BUFFER_STATUS: Mutex<RefCell<BufferStatus>> = Mutex::new(RefCell::new(BufferStatus::new()));
 }
 
 /*
@@ -70,63 +64,59 @@ unsafe fn HardFault(exception_frame: &ExceptionFrame) -> ! {
 
 #[interrupt]
 fn LDMA() {
-    free(|cs| {
-        if let Some(ref mut peripherals) = PERIPHERALS.borrow(cs).borrow_mut().deref_mut() {
-            peripherals.ldma_s.if_().reset();
-            let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
-            match buffer_status.pass_if_done7() {
-                Ok(_) => {
-                    if !buffer_status.is_write_halted() {
-                        peripherals.ldma_s.linkload().write(|w_reg| unsafe { w_reg.linkload().bits(1 << CH_TIM0) });
-                    }
-                },
-                Err(_) => {}
-            }
-        }
-        else {panic!("can not borrow peripherals in ldma interrupt")}
-    });
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done7().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done7().set_bit()
+            });
+        });
+        ldma_nfc_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done6().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done7().set_bit()
+            });
+        });
+        ldma_display_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done5().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done5().set_bit()
+            });
+        });
+        ldma_display_rx_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().error().bit_is_set() 
+    }) {
+        in_free(|peripherals| {
+            panic!(
+                "error on ldma interrupt, ldma_status: chnum {:}, fifolevel: {:}, cherror: {:}, chgrant: {:}, anyreq: {:}, anybusy: {:}",
+                peripherals.ldma_s.status().read().chnum().bits(),
+                peripherals.ldma_s.status().read().fifolevel().bits(),
+                peripherals.ldma_s.status().read().cherror().bits(),
+                peripherals.ldma_s.status().read().chgrant().bits(),
+                peripherals.ldma_s.status().read().anyreq().bit_is_set(),
+                peripherals.ldma_s.status().read().anybusy().bit_is_set(),
+            )
+        });
+    }
 }
 
 #[entry]
 fn main() -> ! {
     unsafe { init_heap(); }
-
-    let nfc_buffer: [u16; 3*BUF_THIRD] = [1; 3*BUF_THIRD];
-
-    let nfc_transfer_block = NfcXferBlock {
-        block0: NfcXfer {
-            descriptors: LINK_DESCRIPTORS,
-            source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[0]) as u32,
-            link: LINK_1,
-        },
-        block1: NfcXfer {
-            descriptors: LINK_DESCRIPTORS,
-            source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[BUF_THIRD]) as u32,
-            link: LINK_1,
-        },
-        block2: NfcXfer {
-            descriptors: LINK_DESCRIPTORS,
-            source: TIMER0_CC0_ICF,
-            dest: addr_of!(nfc_buffer[2*BUF_THIRD]) as u32,
-            link: LINK_2,
-        },
-    };
-
-    let mut peripherals = Peripherals::take().unwrap();
-
-    init_peripherals(&mut peripherals, addr_of!(nfc_transfer_block));
-
-    delay(1000);
-
-    free(|cs| {
-        PERIPHERALS.borrow(cs).replace(Some(peripherals));
-    });
-
-    delay(1000);
     
     free(|cs| {
+        PERIPHERALS.borrow(cs); //will init peripheral
         let mut core_periph = CORE_PERIPHERALS.borrow(cs).borrow_mut();
         // Errata CUR_E302 fix
         // enable FPU to reduce power consumption in EM1
@@ -162,8 +152,7 @@ fn main() -> ! {
     //         //.hard_derive_mini_secret_key(Some(ChainCode(*junction.inner())), b"")
     //         .0
     //         .expand_to_keypair(ExpansionMode::Ed25519);
-
-    // initialize SYST for Timer
+            // initialize SYST for Timer
     free(|cs| {  
         let mut core_periph = CORE_PERIPHERALS.borrow(cs).borrow_mut();
         core_periph.SYST.set_clock_source(cortex_m::peripheral::syst::SystClkSource::Core);
@@ -171,47 +160,50 @@ fn main() -> ! {
         core_periph.SYST.clear_current();
         core_periph.SYST.enable_counter();
     });
-
-    let mut main_state = MainState::new(&nfc_buffer);
+    
+    let mut main_state = MainState::new(());//&nfc_buffer);
     loop {
         main_state.advance(());
     }
 }
 
-enum MainStatus<'a> {
+enum MainStatus {
     ADCProbe,
-    NFCRead(NfcReceiver<'a>),
+    NFCRead(NfcReceiver),
     Display(Option<UIOperationThreads>, Box<UI>),
     TouchRead(Option<Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>>),
 }
 
-impl<'a> Default for MainStatus<'a> {
+impl Default for MainStatus {
     fn default() -> Self {
         MainStatus::ADCProbe
     }
 }
 
-struct MainState<'a> {
-    threads: Threads<MainStatus<'a>, 3>,
+struct MainState {
+    threads: Threads<MainStatus, 3>,
     adc: ADC,
     ui: Option<Box<UI>>,
     touches: Touches,
 }
 
-impl<'a> AsyncOperation for MainState<'a> {
-    type Init = &'a [u16; 3*BUF_THIRD];
+
+
+impl AsyncOperation for MainState {
+    type Init = ();//&'a [u16; 3*BUF_THIRD];
     type Input<'b> = ();
     type Output = ();
     /// Start of UI.
-    fn new(nfc_buffer: Self::Init) -> Self {
+    fn new(_: Self::Init) -> Self {
         let ui = UI::new(());
-        let receiver = NfcReceiver::new(nfc_buffer);
         clear_touch_if();
-        
+
         return Self {
             threads: Threads::from([
                 MainStatus::ADCProbe,
-                MainStatus::NFCRead(receiver),
+                MainStatus::NFCRead(NfcReceiver::new()),
+                //MainStatus::TouchRead(None),
+                //MainStatus::Display(None, Box::new(ui)),
             ]),
             adc: ADC::new(()),
             ui: Some(Box::new(ui)),

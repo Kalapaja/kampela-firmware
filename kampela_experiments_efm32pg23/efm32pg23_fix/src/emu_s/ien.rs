@@ -79,49 +79,41 @@ impl R {
 impl W {
     #[doc = "Bit 16 - AVDD BOD Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn avddbod(&mut self) -> AvddbodW<IenSpec> {
         AvddbodW::new(self, 16)
     }
     #[doc = "Bit 17 - VDDIO0 BOD Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn iovdd0bod(&mut self) -> Iovdd0bodW<IenSpec> {
         Iovdd0bodW::new(self, 17)
     }
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn em23wakeup(&mut self) -> Em23wakeupW<IenSpec> {
         Em23wakeupW::new(self, 24)
     }
     #[doc = "Bit 25 - Vscale done Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn vscaledone(&mut self) -> VscaledoneW<IenSpec> {
         VscaledoneW::new(self, 25)
     }
     #[doc = "Bit 27 - Temperature Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tempavg(&mut self) -> TempavgW<IenSpec> {
         TempavgW::new(self, 27)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn temp(&mut self) -> TempW<IenSpec> {
         TempW::new(self, 29)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn templow(&mut self) -> TemplowW<IenSpec> {
         TemplowW::new(self, 30)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn temphigh(&mut self) -> TemphighW<IenSpec> {
         TemphighW::new(self, 31)
     }
@@ -136,10 +128,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

@@ -7,13 +7,11 @@ pub type Txdata1W<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl W {
     #[doc = "Bits 0:7 - TX Data"]
     #[inline(always)]
-    #[must_use]
     pub fn txdata0(&mut self) -> Txdata0W<TxdoubleSpec> {
         Txdata0W::new(self, 0)
     }
     #[doc = "Bits 8:15 - TX Data"]
     #[inline(always)]
-    #[must_use]
     pub fn txdata1(&mut self) -> Txdata1W<TxdoubleSpec> {
         Txdata1W::new(self, 8)
     }
@@ -26,10 +24,6 @@ impl crate::RegisterSpec for TxdoubleSpec {
 #[doc = "`write(|w| ..)` method takes [`txdouble::W`](W) writer structure"]
 impl crate::Writable for TxdoubleSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TXDOUBLE to value 0"]
-impl crate::Resettable for TxdoubleSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TxdoubleSpec {}

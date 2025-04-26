@@ -83,19 +83,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:17 - Offset"]
     #[inline(always)]
-    #[must_use]
     pub fn offset(&mut self) -> OffsetW<Scale1Spec> {
         OffsetW::new(self, 0)
     }
     #[doc = "Bits 18:30 - Gain 13 LSBs"]
     #[inline(always)]
-    #[must_use]
     pub fn gain13lsb(&mut self) -> Gain13lsbW<Scale1Spec> {
         Gain13lsbW::new(self, 18)
     }
     #[doc = "Bit 31 - Gain 3 MSBs"]
     #[inline(always)]
-    #[must_use]
     pub fn gain3msb(&mut self) -> Gain3msbW<Scale1Spec> {
         Gain3msbW::new(self, 31)
     }
@@ -110,8 +107,6 @@ impl crate::Readable for Scale1Spec {}
 #[doc = "`write(|w| ..)` method takes [`scale1::W`](W) writer structure"]
 impl crate::Writable for Scale1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SCALE1 to value 0x8002_c000"]
 impl crate::Resettable for Scale1Spec {

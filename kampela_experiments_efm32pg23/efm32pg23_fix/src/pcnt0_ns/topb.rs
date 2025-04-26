@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Counter Top Buffer Register"]
     #[inline(always)]
-    #[must_use]
     pub fn topb(&mut self) -> TopbW<TopbSpec> {
         TopbW::new(self, 0)
     }
@@ -31,8 +30,6 @@ impl crate::Readable for TopbSpec {}
 #[doc = "`write(|w| ..)` method takes [`topb::W`](W) writer structure"]
 impl crate::Writable for TopbSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TOPB to value 0xff"]
 impl crate::Resettable for TopbSpec {

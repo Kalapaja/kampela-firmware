@@ -17,6 +17,4 @@ impl crate::RegisterSpec for ScandataSpec {
 #[doc = "`read()` method returns [`scandata::R`](R) reader structure"]
 impl crate::Readable for ScandataSpec {}
 #[doc = "`reset()` method sets SCANDATA to value 0"]
-impl crate::Resettable for ScandataSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ScandataSpec {}

@@ -423,25 +423,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - A Bus Even 0"]
     #[inline(always)]
-    #[must_use]
     pub fn aeven0(&mut self) -> Aeven0W<AbusallocSpec> {
         Aeven0W::new(self, 0)
     }
     #[doc = "Bits 8:11 - A Bus Even 1"]
     #[inline(always)]
-    #[must_use]
     pub fn aeven1(&mut self) -> Aeven1W<AbusallocSpec> {
         Aeven1W::new(self, 8)
     }
     #[doc = "Bits 16:19 - A Bus Odd 0"]
     #[inline(always)]
-    #[must_use]
     pub fn aodd0(&mut self) -> Aodd0W<AbusallocSpec> {
         Aodd0W::new(self, 16)
     }
     #[doc = "Bits 24:27 - A Bus Odd 1"]
     #[inline(always)]
-    #[must_use]
     pub fn aodd1(&mut self) -> Aodd1W<AbusallocSpec> {
         Aodd1W::new(self, 24)
     }
@@ -456,10 +452,6 @@ impl crate::Readable for AbusallocSpec {}
 #[doc = "`write(|w| ..)` method takes [`abusalloc::W`](W) writer structure"]
 impl crate::Writable for AbusallocSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ABUSALLOC to value 0"]
-impl crate::Resettable for AbusallocSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AbusallocSpec {}

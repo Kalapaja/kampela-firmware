@@ -301,25 +301,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Bias Configuration"]
     #[inline(always)]
-    #[must_use]
     pub fn bias(&mut self) -> BiasW<CfgSpec> {
         BiasW::new(self, 0)
     }
     #[doc = "Bits 8:11 - Hysteresis mode"]
     #[inline(always)]
-    #[must_use]
     pub fn hyst(&mut self) -> HystW<CfgSpec> {
         HystW::new(self, 8)
     }
     #[doc = "Bit 16 - Input Range"]
     #[inline(always)]
-    #[must_use]
     pub fn inputrange(&mut self) -> InputrangeW<CfgSpec> {
         InputrangeW::new(self, 16)
     }
     #[doc = "Bit 17 - ACMP accuracy mode"]
     #[inline(always)]
-    #[must_use]
     pub fn accuracy(&mut self) -> AccuracyW<CfgSpec> {
         AccuracyW::new(self, 17)
     }
@@ -334,8 +330,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0x04"]
 impl crate::Resettable for CfgSpec {

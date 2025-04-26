@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - DTI Complementary Output Invert."]
     #[inline(always)]
-    #[must_use]
     pub fn dtcinv(&mut self) -> DtcinvW<DtctrlSpec> {
         DtcinvW::new(self, 0)
     }
     #[doc = "Bit 1 - DTI Inactive Polarity"]
     #[inline(always)]
-    #[must_use]
     pub fn dtipol(&mut self) -> DtipolW<DtctrlSpec> {
         DtipolW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for DtctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`dtctrl::W`](W) writer structure"]
 impl crate::Writable for DtctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DTCTRL to value 0"]
-impl crate::Resettable for DtctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DtctrlSpec {}

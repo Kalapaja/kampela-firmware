@@ -350,25 +350,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:19 - Calibration Counter Top Value"]
     #[inline(always)]
-    #[must_use]
     pub fn caltop(&mut self) -> CaltopW<CalctrlSpec> {
         CaltopW::new(self, 0)
     }
     #[doc = "Bit 23 - Continuous Calibration"]
     #[inline(always)]
-    #[must_use]
     pub fn cont(&mut self) -> ContW<CalctrlSpec> {
         ContW::new(self, 23)
     }
     #[doc = "Bits 24:27 - Calibration Up-counter Select"]
     #[inline(always)]
-    #[must_use]
     pub fn upsel(&mut self) -> UpselW<CalctrlSpec> {
         UpselW::new(self, 24)
     }
     #[doc = "Bits 28:31 - Calibration Down-counter Select"]
     #[inline(always)]
-    #[must_use]
     pub fn downsel(&mut self) -> DownselW<CalctrlSpec> {
         DownselW::new(self, 28)
     }
@@ -383,10 +379,6 @@ impl crate::Readable for CalctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`calctrl::W`](W) writer structure"]
 impl crate::Writable for CalctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CALCTRL to value 0"]
-impl crate::Resettable for CalctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CalctrlSpec {}

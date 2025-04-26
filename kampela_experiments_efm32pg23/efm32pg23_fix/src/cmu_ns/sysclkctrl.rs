@@ -260,19 +260,16 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    #[must_use]
     pub fn clksel(&mut self) -> ClkselW<SysclkctrlSpec> {
         ClkselW::new(self, 0)
     }
     #[doc = "Bit 10 - PCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn pclkpresc(&mut self) -> PclkprescW<SysclkctrlSpec> {
         PclkprescW::new(self, 10)
     }
     #[doc = "Bits 12:15 - HCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
     pub fn hclkpresc(&mut self) -> HclkprescW<SysclkctrlSpec> {
         HclkprescW::new(self, 12)
     }
@@ -287,8 +284,6 @@ impl crate::Readable for SysclkctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`sysclkctrl::W`](W) writer structure"]
 impl crate::Writable for SysclkctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SYSCLKCTRL to value 0x01"]
 impl crate::Resettable for SysclkctrlSpec {

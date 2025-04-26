@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CS pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn cspen(&mut self) -> CspenW<Usart0RouteenSpec> {
         CspenW::new(self, 0)
     }
     #[doc = "Bit 1 - RTS pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn rtspen(&mut self) -> RtspenW<Usart0RouteenSpec> {
         RtspenW::new(self, 1)
     }
     #[doc = "Bit 2 - RX pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn rxpen(&mut self) -> RxpenW<Usart0RouteenSpec> {
         RxpenW::new(self, 2)
     }
     #[doc = "Bit 3 - SCLK pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn clkpen(&mut self) -> ClkpenW<Usart0RouteenSpec> {
         ClkpenW::new(self, 3)
     }
     #[doc = "Bit 4 - TX pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn txpen(&mut self) -> TxpenW<Usart0RouteenSpec> {
         TxpenW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for Usart0RouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`usart0_routeen::W`](W) writer structure"]
 impl crate::Writable for Usart0RouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets USART0_ROUTEEN to value 0"]
-impl crate::Resettable for Usart0RouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Usart0RouteenSpec {}

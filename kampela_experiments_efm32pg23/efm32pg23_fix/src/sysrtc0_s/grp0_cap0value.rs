@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Grp0Cap0valueSpec {
 #[doc = "`read()` method returns [`grp0_cap0value::R`](R) reader structure"]
 impl crate::Readable for Grp0Cap0valueSpec {}
 #[doc = "`reset()` method sets GRP0_CAP0VALUE to value 0"]
-impl crate::Resettable for Grp0Cap0valueSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Grp0Cap0valueSpec {}

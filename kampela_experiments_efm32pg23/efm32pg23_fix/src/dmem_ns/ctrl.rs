@@ -121,31 +121,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable ECC functionality"]
     #[inline(always)]
-    #[must_use]
     pub fn eccen(&mut self) -> EccenW<CtrlSpec> {
         EccenW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable ECC syndrome writes"]
     #[inline(always)]
-    #[must_use]
     pub fn eccwen(&mut self) -> EccwenW<CtrlSpec> {
         EccwenW::new(self, 1)
     }
     #[doc = "Bit 2 - ECC Error bus fault enable"]
     #[inline(always)]
-    #[must_use]
     pub fn eccerrfaulten(&mut self) -> EccerrfaultenW<CtrlSpec> {
         EccerrfaultenW::new(self, 2)
     }
     #[doc = "Bits 3:5 - AHB port arbitration priority"]
     #[inline(always)]
-    #[must_use]
     pub fn ahbportpriority(&mut self) -> AhbportpriorityW<CtrlSpec> {
         AhbportpriorityW::new(self, 3)
     }
     #[doc = "Bit 6 - Address fault bus fault enable"]
     #[inline(always)]
-    #[must_use]
     pub fn addrfaulten(&mut self) -> AddrfaultenW<CtrlSpec> {
         AddrfaultenW::new(self, 6)
     }
@@ -160,8 +155,6 @@ impl crate::Readable for CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
 impl crate::Writable for CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CTRL to value 0x40"]
 impl crate::Resettable for CtrlSpec {

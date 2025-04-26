@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - ROWSENSE4 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<KeyscanRowsense4routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - ROWSENSE4 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<KeyscanRowsense4routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for KeyscanRowsense4routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`keyscan_rowsense4route::W`](W) writer structure"]
 impl crate::Writable for KeyscanRowsense4routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets KEYSCAN_ROWSENSE4ROUTE to value 0"]
-impl crate::Resettable for KeyscanRowsense4routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for KeyscanRowsense4routeSpec {}

@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Repeat Counter 0"]
     #[inline(always)]
-    #[must_use]
     pub fn rep0(&mut self) -> Rep0W<Rep0Spec> {
         Rep0W::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Rep0Spec {}
 #[doc = "`write(|w| ..)` method takes [`rep0::W`](W) writer structure"]
 impl crate::Writable for Rep0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets REP0 to value 0"]
-impl crate::Resettable for Rep0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Rep0Spec {}

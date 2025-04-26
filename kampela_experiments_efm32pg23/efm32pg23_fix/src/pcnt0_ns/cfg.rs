@@ -218,37 +218,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Mode Select"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CfgSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bit 4 - Debug Mode Halt Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn debughalt(&mut self) -> DebughaltW<CfgSpec> {
         DebughaltW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Digital Pulse Width Filter"]
     #[inline(always)]
-    #[must_use]
     pub fn filten(&mut self) -> FiltenW<CfgSpec> {
         FiltenW::new(self, 5)
     }
     #[doc = "Bit 6 - Enable Hysteresis"]
     #[inline(always)]
-    #[must_use]
     pub fn hyst(&mut self) -> HystW<CfgSpec> {
         HystW::new(self, 6)
     }
     #[doc = "Bit 8 - S0IN PRS Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn s0prsen(&mut self) -> S0prsenW<CfgSpec> {
         S0prsenW::new(self, 8)
     }
     #[doc = "Bit 9 - S1IN PRS Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn s1prsen(&mut self) -> S1prsenW<CfgSpec> {
         S1prsenW::new(self, 9)
     }
@@ -263,10 +257,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgSpec {}

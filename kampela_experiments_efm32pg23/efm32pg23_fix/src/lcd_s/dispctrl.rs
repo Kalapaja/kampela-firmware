@@ -351,25 +351,21 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Mux Configuration"]
     #[inline(always)]
-    #[must_use]
     pub fn mux(&mut self) -> MuxW<DispctrlSpec> {
         MuxW::new(self, 0)
     }
     #[doc = "Bit 4 - Waveform Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn wave(&mut self) -> WaveW<DispctrlSpec> {
         WaveW::new(self, 4)
     }
     #[doc = "Bits 20:22 - Charge Redistribution Cycles"]
     #[inline(always)]
-    #[must_use]
     pub fn chgrdst(&mut self) -> ChgrdstW<DispctrlSpec> {
         ChgrdstW::new(self, 20)
     }
     #[doc = "Bits 24:25 - Bias Configuration"]
     #[inline(always)]
-    #[must_use]
     pub fn bias(&mut self) -> BiasW<DispctrlSpec> {
         BiasW::new(self, 24)
     }
@@ -384,8 +380,6 @@ impl crate::Readable for DispctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`dispctrl::W`](W) writer structure"]
 impl crate::Writable for DispctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DISPCTRL to value 0x0010_0000"]
 impl crate::Resettable for DispctrlSpec {

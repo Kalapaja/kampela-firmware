@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - DTI async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerTimer4DtiSpec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerTimer4DtiSpec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_timer4_dti::W`](W) writer structure"]
 impl crate::Writable for ConsumerTimer4DtiSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_TIMER4_DTI to value 0"]
-impl crate::Resettable for ConsumerTimer4DtiSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerTimer4DtiSpec {}

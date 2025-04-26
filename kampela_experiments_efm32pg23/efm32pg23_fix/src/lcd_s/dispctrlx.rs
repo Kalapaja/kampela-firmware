@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:9 - Display Divider"]
     #[inline(always)]
-    #[must_use]
     pub fn displaydiv(&mut self) -> DisplaydivW<DispctrlxSpec> {
         DisplaydivW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for DispctrlxSpec {}
 #[doc = "`write(|w| ..)` method takes [`dispctrlx::W`](W) writer structure"]
 impl crate::Writable for DispctrlxSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DISPCTRLX to value 0"]
-impl crate::Resettable for DispctrlxSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DispctrlxSpec {}

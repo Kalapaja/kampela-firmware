@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:15 - Counter Top Value"]
     #[inline(always)]
-    #[must_use]
     pub fn top(&mut self) -> TopW<TopSpec> {
         TopW::new(self, 0)
     }
@@ -31,8 +30,6 @@ impl crate::Readable for TopSpec {}
 #[doc = "`write(|w| ..)` method takes [`top::W`](W) writer structure"]
 impl crate::Writable for TopSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TOP to value 0xff"]
 impl crate::Resettable for TopSpec {

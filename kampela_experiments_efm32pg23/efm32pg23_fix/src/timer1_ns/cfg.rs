@@ -684,73 +684,61 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - Timer Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn mode(&mut self) -> ModeW<CfgSpec> {
         ModeW::new(self, 0)
     }
     #[doc = "Bit 3 - Timer Start/Stop/Reload Synchronization"]
     #[inline(always)]
-    #[must_use]
     pub fn sync(&mut self) -> SyncW<CfgSpec> {
         SyncW::new(self, 3)
     }
     #[doc = "Bit 4 - One-shot Mode Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn osmen(&mut self) -> OsmenW<CfgSpec> {
         OsmenW::new(self, 4)
     }
     #[doc = "Bit 5 - Quadrature Decoder Mode Selection"]
     #[inline(always)]
-    #[must_use]
     pub fn qdm(&mut self) -> QdmW<CfgSpec> {
         QdmW::new(self, 5)
     }
     #[doc = "Bit 6 - Debug Mode Run Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn debugrun(&mut self) -> DebugrunW<CfgSpec> {
         DebugrunW::new(self, 6)
     }
     #[doc = "Bit 7 - DMA Request Clear on Active"]
     #[inline(always)]
-    #[must_use]
     pub fn dmaclract(&mut self) -> DmaclractW<CfgSpec> {
         DmaclractW::new(self, 7)
     }
     #[doc = "Bits 8:9 - Clock Source Select"]
     #[inline(always)]
-    #[must_use]
     pub fn clksel(&mut self) -> ClkselW<CfgSpec> {
         ClkselW::new(self, 8)
     }
     #[doc = "Bit 10 - PWM output retimed enable"]
     #[inline(always)]
-    #[must_use]
     pub fn retimeen(&mut self) -> RetimeenW<CfgSpec> {
         RetimeenW::new(self, 10)
     }
     #[doc = "Bit 11 - Disable Timer Start/Stop/Reload output"]
     #[inline(always)]
-    #[must_use]
     pub fn dissyncout(&mut self) -> DissyncoutW<CfgSpec> {
         DissyncoutW::new(self, 11)
     }
     #[doc = "Bit 16 - Always Track Inputs"]
     #[inline(always)]
-    #[must_use]
     pub fn ati(&mut self) -> AtiW<CfgSpec> {
         AtiW::new(self, 16)
     }
     #[doc = "Bit 17 - Reload-Start Sets COIST"]
     #[inline(always)]
-    #[must_use]
     pub fn rsscoist(&mut self) -> RsscoistW<CfgSpec> {
         RsscoistW::new(self, 17)
     }
     #[doc = "Bits 18:27 - Prescaler Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn presc(&mut self) -> PrescW<CfgSpec> {
         PrescW::new(self, 18)
     }
@@ -765,10 +753,6 @@ impl crate::Readable for CfgSpec {}
 #[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
 impl crate::Writable for CfgSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CfgSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CfgSpec {}

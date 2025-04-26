@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Rising Edge Triggered Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn rise(&mut self) -> RiseW<IfSpec> {
         RiseW::new(self, 0)
     }
     #[doc = "Bit 1 - Falling Edge Triggered Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn fall(&mut self) -> FallW<IfSpec> {
         FallW::new(self, 1)
     }
     #[doc = "Bit 2 - ACMP ready Interrupt flag"]
     #[inline(always)]
-    #[must_use]
     pub fn acmprdy(&mut self) -> AcmprdyW<IfSpec> {
         AcmprdyW::new(self, 2)
     }
     #[doc = "Bit 3 - Input conflict"]
     #[inline(always)]
-    #[must_use]
     pub fn inputconflict(&mut self) -> InputconflictW<IfSpec> {
         InputconflictW::new(self, 3)
     }
     #[doc = "Bit 4 - Port allocation error"]
     #[inline(always)]
-    #[must_use]
     pub fn portallocerr(&mut self) -> PortallocerrW<IfSpec> {
         PortallocerrW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

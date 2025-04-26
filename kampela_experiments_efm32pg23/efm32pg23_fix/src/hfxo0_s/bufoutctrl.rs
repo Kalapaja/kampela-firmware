@@ -784,43 +784,36 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Driver Bias Current"]
     #[inline(always)]
-    #[must_use]
     pub fn xoutbiasana(&mut self) -> XoutbiasanaW<BufoutctrlSpec> {
         XoutbiasanaW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Buffer Gain"]
     #[inline(always)]
-    #[must_use]
     pub fn xoutcfana(&mut self) -> XoutcfanaW<BufoutctrlSpec> {
         XoutcfanaW::new(self, 4)
     }
     #[doc = "Bits 8:11 - No Description"]
     #[inline(always)]
-    #[must_use]
     pub fn xoutgmana(&mut self) -> XoutgmanaW<BufoutctrlSpec> {
         XoutgmanaW::new(self, 8)
     }
     #[doc = "Bits 12:15 - Peak Detector Threshold for XOUT"]
     #[inline(always)]
-    #[must_use]
     pub fn peakdetthresana(&mut self) -> PeakdetthresanaW<BufoutctrlSpec> {
         PeakdetthresanaW::new(self, 12)
     }
     #[doc = "Bits 16:19 - Tuning Cap Change Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn timeoutctune(&mut self) -> TimeoutctuneW<BufoutctrlSpec> {
         TimeoutctuneW::new(self, 16)
     }
     #[doc = "Bits 20:23 - Oscillator Startup Timeout"]
     #[inline(always)]
-    #[must_use]
     pub fn timeoutstartup(&mut self) -> TimeoutstartupW<BufoutctrlSpec> {
         TimeoutstartupW::new(self, 20)
     }
     #[doc = "Bit 31 - Minimum Startup Delay"]
     #[inline(always)]
-    #[must_use]
     pub fn minimumstartupdelay(&mut self) -> MinimumstartupdelayW<BufoutctrlSpec> {
         MinimumstartupdelayW::new(self, 31)
     }
@@ -835,8 +828,6 @@ impl crate::Readable for BufoutctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`bufoutctrl::W`](W) writer structure"]
 impl crate::Writable for BufoutctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BUFOUTCTRL to value 0x0064_3c15"]
 impl crate::Resettable for BufoutctrlSpec {

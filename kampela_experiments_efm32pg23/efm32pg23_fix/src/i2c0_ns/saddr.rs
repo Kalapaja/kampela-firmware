@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 1:7 - Follower address"]
     #[inline(always)]
-    #[must_use]
     pub fn addr(&mut self) -> AddrW<SaddrSpec> {
         AddrW::new(self, 1)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for SaddrSpec {}
 #[doc = "`write(|w| ..)` method takes [`saddr::W`](W) writer structure"]
 impl crate::Writable for SaddrSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SADDR to value 0"]
-impl crate::Resettable for SaddrSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SaddrSpec {}

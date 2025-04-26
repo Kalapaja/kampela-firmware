@@ -151,97 +151,81 @@ impl R {
 impl W {
     #[doc = "Bit 0 - ASYNCH0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch0pen(&mut self) -> Asynch0penW<Prs0RouteenSpec> {
         Asynch0penW::new(self, 0)
     }
     #[doc = "Bit 1 - ASYNCH1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch1pen(&mut self) -> Asynch1penW<Prs0RouteenSpec> {
         Asynch1penW::new(self, 1)
     }
     #[doc = "Bit 2 - ASYNCH2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch2pen(&mut self) -> Asynch2penW<Prs0RouteenSpec> {
         Asynch2penW::new(self, 2)
     }
     #[doc = "Bit 3 - ASYNCH3 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch3pen(&mut self) -> Asynch3penW<Prs0RouteenSpec> {
         Asynch3penW::new(self, 3)
     }
     #[doc = "Bit 4 - ASYNCH4 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch4pen(&mut self) -> Asynch4penW<Prs0RouteenSpec> {
         Asynch4penW::new(self, 4)
     }
     #[doc = "Bit 5 - ASYNCH5 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch5pen(&mut self) -> Asynch5penW<Prs0RouteenSpec> {
         Asynch5penW::new(self, 5)
     }
     #[doc = "Bit 6 - ASYNCH6 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch6pen(&mut self) -> Asynch6penW<Prs0RouteenSpec> {
         Asynch6penW::new(self, 6)
     }
     #[doc = "Bit 7 - ASYNCH7 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch7pen(&mut self) -> Asynch7penW<Prs0RouteenSpec> {
         Asynch7penW::new(self, 7)
     }
     #[doc = "Bit 8 - ASYNCH8 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch8pen(&mut self) -> Asynch8penW<Prs0RouteenSpec> {
         Asynch8penW::new(self, 8)
     }
     #[doc = "Bit 9 - ASYNCH9 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch9pen(&mut self) -> Asynch9penW<Prs0RouteenSpec> {
         Asynch9penW::new(self, 9)
     }
     #[doc = "Bit 10 - ASYNCH10 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch10pen(&mut self) -> Asynch10penW<Prs0RouteenSpec> {
         Asynch10penW::new(self, 10)
     }
     #[doc = "Bit 11 - ASYNCH11 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn asynch11pen(&mut self) -> Asynch11penW<Prs0RouteenSpec> {
         Asynch11penW::new(self, 11)
     }
     #[doc = "Bit 12 - SYNCH0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn synch0pen(&mut self) -> Synch0penW<Prs0RouteenSpec> {
         Synch0penW::new(self, 12)
     }
     #[doc = "Bit 13 - SYNCH1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn synch1pen(&mut self) -> Synch1penW<Prs0RouteenSpec> {
         Synch1penW::new(self, 13)
     }
     #[doc = "Bit 14 - SYNCH2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn synch2pen(&mut self) -> Synch2penW<Prs0RouteenSpec> {
         Synch2penW::new(self, 14)
     }
     #[doc = "Bit 15 - SYNCH3 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn synch3pen(&mut self) -> Synch3penW<Prs0RouteenSpec> {
         Synch3penW::new(self, 15)
     }
@@ -256,10 +240,6 @@ impl crate::Readable for Prs0RouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`prs0_routeen::W`](W) writer structure"]
 impl crate::Writable for Prs0RouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PRS0_ROUTEEN to value 0"]
-impl crate::Resettable for Prs0RouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Prs0RouteenSpec {}

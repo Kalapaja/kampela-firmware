@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - CTI async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerCoreCtiin2Spec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerCoreCtiin2Spec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_core_ctiin2::W`](W) writer structure"]
 impl crate::Writable for ConsumerCoreCtiin2Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_CORE_CTIIN2 to value 0"]
-impl crate::Resettable for ConsumerCoreCtiin2Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerCoreCtiin2Spec {}

@@ -38,6 +38,4 @@ impl crate::RegisterSpec for SyncPeekSpec {
 #[doc = "`read()` method returns [`sync_peek::R`](R) reader structure"]
 impl crate::Readable for SyncPeekSpec {}
 #[doc = "`reset()` method sets SYNC_PEEK to value 0"]
-impl crate::Resettable for SyncPeekSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SyncPeekSpec {}

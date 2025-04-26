@@ -5,7 +5,6 @@ pub type InitW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Initialization Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn init(&mut self) -> InitW<CmdSpec> {
         InitW::new(self, 0)
     }
@@ -18,10 +17,6 @@ impl crate::RegisterSpec for CmdSpec {
 #[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
 impl crate::Writable for CmdSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CmdSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CmdSpec {}

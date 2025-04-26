@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:31 - Compare 0 Value"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp0value(&mut self) -> Cmp0valueW<Grp0Cmp0valueSpec> {
         Cmp0valueW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for Grp0Cmp0valueSpec {}
 #[doc = "`write(|w| ..)` method takes [`grp0_cmp0value::W`](W) writer structure"]
 impl crate::Writable for Grp0Cmp0valueSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets GRP0_CMP0VALUE to value 0"]
-impl crate::Resettable for Grp0Cmp0valueSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Grp0Cmp0valueSpec {}

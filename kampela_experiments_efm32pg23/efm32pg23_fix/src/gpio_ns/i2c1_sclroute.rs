@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - SCL port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<I2c1SclrouteSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - SCL pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<I2c1SclrouteSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for I2c1SclrouteSpec {}
 #[doc = "`write(|w| ..)` method takes [`i2c1_sclroute::W`](W) writer structure"]
 impl crate::Writable for I2c1SclrouteSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets I2C1_SCLROUTE to value 0"]
-impl crate::Resettable for I2c1SclrouteSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for I2c1SclrouteSpec {}

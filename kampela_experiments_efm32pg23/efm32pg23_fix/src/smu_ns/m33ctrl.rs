@@ -52,31 +52,26 @@ impl R {
 impl W {
     #[doc = "Bit 0 - New BitField"]
     #[inline(always)]
-    #[must_use]
     pub fn locksvtaircr(&mut self) -> LocksvtaircrW<M33ctrlSpec> {
         LocksvtaircrW::new(self, 0)
     }
     #[doc = "Bit 1 - New BitField"]
     #[inline(always)]
-    #[must_use]
     pub fn locknsvtor(&mut self) -> LocknsvtorW<M33ctrlSpec> {
         LocknsvtorW::new(self, 1)
     }
     #[doc = "Bit 2 - New BitField"]
     #[inline(always)]
-    #[must_use]
     pub fn locksmpu(&mut self) -> LocksmpuW<M33ctrlSpec> {
         LocksmpuW::new(self, 2)
     }
     #[doc = "Bit 3 - New BitField"]
     #[inline(always)]
-    #[must_use]
     pub fn locknsmpu(&mut self) -> LocknsmpuW<M33ctrlSpec> {
         LocknsmpuW::new(self, 3)
     }
     #[doc = "Bit 4 - New BitField"]
     #[inline(always)]
-    #[must_use]
     pub fn locksau(&mut self) -> LocksauW<M33ctrlSpec> {
         LocksauW::new(self, 4)
     }
@@ -91,10 +86,6 @@ impl crate::Readable for M33ctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`m33ctrl::W`](W) writer structure"]
 impl crate::Writable for M33ctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets M33CTRL to value 0"]
-impl crate::Resettable for M33ctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for M33ctrlSpec {}

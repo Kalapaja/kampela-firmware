@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - CLK async channel select"]
     #[inline(always)]
-    #[must_use]
     pub fn prssel(&mut self) -> PrsselW<ConsumerEusart2ClkSpec> {
         PrsselW::new(self, 0)
     }
@@ -31,10 +30,6 @@ impl crate::Readable for ConsumerEusart2ClkSpec {}
 #[doc = "`write(|w| ..)` method takes [`consumer_eusart2_clk::W`](W) writer structure"]
 impl crate::Writable for ConsumerEusart2ClkSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CONSUMER_EUSART2_CLK to value 0"]
-impl crate::Resettable for ConsumerEusart2ClkSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for ConsumerEusart2ClkSpec {}

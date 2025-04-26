@@ -244,37 +244,31 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable I2S Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn en(&mut self) -> EnW<I2sctrlSpec> {
         EnW::new(self, 0)
     }
     #[doc = "Bit 1 - Stero or Mono"]
     #[inline(always)]
-    #[must_use]
     pub fn mono(&mut self) -> MonoW<I2sctrlSpec> {
         MonoW::new(self, 1)
     }
     #[doc = "Bit 2 - Justification of I2S Data"]
     #[inline(always)]
-    #[must_use]
     pub fn justify(&mut self) -> JustifyW<I2sctrlSpec> {
         JustifyW::new(self, 2)
     }
     #[doc = "Bit 3 - Separate DMA Request For Left/Right Data"]
     #[inline(always)]
-    #[must_use]
     pub fn dmasplit(&mut self) -> DmasplitW<I2sctrlSpec> {
         DmasplitW::new(self, 3)
     }
     #[doc = "Bit 4 - Delay on I2S data"]
     #[inline(always)]
-    #[must_use]
     pub fn delay(&mut self) -> DelayW<I2sctrlSpec> {
         DelayW::new(self, 4)
     }
     #[doc = "Bits 8:10 - I2S Word Format"]
     #[inline(always)]
-    #[must_use]
     pub fn format(&mut self) -> FormatW<I2sctrlSpec> {
         FormatW::new(self, 8)
     }
@@ -289,10 +283,6 @@ impl crate::Readable for I2sctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`i2sctrl::W`](W) writer structure"]
 impl crate::Writable for I2sctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets I2SCTRL to value 0"]
-impl crate::Resettable for I2sctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for I2sctrlSpec {}

@@ -758,67 +758,56 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - DMA Structure Type"]
     #[inline(always)]
-    #[must_use]
     pub fn structtype(&mut self) -> StructtypeW<Ch3CtrlSpec> {
         StructtypeW::new(self, 0)
     }
     #[doc = "Bits 4:14 - DMA Unit Data Transfer Count"]
     #[inline(always)]
-    #[must_use]
     pub fn xfercnt(&mut self) -> XfercntW<Ch3CtrlSpec> {
         XfercntW::new(self, 4)
     }
     #[doc = "Bit 15 - Endian Byte Swap"]
     #[inline(always)]
-    #[must_use]
     pub fn byteswap(&mut self) -> ByteswapW<Ch3CtrlSpec> {
         ByteswapW::new(self, 15)
     }
     #[doc = "Bits 16:19 - Block Transfer Size"]
     #[inline(always)]
-    #[must_use]
     pub fn blocksize(&mut self) -> BlocksizeW<Ch3CtrlSpec> {
         BlocksizeW::new(self, 16)
     }
     #[doc = "Bit 20 - DMA Operation Done Interrupt Flag Set En"]
     #[inline(always)]
-    #[must_use]
     pub fn doneien(&mut self) -> DoneienW<Ch3CtrlSpec> {
         DoneienW::new(self, 20)
     }
     #[doc = "Bit 21 - DMA Request Transfer Mode Select"]
     #[inline(always)]
-    #[must_use]
     pub fn reqmode(&mut self) -> ReqmodeW<Ch3CtrlSpec> {
         ReqmodeW::new(self, 21)
     }
     #[doc = "Bit 22 - Decrement Loop Count"]
     #[inline(always)]
-    #[must_use]
     pub fn decloopcnt(&mut self) -> DecloopcntW<Ch3CtrlSpec> {
         DecloopcntW::new(self, 22)
     }
     #[doc = "Bit 23 - Ignore Sreq"]
     #[inline(always)]
-    #[must_use]
     pub fn ignoresreq(&mut self) -> IgnoresreqW<Ch3CtrlSpec> {
         IgnoresreqW::new(self, 23)
     }
     #[doc = "Bits 24:25 - Source Address Increment Size"]
     #[inline(always)]
-    #[must_use]
     pub fn srcinc(&mut self) -> SrcincW<Ch3CtrlSpec> {
         SrcincW::new(self, 24)
     }
     #[doc = "Bits 26:27 - Unit Data Transfer Size"]
     #[inline(always)]
-    #[must_use]
     pub fn size(&mut self) -> SizeW<Ch3CtrlSpec> {
         SizeW::new(self, 26)
     }
     #[doc = "Bits 28:29 - Destination Address Increment Size"]
     #[inline(always)]
-    #[must_use]
     pub fn dstinc(&mut self) -> DstincW<Ch3CtrlSpec> {
         DstincW::new(self, 28)
     }
@@ -833,10 +822,6 @@ impl crate::Readable for Ch3CtrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`ch3_ctrl::W`](W) writer structure"]
 impl crate::Writable for Ch3CtrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CH3_CTRL to value 0"]
-impl crate::Resettable for Ch3CtrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Ch3CtrlSpec {}

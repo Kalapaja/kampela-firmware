@@ -185,13 +185,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - PFMX mode Peak Current Setting"]
     #[inline(always)]
-    #[must_use]
     pub fn ipkval(&mut self) -> IpkvalW<PfmxctrlSpec> {
         IpkvalW::new(self, 0)
     }
     #[doc = "Bits 8:12 - Ton_max timeout control"]
     #[inline(always)]
-    #[must_use]
     pub fn ipktmaxctrl(&mut self) -> IpktmaxctrlW<PfmxctrlSpec> {
         IpktmaxctrlW::new(self, 8)
     }
@@ -206,8 +204,6 @@ impl crate::Readable for PfmxctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`pfmxctrl::W`](W) writer structure"]
 impl crate::Writable for PfmxctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PFMXCTRL to value 0x0c0c"]
 impl crate::Resettable for PfmxctrlSpec {

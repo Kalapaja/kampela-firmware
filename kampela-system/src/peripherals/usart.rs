@@ -3,7 +3,7 @@
 use efm32pg23_fix::{GpioS, Peripherals};
 use crate::peripherals::gpio_pins::*;
 
-pub const BAUDRATE_USART: u32 = 10_000_000;
+pub const BAUDRATE_USART: u32 = 2_500_000;
 
 /// Select display channel
 pub fn select_display(gpio: &mut GpioS) {
@@ -73,8 +73,7 @@ pub fn init_usart(peripherals: &mut Peripherals) {
                 .parity().none()
     });
 
-
-    let clkdiv = ((19_000_000 - 1)/(2*BAUDRATE_USART)) << 8;
+    let clkdiv = ((19_000_000 << 4)/(BAUDRATE_USART)).saturating_sub(32); // ((19_000_000 - 1)/(2*BAUDRATE_USART)) << 8 preventing overflow
 
     peripherals
         .usart0_s

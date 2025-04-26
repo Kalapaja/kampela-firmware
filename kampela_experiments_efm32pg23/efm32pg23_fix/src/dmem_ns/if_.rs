@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 0 - AHB0 1-bit ECC Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ahb0err1b(&mut self) -> Ahb0err1bW<IfSpec> {
         Ahb0err1bW::new(self, 0)
     }
     #[doc = "Bit 1 - AHB1 1-bit ECC Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ahb1err1b(&mut self) -> Ahb1err1bW<IfSpec> {
         Ahb1err1bW::new(self, 1)
     }
     #[doc = "Bit 4 - AHB0 2-bit ECC Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ahb0err2b(&mut self) -> Ahb0err2bW<IfSpec> {
         Ahb0err2bW::new(self, 4)
     }
     #[doc = "Bit 5 - AHB1 2-bit ECC Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
     pub fn ahb1err2b(&mut self) -> Ahb1err2bW<IfSpec> {
         Ahb1err2bW::new(self, 5)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for IfSpec {}
 #[doc = "`write(|w| ..)` method takes [`if_::W`](W) writer structure"]
 impl crate::Writable for IfSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IF to value 0"]
-impl crate::Resettable for IfSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IfSpec {}

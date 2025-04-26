@@ -109,7 +109,7 @@ impl AsyncOperation for ReadI2C {
                         .read()
                         .rxdatav()
                         .bit_is_set()
-                )? {
+                ) {
                     in_free(|peripherals| 
                         self.value = Some(
                             peripherals
@@ -166,7 +166,7 @@ pub fn acknowledge_i2c_tx() -> Result<bool, I2CError> {
             .read()
             .ack()
             .bit_is_clear()
-    ).unwrap() {
+    ) {
         check_i2c_errors()?;
 
         if if_in_free(|peripherals|
@@ -176,7 +176,7 @@ pub fn acknowledge_i2c_tx() -> Result<bool, I2CError> {
                 .read()
                 .nack()
                 .bit_is_set()
-        ).unwrap() {
+         ) {
             in_free(|peripherals| {
                 // clear interrupt flag
                 peripherals
@@ -196,13 +196,13 @@ pub fn acknowledge_i2c_tx() -> Result<bool, I2CError> {
 
         Ok(false)
     } else {
-        in_free(|peripherals|
+        in_free(|peripherals| {
             // clear interrupt flag
             peripherals
                 .i2c0_s
                 .if_()
-                .write(|w_reg| w_reg.ack().clear_bit())
-        );
+                .write(|w_reg| w_reg.ack().clear_bit());
+        });
         Ok(true)
     }
 }
@@ -216,16 +216,16 @@ pub fn mstop_i2c_wait_and_clear() -> Result<bool, I2CError> {
             .read()
             .mstop()
             .bit_is_clear()
-    ).unwrap() {
+    ) {
         check_i2c_errors()?;
         Ok(false)
     } else {
-        in_free(|peripherals|
+        in_free(|peripherals| {
             peripherals
             .i2c0_s
             .if_()
-            .write(|w_reg| w_reg.mstop().clear_bit())
-        );
+            .write(|w_reg| w_reg.mstop().clear_bit());
+        });
         Ok(true)
     }
 }

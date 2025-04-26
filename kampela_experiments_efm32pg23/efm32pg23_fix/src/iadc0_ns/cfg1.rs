@@ -553,37 +553,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - ADC Mode"]
     #[inline(always)]
-    #[must_use]
     pub fn adcmode(&mut self) -> AdcmodeW<Cfg1Spec> {
         AdcmodeW::new(self, 0)
     }
     #[doc = "Bits 2:4 - High Speed OSR"]
     #[inline(always)]
-    #[must_use]
     pub fn osrhs(&mut self) -> OsrhsW<Cfg1Spec> {
         OsrhsW::new(self, 2)
     }
     #[doc = "Bits 12:14 - Analog Gain"]
     #[inline(always)]
-    #[must_use]
     pub fn analoggain(&mut self) -> AnaloggainW<Cfg1Spec> {
         AnaloggainW::new(self, 12)
     }
     #[doc = "Bits 16:18 - Reference Select"]
     #[inline(always)]
-    #[must_use]
     pub fn refsel(&mut self) -> RefselW<Cfg1Spec> {
         RefselW::new(self, 16)
     }
     #[doc = "Bits 21:23 - Digital Averaging"]
     #[inline(always)]
-    #[must_use]
     pub fn digavg(&mut self) -> DigavgW<Cfg1Spec> {
         DigavgW::new(self, 21)
     }
     #[doc = "Bits 28:29 - Two's Complement"]
     #[inline(always)]
-    #[must_use]
     pub fn twoscompl(&mut self) -> TwoscomplW<Cfg1Spec> {
         TwoscomplW::new(self, 28)
     }
@@ -598,8 +592,6 @@ impl crate::Readable for Cfg1Spec {}
 #[doc = "`write(|w| ..)` method takes [`cfg1::W`](W) writer structure"]
 impl crate::Writable for Cfg1Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CFG1 to value 0x2060"]
 impl crate::Resettable for Cfg1Spec {

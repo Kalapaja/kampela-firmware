@@ -18,7 +18,7 @@ use crate::{
     devices::{display::{
         Bounds, Request, UpdateFast, UpdateFull, UpdateUltraFast
     }, touch::{disable_touch_int, enable_touch_int}},
-    parallel::{AsyncOperation, Threads}
+    parallel::{AsyncOperation, Threads}, peripherals::ldma_ch_usart::FrameBufferLDMA
 };
 use kampela_ui::uistate::UpdateRequest;
 use crate::debug_display::epaper_draw_stuff_differently;
@@ -34,11 +34,11 @@ fn refreshable_area_address(refreshable_area: Rectangle) -> Bounds {
     };
 
     let y_start_address: u16 = if refreshable_area.top_left.x < 0 {
-        (SCREEN_SIZE_X) as u16
+        (SCREEN_SIZE_X - 1) as u16
     } else if refreshable_area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
         0
     } else {
-        ((SCREEN_SIZE_X) as i32 - refreshable_area.top_left.x) as u16
+        ((SCREEN_SIZE_X - 1) as i32 - refreshable_area.top_left.x) as u16
     };
 
     let bottom_right = refreshable_area.top_left + refreshable_area.size - Point{x: 1, y: 1};
@@ -69,18 +69,85 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 5000;
-const FULL_REFRESH_POWER: i32 = 5000;
-const PART_REFRESH_POWER: i32 = 5000;
+const FAST_REFRESH_POWER: i32 = 4000;
+const FULL_REFRESH_POWER: i32 = 4000;
+const PART_REFRESH_POWER: i32 = 4000;
 
 const SEQUENCIAL_SELECTIVE_LIMIT: usize = 5; // more sequencial selective refreshes cause to leave traces, less cause artefacts
 /// Virtual display data storage
-type PixelData = BitArr!(for SCREEN_RESOLUTION as usize, in u8, Msb0);
+type PixelBufferData = BitArr!(for SCREEN_RESOLUTION as usize, in u8, Msb0);
+#[repr(C)]
+pub struct PixelBuffer(PixelBufferData);
 
+impl PixelBuffer {
+    pub fn new_white() -> Self {
+        Self(bitarr!(u8, Msb0; 1; SCREEN_RESOLUTION as usize))
+    }
+
+    /// Send display data to real EPD; invokes full screen refresh
+    ///
+    /// this is for cs environment; do not use otherwise
+    pub fn apply(&self, peripherals: &mut Peripherals) {
+        epaper_draw_stuff_differently(peripherals, self.0.into_inner());
+    }
+    fn try_draw_iter_px(&mut self, pixel: Pixel<BinaryColor>) -> bool {
+        if (pixel.0.x<0)|(pixel.0.x>=SCREEN_SIZE_X as i32) {return false}
+        if (pixel.0.y<0)|(pixel.0.y>=SCREEN_SIZE_Y as i32) {return false}
+        //transposing pizels correctly here
+        let n = (pixel.0.y + pixel.0.x*SCREEN_SIZE_Y as i32) as usize;
+        let mut pixel_update = self.get_mut(n).expect("checked the bounds");
+        match pixel.1 {
+            BinaryColor::Off => {
+                *pixel_update = true; //white
+            },
+            BinaryColor::On => {
+                *pixel_update = false; //black
+            }
+        }
+        true
+    }
+}
+
+impl Dimensions for PixelBuffer {
+    fn bounding_box(&self) -> Rectangle {
+            Rectangle {
+                top_left: SCREEN_ZERO,
+                size: SCREEN_SIZE,
+            }
+    }
+}
+
+impl DrawTarget for PixelBuffer {
+    type Color = BinaryColor;
+    type Error = DisplayError;
+    fn draw_iter<I>(&mut self, pixels: I) -> Result<(), Self::Error>
+    where
+        I: IntoIterator<Item = Pixel<Self::Color>>,
+    {
+        for pixel in pixels {
+            self.try_draw_iter_px(pixel);
+        }
+        Ok(())
+    }
+}
+
+impl core::ops::Deref for PixelBuffer {
+    type Target = PixelBufferData;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl core::ops::DerefMut for PixelBuffer {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
 
 /// A virtual display that could be written to EPD simultaneously
 pub struct FrameBuffer {
-    data: PixelData,
+    data: Option<FrameBufferLDMA>,
 }
 
 pub struct DisplayOperationThreads{
@@ -179,15 +246,8 @@ impl FrameBuffer {
     /// Create new virtual display and fill it with ON pixels
     pub fn new_white() -> Self {
         Self {
-            data: bitarr!(u8, Msb0; 1; SCREEN_RESOLUTION as usize),
+            data: Some(FrameBufferLDMA::new()),
         }
-    }
-
-    /// Send display data to real EPD; invokes full screen refresh
-    ///
-    /// this is for cs environment; do not use otherwise
-    pub fn apply(&self, peripherals: &mut Peripherals) {
-        epaper_draw_stuff_differently(peripherals, self.data.into_inner());
     }
 }
 
@@ -234,36 +294,48 @@ impl AsyncOperation for FrameBuffer {
             DisplayState::FullOperating(state) => {
                 match state {
                     None => {
-                        threads.change(DisplayState::FullOperating(Some(Request::<UpdateFull>::new((None, None)))));
+                        threads.change(DisplayState::FullOperating(Some(Request::<UpdateFull>::new((None, false)))));
                         threads.last_black =true;
                         threads.selective_counter = 0;
                         Some(false)
                     },
                     Some(a) => {
-                        let r = a.advance(&self.data.data);
-                        if r == Some(true) {
-                            threads.change(DisplayState::End);
-                            return Some(false)
+                        let r = a.advance(&mut self.data);
+                        match r {
+                            Some(Some(true)) => {
+                                threads.change(DisplayState::End);
+                                return Some(false)
+                            },
+                            Some(Some(false)) => {
+                                Some(true)
+                            }
+                            Some(None) => Some(false),
+                            None => None
                         }
-                        r
                     }
                 }
             },
             DisplayState::FastOperating(state) => {
                 match state {
                     None => {
-                        threads.change(DisplayState::FastOperating(Some(Request::<UpdateFast>::new((None, None)))));
+                        threads.change(DisplayState::FastOperating(Some(Request::<UpdateFast>::new((None, false)))));
                         threads.last_black =true;
                         threads.selective_counter = 0;
                         Some(false)
                     },
                     Some(a) => {
-                        let r = a.advance(&self.data.data);
-                        if r == Some(true) {
-                            threads.change(DisplayState::End);
-                            return Some(false)
+                        let r = a.advance(&mut self.data);
+                        match r {
+                            Some(Some(true)) => {
+                                threads.change(DisplayState::End);
+                                return Some(false)
+                            },
+                            Some(Some(false)) => {
+                                Some(true)
+                            }
+                            Some(None) => Some(false),
+                            None => None
                         }
-                        r
                     }
                 }
             },
@@ -271,26 +343,29 @@ impl AsyncOperation for FrameBuffer {
                 match state {
                     None => {
                         let p = part_options.take();
-                        let selective = selective_refresh.to_owned();
-                        let r = if selective && threads.selective_counter < SEQUENCIAL_SELECTIVE_LIMIT {
+                        let r = if *selective_refresh && threads.selective_counter < SEQUENCIAL_SELECTIVE_LIMIT {
                             threads.selective_counter += 1;
-                            threads.last_black = !threads.last_black;
-                            Some(!threads.last_black)
+                            true
                         } else {
                             threads.selective_counter = 0;
-                            threads.last_black = true;
-                            None
+                            false
                         };
                         threads.change(DisplayState::UltraFastOperating((Some(Request::<UpdateUltraFast>::new((p, r))), None, false)));
                         Some(false)
                     },
                     Some(a) => {
-                        let r = a.advance(&self.data.data);
-                        if r == Some(true) {
-                            threads.change(DisplayState::End);
-                            return Some(false)
+                        let r = a.advance(&mut self.data);
+                        match r {
+                            Some(Some(true)) => {
+                                threads.change(DisplayState::End);
+                                return Some(false)
+                            },
+                            Some(Some(false)) => {
+                                Some(true)
+                            }
+                            Some(None) => Some(false),
+                            None => None
                         }
-                        r
                     }
                 }
             },
@@ -322,21 +397,9 @@ impl DrawTarget for FrameBuffer {
     where
         I: IntoIterator<Item = Pixel<Self::Color>>,
     {
+        let data = self.data.as_mut().expect("FrameBuffer data should return from static cell");
         for pixel in pixels {
-            if (pixel.0.x<0)|(pixel.0.x>=SCREEN_SIZE_X as i32) {continue}
-            if (pixel.0.y<0)|(pixel.0.y>=SCREEN_SIZE_Y as i32) {continue}
-            //transposing pizels correctly here
-            let n = (pixel.0.y + pixel.0.x*SCREEN_SIZE_Y as i32) /*(pixel.0.y*176 + (175 - pixel.0.x))*/ as usize;
-            //let n = if n<SHIFT_COEFFICIENT { n + SCREEN_SIZE_VALUE - SHIFT_COEFFICIENT } else { n - SHIFT_COEFFICIENT };
-            let mut pixel_update = self.data.get_mut(n).expect("checked the bounds");
-            match pixel.1 {
-                BinaryColor::Off => {
-                    *pixel_update = true; //white
-                },
-                BinaryColor::On => {
-                    *pixel_update = false; //black
-                }
-            }
+            data.try_draw_iter_px(pixel);
         }
         Ok(())
     }
@@ -358,7 +421,7 @@ pub fn draw_qr(peripherals: &mut Peripherals, data_to_qr: &[u8]) {
         else {SCREEN_SIZE_Y as i32/qr_code.size()}
     };
 
-    let mut buffer = FrameBuffer::new_white();
+    let mut buffer = PixelBuffer::new_white();
 
     let size = qr_code.size() * scaling;
     for y in 0..size {

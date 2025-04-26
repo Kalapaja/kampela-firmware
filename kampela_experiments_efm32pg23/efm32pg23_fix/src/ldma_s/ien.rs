@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:7 - Enable or disable the done interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn chdone(&mut self) -> ChdoneW<IenSpec> {
         ChdoneW::new(self, 0)
     }
     #[doc = "Bit 31 - Enable or disable the error interrupt"]
     #[inline(always)]
-    #[must_use]
     pub fn error(&mut self) -> ErrorW<IenSpec> {
         ErrorW::new(self, 31)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for IenSpec {}
 #[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
 impl crate::Writable for IenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for IenSpec {}

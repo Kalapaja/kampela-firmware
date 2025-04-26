@@ -1983,49 +1983,41 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode0(&mut self) -> Mode0W<PortcModelSpec> {
         Mode0W::new(self, 0)
     }
     #[doc = "Bits 4:7 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode1(&mut self) -> Mode1W<PortcModelSpec> {
         Mode1W::new(self, 4)
     }
     #[doc = "Bits 8:11 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode2(&mut self) -> Mode2W<PortcModelSpec> {
         Mode2W::new(self, 8)
     }
     #[doc = "Bits 12:15 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode3(&mut self) -> Mode3W<PortcModelSpec> {
         Mode3W::new(self, 12)
     }
     #[doc = "Bits 16:19 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode4(&mut self) -> Mode4W<PortcModelSpec> {
         Mode4W::new(self, 16)
     }
     #[doc = "Bits 20:23 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode5(&mut self) -> Mode5W<PortcModelSpec> {
         Mode5W::new(self, 20)
     }
     #[doc = "Bits 24:27 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode6(&mut self) -> Mode6W<PortcModelSpec> {
         Mode6W::new(self, 24)
     }
     #[doc = "Bits 28:31 - MODE n"]
     #[inline(always)]
-    #[must_use]
     pub fn mode7(&mut self) -> Mode7W<PortcModelSpec> {
         Mode7W::new(self, 28)
     }
@@ -2040,10 +2032,6 @@ impl crate::Readable for PortcModelSpec {}
 #[doc = "`write(|w| ..)` method takes [`portc_model::W`](W) writer structure"]
 impl crate::Writable for PortcModelSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets PORTC_MODEL to value 0"]
-impl crate::Resettable for PortcModelSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortcModelSpec {}

@@ -143,6 +143,4 @@ impl crate::RegisterSpec for PkginfoSpec {
 #[doc = "`read()` method returns [`pkginfo::R`](R) reader structure"]
 impl crate::Readable for PkginfoSpec {}
 #[doc = "`reset()` method sets PKGINFO to value 0"]
-impl crate::Resettable for PkginfoSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PkginfoSpec {}

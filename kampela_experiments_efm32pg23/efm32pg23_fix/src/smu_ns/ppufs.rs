@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PpufsSpec {
 #[doc = "`read()` method returns [`ppufs::R`](R) reader structure"]
 impl crate::Readable for PpufsSpec {}
 #[doc = "`reset()` method sets PPUFS to value 0"]
-impl crate::Resettable for PpufsSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PpufsSpec {}

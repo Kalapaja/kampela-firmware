@@ -286,187 +286,156 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn ldma(&mut self) -> LdmaW<Clken0Spec> {
         LdmaW::new(self, 0)
     }
     #[doc = "Bit 1 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn ldmaxbar(&mut self) -> LdmaxbarW<Clken0Spec> {
         LdmaxbarW::new(self, 1)
     }
     #[doc = "Bit 3 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn gpcrc(&mut self) -> GpcrcW<Clken0Spec> {
         GpcrcW::new(self, 3)
     }
     #[doc = "Bit 4 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn timer0(&mut self) -> Timer0W<Clken0Spec> {
         Timer0W::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn timer1(&mut self) -> Timer1W<Clken0Spec> {
         Timer1W::new(self, 5)
     }
     #[doc = "Bit 6 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn timer2(&mut self) -> Timer2W<Clken0Spec> {
         Timer2W::new(self, 6)
     }
     #[doc = "Bit 7 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn timer3(&mut self) -> Timer3W<Clken0Spec> {
         Timer3W::new(self, 7)
     }
     #[doc = "Bit 8 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn timer4(&mut self) -> Timer4W<Clken0Spec> {
         Timer4W::new(self, 8)
     }
     #[doc = "Bit 9 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn usart0(&mut self) -> Usart0W<Clken0Spec> {
         Usart0W::new(self, 9)
     }
     #[doc = "Bit 10 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn iadc0(&mut self) -> Iadc0W<Clken0Spec> {
         Iadc0W::new(self, 10)
     }
     #[doc = "Bit 11 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn amuxcp0(&mut self) -> Amuxcp0W<Clken0Spec> {
         Amuxcp0W::new(self, 11)
     }
     #[doc = "Bit 12 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn letimer0(&mut self) -> Letimer0W<Clken0Spec> {
         Letimer0W::new(self, 12)
     }
     #[doc = "Bit 13 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn wdog0(&mut self) -> Wdog0W<Clken0Spec> {
         Wdog0W::new(self, 13)
     }
     #[doc = "Bit 14 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn i2c0(&mut self) -> I2c0W<Clken0Spec> {
         I2c0W::new(self, 14)
     }
     #[doc = "Bit 15 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn i2c1(&mut self) -> I2c1W<Clken0Spec> {
         I2c1W::new(self, 15)
     }
     #[doc = "Bit 16 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn syscfg(&mut self) -> SyscfgW<Clken0Spec> {
         SyscfgW::new(self, 16)
     }
     #[doc = "Bit 17 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn dpll0(&mut self) -> Dpll0W<Clken0Spec> {
         Dpll0W::new(self, 17)
     }
     #[doc = "Bit 18 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn hfrco0(&mut self) -> Hfrco0W<Clken0Spec> {
         Hfrco0W::new(self, 18)
     }
     #[doc = "Bit 19 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn hfrcoem23(&mut self) -> Hfrcoem23W<Clken0Spec> {
         Hfrcoem23W::new(self, 19)
     }
     #[doc = "Bit 20 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn hfxo0(&mut self) -> Hfxo0W<Clken0Spec> {
         Hfxo0W::new(self, 20)
     }
     #[doc = "Bit 21 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn fsrco(&mut self) -> FsrcoW<Clken0Spec> {
         FsrcoW::new(self, 21)
     }
     #[doc = "Bit 22 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn lfrco(&mut self) -> LfrcoW<Clken0Spec> {
         LfrcoW::new(self, 22)
     }
     #[doc = "Bit 23 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn lfxo(&mut self) -> LfxoW<Clken0Spec> {
         LfxoW::new(self, 23)
     }
     #[doc = "Bit 24 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn ulfrco(&mut self) -> UlfrcoW<Clken0Spec> {
         UlfrcoW::new(self, 24)
     }
     #[doc = "Bit 25 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn lesense(&mut self) -> LesenseW<Clken0Spec> {
         LesenseW::new(self, 25)
     }
     #[doc = "Bit 26 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn gpio(&mut self) -> GpioW<Clken0Spec> {
         GpioW::new(self, 26)
     }
     #[doc = "Bit 27 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn prs(&mut self) -> PrsW<Clken0Spec> {
         PrsW::new(self, 27)
     }
     #[doc = "Bit 28 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn buram(&mut self) -> BuramW<Clken0Spec> {
         BuramW::new(self, 28)
     }
     #[doc = "Bit 29 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn burtc(&mut self) -> BurtcW<Clken0Spec> {
         BurtcW::new(self, 29)
     }
     #[doc = "Bit 30 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn sysrtc0(&mut self) -> Sysrtc0W<Clken0Spec> {
         Sysrtc0W::new(self, 30)
     }
     #[doc = "Bit 31 - Enable Bus Clock"]
     #[inline(always)]
-    #[must_use]
     pub fn dcdc(&mut self) -> DcdcW<Clken0Spec> {
         DcdcW::new(self, 31)
     }
@@ -481,10 +450,6 @@ impl crate::Readable for Clken0Spec {}
 #[doc = "`write(|w| ..)` method takes [`clken0::W`](W) writer structure"]
 impl crate::Writable for Clken0Spec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets CLKEN0 to value 0"]
-impl crate::Resettable for Clken0Spec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Clken0Spec {}

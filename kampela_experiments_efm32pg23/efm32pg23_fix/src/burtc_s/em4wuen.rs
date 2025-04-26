@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Overflow EM4 Wakeup Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn ofem4wuen(&mut self) -> Ofem4wuenW<Em4wuenSpec> {
         Ofem4wuenW::new(self, 0)
     }
     #[doc = "Bit 1 - Compare Match EM4 Wakeup Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn compem4wuen(&mut self) -> Compem4wuenW<Em4wuenSpec> {
         Compem4wuenW::new(self, 1)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Em4wuenSpec {}
 #[doc = "`write(|w| ..)` method takes [`em4wuen::W`](W) writer structure"]
 impl crate::Writable for Em4wuenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets EM4WUEN to value 0"]
-impl crate::Resettable for Em4wuenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Em4wuenSpec {}

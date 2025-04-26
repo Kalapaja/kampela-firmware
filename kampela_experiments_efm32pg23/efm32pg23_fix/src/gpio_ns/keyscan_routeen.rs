@@ -79,49 +79,41 @@ impl R {
 impl W {
     #[doc = "Bit 0 - COLOUT0 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout0pen(&mut self) -> Colout0penW<KeyscanRouteenSpec> {
         Colout0penW::new(self, 0)
     }
     #[doc = "Bit 1 - COLOUT1 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout1pen(&mut self) -> Colout1penW<KeyscanRouteenSpec> {
         Colout1penW::new(self, 1)
     }
     #[doc = "Bit 2 - COLOUT2 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout2pen(&mut self) -> Colout2penW<KeyscanRouteenSpec> {
         Colout2penW::new(self, 2)
     }
     #[doc = "Bit 3 - COLOUT3 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout3pen(&mut self) -> Colout3penW<KeyscanRouteenSpec> {
         Colout3penW::new(self, 3)
     }
     #[doc = "Bit 4 - COLOUT4 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout4pen(&mut self) -> Colout4penW<KeyscanRouteenSpec> {
         Colout4penW::new(self, 4)
     }
     #[doc = "Bit 5 - COLOUT5 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout5pen(&mut self) -> Colout5penW<KeyscanRouteenSpec> {
         Colout5penW::new(self, 5)
     }
     #[doc = "Bit 6 - COLOUT6 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout6pen(&mut self) -> Colout6penW<KeyscanRouteenSpec> {
         Colout6penW::new(self, 6)
     }
     #[doc = "Bit 7 - COLOUT7 pin enable control bit"]
     #[inline(always)]
-    #[must_use]
     pub fn colout7pen(&mut self) -> Colout7penW<KeyscanRouteenSpec> {
         Colout7penW::new(self, 7)
     }
@@ -136,10 +128,6 @@ impl crate::Readable for KeyscanRouteenSpec {}
 #[doc = "`write(|w| ..)` method takes [`keyscan_routeen::W`](W) writer structure"]
 impl crate::Writable for KeyscanRouteenSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets KEYSCAN_ROUTEEN to value 0"]
-impl crate::Resettable for KeyscanRouteenSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for KeyscanRouteenSpec {}

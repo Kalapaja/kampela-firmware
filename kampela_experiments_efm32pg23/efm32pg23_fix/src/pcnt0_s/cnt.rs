@@ -17,6 +17,4 @@ impl crate::RegisterSpec for CntSpec {
 #[doc = "`read()` method returns [`cnt::R`](R) reader structure"]
 impl crate::Readable for CntSpec {}
 #[doc = "`reset()` method sets CNT to value 0"]
-impl crate::Resettable for CntSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for CntSpec {}

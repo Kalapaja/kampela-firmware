@@ -16,7 +16,6 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - BUFOUT Reference Trim"]
     #[inline(always)]
-    #[must_use]
     pub fn vtrtrimana(&mut self) -> VtrtrimanaW<BufouttrimSpec> {
         VtrtrimanaW::new(self, 0)
     }
@@ -31,8 +30,6 @@ impl crate::Readable for BufouttrimSpec {}
 #[doc = "`write(|w| ..)` method takes [`bufouttrim::W`](W) writer structure"]
 impl crate::Writable for BufouttrimSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets BUFOUTTRIM to value 0x08"]
 impl crate::Resettable for BufouttrimSpec {

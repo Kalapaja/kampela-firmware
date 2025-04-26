@@ -17,6 +17,4 @@ impl crate::RegisterSpec for PortcDinSpec {
 #[doc = "`read()` method returns [`portc_din::R`](R) reader structure"]
 impl crate::Readable for PortcDinSpec {}
 #[doc = "`reset()` method sets PORTC_DIN to value 0"]
-impl crate::Resettable for PortcDinSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PortcDinSpec {}

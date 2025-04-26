@@ -25,13 +25,11 @@ impl R {
 impl W {
     #[doc = "Bits 0:1 - CC2 port select register"]
     #[inline(always)]
-    #[must_use]
     pub fn port(&mut self) -> PortW<Timer4Cc2routeSpec> {
         PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - CC2 pin select register"]
     #[inline(always)]
-    #[must_use]
     pub fn pin(&mut self) -> PinW<Timer4Cc2routeSpec> {
         PinW::new(self, 16)
     }
@@ -46,10 +44,6 @@ impl crate::Readable for Timer4Cc2routeSpec {}
 #[doc = "`write(|w| ..)` method takes [`timer4_cc2route::W`](W) writer structure"]
 impl crate::Writable for Timer4Cc2routeSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TIMER4_CC2ROUTE to value 0"]
-impl crate::Resettable for Timer4Cc2routeSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Timer4Cc2routeSpec {}

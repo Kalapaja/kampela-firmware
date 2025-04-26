@@ -87,6 +87,4 @@ impl crate::RegisterSpec for PartSpec {
 #[doc = "`read()` method returns [`part::R`](R) reader structure"]
 impl crate::Readable for PartSpec {}
 #[doc = "`reset()` method sets PART to value 0"]
-impl crate::Resettable for PartSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for PartSpec {}

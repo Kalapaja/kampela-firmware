@@ -115,73 +115,61 @@ impl R {
 impl W {
     #[doc = "Bit 0 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch0level(&mut self) -> Ch0levelW<AsyncSwlevelSpec> {
         Ch0levelW::new(self, 0)
     }
     #[doc = "Bit 1 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch1level(&mut self) -> Ch1levelW<AsyncSwlevelSpec> {
         Ch1levelW::new(self, 1)
     }
     #[doc = "Bit 2 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch2level(&mut self) -> Ch2levelW<AsyncSwlevelSpec> {
         Ch2levelW::new(self, 2)
     }
     #[doc = "Bit 3 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch3level(&mut self) -> Ch3levelW<AsyncSwlevelSpec> {
         Ch3levelW::new(self, 3)
     }
     #[doc = "Bit 4 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch4level(&mut self) -> Ch4levelW<AsyncSwlevelSpec> {
         Ch4levelW::new(self, 4)
     }
     #[doc = "Bit 5 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch5level(&mut self) -> Ch5levelW<AsyncSwlevelSpec> {
         Ch5levelW::new(self, 5)
     }
     #[doc = "Bit 6 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch6level(&mut self) -> Ch6levelW<AsyncSwlevelSpec> {
         Ch6levelW::new(self, 6)
     }
     #[doc = "Bit 7 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch7level(&mut self) -> Ch7levelW<AsyncSwlevelSpec> {
         Ch7levelW::new(self, 7)
     }
     #[doc = "Bit 8 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch8level(&mut self) -> Ch8levelW<AsyncSwlevelSpec> {
         Ch8levelW::new(self, 8)
     }
     #[doc = "Bit 9 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch9level(&mut self) -> Ch9levelW<AsyncSwlevelSpec> {
         Ch9levelW::new(self, 9)
     }
     #[doc = "Bit 10 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch10level(&mut self) -> Ch10levelW<AsyncSwlevelSpec> {
         Ch10levelW::new(self, 10)
     }
     #[doc = "Bit 11 - Channel Level"]
     #[inline(always)]
-    #[must_use]
     pub fn ch11level(&mut self) -> Ch11levelW<AsyncSwlevelSpec> {
         Ch11levelW::new(self, 11)
     }
@@ -196,10 +184,6 @@ impl crate::Readable for AsyncSwlevelSpec {}
 #[doc = "`write(|w| ..)` method takes [`async_swlevel::W`](W) writer structure"]
 impl crate::Writable for AsyncSwlevelSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets ASYNC_SWLEVEL to value 0"]
-impl crate::Resettable for AsyncSwlevelSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for AsyncSwlevelSpec {}

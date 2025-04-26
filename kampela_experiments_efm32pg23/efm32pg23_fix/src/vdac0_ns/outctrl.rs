@@ -287,61 +287,51 @@ impl R {
 impl W {
     #[doc = "Bit 0 - CH0 Main Output Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mainoutench0(&mut self) -> Mainoutench0W<OutctrlSpec> {
         Mainoutench0W::new(self, 0)
     }
     #[doc = "Bit 1 - CH1 Main Output Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn mainoutench1(&mut self) -> Mainoutench1W<OutctrlSpec> {
         Mainoutench1W::new(self, 1)
     }
     #[doc = "Bit 4 - CH0 Alternative Output Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn auxoutench0(&mut self) -> Auxoutench0W<OutctrlSpec> {
         Auxoutench0W::new(self, 4)
     }
     #[doc = "Bit 5 - CH1 Alternative Output Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn auxoutench1(&mut self) -> Auxoutench1W<OutctrlSpec> {
         Auxoutench1W::new(self, 5)
     }
     #[doc = "Bit 8 - CH1 Main and Alternative Output Short"]
     #[inline(always)]
-    #[must_use]
     pub fn shortch0(&mut self) -> Shortch0W<OutctrlSpec> {
         Shortch0W::new(self, 8)
     }
     #[doc = "Bit 9 - CH0 Main and Alternative Output Short"]
     #[inline(always)]
-    #[must_use]
     pub fn shortch1(&mut self) -> Shortch1W<OutctrlSpec> {
         Shortch1W::new(self, 9)
     }
     #[doc = "Bits 12:14 - CH0 ABUS Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn abusportselch0(&mut self) -> Abusportselch0W<OutctrlSpec> {
         Abusportselch0W::new(self, 12)
     }
     #[doc = "Bits 15:20 - CH0 ABUS Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn abuspinselch0(&mut self) -> Abuspinselch0W<OutctrlSpec> {
         Abuspinselch0W::new(self, 15)
     }
     #[doc = "Bits 22:24 - CH1 ABUS Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn abusportselch1(&mut self) -> Abusportselch1W<OutctrlSpec> {
         Abusportselch1W::new(self, 22)
     }
     #[doc = "Bits 25:30 - CH1 ABUS Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn abuspinselch1(&mut self) -> Abuspinselch1W<OutctrlSpec> {
         Abuspinselch1W::new(self, 25)
     }
@@ -356,10 +346,6 @@ impl crate::Readable for OutctrlSpec {}
 #[doc = "`write(|w| ..)` method takes [`outctrl::W`](W) writer structure"]
 impl crate::Writable for OutctrlSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets OUTCTRL to value 0"]
-impl crate::Resettable for OutctrlSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for OutctrlSpec {}

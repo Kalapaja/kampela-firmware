@@ -17,6 +17,4 @@ impl crate::RegisterSpec for Eui64lSpec {
 #[doc = "`read()` method returns [`eui64l::R`](R) reader structure"]
 impl crate::Readable for Eui64lSpec {}
 #[doc = "`reset()` method sets EUI64L to value 0"]
-impl crate::Resettable for Eui64lSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for Eui64lSpec {}

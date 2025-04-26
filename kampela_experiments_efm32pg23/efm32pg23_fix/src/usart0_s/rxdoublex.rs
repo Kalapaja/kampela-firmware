@@ -52,6 +52,4 @@ impl crate::RegisterSpec for RxdoublexSpec {
 #[doc = "`read()` method returns [`rxdoublex::R`](R) reader structure"]
 impl crate::Readable for RxdoublexSpec {}
 #[doc = "`reset()` method sets RXDOUBLEX to value 0"]
-impl crate::Resettable for RxdoublexSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for RxdoublexSpec {}

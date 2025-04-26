@@ -339,37 +339,31 @@ impl R {
 impl W {
     #[doc = "Bits 0:3 - Negative Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn pinneg(&mut self) -> PinnegW<SingleSpec> {
         PinnegW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Negative Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn portneg(&mut self) -> PortnegW<SingleSpec> {
         PortnegW::new(self, 4)
     }
     #[doc = "Bits 8:11 - Positive Pin Select"]
     #[inline(always)]
-    #[must_use]
     pub fn pinpos(&mut self) -> PinposW<SingleSpec> {
         PinposW::new(self, 8)
     }
     #[doc = "Bits 12:15 - Positive Port Select"]
     #[inline(always)]
-    #[must_use]
     pub fn portpos(&mut self) -> PortposW<SingleSpec> {
         PortposW::new(self, 12)
     }
     #[doc = "Bit 16 - Configuration Group Select"]
     #[inline(always)]
-    #[must_use]
     pub fn cfg(&mut self) -> CfgW<SingleSpec> {
         CfgW::new(self, 16)
     }
     #[doc = "Bit 17 - Comparison Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn cmp(&mut self) -> CmpW<SingleSpec> {
         CmpW::new(self, 17)
     }
@@ -384,10 +378,6 @@ impl crate::Readable for SingleSpec {}
 #[doc = "`write(|w| ..)` method takes [`single::W`](W) writer structure"]
 impl crate::Writable for SingleSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets SINGLE to value 0"]
-impl crate::Resettable for SingleSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for SingleSpec {}

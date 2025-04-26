@@ -43,25 +43,21 @@ impl R {
 impl W {
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn em23wakeupdgien(&mut self) -> Em23wakeupdgienW<DgienSpec> {
         Em23wakeupdgienW::new(self, 24)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn tempdgien(&mut self) -> TempdgienW<DgienSpec> {
         TempdgienW::new(self, 29)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn templowdgien(&mut self) -> TemplowdgienW<DgienSpec> {
         TemplowdgienW::new(self, 30)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
-    #[must_use]
     pub fn temphighdgien(&mut self) -> TemphighdgienW<DgienSpec> {
         TemphighdgienW::new(self, 31)
     }
@@ -76,10 +72,6 @@ impl crate::Readable for DgienSpec {}
 #[doc = "`write(|w| ..)` method takes [`dgien::W`](W) writer structure"]
 impl crate::Writable for DgienSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets DGIEN to value 0"]
-impl crate::Resettable for DgienSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for DgienSpec {}

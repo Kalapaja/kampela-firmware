@@ -402,31 +402,26 @@ impl R {
 impl W {
     #[doc = "Bits 0:2 - Scan Trigger Select"]
     #[inline(always)]
-    #[must_use]
     pub fn scantrigsel(&mut self) -> ScantrigselW<TriggerSpec> {
         ScantrigselW::new(self, 0)
     }
     #[doc = "Bit 4 - Scan Trigger Action"]
     #[inline(always)]
-    #[must_use]
     pub fn scantrigaction(&mut self) -> ScantrigactionW<TriggerSpec> {
         ScantrigactionW::new(self, 4)
     }
     #[doc = "Bits 8:10 - Single Trigger Select"]
     #[inline(always)]
-    #[must_use]
     pub fn singletrigsel(&mut self) -> SingletrigselW<TriggerSpec> {
         SingletrigselW::new(self, 8)
     }
     #[doc = "Bit 12 - Single Trigger Action"]
     #[inline(always)]
-    #[must_use]
     pub fn singletrigaction(&mut self) -> SingletrigactionW<TriggerSpec> {
         SingletrigactionW::new(self, 12)
     }
     #[doc = "Bit 16 - Single Tailgate Enable"]
     #[inline(always)]
-    #[must_use]
     pub fn singletailgate(&mut self) -> SingletailgateW<TriggerSpec> {
         SingletailgateW::new(self, 16)
     }
@@ -441,10 +436,6 @@ impl crate::Readable for TriggerSpec {}
 #[doc = "`write(|w| ..)` method takes [`trigger::W`](W) writer structure"]
 impl crate::Writable for TriggerSpec {
     type Safety = crate::Unsafe;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: u32 = 0;
 }
 #[doc = "`reset()` method sets TRIGGER to value 0"]
-impl crate::Resettable for TriggerSpec {
-    const RESET_VALUE: u32 = 0;
-}
+impl crate::Resettable for TriggerSpec {}
