@@ -10,7 +10,7 @@ use embedded_graphics::{
     prelude::{Dimensions, DrawTarget, Point, Size},
     primitives::{PointsIter, Rectangle},
 };
-use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{display_def::*, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::key::Key;
 
@@ -116,7 +116,7 @@ impl Keyboard {
 impl View for Keyboard {
     type DrawInput<'a> = (bool, bool);
     type DrawOutput = Option<Rectangle>;
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = Option<(Vec<char>, Rectangle)>;
 
     fn bounding_box(&self) -> Rectangle {
@@ -141,40 +141,42 @@ impl View for Keyboard {
         Ok(was_tapped)
     }
 
-    fn handle_tap_view<'a>(&mut self, p: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
         where Self: 'a
     {
         let mut nearest = Vec::new();
         let mut rectangle = SCREEN_AREA;
-        for key in self.keys.iter_mut() {
-            if key.handle_tap(p, ()).is_some() {
-                rectangle = key.bounding_box_absolut();
-            };
-            
-            let b = &key.bounding_box();
-            
-            //calculating square(to avoid sqrt) of distance to edge or vertex of bounding box
-            let mut l = i32::max_value();
-            let horizontally_contained = b.columns().contains(&p.x);
-            let vertically_contained = b.rows().contains(&p.y);
-            if vertically_contained && horizontally_contained {
-                l = 0;
-            }
-            if vertically_contained && !horizontally_contained {
-                l = min((b.columns().start - p.x).pow(2), (b.columns().end - 1 - p.x).pow(2));
-            }
-            if horizontally_contained && !vertically_contained {
-                l = min((b.rows().start - p.y).pow(2), (b.rows().end - 1 - p.y).pow(2));
-            }
-            if !vertically_contained && !horizontally_contained {
-                l = b.points()
-                    .map(|vertex| {
-                        (vertex.x - p.x).pow(2) + (vertex.y - p.y).pow(2)
-                    }).min().unwrap();
-            };
-
-            if l < TAP_RADIUS_SQUARED {
-                nearest.push((key.get_char(), l));
+        if let Event::Tap(point) = event {
+            for key in self.keys.iter_mut() {
+                if key.handle_event(event, ()).unwrap_or(None).is_some() {
+                    rectangle = key.bounding_box_absolut();
+                }
+                    
+                let b = &key.bounding_box();
+                
+                //calculating square(to avoid sqrt) of distance to edge or vertex of bounding box
+                let mut l = i32::max_value();
+                let horizontally_contained = b.columns().contains(&point.x);
+                let vertically_contained = b.rows().contains(&point.y);
+                if vertically_contained && horizontally_contained {
+                    l = 0;
+                }
+                if vertically_contained && !horizontally_contained {
+                    l = min((b.columns().start - point.x).pow(2), (b.columns().end - 1 - point.x).pow(2));
+                }
+                if horizontally_contained && !vertically_contained {
+                    l = min((b.rows().start - point.y).pow(2), (b.rows().end - 1 - point.y).pow(2));
+                }
+                if !vertically_contained && !horizontally_contained {
+                    l = b.points()
+                        .map(|vertex| {
+                            (vertex.x - point.x).pow(2) + (vertex.y - point.y).pow(2)
+                        }).min().unwrap();
+                };
+    
+                if l < TAP_RADIUS_SQUARED {
+                    nearest.push((key.get_char(), l));
+                }
             }
         }
         nearest.sort_by_key(|k| k.1);

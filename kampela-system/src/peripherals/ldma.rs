@@ -1,6 +1,13 @@
+use core::cell::Cell;
+
+use cortex_m::interrupt::CriticalSection;
 use efm32pg23_fix::Peripherals;
 
-use super::{ldma_ch_usart::LDMAchUSART0, ldma_ch_usart_rx::LDMAchUSART0Rx};
+use cortex_m::interrupt::free;
+
+use crate::{if_in_free, in_free};
+
+use super::{ldma_ch_eusart::LDMAchEUSART2, ldma_ch_usart::LDMAchUSART0, ldma_ch_usart_rx::LDMAchUSART0Rx};
 
 pub const LINK_TRUE: u32 = 1 << 1;
 pub const LINKMODE_RELATIVE: u32 = 1;
@@ -22,6 +29,7 @@ pub const STRUCTTYPE_WRI: u32 = 2;
 pub const STRUCTREQ_TRUE: u32 = 1 << 3;
 pub const BLOCKSIZE_2: u32 = 1 << 16;
 pub const BLOCKSIZE_3: u32 = 2 << 16;
+pub const BLOCKSIZE_16: u32 = 7 << 16;
 pub const DONEIEN: u32 = 1 << 20;
 pub const REQMODE_ALL: u32 = 1 << 21;
 pub const DECLOOPCNT_TRUE: u32 = 1 << 22;
@@ -112,4 +120,166 @@ pub fn init_ldma(peripherals: &mut Peripherals) {
 
     LDMAchUSART0::init(peripherals);
     LDMAchUSART0Rx::init(peripherals);
+    LDMAchEUSART2::init(peripherals);
+}
+
+macro_rules! chx_set_loopcnt {
+    ( $( $CH: ident, $periph: tt, $loopcnt: expr ),* ) => {
+        match CH {
+            0u8 => $($periph.ldma_s.ch0_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            1u8 => $($periph.ldma_s.ch1_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            2u8 => $($periph.ldma_s.ch2_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            3u8 => $($periph.ldma_s.ch3_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            4u8 => $($periph.ldma_s.ch4_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            5u8 => $($periph.ldma_s.ch5_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            6u8 => $($periph.ldma_s.ch6_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            7u8 => $($periph.ldma_s.ch7_loop().write(|w_reg| unsafe {w_reg.loopcnt().bits($loopcnt)}))*,
+            8u8..=u8::MAX => panic!("No such ldma channel"),
+        }
+    };
+}
+
+macro_rules! chx_set_linkaddr {
+    ( $( $CH: ident, $periph: tt, $linkaddr: expr ),* ) => {
+        match CH {
+            0u8 => $($periph.ldma_s.ch0_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            1u8 => $($periph.ldma_s.ch1_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            2u8 => $($periph.ldma_s.ch2_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            3u8 => $($periph.ldma_s.ch3_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            4u8 => $($periph.ldma_s.ch4_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            5u8 => $($periph.ldma_s.ch5_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            6u8 => $($periph.ldma_s.ch6_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            7u8 => $($periph.ldma_s.ch7_link().write(|w_reg| unsafe {w_reg.linkaddr().bits($linkaddr)}))*,
+            8u8..=u8::MAX => panic!("No such ldma channel"),
+        }
+    };
+}
+
+pub trait ChObjEnum {
+    fn link(&mut self) -> ChLinkData;
+    fn unlink(&mut self);
+}
+
+pub trait LdmaCh<T: ChObjEnum, const CH: u8> {
+    fn init(peripherals: &Peripherals);
+
+    fn unlink(val: &mut Option<T>) {
+        val.as_mut().map(|a| a.unlink());
+        //must be called when transmittable is dropped
+        assert!(!Self::busy(), "LDMA channel is busy while tried to unlink");
+        in_free(|peripherals| {
+            peripherals
+                .ldma_s
+                .chdis()
+                .write(|w_reg| unsafe {
+                    w_reg
+                        .chdis()
+                        .bits(CH)
+                });
+        });
+    }
+
+    fn link(val: &mut Option<T>) {
+        assert!(!Self::busy(), "LDMA channel is busy while tried to link");
+        match val {
+            None => {},
+            Some(t) => {
+                let ChLinkData { linkaddr, loopcnt, ien } = t.link();
+                in_free(|peripherals| {
+                    peripherals
+                    .ldma_s
+                    .if_clr()
+                    .write(|w_reg| unsafe{
+                        w_reg.bits(1 << CH)
+                    });
+                    chx_set_loopcnt!(CH, peripherals, loopcnt);
+                    chx_set_linkaddr!(CH, peripherals, linkaddr);
+                    if ien {
+                        peripherals
+                        .ldma_s
+                        .ien()
+                        .modify(|r_reg, w_reg| unsafe {
+                            w_reg
+                                .chdone().bits(r_reg.chdone().bits() | 1 << CH)  
+                        });
+                    }
+                    peripherals
+                        .ldma_s
+                        .chdone()
+                        .modify(|r_reg, w_reg| unsafe {
+                            w_reg.bits(r_reg.bits() & !(1 << CH))
+                        });
+                    peripherals
+                        .ldma_s
+                        .linkload()
+                        .write(|w_reg| unsafe {
+                            w_reg
+                                .linkload().bits(1 << CH)
+                        });
+                });
+            }
+        }
+    }
+
+    fn busy() -> bool {
+        if_in_free(|peripherals| {
+            peripherals
+                .ldma_s
+                .chbusy()
+                .read()
+                .busy()
+                .bits() & (1 << CH) != 0
+        })
+    }
+
+    fn done() -> bool {
+        if_in_free(|peripherals| {
+            peripherals.ldma_s.ien().read().chdone().bits() & (1 << CH) == 0 &&
+            peripherals.ldma_s.chdone().read().bits() & (1 << CH) != 0
+        })
+    }
+
+    fn get_static<'a>(cs: &'a CriticalSection) -> &'a Self;
+
+    fn take_static_cell() -> Option<T> {
+        let mut a = None;
+        free(|cs| {
+            a = Self::get_static(cs).take()
+        });
+        a
+    }
+
+    fn set_static_cell(val: Option<T>) {
+        free(|cs| {
+            Self::get_static(cs).set(val)
+        });
+    }
+
+    fn replace_static_cell(val: Option<T>) -> Option<T> {
+        let mut a = None;
+        free(|cs| {
+            a = Self::get_static(cs).replace(val)
+        });
+        a
+    }
+
+    fn get_cell<'a>(&'a self) -> &'a Cell<Option<T>>;
+
+    fn take(&self) -> Option<T> {
+        let mut a = self.get_cell().take();
+        Self::unlink(&mut a);
+        a
+    }
+
+    fn set(&self, val: Option<T>) {
+        self.replace(val);
+    }
+
+    fn replace(&self, val: Option<T>) -> Option<T> {
+        let mut a = self.get_cell().replace(val);
+        Self::unlink(&mut a);
+        let mut val = self.get_cell().replace(a);
+        Self::link(&mut val);
+        self.get_cell().replace(val)
+    }
 }

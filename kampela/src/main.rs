@@ -7,19 +7,25 @@ extern crate alloc;
 extern crate core;
 
 use alloc::{borrow::ToOwned, boxed::Box, format};
-use core::{alloc::Layout, ops::DerefMut, panic::PanicInfo};
-use cortex_m::{interrupt::{free, Mutex}, asm::delay};
+use core::{alloc::Layout, panic::PanicInfo};
+use cortex_m::interrupt::free;
 use cortex_m_rt::{entry, exception, ExceptionFrame};
 
 use embedded_alloc::Heap;
 
 use kampela_system::{
-    debug_display::burning_tank, devices::{power::ADC, touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}}, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma_ch_usart::ldma_display_interrupt, ldma_ch_usart_rx::ldma_display_rx_interrupt}, CORE_PERIPHERALS, PERIPHERALS
+    debug_display::burning_tank, devices::{
+        flash::{flash_sleep, flash_wait_ready, flash_wakeup},
+        power::ADC,
+        psram::psram_reset,
+        touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
+    }, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_eusart::ldma_eusart_interrupt, ldma_ch_usart::ldma_display_interrupt, ldma_ch_usart_rx::{ldma_display_rx_interrupt, FlashPSRamCopy, LDMAchUSART0Rx, ReceivableUSART}}, CORE_PERIPHERALS, PERIPHERALS
 };
 use efm32pg23_fix::{Interrupt, interrupt, Peripherals, NVIC, SYST};
 
 mod ui;
-use ui::{UIOperationThreads, UI};
+use ui::UI;
+mod hardware;
 mod nfc;
 use nfc::{ldma_nfc_interrupt, NfcError, NfcReceiver, NfcResult, NfcStateOutput};
 mod touch;
@@ -95,6 +101,16 @@ fn LDMA() {
         ldma_display_rx_interrupt();
     }
     if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done4().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done4().set_bit()
+            });
+        });
+        ldma_eusart_interrupt();
+    }
+    if if_in_free(|peripherals| {
         peripherals.ldma_s.if_().read().error().bit_is_set() 
     }) {
         in_free(|peripherals| {
@@ -131,7 +147,19 @@ fn main() -> ! {
             NVIC::unmask(Interrupt::LDMA);
         }
     });
-
+    in_free(|peripherals| {
+        flash_wakeup(peripherals);
+        flash_wait_ready(peripherals);
+        psram_reset(peripherals);
+    });
+    LDMAchUSART0Rx::set_static_cell(Some(ReceivableUSART::FlashPSRamCopy(FlashPSRamCopy::new())));
+    let mut counter = 0;
+    while !LDMAchUSART0Rx::done() {
+    }
+    LDMAchUSART0Rx::take_static_cell();
+    in_free(|peripherals| {
+        flash_sleep(peripherals);
+    });
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
     // Development: erase seed when Pilkki can't
@@ -170,7 +198,7 @@ fn main() -> ! {
 enum MainStatus {
     ADCProbe,
     NFCRead(NfcReceiver),
-    Display(Option<UIOperationThreads>, Box<UI>),
+    Display(Box<UI>),
     TouchRead(Option<Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>>),
 }
 
@@ -187,8 +215,6 @@ struct MainState {
     touches: Touches,
 }
 
-
-
 impl AsyncOperation for MainState {
     type Init = ();//&'a [u16; 3*BUF_THIRD];
     type Input<'b> = ();
@@ -203,7 +229,7 @@ impl AsyncOperation for MainState {
                 MainStatus::ADCProbe,
                 MainStatus::NFCRead(NfcReceiver::new()),
                 //MainStatus::TouchRead(None),
-                //MainStatus::Display(None, Box::new(ui)),
+                //MainStatus::Display(None), // PixelBuffer is boxed in FrameBuffer
             ]),
             adc: ADC::new(()),
             ui: Some(Box::new(ui)),
@@ -229,7 +255,7 @@ impl AsyncOperation for MainState {
                                 }
                             }
                             if let Some(u) = self.ui.take() {
-                                self.threads.change(MainStatus::Display(None, u));
+                                self.threads.change(MainStatus::Display(u));
                             }
                         }
                         Ok(s) => {
@@ -243,7 +269,7 @@ impl AsyncOperation for MainState {
                                             |s| matches!(s, MainStatus::Display(..))
                                         ]) {
                                             if let Some(u) = self.ui.take() {
-                                                self.threads.wind(MainStatus::Display(None, u));
+                                                self.threads.wind(MainStatus::Display(u));
                                             }
                                         };
                                     }
@@ -255,20 +281,20 @@ impl AsyncOperation for MainState {
                                                 |s| matches!(s, MainStatus::Display(..))
                                             ]) {
                                                 if let Some(u) = self.ui.take() {
-                                                    self.threads.wind(MainStatus::Display(None, u));
+                                                    self.threads.wind(MainStatus::Display(u));
                                                 }
                                             };
                                         },
                                         NfcResult::DisplayAddress => {
                                             self.threads.try_change_any(|status| {
-                                                if let MainStatus::Display(_, ui) = status {
+                                                if let MainStatus::Display(ui) = status {
                                                     ui.handle_address([0;76]);
                                                 }
                                             });
                                         },
                                         NfcResult::Transaction(transaction) => {
                                             self.threads.try_change_any(|status| {
-                                                if let MainStatus::Display(_, ui) = status {
+                                                if let MainStatus::Display(ui) = status {
                                                     ui.handle_transaction(transaction.clone());
                                                 }
                                             });
@@ -282,16 +308,9 @@ impl AsyncOperation for MainState {
                     }
                 }
             },
-            MainStatus::Display(state, ui) => {
-                match state {
-                    None => {
-                        *state = Some(UIOperationThreads::new());
-                    }
-                    Some(t) => {
-                        if ui.advance((self.adc.read(), &mut self.touches, t)) == Some(false) {
-                            self.threads.hold();
-                        }
-                    }
+            MainStatus::Display(ui) => {
+                if ui.advance((self.adc.read(), &mut self.touches)) == Some(false) {
+                    self.threads.hold();
                 }
             },
             MainStatus::TouchRead(state) => {

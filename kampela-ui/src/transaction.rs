@@ -6,7 +6,6 @@ use std::{string::String, boxed::Box};
 use embedded_graphics::{
     draw_target::DrawTarget,
     pixelcolor::BinaryColor,
-    geometry::Point,
     mono_font::{
         ascii::FONT_6X10,
         MonoTextStyle,
@@ -21,7 +20,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::widget::{nav_bar::nav_bar::{NavBar, NavCommand}, view::{View, ViewScreen}};
+use crate::{uistate::Event, widget::{nav_bar::nav_bar::{NavBar, NavCommand}, view::{View, ViewScreen}}};
 use crate::uistate::{EventResult, UpdateRequest, UnitScreen};
 
 #[derive(Clone)]
@@ -54,8 +53,8 @@ impl Transaction {
 impl ViewScreen for Transaction {
     type DrawInput<'a> = Box<dyn FnOnce(&TransactionPage) -> String + 'a>;
     type DrawOutput = ();
-    type TapInput<'a> = ();
-    type TapOutput = ();
+    type EventInput<'a> = ();
+    type EventOutput = ();
 
     fn draw_screen<'a, D>(&mut self, target: &mut D, get_content: Self::DrawInput<'a>) -> Result<(EventResult, ()), D::Error>
     where
@@ -87,14 +86,14 @@ impl ViewScreen for Transaction {
         Ok((EventResult{state, request}, ()))
     }
 
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: Self::TapInput<'a>) -> (EventResult, ())
+    fn handle_event_screen<'a>(&mut self, event: Event, _: Self::EventInput<'a>) -> (EventResult, ())
     where
         Self: 'a
     {
         let mut state = None;
         let mut request = None;
 
-        if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
+        if let Some(Some(c)) = self.navbar.handle_event(event, ()) {
             match self.page {
                 TransactionPage::Call => {
                     match c {

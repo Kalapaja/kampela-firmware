@@ -1,76 +1,35 @@
 //! Everything high-level related to interfacing with user
-use alloc::{borrow::ToOwned, string::String, vec::Vec};
-use substrate_crypto_light::sr25519::Public;
-
+use alloc::{borrow::ToOwned, string::String};
 use kampela_system::{
-    devices::{
-        flash::{read_encoded_entropy, store_encoded_entopy},
-        psram::{psram_decode_call, psram_decode_extension, read_from_psram, PsramAccess},
-        se_aes_gcm::{decode_entropy, encode_entropy, Protected},
-        se_rng
-    },
-    draw::{DisplayOperationThreads, FrameBuffer},
-    flash_mnemonic::FlashWordList,
-    parallel::{AsyncOperation, Threads}
+    devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{nfc::NfcTransactionPsramAccess, touch::Touches};
+use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::Touches};
 use kampela_ui::{
-    platform::{PinCode, Platform},
-    uistate::{UIState, UpdateRequest, UpdateRequestMutate}
+    platform::Platform,
+    uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
 };
-
+/// General status of UI
+///
+/// There is no sense in reading input while screen processes last event, nor refreshing the screen
+/// before touch was parsed
+pub enum UIStatus {
+    /// Event listening state, default
+    UIUpdate(bool),
+    /// Screen update started
+    BufferUpdate,
+}
+impl Default for UIStatus {
+    fn default() -> Self { UIStatus::UIUpdate(false) }
+}
 /// UI handler
 pub struct UI {
-    pub state: UIState<Hardware, FrameBuffer>,
+    pub state: UIState<Hardware>,
     update_request: Option<UpdateRequest>,
-    display_threads: DisplayOperationThreads,
-}
-
-pub struct UIOperationThreads(Threads<UIStatus, 2>);
-
-impl core::ops::Deref for UIOperationThreads {
-    type Target = Threads<UIStatus, 2>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl core::ops::DerefMut for UIOperationThreads {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl UIOperationThreads {
-    pub fn new() -> Self {
-        Self(Threads::new(UIStatus::Listen))
-    }
+    ui_threads: Threads<UIStatus, 2>,
+    frame_buffer: FrameBufferOperation
 }
 
 impl UI {
-    fn listen(&mut self, threads: &mut UIOperationThreads, touches: &mut Touches) -> Option<bool> {
-        // update ui if needed
-        if let Some(point) = touches.take_touch_point() {
-            self.update_request.propagate(self.state.handle_tap(point, &mut ()));
-        }
-        if let Some(u) = &self.update_request {
-            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
-            if !matches!(u, UpdateRequest::Hidden) {
-                if self.display_threads.try_add_next(u.clone()) {
-                    if !threads.is_other_running() {
-                        threads.wind(UIStatus::DisplayOperation);
-                    }
-                    threads.sync();
-                } else {
-                    return None
-                }
-            }
-            self.update_request = self.state.render(is_clear_update, &mut ()).expect("guaranteed to work, no errors implemented");
-        }
-        None
-    }
-
     pub fn handle_message(&mut self, message: String) {
         self.update_request.propagate(self.state.handle_message(message, &mut ()));
     }
@@ -91,43 +50,65 @@ impl UI {
 
 impl AsyncOperation for UI {
     type Init = ();
-    type Input<'a> = (i32, &'a mut Touches, &'a mut UIOperationThreads);
+    type Input<'a> = (i32, &'a mut Touches);
     type Output = Option<bool>;
     
     /// Start of UI.
     fn new(_: Self::Init) -> Self {
         let hardware = Hardware::new();
-        let display = FrameBuffer::new_white();
-        let state = UIState::new(hardware, display, &mut ());
+        let state = UIState::new(hardware, &mut ());
+        let frame_buffer = FrameBufferOperation::new(());
 
-        let display_threads = DisplayOperationThreads::new();
         return Self {
             state,
             update_request: Some(UpdateRequest::Slow),
-            display_threads
+            frame_buffer,
+            ui_threads: Threads::<UIStatus, 2>::from([
+                UIStatus::UIUpdate(false),
+                UIStatus::BufferUpdate
+            ])
         }
     }
     /// Call in event loop to progress through UI state
-    fn advance<'a>(&mut self, (voltage, touches, threads): Self::Input<'a>) -> Self::Output {
-        match threads.turn() {
-            UIStatus::Listen => {
-                let a = self.listen(threads, touches);
-                if a.unwrap_or(false) {
-                    //cortex_m::asm::wfi(); // sleep waiting for tocuh irq
-                }
-                a
-            },
-            UIStatus::DisplayOperation => {
-                let r = self.state.display.advance((voltage, &mut self.display_threads));
-                if r == Some(true) {
-                    if !threads.is_other_running() {
-                        threads.wind(UIStatus::Listen)
-                    } else if self.display_threads.is_any_running() {
-                        threads.sync();
+    fn advance<'a>(&mut self, (voltage, touches): Self::Input<'a>) -> Self::Output {
+        match self.ui_threads.turn() {
+            UIStatus::UIUpdate(tapped) => {
+                if !*tapped {
+                    if let Some(point) = touches.take_touch_point() {
+                        let u = self.state.handle_event(Event::Tap(point), &mut ());
+                        if u.is_some() { *tapped = true; } // one tap handle per update
+                        self.update_request.propagate(u);
+                        return None
                     }
                 }
+
+                let m = match self.update_request.take() { 
+                    Some(UpdateRequest::Invocate) => {
+                        let u = self.state.handle_event(Event::Invocation, &mut ());
+                        if u.is_none() { *tapped = false; }
+                        self.update_request.propagate(u);
+                        None
+                    },
+                    Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Bounds::new_fullscreen(), *tapped)),
+                    Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Bounds::new_fullscreen(), *tapped)),
+                    Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Bounds::new_fullscreen(), *tapped)),
+                    Some(UpdateRequest::Part(r)) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::from_rectangle(r), *tapped)),
+                    Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::new_fullscreen(), *tapped)),
+                    _ => None
+                };
+                self.frame_buffer.propagate(m);
+                if *tapped {
+                    self.ui_threads.sync(); // no need to poll
+                }
+                None
+            },
+            UIStatus::BufferUpdate => {
+                let r = self.frame_buffer.advance((voltage, &mut self.state, &mut self.update_request));
                 if r == Some(false) {
-                    threads.hold();
+                    self.ui_threads.hold();
+                }
+                if r == Some(true) && !self.ui_threads.is_other_running() {
+                    self.ui_threads.wind(UIStatus::UIUpdate(false));
                 }
                 r
             },
@@ -135,177 +116,141 @@ impl AsyncOperation for UI {
     }
 }
 
-/// General status of UI
-///
-/// There is no sense in reading input while screen processes last event, nor refreshing the screen
-/// before touch was parsed
-pub enum UIStatus {
-    /// Event listening state, default
-    Listen,
-    /// Screen update started
-    DisplayOperation,
-}
-impl Default for UIStatus {
-    fn default() -> Self { UIStatus::Listen }
+/// A virtual display that could be written to EPD simultaneously
+pub struct FrameBufferOperation {
+    frame_buffer: FrameBuffer,
+    state: Threads<BufferState, 1>,
+    update_request: Option<UpdateRequest>
 }
 
-pub struct Hardware {
-    pin: PinCode,
-    protected: Option<Protected>,
-    address: Option<[u8; 76]>,
-    transaction_psram_access: Option<NfcTransactionPsramAccess>,
+impl FrameBufferOperation {
+    fn propagate(&mut self, new_update_request: Option<UpdateMode>) {
+        self.frame_buffer.propagate(new_update_request);
+    }
+}
+pub enum BufferState {
+    UIRender(UIRender),
+    DisplaySend,
 }
 
-impl Hardware {
-    pub fn new() -> Self {
-        let protected = None;
-        let pin_set = false; // TODO query storage
-        let pin = [0; 4];
+impl Default for BufferState {
+    fn default() -> Self { BufferState::UIRender(UIRender::new(())) }
+}
+
+impl AsyncOperation for FrameBufferOperation {
+    type Init = ();
+    type Input<'a> = (i32, &'a mut UIState<Hardware>, &'a mut Option<UpdateRequest>);
+    type Output = Option<bool>;
+
+    fn new(_: ()) -> Self {
         Self {
-            pin,
-            protected,
-            address: None,
-            transaction_psram_access: None,
+            frame_buffer: FrameBuffer::new_white(),
+            state: Threads::new(BufferState::UIRender(UIRender::new(()))),
+            update_request: None
+        }
+    }
+
+    /// Move through display update progress
+    fn advance<'a>(&mut self, (voltage, ui_state, new_update_request): Self::Input<'a>) -> Self::Output {
+        match self.state.turn() {
+            BufferState::UIRender(ui_render) => {
+                let r = ui_render.advance((voltage, ui_state, &mut self.frame_buffer, &mut self.update_request));
+                if r == Some(true) && matches!(self.update_request, Some(UpdateRequest::Invocate)) {
+                    new_update_request.try_add(self.update_request.take()); // no need to wait for invocate request
+                }
+                if r == Some(true) && self.frame_buffer.can_send() {
+                    self.state.change(BufferState::DisplaySend);
+                }
+                r
+            },
+            BufferState::DisplaySend => {
+                let r = self.frame_buffer.advance(());
+                if r == Some(true) {
+                    self.frame_buffer.end_send();
+                    // lower priority for render update request
+                    // propagate update request once per update
+                    new_update_request.try_add(self.update_request.take());
+                    self.state.change(BufferState::UIRender(UIRender::new(())));
+                    return Some(false)
+                }
+                r
+            },
         }
     }
 }
 
-impl Platform for Hardware {
-    type HAL = ();
-    type Rng<'c> = se_rng::SeRng;
-    type AsWordList = FlashWordList;
+/// A virtual display that could be written to EPD simultaneously
+pub struct UIRender {
+    state: Threads<UIRenderState, 2>,
+}
 
-    type NfcTransaction = NfcTransactionPsramAccess;
-    fn get_wordlist() -> Self::AsWordList {
-        FlashWordList::new()
-    }
+pub enum UIRenderState {
+    UIRender,
+    DisplayUpdate(Option<Request>),
+}
 
-    fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {
-        se_rng::SeRng{}
-    }
+impl Default for UIRenderState {
+    fn default() -> Self { UIRenderState::DisplayUpdate(None) }
+}
 
-    fn pin(&self) -> &PinCode {
-        &self.pin
-    }
+impl AsyncOperation for UIRender {
+    type Init = ();
+    type Input<'a> = (i32, &'a mut UIState<Hardware>, &'a mut FrameBuffer, &'a mut Option<UpdateRequest>);
+    type Output = Option<bool>;
 
-    fn pin_mut(&mut self) -> &mut PinCode {
-        &mut self.pin
-    }
-
-    fn store_entropy(&mut self, e: &[u8]) {
-        self.protected = if e.len() != 0 {
-            let protected = encode_entropy(e);
-            store_encoded_entopy(&protected);
-            Some(protected)
-        } else {
-            None
+    fn new(_: ()) -> Self {
+        Self {
+            state: Threads::from([
+                UIRenderState::DisplayUpdate(None)
+            ])
         }
     }
 
-    fn read_entropy(&mut self) {
-        self.protected = read_encoded_entropy();
-    }
-
-    fn public(&self) -> Option<Public> {
-        self.pair().map(|p| p.public())
-    }
-
-    fn entropy(&self) -> Option<Vec<u8>> {
-        self.protected.as_ref().map(|p| decode_entropy(p))
-    }
-
-    fn set_address(&mut self, addr: [u8; 76]) {
-        self.address = Some(addr);
-    }
-
-    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
-        self.transaction_psram_access = Some(transaction);
-    }
-
-
-    fn call(&mut self) -> Option<String> {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => return None
-        };
-
-        let (decoded_call, specs, spec_name) = psram_decode_call(
-            &transaction_psram_access.call_psram_access,
-            &transaction_psram_access.metadata_psram_access,
-        );
-
-        let carded = decoded_call.card(0, &specs, &spec_name);
-        let call = carded
-            .into_iter()
-            .map(|card| card.show())
-            .collect::<Vec<String>>()
-            .join("\n");
-
-        Some(call)
-    }
-
-    fn extensions(&mut self) -> Option<String> {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => return None
-        };
-        
-        let (decoded_extension, specs, spec_name) = psram_decode_extension(
-            &transaction_psram_access.extension_psram_access,
-            &transaction_psram_access.metadata_psram_access,
-            &transaction_psram_access.genesis_hash_bytes_psram_access
-        );
-
-        let mut carded = Vec::new();
-        for ext in decoded_extension.iter() {
-            let addition_set = ext.card(0, true, &specs, &spec_name);
-            if !addition_set.is_empty() {
-                carded.extend_from_slice(&addition_set)
-            }
-        }
-        let extensions = carded
-            .into_iter()
-            .map(|card| card.show())
-            .collect::<Vec<String>>()
-            .join("\n");
-
-        Some(extensions)
-    }
-
-    fn signature(&mut self) -> [u8; 130] {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => panic!("qr generation failed")
-        };
-        
-        let data_to_sign_psram_access = PsramAccess {
-            start_address: transaction_psram_access.call_psram_access.start_address,
-            total_len:
-                transaction_psram_access.call_psram_access.total_len
-                + &transaction_psram_access.extension_psram_access.total_len
-        };
-        let data_to_sign = read_from_psram(&data_to_sign_psram_access);
-
-        let signature = self.pair()
-            .expect("entropy should be stored at this point")
-            .sign_external_rng(&data_to_sign, &mut Self::rng(&mut ()));
-
-        let mut signature_with_id: [u8; 65] = [1; 65];
-        signature_with_id[1..].copy_from_slice(&signature.0);
-        let signature_with_id_bytes = hex::encode(signature_with_id)
-            .into_bytes()
-            .try_into()
-            .expect("static length");
-
-        signature_with_id_bytes
-    }
-
-    fn address(&mut self) -> &[u8; 76] {
-        if let Some(ref a) = self.address {
-            a
-        } else {
-            panic!("qr generation failed");
+    /// Move through display update progress
+    fn advance<'a>(&mut self, (voltage, ui_state, frame_buffer, new_update_request): Self::Input<'a>) -> Self::Output {
+        match self.state.turn() {
+            UIRenderState::UIRender => {
+                self.state.sync();
+                if !frame_buffer.has_request() {
+                    return None
+                }
+                let Ok(u) = ui_state.render(frame_buffer, &mut ());
+                new_update_request.propagate(u);
+                if frame_buffer.end_render() {
+                    return Some(true)
+                }
+                None
+            },
+            UIRenderState::DisplayUpdate(state) => {
+                match state {
+                    None => {
+                        if let Some(m) = frame_buffer.has_update_request(voltage) {
+                            *state = Some(Request::new(m));
+                            Some(false)
+                        } else {
+                            self.state.wind(UIRenderState::UIRender);
+                            None
+                        }
+                    },
+                    Some(a) => {
+                        match a.advance(()) {
+                            Some(Some(true)) => {
+                                *state = None;
+                                frame_buffer.end_update();
+                                Some(true)
+                            },
+                            Some(Some(false)) => { // some long awaiting
+                                self.state.wind(UIRenderState::UIRender);
+                                Some(false)
+                            },
+                            Some(None) => {
+                                Some(false)
+                            },
+                            None => None
+                        }
+                    }
+                }
+            },
         }
     }
-
 }

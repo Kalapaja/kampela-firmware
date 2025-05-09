@@ -8,7 +8,7 @@ use embedded_graphics::{
         ascii::FONT_10X20, MonoFont, MonoTextStyle
     },
     pixelcolor::BinaryColor,
-    prelude::{Dimensions, DrawTarget, Point, Size},
+    prelude::{Dimensions, DrawTarget, Size},
     primitives::{
         CornerRadii,
         Primitive,
@@ -25,7 +25,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::widget::view::{Widget, View, DrawView};
+use crate::{uistate::Event, widget::view::{DrawView, View, Widget}};
 
 const KEY_FONT: MonoFont = FONT_10X20;
 const KEY_RADIUS: u32 = 4;
@@ -52,8 +52,8 @@ impl Key {
 impl View for Key {
     type DrawInput<'a> = (bool, bool);
     type DrawOutput = bool;
-    type TapInput<'a> = ();
-    type TapOutput = char;
+    type EventInput<'a> = ();
+    type TapOutput = Option<char>;
 
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -81,10 +81,14 @@ impl View for Key {
         Ok(was_tapped)
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
     where Self: 'a {
-        self.this_tapped = true;
-        self.get_char()
+        if matches!(event, Event::Tap(_)) {
+            self.this_tapped = true;
+            Some(self.get_char())
+        } else {
+            None
+        }
     }
 }
 

@@ -1,15 +1,39 @@
 //! display control functions
-use crate::peripherals::ldma_ch_usart::{FrameBufferLDMA, LDMAchUSART0, RamCopy, StaticArrayLDMA, Transmittable};
-use crate::peripherals::ldma_ch_usart_rx::{LDMAchUSART0Rx, Receivable};
+use crate::draw::{Bounds, DisplayMode, UpdateMode};
+use crate::peripherals::ldma::LdmaCh;
+use crate::peripherals::ldma_ch_usart::{LDMAchUSART0, DisplayRamCopy, StaticArrayLDMA, TransmittableUSART};
+use crate::peripherals::ldma_ch_usart_rx::{LDMAchUSART0Rx, ReceivableUSART};
 use crate::peripherals::usart::*;
 use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
 use crate::in_free;
 use crate::parallel::{AsyncOperation, Threads, Timer, DELAY};
-use crate::devices::display_transmission::{display_is_busy, EPDCommand, EPDData, EPDDataBuffer};
+use crate::devices::display_transmission::{display_is_busy, EPDCommand, EPDData};
 use kampela_ui::display_def::*;
 
-use super::display_transmission::{epaper_write_command, epaper_write_data};
 const LUT_LEN: usize = 0x99;
+const FULL_LUT: [u8; LUT_LEN] = [
+    0xA0, 0x90, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 0
+    0x50, 0x60, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 1
+    0xA0, 0x90, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 2
+    0x50, 0x60, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 3
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 4
+//  TPA   TPB   SRAB  TPC   TPD   SRCD  RP
+    0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x0A, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x06,
+    0x06, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    
+    0x77, 0x00, 0x00, 0x00, 0x00, 0x00, // FR
+    0x00, 0x00, 0x00,                   // XON
+];
 const FAST_LUT: [u8; LUT_LEN] = [
     0xA0, 0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 0
     0x50, 0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 1
@@ -56,30 +80,6 @@ const ULTRAFAST_LUT: [u8; LUT_LEN] = [
     0x70, 0x00, 0x00, 0x00, 0x00, 0x00, // FR
     0x00, 0x00, 0x00,                   // XON
 ];
-
-const REVERSED_LUT: [u8; LUT_LEN] = [
-    0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 0
-    0x50, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 1
-    0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 2
-    0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 3
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 4
-//  TPA   TPB   SRAB  TPC   TPD   SRCD  RP
-    0x10, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    
-    0x70, 0x00, 0x00, 0x00, 0x00, 0x00, // FR
-    0x00, 0x00, 0x00,                   // XON
-];
 const ULTRAFAST_SELECTIVE_LUT: [u8; LUT_LEN] = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 0
     0xA0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // LUT 1
@@ -104,123 +104,51 @@ const ULTRAFAST_SELECTIVE_LUT: [u8; LUT_LEN] = [
     0x00, 0x00, 0x00,                   // XON
 ];
 
-pub type Bounds = (u8, u8, u16, u16);
-
 /// Draw sequence
 ///
 /// Iterate through this to perform drawing and send display to proper sleep mode
-pub struct Request<R> where
-    R: for <'a> RequestType<
-        Init = <UpdateUltraFast as AsyncOperation>::Init,
-        Input<'a> = (),
-        Output = Option<bool>,
-    > 
-{
-    threads: Threads<RequestState<R>, 1>,
-    part_options: Option<Bounds>,
-    selective_refresh: bool,
-    repeats: usize
+pub struct Request {
+    threads: Threads<RequestState, 1>,
+    update_mode: UpdateMode
 }
 
-enum RequestState<R> where
-    R: for <'a> RequestType<
-        Init = <UpdateUltraFast as AsyncOperation>::Init,
-        Input<'a> = (),
-        Output = Option<bool>,
-    > 
-{
-    Init(Option<EPDInit>),
-    PrepareDraw(Option<PrepareDraw>),
-    Update(Option<R>),
+enum RequestState {
+    Update(Option<Update>),
     PostUpdate(Option<()>),
     DeepSleepEnter(Option<EPDDeepSleepEnter>),
     End,
     Error,
 }
 
-impl<R> Default for RequestState<R> where
-    R: for <'a> RequestType<
-        Init = <UpdateUltraFast as AsyncOperation>::Init,
-        Input<'a> = (),
-        Output = Option<bool>,
-    >
-{
-    fn default() -> Self { RequestState::<R>::Error }
+impl Default for RequestState {
+    fn default() -> Self { RequestState::Error }
 }
 
-impl<R> AsyncOperation for Request<R> where
-    R: for <'a> RequestType<
-        Init = <UpdateUltraFast as AsyncOperation>::Init,
-        Input<'a> = (),
-        Output = Option<bool>,
-    >
-{
-    type Init = (Option<Bounds>, bool);
-    type Input<'a> = <PrepareDraw as AsyncOperation>::Input<'a>;
+impl AsyncOperation for Request {
+    type Init = UpdateMode;
+    type Input<'a> = ();
     type Output = Option<Option<bool>>;
 
-    fn new((part_options, selective_refresh): Self::Init) -> Self {
+    fn new(update_mode: Self::Init) -> Self {
         Self {
-            threads: Threads::new(RequestState::Init(None)),
-            part_options,
-            selective_refresh,
-            repeats: 0,
+            threads: Threads::new(RequestState::Update(None)),
+            update_mode
         }
     }
 
-    fn advance(&mut self, data: Self::Input<'_>) -> Self::Output {
+    fn advance(&mut self, _: Self::Input<'_>) -> Self::Output {
         match self.threads.turn() {
-            RequestState::Init(state) => {
-                match state {
-                    None => {
-                        self.threads.change(RequestState::Init(Some(EPDInit::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(RequestState::PrepareDraw(None));
-                            },
-                            Some(false) => {
-                                return Some(None)
-                            },
-                            None => return None
-                        };
-                    }
-                }
-                Some(None)
-            },
-            RequestState::PrepareDraw(state) => {
-                match state {
-                    None => {
-                        self.threads.change(RequestState::PrepareDraw(
-                            Some(
-                                PrepareDraw::new(self.part_options)
-                            )
-                        ));
-                    },
-                    Some(a) => {
-                        match a.advance(data) {
-                            Some(true) => {
-                                self.threads.change(RequestState::Update(None));
-                                return Some(Some(false))
-                            },
-                            Some(false) => {
-                                return Some(None)
-                            },
-                            None => return None
-                        };
-                    }
-                }
-                Some(None)
-            },
             RequestState::Update(state) => {
                 match state {
                     None => {
-                        self.threads.change(RequestState::Update(Some(R::new(self.selective_refresh))));
+                        self.threads.change(RequestState::Update(Some(Update::new(()))));
                     },
                     Some(a) => {
-                        match a.advance(()) {
+                        match a.advance(&self.update_mode) {
                             Some(true) => {
+                                if display_is_busy() {
+                                    return Some(Some(false))
+                                }
                                 self.threads.change(RequestState::PostUpdate(None));
                             },
                             Some(false) => {
@@ -235,61 +163,20 @@ impl<R> AsyncOperation for Request<R> where
             RequestState::PostUpdate(state) => {
                 match state {
                     None => {
-                        let b = self.part_options.unwrap_or((0, SCREEN_SIZE_WIDTH_ADDRESS as u8 - 1, SCREEN_SIZE_X as u16 - 1, 0));
                         LDMAchUSART0Rx::set_static_cell( 
                             Some(
-                                Receivable::RamCopy(
-                                    RamCopy::new(b)
+                                ReceivableUSART::DisplayRamCopy(
+                                    DisplayRamCopy::new(self.update_mode.get_bounds())
                                 )
                             )
                         );
-                        self.threads.change(RequestState::PostUpdate(Some(())));
+                        *state = Some(());
                     },
                     Some(_) => {
                         if !LDMAchUSART0Rx::done() {
-                            if self.repeats > 2000 {
-                                let a = LDMAchUSART0Rx::take_static_cell();
-                                match a {
-                                    Some(Receivable::RamCopy(a)) => {
-                                        panic!("{:x?}", a.buffer)
-                                    },
-                                    _ => ()
-                                };
-                                in_free(|peripherals| {
-                                    let f = peripherals
-                                        .usart0_s
-                                        .status()
-                                        .read()
-                                        .rxdatav()
-                                        .bit_is_set();
-                                    let h = peripherals.usart0_s.if_().read().rxof().bit_is_set();
-                                    panic!("data rxdatav:{f} rxof: {h}");
-                                });
-                            }
-                            self.repeats += 1;
-                            return None
+                            return Some(Some(false))
                         }
-
-                        /*
-                        in_free(|peripherals| {
-                            epaper_write_command(peripherals, &[0x32]);
-                        });
-                        LDMAchUSART0::set_static_cell( 
-                            Some(
-                                Transmittable::Array(
-                                    StaticArrayLDMA::new(&REVERSED_LUT)
-                                )
-                            )
-                        );
-                        while !LDMAchUSART0::done() {}
-                        LDMAchUSART0::take_static_cell();
-                        in_free(|peripherals| {
-                            epaper_write_command(peripherals, &[0x22]);
-                            epaper_write_data(peripherals, &[0xC7]);
-                            epaper_write_command(peripherals, &[0x20]);
-                        });
-                        while display_is_busy() {}
-                        */
+                        LDMAchUSART0Rx::take_static_cell();
                         self.threads.change(RequestState::DeepSleepEnter(None));
                     }
                 }
@@ -298,7 +185,7 @@ impl<R> AsyncOperation for Request<R> where
             RequestState::DeepSleepEnter(state) => {
                 match state {
                     None => {
-                        self.threads.change(RequestState::DeepSleepEnter(Some(EPDDeepSleepEnter::new(()))));
+                        *state = Some(EPDDeepSleepEnter::new(()));
                     },
                     Some(a) => {
                         match a.advance(()) {
@@ -329,7 +216,7 @@ impl<R> AsyncOperation for Request<R> where
 
 
 /// EPD init to wake up display
-struct EPDInit {
+pub struct EPDInit {
     threads: Threads<EPDInitState, 1>,
 }
 
@@ -500,14 +387,9 @@ impl AsyncOperation for EPDDeepSleepEnter {
     }
 }
 
-pub trait RequestType: AsyncOperation {}
-impl RequestType for UpdateFast {}
-impl RequestType for UpdateFull {}
-impl RequestType for UpdateUltraFast {}
-
-pub struct PrepareDraw {
+pub struct PrepareSend {
     threads: Threads<PrepareDrawState, 1>,
-    bounds: <EPDDataBuffer::<SCREEN_BUFFER_SIZE> as AsyncOperation>::Init,
+    bounds: Bounds,
 }
 
 enum PrepareDrawState {
@@ -527,7 +409,6 @@ enum PrepareDrawState {
     VBDasVCOM(Option<EPDData<1>>),
 
     WriteRamBlack(Option<EPDCommand<0x24>>),
-    SendBufferData(Option<()>),
 
     End,
     Error,
@@ -537,9 +418,9 @@ impl Default for PrepareDrawState {
     fn default() -> Self { PrepareDrawState::Error }
 }
 
-impl AsyncOperation for PrepareDraw {
-    type Init = <EPDDataBuffer::<SCREEN_BUFFER_SIZE> as AsyncOperation>::Init;
-    type Input<'a> = &'a mut Option<FrameBufferLDMA>;
+impl AsyncOperation for PrepareSend {
+    type Init = Bounds;
+    type Input<'a> = ();
     type Output = Option<bool>;
 
     fn new(bounds: Self::Init) -> Self {
@@ -558,7 +439,7 @@ impl AsyncOperation for PrepareDraw {
         }
     }
 
-    fn advance(&mut self, data: Self::Input<'_>) -> Self::Output {
+    fn advance(&mut self, _: Self::Input<'_>) -> Self::Output {
         match self.threads.turn() {
             PrepareDrawState::SetRamXAddress(state) => {
                 match state {
@@ -761,32 +642,12 @@ impl AsyncOperation for PrepareDraw {
                     },
                     Some(a) => {
                         match a.advance(()) {
-                            Some(true) => self.threads.change(PrepareDrawState::SendBufferData(None)),
+                            Some(true) => {
+                                self.threads.change(PrepareDrawState::End);
+                                return Some(true)
+                            },
                             r => return r
                         };
-                    }
-                }
-                Some(false)
-            },
-            PrepareDrawState::SendBufferData(state) => {
-                match state {
-                    None => {
-                        let b = self.bounds.unwrap_or((0, SCREEN_SIZE_WIDTH_ADDRESS as u8 - 1, SCREEN_SIZE_X as u16 - 1, 0));
-                        data.as_mut().unwrap().set_bounds(b);
-                        LDMAchUSART0::set_static_cell(Some(Transmittable::Display(data.take().unwrap())));
-                        *state = Some(());
-                    },
-                    Some(_) => {
-                        if !LDMAchUSART0::done() {
-                            return None
-                        }
-                        match LDMAchUSART0::take_static_cell() {
-                            Some(Transmittable::Display(a)) => {
-                                *data = Some(a)
-                            },
-                            _ => {unreachable!("FrameBuffer should be in static cell")}
-                        }
-                        self.threads.change(PrepareDrawState::End)
                     }
                 }
                 Some(false)
@@ -801,277 +662,11 @@ impl AsyncOperation for PrepareDraw {
     }
 }
 
-
-pub struct UpdateFull {
-    threads: Threads<UpdateFullState, 1>,
+pub struct Update {
+    threads: Threads<UpdateState, 1>,
 }
 
-enum UpdateFullState {
-    // set read temperature from internal TS
-    TempSensorControl(Option<EPDCommand<0x18>>),
-    InternalTempSensor(Option<EPDData<1>>),
-    
-    DisplayUpdateControl2(Option<EPDCommand<0x22>>),
-    DisplayMode1(Option<EPDData<1>>),
-
-    MasterActivation(Option<EPDCommand<0x20>>),
-
-    End,
-    Error,
-}
-
-impl Default for UpdateFullState {
-    fn default() -> Self { UpdateFullState::Error }
-}
-
-impl AsyncOperation for UpdateFull {
-    type Init = <UpdateUltraFast as AsyncOperation>::Init;
-    type Input<'a> = ();
-    type Output = Option<bool>;
-
-    fn new(_: Self::Init) -> Self {
-        Self {
-            threads: Threads::new(UpdateFullState::TempSensorControl(None)),
-        }
-    }
-
-    fn advance(&mut self, _: ()) -> Self::Output {
-        match self.threads.turn() {
-            UpdateFullState::TempSensorControl(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFullState::TempSensorControl(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(UpdateFullState::InternalTempSensor(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFullState::InternalTempSensor(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFullState::InternalTempSensor(Some(EPDData::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(&[0x80]) {
-                            Some(true) => {
-                                self.threads.change(UpdateFullState::DisplayUpdateControl2(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFullState::DisplayUpdateControl2(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFullState::DisplayUpdateControl2(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(UpdateFullState::DisplayMode1(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFullState::DisplayMode1(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFullState::DisplayMode1(Some(EPDData::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(&[0xF7]) {
-                            Some(true) => {
-                                self.threads.change(UpdateFullState::MasterActivation(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFullState::MasterActivation(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFullState::MasterActivation(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                if display_is_busy() {
-                                    return None
-                                }
-                                self.threads.change(UpdateFullState::End);
-                                return Some(true)
-                            },
-                            r => return r
-                        }
-                    }
-                }
-                Some(false)
-            },
-            UpdateFullState::End => {
-                Some(true)
-            },
-            UpdateFullState::Error => {
-                panic!("Unknown UpdateFullState while display")
-            }
-        }
-    }
-}
-
-pub struct UpdateFast {
-    threads: Threads<UpdateFastState, 1>,
-}
-
-enum UpdateFastState {
-    // Load custom LUT
-    WtiteLUTRegister(Option<EPDCommand<0x32>>),
-    CustomLUTData(Option<()>),
-    // Display with mode 1
-    DisplayUpdateControl2(Option<EPDCommand<0x22>>),
-    DisplayMode1NoLoadLUT(Option<EPDData<1>>),
-
-    MasterActivation(Option<EPDCommand<0x20>>),
-    
-    End,
-    Error,
-}
-
-impl Default for UpdateFastState {
-    fn default() -> Self { UpdateFastState::Error }
-}
-
-impl AsyncOperation for UpdateFast {
-    type Init = <UpdateUltraFast as AsyncOperation>::Init;
-    type Input<'a> = ();
-    type Output = Option<bool>;
-
-    fn new(_: Self::Init) -> Self {
-        Self {
-            threads: Threads::new(UpdateFastState::WtiteLUTRegister(None)),
-        }
-    }
-
-    fn advance(&mut self, _: ()) -> Self::Output {
-        match self.threads.turn() {
-            UpdateFastState::WtiteLUTRegister(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFastState::WtiteLUTRegister(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(UpdateFastState::CustomLUTData(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFastState::CustomLUTData(state) => {
-                match state {
-                    None => {
-                        LDMAchUSART0::set_static_cell( 
-                            Some(
-                                Transmittable::Array(
-                                    StaticArrayLDMA::new(&FAST_LUT)
-                                )
-                            )
-                        );
-                        self.threads.change(UpdateFastState::CustomLUTData(Some(())));
-                    },
-                    Some(_) => {
-                        if !LDMAchUSART0::done() {
-                            return None
-                        }
-                        LDMAchUSART0::take_static_cell();
-                        self.threads.change(UpdateFastState::DisplayUpdateControl2(None));
-                    }
-                }
-                Some(false)
-            },
-            UpdateFastState::DisplayUpdateControl2(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFastState::DisplayUpdateControl2(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(UpdateFastState::DisplayMode1NoLoadLUT(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFastState::DisplayMode1NoLoadLUT(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFastState::DisplayMode1NoLoadLUT(Some(EPDData::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(&[0xC7]) {
-                            Some(true) => {
-                                self.threads.change(UpdateFastState::MasterActivation(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            UpdateFastState::MasterActivation(state) => {
-                match state {
-                    None => {
-                        self.threads.change(UpdateFastState::MasterActivation(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                if display_is_busy() {
-                                    return None
-                                }
-                                self.threads.change(UpdateFastState::End);
-                                return Some(true)
-                            },
-                            r => return r
-                        }
-                    }
-                }
-                Some(false)
-            },
-            UpdateFastState::End => {
-                Some(true)
-            },
-            UpdateFastState::Error => {
-                panic!("Unknown UpdateFastState while display")
-            }
-        }
-    }
-}
-
-pub struct UpdateUltraFast {
-    threads: Threads<UpdateUltraFastState, 1>,
-    part_mode: <UpdateUltraFast as AsyncOperation>::Init
-}
-
-enum UpdateUltraFastState {
+enum UpdateState {
     // Load custom LUT
     WtiteLUTRegister(Option<EPDCommand<0x32>>),
     CustomLUTData(Option<()>),
@@ -1085,33 +680,32 @@ enum UpdateUltraFastState {
     Error,
 }
 
-impl Default for UpdateUltraFastState {
-    fn default() -> Self { UpdateUltraFastState::Error }
+impl Default for UpdateState {
+    fn default() -> Self { UpdateState::Error }
 }
 
-impl AsyncOperation for UpdateUltraFast {
-    type Init = bool;
-    type Input<'a> = ();
+impl AsyncOperation for Update {
+    type Init = ();
+    type Input<'a> = &'a UpdateMode;
     type Output = Option<bool>;
 
-    fn new(part_mode: Self::Init) -> Self {
+    fn new(_: Self::Init) -> Self {
         Self {
-            threads: Threads::new(UpdateUltraFastState::WtiteLUTRegister(None)),
-            part_mode
+            threads: Threads::new(UpdateState::WtiteLUTRegister(None)),
         }
     }
 
-    fn advance(&mut self, _: ()) -> Self::Output {
+    fn advance(&mut self, update_mode: Self::Input<'_>) -> Self::Output {
         match self.threads.turn() {
-            UpdateUltraFastState::WtiteLUTRegister(state) => {
+            UpdateState::WtiteLUTRegister(state) => {
                 match state {
                     None => {
-                        self.threads.change(UpdateUltraFastState::WtiteLUTRegister(Some(EPDCommand::new(()))));
+                        self.threads.change(UpdateState::WtiteLUTRegister(Some(EPDCommand::new(()))));
                     },
                     Some(a) => {
                         match a.advance(()) {
                             Some(true) => {
-                                self.threads.change(UpdateUltraFastState::CustomLUTData(None));
+                                self.threads.change(UpdateState::CustomLUTData(None));
                             },
                             r => return r
                         };
@@ -1119,18 +713,19 @@ impl AsyncOperation for UpdateUltraFast {
                 }
                 Some(false)
             },
-            UpdateUltraFastState::CustomLUTData(state) => {
+            UpdateState::CustomLUTData(state) => {
                 match state {
                     None => {
-                        self.threads.change(UpdateUltraFastState::CustomLUTData(Some(())));
+                        self.threads.change(UpdateState::CustomLUTData(Some(())));
                         LDMAchUSART0::set_static_cell( 
                             Some(
-                                Transmittable::Array(
+                                TransmittableUSART::Array(
                                     StaticArrayLDMA::new( {
-                                        if self.part_mode {
-                                            &ULTRAFAST_SELECTIVE_LUT
-                                        } else {
-                                            &ULTRAFAST_LUT
+                                        match update_mode.get_display_mode() {
+                                            DisplayMode::Full => &FULL_LUT,
+                                            DisplayMode::Fast => &FAST_LUT,
+                                            DisplayMode::UltraFast => &ULTRAFAST_LUT,
+                                            DisplayMode::UltraFastSelective => &ULTRAFAST_SELECTIVE_LUT
                                         }
                                     })
                                 )
@@ -1142,20 +737,20 @@ impl AsyncOperation for UpdateUltraFast {
                             return None
                         }
                         LDMAchUSART0::take_static_cell();
-                        self.threads.change(UpdateUltraFastState::DisplayUpdateControl2(None));
+                        self.threads.change(UpdateState::DisplayUpdateControl2(None));
                     }
                 }
                 Some(false)
             },
-            UpdateUltraFastState::DisplayUpdateControl2(state) => {
+            UpdateState::DisplayUpdateControl2(state) => {
                 match state {
                     None => {
-                        self.threads.change(UpdateUltraFastState::DisplayUpdateControl2(Some(EPDCommand::new(()))));
+                        self.threads.change(UpdateState::DisplayUpdateControl2(Some(EPDCommand::new(()))));
                     },
                     Some(a) => {
                         match a.advance(()) {
                             Some(true) => {
-                                self.threads.change(UpdateUltraFastState::DisplayMode1NoLoadLUT(None));
+                                self.threads.change(UpdateState::DisplayMode1NoLoadLUT(None));
                             },
                             r => return r
                         };
@@ -1163,15 +758,15 @@ impl AsyncOperation for UpdateUltraFast {
                 }
                 Some(false)
             },
-            UpdateUltraFastState::DisplayMode1NoLoadLUT(state) => {
+            UpdateState::DisplayMode1NoLoadLUT(state) => {
                 match state {
                     None => {
-                        self.threads.change(UpdateUltraFastState::DisplayMode1NoLoadLUT(Some(EPDData::new(()))));
+                        self.threads.change(UpdateState::DisplayMode1NoLoadLUT(Some(EPDData::new(()))));
                     },
                     Some(a) => {
                         match a.advance(&[0xC7]) {
                             Some(true) => {
-                                self.threads.change(UpdateUltraFastState::MasterActivation(None));
+                                self.threads.change(UpdateState::MasterActivation(None));
                             },
                             r => return r
                         };
@@ -1179,18 +774,15 @@ impl AsyncOperation for UpdateUltraFast {
                 }
                 Some(false)
             },
-            UpdateUltraFastState::MasterActivation(state) => {
+            UpdateState::MasterActivation(state) => {
                 match state {
                     None => {
-                        self.threads.change(UpdateUltraFastState::MasterActivation(Some(EPDCommand::new(()))));
+                        self.threads.change(UpdateState::MasterActivation(Some(EPDCommand::new(()))));
                     },
                     Some(a) => {
                         match a.advance(()) {
                             Some(true) => {
-                                if display_is_busy() {
-                                    return None
-                                }
-                                self.threads.change(UpdateUltraFastState::End);
+                                self.threads.change(UpdateState::End);
                                 return Some(true)
                             },
                             r => return r
@@ -1199,10 +791,10 @@ impl AsyncOperation for UpdateUltraFast {
                 }
                 Some(false)
             },
-            UpdateUltraFastState::End => {
+            UpdateState::End => {
                 Some(true)
             },
-            UpdateUltraFastState::Error => {
+            UpdateState::Error => {
                 panic!("Unknown UpdateUltraFastState while display")
             }
         }

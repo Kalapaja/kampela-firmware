@@ -5,7 +5,7 @@ use core::cell::RefCell;
 //use crate::wordlist::WORDLIST_ENGLISH;
 use mnemonic_external::{AsWordList, Bits11, WordListElement, TOTAL_WORDS, WORD_MAX_LEN, error::ErrorMnemonic};
 
-use crate::devices::flash::read_data;
+use crate::devices::{flash::read_data, psram::{psram_read_at_address, read_from_psram, AddressPsram, PsramAccess}};
 const WORDLIST_STARTS: [usize; 26] = [
     0, 4, 7, 13, 17, 20, 23,
     26, 28, 29, 30, 31, 33, 36,
@@ -13,10 +13,12 @@ const WORDLIST_STARTS: [usize; 26] = [
     60, 61, 63, 63, 63
 ];
 const FIRST_WORDLIST_STARTS: u8 = 0x61;
+pub const WORDLIST_SIZE: usize = TOTAL_WORDS*WORD_MAX_LEN;
+
 
 const CACHE_SIZE: usize = 5;
 pub const MAX_PROPOSAL: usize = 3;
-const WORDLIST_BASE: u32 = 128*256;
+pub const WORDLIST_BASE: u32 = 128*256;
 
 struct CachedChunk {
     chunk_index: usize,
@@ -41,9 +43,8 @@ impl FlashWordList {
             }
         }
         let mut c = CachedChunk { chunk_index, cache: [0; 256]};
-        if let Err(_) = read_data(WORDLIST_BASE + chunk_index as u32 * 256, &mut c.cache) {
-            panic!("couldn't read from flash wordlist chunk №{}", chunk_index)
-        };
+        c.cache = read_from_psram(&PsramAccess{start_address: AddressPsram::new(WORDLIST_BASE + chunk_index as u32 * 256).unwrap(), total_len: 256}).try_into().unwrap();
+        //panic!("{:x?}", c.cache);
         if cached_chunk.len() >= CACHE_SIZE {
             cached_chunk.pop_front();
         }

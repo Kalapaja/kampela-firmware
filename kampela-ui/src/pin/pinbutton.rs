@@ -5,7 +5,7 @@ use std::string::ToString;
 
 use embedded_graphics::{
 	pixelcolor::BinaryColor,
-	prelude::{DrawTarget, Point, Primitive, Dimensions, Size},
+	prelude::{DrawTarget, Primitive, Dimensions, Size},
 	Drawable,
 	mono_font::{
         ascii::FONT_10X20,
@@ -23,7 +23,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::widget::view::{View, Widget, DrawView};
+use crate::{uistate::Event, widget::view::{DrawView, View, Widget}};
 
 const BUTTON_FONT: MonoFont = FONT_10X20;
 const BUTTON_RADIUS: u32 = 6;
@@ -60,7 +60,7 @@ impl PinButton {
 impl View for PinButton {
     type DrawInput<'a> = ();
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = bool;
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -78,9 +78,14 @@ impl View for PinButton {
         }
         Ok(())
 	}
-    fn handle_tap_view<'a>(&mut self, _point: Point, _: ()) -> bool where Self: 'a, {
-        self.this_tapped = true;
-        true
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> bool where Self: 'a, {
+        match event {
+            Event::Tap(_) => {
+                self.this_tapped = true;
+                true
+            },
+            _ => false
+        }
     }
 }
 

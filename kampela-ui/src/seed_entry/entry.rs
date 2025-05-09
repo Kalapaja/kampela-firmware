@@ -28,7 +28,7 @@ use embedded_text::{
 
 use mnemonic_external::WORD_MAX_LEN;
 
-use crate::{display_def::*, widget::view::{Widget,View, DrawView}};
+use crate::{display_def::*, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::proposal::PROPOSAL_AREA;
 
@@ -108,7 +108,7 @@ impl Entry {
 impl View for Entry {
     type DrawInput<'a> = bool;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = ();
 
     fn bounding_box(&self) -> Rectangle {
@@ -160,7 +160,7 @@ impl View for Entry {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> ()
+    fn handle_event_view<'a>(&mut self, _: Event, _: ()) -> ()
     where Self: 'a {
     }
 }

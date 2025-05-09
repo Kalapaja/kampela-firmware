@@ -8,7 +8,7 @@ use embedded_graphics::{
     geometry::Size,
 };
 
-use crate::{display_def::*, widget::view::{View, Widget, DrawView}};
+use crate::{display_def::*, uistate::Event, widget::view::{DrawView, View, Widget}};
 use crate::pin::pin::PIN_LEN;
 
 const DOT_DIAMETER: u32 = 16;
@@ -41,7 +41,7 @@ impl Pindots {
 impl View for Pindots {
     type DrawInput<'a> = usize;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = ();
     fn bounding_box(&self) -> Rectangle {
         PINDOTS_WIDGET.bounding_box()
@@ -78,7 +78,7 @@ impl View for Pindots {
         }
         Ok(())
 	}
-    fn handle_tap_view<'a>(&mut self, _point: Point, _: ())
+    fn handle_event_view<'a>(&mut self, _event: Event, _: ())
     where Self: 'a {
     }
 }

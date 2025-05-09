@@ -22,7 +22,7 @@ use embedded_text::{
 use mnemonic_external::{AsWordList, WordListElement};
 const MAX_PROPOSAL: usize = 3;
 
-use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{display_def::*, platform::Platform, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::phrase::PHRASE_AREA;
 
@@ -155,8 +155,8 @@ impl<P: Platform> Proposal<P> {
 impl<P: Platform> View for Proposal<P> {
     type DrawInput<'a> = bool where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = () where P: 'a;
-    type TapOutput = Option<WordListElement<P::AsWordList>>;
+    type EventInput<'a> = () where P: 'a;
+    type TapOutput = Option<Option<WordListElement<P::AsWordList>>>;
 
     fn bounding_box(&self) -> Rectangle {
         PROPOSAL_WIDGET.bounding_box()
@@ -177,8 +177,6 @@ impl<P: Platform> View for Proposal<P> {
         } else {
             (BinaryColor::On, BinaryColor::Off)
         };
-
-        self.make_guess();
 
         let character_style = MonoTextStyleBuilder::new()
             .font(&PROPOSAL_FONT)
@@ -208,16 +206,22 @@ impl<P: Platform> View for Proposal<P> {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, point: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
     where Self: 'a
     {
         let mut guess_tapped = None;
-        for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
-            if section.contains(point) {
-                if i < self.guess.len() {
-                    guess_tapped = Some(self.guess.swap_remove(i));
-                };
-                self.clear();
+        if let Event::Invocation = event {
+            self.make_guess();
+            guess_tapped = Some(None)
+        }
+        if let Event::Tap(point) = event {
+            for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
+                if section.contains(point) {
+                    if i < self.guess.len() {
+                        guess_tapped = Some(Some(self.guess.swap_remove(i)));
+                    };
+                    self.clear();
+                }
             }
         }
         guess_tapped

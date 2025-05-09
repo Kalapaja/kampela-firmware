@@ -2,22 +2,20 @@ use core::cell::Cell;
 use core::ptr::addr_of;
 
 use alloc::boxed::Box;
-use cortex_m::asm::delay;
-use cortex_m::interrupt::{free, Mutex};
+use cortex_m::interrupt::{free, CriticalSection, Mutex};
 use efm32pg23_fix::Peripherals;
 use kampela_ui::display_def::*;
 
-use crate::devices::display::Bounds;
+use crate::draw::Bounds;
+use crate::draw::BoundsTrait;
 use crate::draw::PixelBuffer;
-use crate::peripherals::gpio_pins::DISP_DC_PIN;
-use crate::peripherals::ldma_ch_usart_rx::CHUNK_SIZE;
-use crate::{if_in_free, in_free};
+use crate::in_free;
 use crate::peripherals::ldma::*;
 
-pub use crate::peripherals::ldma_ch_usart_rx::RamCopy;
+pub use crate::peripherals::ldma_ch_usart_rx::DisplayRamCopy;
 pub use crate::peripherals::usart::{display_select_command, display_select_data, select_display};
 
-use super::ldma_ch_usart_rx::{ch_usart0_rx_idis, LDMAchUSART0Rx, Receivable};
+use super::ldma_ch_usart_rx::{ch_usart0_rx_idis, LDMAchUSART0Rx, ReceivableUSART};
 
 const CH_USART0: u8 = 6;
 pub const USART_TXDATA: u32 = 0x4005C03C;
@@ -48,10 +46,10 @@ pub fn ldma_display_interrupt() {
         let transmittable = LDMA_CHUSART0_TRANSMITTABLE.borrow(cs).take();
 
         match transmittable {
-            Some(Transmittable::RamCopy(mut a)) => {
+            Some(TransmittableUSART::RamCopy(mut a)) => {
                 if a.iter_chunk() {
                     a.set_receive();
-                    LDMAchUSART0Rx::set_static_cell(Some(Receivable::RamCopy(a)));
+                    LDMAchUSART0Rx::set_static_cell(Some(ReceivableUSART::DisplayRamCopy(a)));
                 } else {
                     ch_usart0_rx_idis();
                 };
@@ -61,18 +59,10 @@ pub fn ldma_display_interrupt() {
     })
 }
 
-pub struct LDMAchUSART0(Cell<Option<Transmittable>>);
+pub struct LDMAchUSART0(Cell<Option<TransmittableUSART>>);
 
-impl LDMAchUSART0 {
-    pub fn init(peripherals: &Peripherals) {
-        peripherals
-            .ldma_s
-            .if_()
-            .write(|w_reg| {
-                w_reg
-                    .done6().clear_bit()
-            });
-
+impl LdmaCh<TransmittableUSART, CH_USART0> for LDMAchUSART0 {
+    fn init(peripherals: &Peripherals) {
         peripherals
             .ldmaxbar_s
             .ch6_reqsel()
@@ -81,170 +71,60 @@ impl LDMAchUSART0 {
                     .sourcesel().bits(4) // _LDMAXBAR_CH_REQSEL_SOURCESEL_USART0
                     .sigsel().bits(2) // _LDMAXBAR_CH_REQSEL_SIGSEL_USART0TXBL
             });
-
-        peripherals
-            .ldma_s
-            .ch6_cfg()
-            .write(|w_reg| {
-                w_reg
-                    .arbslots().one()
-                    .srcincsign().positive()
-                    .dstincsign().positive()
-            });
     }
 
-    fn unlink() {
-        //must be called when transmittable is dropped
-        assert!(!Self::busy(), "LDMA channel is busy while tried to unlink");
-        in_free(|peripherals| {
-            peripherals
-                .ldma_s
-                .chdis()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .chdis()
-                        .bits(CH_USART0)
-                });
-        });
+    fn get_static<'a>(cs: &'a CriticalSection) -> &'a Self {
+        LDMA_CHUSART0_TRANSMITTABLE.borrow(cs)
     }
 
-    fn link(val: &mut Option<Transmittable>) {
-        assert!(!Self::busy(), "LDMA channel is busy while tried to link");
-        match val {
-            None => {
-                Self::unlink()
-            },
-            Some(t) => {
-                let ChLinkData { linkaddr, loopcnt, ien } = t.link();
-                in_free(|peripherals| {
-                    peripherals
-                        .ldma_s
-                        .if_()
-                        .write(|w_reg| {
-                            w_reg
-                                .done6().clear_bit()
-                        });
-                    peripherals
-                        .ldma_s
-                        .ch6_loop()
-                        .write(|w_reg| unsafe {
-                            w_reg
-                                .loopcnt().bits(loopcnt)
-                        });
-                    if ien {
-                        peripherals
-                        .ldma_s
-                        .ien()
-                        .modify(|r_reg, w_reg| unsafe {
-                            w_reg
-                                .chdone().bits(r_reg.chdone().bits() | 1 << CH_USART0)  
-                        });
-                    }
-                    peripherals
-                        .ldma_s
-                        .chdone()
-                        .write(|w_reg| {
-                            w_reg
-                                .chdone6().clear_bit() 
-                        });
-                    peripherals
-                        .ldma_s
-                        .ch6_link()
-                        .write(|w_reg| unsafe {
-                            w_reg.linkaddr().bits(linkaddr)
-                        });
-                    peripherals
-                        .ldma_s
-                        .linkload()
-                        .write(|w_reg| unsafe {
-                            w_reg
-                                .linkload().bits(1 << CH_USART0)
-                        });
-
-                });
-            }
-        }
-    }
-
-    pub fn busy() -> bool {
-        if_in_free(|peripherals| {
-            peripherals
-                .ldma_s
-                .chbusy()
-                .read()
-                .busy()
-                .bits() & (1 << CH_USART0) != 0
-        })
-    }
-
-    pub fn done() -> bool {
-        if_in_free(|peripherals| {
-            peripherals.ldma_s.ien().read().chdone().bits() & (1 << CH_USART0) == 0 &&
-            peripherals.ldma_s.chdone().read().chdone6().bit_is_set()
-        })
-    }
-
-    pub fn take_static_cell() -> Option<Transmittable> {
-        free(|cs| {
-            LDMA_CHUSART0_TRANSMITTABLE.borrow(cs).take()
-        })
-    }
-
-    pub fn take(&self) -> Option<Transmittable> {
-        Self::unlink();
-        self.0.take()
-    }
-
-    pub fn set_static_cell(val: Option<Transmittable>) {
-        free(|cs| {
-            LDMA_CHUSART0_TRANSMITTABLE.borrow(cs).set(val);
-        })
-    }
-
-    pub fn set(&self, mut val: Option<Transmittable>) {
-        Self::link(&mut val);
-        self.0.set(val);
-    }
-
-    pub fn replace_static_cell(val: Option<Transmittable>) -> Option<Transmittable> {
-        free(|cs| {
-            LDMA_CHUSART0_TRANSMITTABLE.borrow(cs).replace(val)
-        })
-    }
-
-    pub fn replace(&self, mut val: Option<Transmittable>) -> Option<Transmittable> {
-        Self::link(&mut val);
-        self.0.replace(val)
+    fn get_cell<'a>(&'a self) -> &'a Cell<Option<TransmittableUSART>> {
+        &self.0
     }
 }
 
 impl Drop for LDMAchUSART0 {
     fn drop(&mut self) {
-        Self::unlink();
+        self.take();
     }
 }
 
-pub enum Transmittable {
+pub enum TransmittableUSART {
     Display(FrameBufferLDMA),
-    RamCopy(RamCopy),
+    RamCopy(DisplayRamCopy),
     DummyTX(DummyTX),
     Array(StaticArrayLDMA)
 }
 
-impl Transmittable {
+impl ChObjEnum for TransmittableUSART {
     fn link(&mut self) -> ChLinkData {
         match self {
-            Transmittable::Display(a) => {
+            TransmittableUSART::Display(a) => {
                 a.link()
             },
-            Transmittable::RamCopy(a) => {
+            TransmittableUSART::RamCopy(a) => {
                 a.link()
             },
-            Transmittable::DummyTX(a) => {
+            TransmittableUSART::DummyTX(a) => {
                 a.link()
             },
-            Transmittable::Array(a) => {
+            TransmittableUSART::Array(a) => {
                 a.link()
+            }
+        }
+    }
+    fn unlink(&mut self) {
+        match self {
+            TransmittableUSART::Display(a) => {
+                a.unlink();
+            },
+            TransmittableUSART::RamCopy(a) => {
+                a.unlink();
+            },
+            TransmittableUSART::DummyTX(a) => {
+                a.unlink();
+            },
+            TransmittableUSART::Array(a) => {
+                a.unlink();
             }
         }
     }
@@ -314,33 +194,26 @@ impl FrameBufferLDMA {
     }
 
     pub fn set_bounds(&mut self, bounds: Bounds) {
-        let y_start_position = (SCREEN_SIZE_X - 1) as usize - bounds.2 as usize;
-        let y_end_position = (SCREEN_SIZE_X - 1) as usize - bounds.3 as usize;
-        let x_start_position = bounds.0 as usize;
-        let x_end_position = bounds.1 as usize;
-        let bounds_height = y_end_position - y_start_position + 1;
-        let bounds_width = x_end_position - x_start_position + 1;
+        let position = bounds.start_bytes();
 
-        let position = y_start_position * SCREEN_SIZE_WIDTH_ADDRESS + x_start_position;
-
-        self.transfer_block[0].ctrl = USART_XFER_INITIAL | (bounds_width as u32 - 1) << 4;
+        self.transfer_block[0].ctrl = USART_XFER_INITIAL | (bounds.width_bytes() as u32 - 1) << 4;
         self.transfer_block[0].source = addr_of!(self.buffer.data[position]) as u32;
 
-        if bounds_height < 2 {
+        if bounds.height() < 2 {
             self.transfer_block[0].link = 0; // transfer first line only
             self.loop_cnt = 0;
             return
         }
 
         self.transfer_block[0].link = LINK_NEXT;
-        self.transfer_block[1].ctrl = USART_XFER_LOOP | (bounds_width as u32 - 1) << 4;
-        self.transfer_block[1].source = (SCREEN_SIZE_WIDTH_ADDRESS - bounds_width) as u32;
+        self.transfer_block[1].ctrl = USART_XFER_LOOP | (bounds.width_bytes() as u32 - 1) << 4;
+        self.transfer_block[1].source = SCREEN_SIZE_WIDTH_ADDRESS as u32 - bounds.width_bytes() as u32 ;
 
-        let bounds_height_rest: u8 = (bounds_height.saturating_sub(u8::max_value() as usize + 2)).try_into().unwrap();
+        let bounds_height_rest: u8 = (bounds.height().saturating_sub(u8::max_value() as u16 + 2)).try_into().unwrap();
 
         if bounds_height_rest == 0 {
             self.transfer_block[1].link = LINK_SELF; // do not reload
-            self.loop_cnt = (bounds_height - 2) as u8;
+            self.loop_cnt = (bounds.height() - 2) as u8;
             return
         }
         self.transfer_block[1].link = LINK_SELF_NEXT;
@@ -348,7 +221,7 @@ impl FrameBufferLDMA {
 
         let next_position = position + (u8::max_value() as usize + 2) * SCREEN_SIZE_WIDTH_ADDRESS;
 
-        self.transfer_block[3].ctrl = USART_XFER_INITIAL | (bounds_width as u32 - 1) << 4;
+        self.transfer_block[3].ctrl = USART_XFER_INITIAL | (bounds.width_bytes() as u32 - 1) << 4;
         self.transfer_block[3].source = addr_of!(self.buffer.data[next_position]) as u32;
 
         if bounds_height_rest < 2 {
@@ -358,13 +231,14 @@ impl FrameBufferLDMA {
 
         self.transfer_block[3].link = LINK_NEXT;
         self.transfer_block[2].source = (bounds_height_rest - 2) as u32;
-        self.transfer_block[4].ctrl = USART_XFER_LOOP | (bounds_width as u32 - 1) << 4;
-        self.transfer_block[4].source = (SCREEN_SIZE_WIDTH_ADDRESS - bounds_width) as u32;
+        self.transfer_block[4].ctrl = USART_XFER_LOOP | (bounds.width_bytes() as u32 - 1) << 4;
+        self.transfer_block[4].source = SCREEN_SIZE_WIDTH_ADDRESS as u32 - bounds.width_bytes() as u32;
     }
 
     fn link(&mut self) -> ChLinkData {
         in_free(|peripherals| {
             display_select_data(&mut peripherals.gpio_s);
+            peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit());
         });
         ChLinkData {
             linkaddr: addr_of!(self.transfer_block[0]) as u32 >> 2,
@@ -372,6 +246,12 @@ impl FrameBufferLDMA {
             ien: false
         }
         
+    }
+
+    fn unlink(&mut self) {
+        in_free(|peripherals| {
+            while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+        });
     }
 }
 
@@ -381,10 +261,10 @@ const USART_SYNCCLEAR_TX: u8 = USART_MATCHEN_TX & !USART_TX_MATCHVAL;
 
 pub struct DummyTX {
     _dummy_byte: Box<u8>,
-    transfer_block: Box<[Descriptor; 2]>,
+    transfer_block: Box<[Descriptor; 3]>,
 }
 impl DummyTX {
-    pub fn new(len: usize) -> Self {
+    pub fn new(len: u32) -> Self {
         assert!(len > 0, "Nothing to transmit via DMA");
         assert!(len <= 2048, "length no more than maximum xfercnt implemented");
         let _dummy_byte = Box::new(0x00);
@@ -397,11 +277,17 @@ impl DummyTX {
                 link: LINK_NEXT,
             },
             Descriptor {
-                ctrl: USART_XFER_DUMMY | (len as u32 - 1) << 4,
+                ctrl: USART_SYNC,
+                source: (USART_SYNCCLEAR_TX as u32) << 8,
+                dest: 0,
+                link: LINK_NEXT,
+            },
+            Descriptor {
+                ctrl: USART_XFER_DUMMY | (len - 1) << 4,
                 source: addr_of!(*_dummy_byte) as u32,
                 dest: USART_TXDATA,
                 link: 0,
-            },
+            }
         ]);
 
         Self {
@@ -417,6 +303,8 @@ impl DummyTX {
             ien: false,
         }
     }
+
+    fn unlink(&mut self) {}
 }
 
 pub struct StaticArrayLDMA { // Boxed data is never moved
@@ -471,11 +359,19 @@ impl StaticArrayLDMA {
     fn link(&mut self) -> ChLinkData {
         in_free(|peripherals| {
             display_select_data(&mut peripherals.gpio_s);
+            peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit());
         });
         ChLinkData {
             linkaddr: addr_of!(self.transfer_block[0]) as u32 >> 2,
             loopcnt: self.loop_cnt,
             ien: false
         }
+    }
+
+    fn unlink(&mut self) {
+        in_free(|peripherals| {
+            while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+            peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxen().set_bit());
+        });
     }
 }

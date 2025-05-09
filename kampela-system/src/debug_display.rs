@@ -28,7 +28,6 @@ use crate::{devices::display_transmission::{
     epaper_write_command,
     epaper_write_data
 }, draw::PixelBuffer, peripherals::usart::init_usart};
-use crate::draw::FrameBuffer;
 //**** Debug stuff ****//
 
 /// Emergency debug function that spits out errors

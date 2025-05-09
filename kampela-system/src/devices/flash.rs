@@ -108,7 +108,7 @@ pub fn read_encoded_entropy() -> Option<Protected> {
 }
 
 #[allow(dead_code)]
-enum FlashCommand {
+pub enum FlashCommand {
     WriteEnable = 0x06, /* 06 xx xx xx xx sets the (WEL) write enable latch bit */
     WriteDisable = 0x04, /* 04 xx xx xx xx resets the (WEL) write enable latch bit*/
     ReadId = 0x9f, /* 9f xx xx xx xx outputs JEDEC ID: 1 byte manufacturer ID & 2 byte device ID */
@@ -145,12 +145,12 @@ enum FlashCommand {
 
 
 
-fn flash_cmd(peripherals: &mut Peripherals, cmd: FlashCommand) {
+pub fn flash_cmd(peripherals: &mut Peripherals, cmd: FlashCommand) {
     write_to_usart(peripherals, cmd as u8);
 }
 
 
-fn flash_write_some(peripherals: &mut Peripherals, command_set: &[u8]) {
+pub fn flash_write_some(peripherals: &mut Peripherals, command_set: &[u8]) {
     for command in command_set.iter() {
         write_to_usart(peripherals, *command);
     }
@@ -219,8 +219,9 @@ pub fn flash_lock(peripherals: &mut Peripherals) {
     deselect_flash(&mut peripherals.gpio_s);
 }
 
+#[macro_export]
 macro_rules! flash_write_addr {
-    ( $( $periph: tt, $addr: tt ),* ) => {
+    ( $( $periph: tt, $addr: expr ),* ) => {
         $(
             flash_write_some($periph, &[(($addr>>16)&0xff) as u8, (($addr>>8)&0xff) as u8, ($addr&0xff)as u8]);
         )*

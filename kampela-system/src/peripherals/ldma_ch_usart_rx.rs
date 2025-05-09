@@ -1,22 +1,27 @@
-use core::cell::{Cell, RefCell};
+use core::cell::Cell;
 use core::ptr::addr_of;
 
 use alloc::boxed::Box;
-use cortex_m::asm::delay;
-use cortex_m::interrupt::{free, Mutex};
+use cortex_m::interrupt::{free, CriticalSection, Mutex};
 use efm32pg23_fix::Peripherals;
-use kampela_ui::display_def::*;
 
 use crate::devices::display_transmission::{epaper_write_command, epaper_write_data};
-use crate::{devices::display::Bounds, if_in_free, in_free};
+use crate::devices::flash::{flash_cmd, flash_write_some};
+use crate::devices::psram::{psram_write_read_byte, psram_write_slice, AddressPsram, PSRAM_WRITE};
+use crate::draw::{Bounds, BoundsTrait};
+use crate::flash_mnemonic::{WORDLIST_BASE, WORDLIST_SIZE};
+use crate::flash_write_addr;
+use crate::in_free;
 
 use crate::peripherals::ldma::*;
 
-use crate::peripherals::ldma_ch_usart::{USART_TXDATA, USART_WRI, USART_XFER_INITIAL};
-use crate::peripherals::usart::display_select_data;
+use crate::peripherals::ldma_ch_usart::{USART_TXDATA, USART_XFER_INITIAL};
+use crate::peripherals::usart::{display_select_data, select_flash};
 
+use super::eusart::{deselect_psram, select_psram};
+use super::ldma_ch_eusart::{LDMAchEUSART2, TransmittableEUSART, EUSART2_TXDATA, EUSART_XFER_INITIAL};
 use super::ldma_ch_usart::*;
-use super::usart::{deselect_display, display_select_command, write_to_usart};
+use super::usart::deselect_flash;
 
 const CH_USART0_RX: u8 = 5;
 const USART_RXDATA: u32 = 0x4005C024;
@@ -37,12 +42,23 @@ pub fn ldma_display_rx_interrupt() {
     free(|cs| {
         let receivable = LDMA_CHUSART0_RECEIVABLE.borrow(cs).take();
         match receivable {
-            Some(Receivable::RamCopy(mut a)) => {
+            Some(ReceivableUSART::DisplayRamCopy(mut a)) => {
                 a.set_transmit();
-                while !LDMAchUSART0::done() {};
-                LDMAchUSART0::set_static_cell(Some(Transmittable::RamCopy(a)));
-                ch_usart0_rx_ien();
+                in_free(|peripherals| {
+                    while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+                });
+                LDMAchUSART0::set_static_cell(Some(TransmittableUSART::RamCopy(a)));
+                ch_usart0_rx_ien(); // mark ch as undone
             },
+            Some(ReceivableUSART::FlashPSRamCopy(mut a)) => {
+                in_free(|peripherals| {
+                    while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+                    deselect_flash(&mut peripherals.gpio_s);
+                });
+                a.set_transmit();
+                LDMAchEUSART2::set_static_cell(Some(TransmittableEUSART::FlashPSRamCopy(a)));
+                ch_usart0_rx_ien(); // mark ch as undone
+            }
             _ => ()
         };
     })
@@ -79,18 +95,10 @@ pub fn ch_usart0_rx_idis() {
     });
 }
 
-pub struct LDMAchUSART0Rx(Cell<Option<Receivable>>);
+pub struct LDMAchUSART0Rx(Cell<Option<ReceivableUSART>>);
 
-impl LDMAchUSART0Rx {
-    pub fn init(peripherals: &Peripherals) {
-        peripherals
-            .ldma_s
-            .if_()
-            .write(|w_reg| {
-                w_reg
-                    .done5().clear_bit()
-            });
-
+impl LdmaCh<ReceivableUSART, CH_USART0_RX> for LDMAchUSART0Rx {
+    fn init(peripherals: &Peripherals) {
         peripherals
             .ldmaxbar_s
             .ch5_reqsel()
@@ -99,7 +107,6 @@ impl LDMAchUSART0Rx {
                     .sourcesel().bits(4) // _LDMAXBAR_CH_REQSEL_SOURCESEL_USART0
                     .sigsel().bits(0) // _LDMAXBAR_CH_REQSEL_SIGSEL_USART0RXDATAV
             });
-
         peripherals
             .ldma_s
             .ch5_cfg()
@@ -111,169 +118,181 @@ impl LDMAchUSART0Rx {
             });
     }
 
-    fn unlink() {
-        //must be called when transmittable is dropped
-        assert!(!Self::busy(), "LDMA channel is busy while tried to unlink");
-        in_free(|peripherals| {
-            peripherals
-                .ldma_s
-                .chdis()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .chdis()
-                        .bits(CH_USART0_RX)
-                });
-        });
+    fn get_static<'a>(cs: &'a CriticalSection) -> &'a Self {
+        LDMA_CHUSART0_RECEIVABLE.borrow(cs)
     }
 
-    fn link(val: &mut Option<Receivable>) {
-        assert!(!Self::busy(), "LDMA channel is busy while tried to link");
-        match val {
-            None => {
-                Self::unlink()
-            },
-            Some(t) => {
-                let ChLinkData {linkaddr, loopcnt, ien} = t.link();
-                in_free(|peripherals| {
-                    peripherals
-                        .ldma_s
-                        .if_()
-                        .write(|w_reg| {
-                            w_reg
-                                .done5().clear_bit()
-                        });
-                    peripherals
-                        .ldma_s
-                        .ch5_loop()
-                        .write(|w_reg| unsafe {
-                            w_reg
-                                .loopcnt().bits(loopcnt)
-                        });
-                    if ien {
-                        peripherals
-                            .ldma_s
-                            .ien()
-                            .modify(|r_reg, w_reg| unsafe {
-                                w_reg
-                                    .chdone().bits(r_reg.chdone().bits() | 1 << CH_USART0_RX)  
-                            });
-                    }
-                    peripherals
-                        .ldma_s
-                        .chdone()
-                        .write(|w_reg| {
-                            w_reg
-                                .chdone5().clear_bit() 
-                        });
-                    peripherals
-                        .ldma_s
-                        .ch5_link()
-                        .write(|w_reg| unsafe {
-                            w_reg.linkaddr().bits(linkaddr)
-                        });
-                    peripherals
-                        .ldma_s
-                        .linkload()
-                        .write(|w_reg| unsafe {
-                            w_reg
-                                .linkload().bits(1 << CH_USART0_RX)
-                        });
-                });
-            }
-        }
-    }
-
-    pub fn busy() -> bool {
-        if_in_free(|peripherals| {
-            peripherals
-                .ldma_s
-                .chbusy()
-                .read()
-                .busy()
-                .bits() & (1 << CH_USART0_RX) != 0
-        })
-    }
-
-    pub fn done() -> bool {
-        if_in_free(|peripherals| {
-            peripherals.ldma_s.ien().read().chdone().bits() & (1 << CH_USART0_RX) == 0 &&
-            peripherals.ldma_s.chdone().read().chdone5().bit_is_set()
-        })
-    }
-
-    pub fn take_static_cell() -> Option<Receivable> {
-        free(|cs| {
-            LDMA_CHUSART0_RECEIVABLE.borrow(cs).take()
-        })
-    }
-
-    pub fn take(&self) -> Option<Receivable> {
-        Self::unlink();
-        self.0.take()
-    }
-
-    pub fn set_static_cell(val: Option<Receivable>) {
-        free(|cs| {
-            LDMA_CHUSART0_RECEIVABLE.borrow(cs).set(val);
-        })
-    }
-
-    pub fn set(&self, mut val: Option<Receivable>) {
-        Self::link(&mut val);
-        self.0.set(val);
-    }
-
-    pub fn replace_static_cell(val: Option<Receivable>) -> Option<Receivable> {
-        free(|cs| {
-            LDMA_CHUSART0_RECEIVABLE.borrow(cs).replace(val)
-        })
-    }
-
-    pub fn replace(&self, mut val: Option<Receivable>) -> Option<Receivable> {
-        Self::link(&mut val);
-        self.0.replace(val)
+    fn get_cell<'a>(&'a self) -> &'a Cell<Option<ReceivableUSART>> {
+        &self.0
     }
 }
 
 impl Drop for LDMAchUSART0Rx {
     fn drop(&mut self) {
-        Self::unlink();
+        self.take();
     }
 }
 
-pub enum Receivable {
-    RamCopy(RamCopy)
+pub enum ReceivableUSART {
+    DisplayRamCopy(DisplayRamCopy),
+    FlashPSRamCopy(FlashPSRamCopy)
 }
 
-impl Receivable {
+impl ChObjEnum for ReceivableUSART {
     fn link(&mut self) -> ChLinkData {
         match self {
-            Receivable::RamCopy(a) => {
+            ReceivableUSART::DisplayRamCopy(a) => {
                 a.link()
             },
+            ReceivableUSART::FlashPSRamCopy(a) => {
+                a.link()
+            }
+        }
+    }
+    fn unlink(&mut self) {
+        match self {
+            ReceivableUSART::DisplayRamCopy(a) => {
+                a.unlink();
+            },
+            ReceivableUSART::FlashPSRamCopy(a) => {
+                a.unlink();
+            }
         }
     }
 }
 
-pub const CHUNK_SIZE: usize = 0x200; // no more than 0x800
+const CHUNK_SIZE: u32 = 0x200; // no more than 0x800
 const USART_SYNCTRIG_TX: u8 = USART_TX_MATCHVAL;
 const USART_SYNCCLEAR_TX: u8 = USART_MATCHEN_TX & !USART_TX_MATCHVAL;
 
 enum RamCopyState {
-    Receive(usize),
-    Transmit(usize)
+    Receive,
+    Transmit
 }
 
-pub struct RamCopy {
-    pub buffer: Box<[u8; CHUNK_SIZE]>,
-    transfer_block: Box<[Descriptor; 3]>,
-    pub left_len: usize,
+pub struct DisplayRamCopy {
+    buffer: Box<[u8; CHUNK_SIZE as usize]>,
+    transfer_block: Box<[Descriptor; 2]>,
+    left_len: u32,
     state: RamCopyState,
+    current_chunk: u32
 }
 
-impl RamCopy {
+impl DisplayRamCopy {
     pub fn new(bounds: Bounds) -> Self {
-        let buffer = Box::new([0; CHUNK_SIZE]);
+        let buffer = Box::new([0; CHUNK_SIZE as usize]);
+
+        let transfer_block = Box::new([
+            Descriptor { // start tx
+                ctrl: USART_SYNC | STRUCTREQ_TRUE,
+                source: USART_SYNCTRIG_TX as u32,
+                dest: 0,
+                link: LINK_NEXT,
+            },
+            Descriptor {
+                ctrl: USART_XFER_RECEIVE,
+                source: USART_RXDATA,
+                dest: addr_of!(buffer[0]) as u32,
+                link: 0,
+            }
+        ]);
+
+        let total_len = bounds.total_bytes();
+
+        let mut a = Self {
+            buffer,
+            transfer_block,
+            left_len: total_len,
+            state: RamCopyState::Receive,
+            current_chunk: core::cmp::min(total_len, CHUNK_SIZE)
+        };
+        a.set_receive();
+        a
+    }
+
+    pub fn set_receive(&mut self) {
+        self.transfer_block[1].ctrl = USART_XFER_RECEIVE | (self.current_chunk as u32 - 1) << 4;
+        self.transfer_block[1].source = USART_RXDATA;
+        self.transfer_block[1].dest = addr_of!(self.buffer[0]) as u32;
+
+        self.state = RamCopyState::Receive;
+    }
+
+    pub fn set_transmit(&mut self) {
+        self.transfer_block[1].ctrl = USART_XFER_INITIAL | (self.current_chunk as u32 - 1) << 4;
+        self.transfer_block[1].source = addr_of!(self.buffer[0]) as u32;
+        self.transfer_block[1].dest = USART_TXDATA;
+
+        self.state = RamCopyState::Transmit;
+    }
+
+    pub fn iter_chunk(&mut self) -> bool {
+        self.left_len = self.left_len.saturating_sub(CHUNK_SIZE);
+        self.current_chunk = core::cmp::min(self.left_len, CHUNK_SIZE);
+        self.left_len > 0
+    }
+
+    pub fn link(&mut self) -> ChLinkData {
+        match self.state {
+            RamCopyState::Receive => {
+                in_free(|peripherals| {
+                    peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit().clearrx().set_bit());
+                    epaper_write_command(peripherals, &[0x27]);
+                    epaper_write_data(peripherals, &[0x0]);
+                    peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxen().set_bit());
+                });
+                LDMAchUSART0::set_static_cell(
+                    Some(
+                        TransmittableUSART::DummyTX(
+                            DummyTX::new(self.current_chunk)
+                        )
+                    )
+                );
+                ChLinkData {
+                    linkaddr: addr_of!(self.transfer_block[0]) as u32 >> 2,
+                    loopcnt: 0,
+                    ien: true, // to switch Transmission
+                }
+            },
+            RamCopyState::Transmit => {
+                in_free(|peripherals| {
+                    epaper_write_command(peripherals, &[0x26]);
+                    display_select_data(&mut peripherals.gpio_s);
+                });
+                ChLinkData {
+                    linkaddr: addr_of!(self.transfer_block[1]) as u32 >> 2,
+                    loopcnt: 0,
+                    ien: true, // to switch Transmission
+                }
+            }
+        }
+    }
+
+    pub fn unlink(&mut self) {
+        in_free(|peripherals| {
+            while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+        })
+    }
+}
+
+pub const PSRAM_BLOCK_SIZE: u32 = 0x400; // should be aligned to 0x400 PSRAM block size
+enum FlashPSRamCopyState {
+    Receive,
+    Transmit
+}
+
+pub struct FlashPSRamCopy {
+    pub buffer: Box<[u8; PSRAM_BLOCK_SIZE as usize]>,
+    transfer_block: Box<[Descriptor; 2]>,
+    pub left_len: u32,
+    state: FlashPSRamCopyState,
+    current_chunk: u32,
+    addr: u32,
+}
+
+impl FlashPSRamCopy {
+    pub fn new() -> Self {
+        let buffer = Box::new([0; PSRAM_BLOCK_SIZE as usize]);
 
         let transfer_block = Box::new([
             Descriptor { // start tx
@@ -288,79 +307,59 @@ impl RamCopy {
                 dest: addr_of!(buffer[0]) as u32,
                 link: 0,
             },
-            Descriptor {
-                ctrl: USART_SYNC | STRUCTREQ_TRUE,
-                source: (USART_SYNCCLEAR_TX as u32) << 8,
-                dest: 0,
-                link: 0,
-            },
         ]);
-
-        let y_start_position = (SCREEN_SIZE_X - 1) as usize - bounds.2 as usize;
-        let y_end_position = (SCREEN_SIZE_X - 1) as usize - bounds.3 as usize;
-        let x_start_position = bounds.0 as usize;
-        let x_end_position = bounds.1 as usize;
-        let bounds_height = y_end_position - y_start_position + 1;
-        let bounds_width = x_end_position - x_start_position + 1;
-
-        let total_len = bounds_height * bounds_width;
 
         let mut a = Self {
             buffer,
             transfer_block,
-            left_len: total_len,
-            state: RamCopyState::Receive(0)
+            left_len: WORDLIST_SIZE as u32,
+            state: FlashPSRamCopyState::Receive,
+            current_chunk: core::cmp::min(WORDLIST_SIZE as u32, PSRAM_BLOCK_SIZE),
+            addr: WORDLIST_BASE
         };
         a.set_receive();
         a
     }
 
     pub fn set_receive(&mut self) {
-        let current_chunk = core::cmp::min(self.left_len, CHUNK_SIZE);
-
-        self.transfer_block[1].ctrl = USART_XFER_RECEIVE | (current_chunk as u32 - 1) << 4;
+        self.transfer_block[1].ctrl = USART_XFER_RECEIVE | (self.current_chunk - 1) << 4;
         self.transfer_block[1].source = USART_RXDATA;
         self.transfer_block[1].dest = addr_of!(self.buffer[0]) as u32;
-        self.transfer_block[1].link = 0;
 
-        self.state = RamCopyState::Receive(current_chunk);
+        self.state = FlashPSRamCopyState::Receive;
     }
 
     pub fn set_transmit(&mut self) {
-        let current_chunk = core::cmp::min(self.left_len, CHUNK_SIZE);
-
-        self.transfer_block[1].ctrl = USART_XFER_INITIAL | (current_chunk as u32 - 1) << 4;
+        self.transfer_block[1].ctrl = EUSART_XFER_INITIAL | (self.current_chunk - 1) << 4;
         self.transfer_block[1].source = addr_of!(self.buffer[0]) as u32;
-        self.transfer_block[1].dest = USART_TXDATA;
-        self.transfer_block[1].link = 0;
+        self.transfer_block[1].dest = EUSART2_TXDATA;
 
-        in_free(|peripherals| {
-            peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit());
-        });
-
-        self.state = RamCopyState::Transmit(current_chunk);
+        self.state = FlashPSRamCopyState::Transmit;
     }
 
     pub fn iter_chunk(&mut self) -> bool {
-        self.left_len = self.left_len.saturating_sub(CHUNK_SIZE);
+        self.addr = self.addr + self.current_chunk;
+        self.left_len = self.left_len.saturating_sub(PSRAM_BLOCK_SIZE);
+        self.current_chunk = core::cmp::min(self.left_len, PSRAM_BLOCK_SIZE);
         self.left_len > 0
     }
 
     pub fn link(&mut self) -> ChLinkData {
         match self.state {
-            RamCopyState::Receive(len) => {
+            FlashPSRamCopyState::Receive => {
                 in_free(|peripherals| {
                     peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit().clearrx().set_bit());
                     peripherals.usart0_s.ien().write(|w_reg| w_reg.rxof().set_bit());
                     peripherals.usart0_s.if_clr().write(|w_reg| w_reg.rxof().set_bit());
-                    epaper_write_command(peripherals, &[0x27]);
-                    epaper_write_data(peripherals, &[0x0]);
+                    select_flash(&mut peripherals.gpio_s);
+                    flash_cmd(peripherals, crate::devices::flash::FlashCommand::Read);
+                    flash_write_addr!(peripherals, self.addr);
                     peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxen().set_bit());
                 });
                 LDMAchUSART0::set_static_cell(
                     Some(
-                        Transmittable::DummyTX(
-                            DummyTX::new(len)
+                        TransmittableUSART::DummyTX(
+                            DummyTX::new(self.current_chunk)
                         )
                     )
                 );
@@ -370,10 +369,12 @@ impl RamCopy {
                     ien: true, // to switch Transmission
                 }
             },
-            RamCopyState::Transmit(_) => {
+            FlashPSRamCopyState::Transmit => {
                 in_free(|peripherals| {
-                    epaper_write_command(peripherals, &[0x26]);
-                    display_select_data(&mut peripherals.gpio_s);
+                    select_psram(&mut peripherals.gpio_s);
+                    psram_write_read_byte(peripherals, PSRAM_WRITE);
+                    psram_write_slice(peripherals, &AddressPsram::new(self.addr).expect("WORDLIST should fit into PSRAM").inner());
+                    peripherals.eusart2_s.cmd().write(|w_reg| w_reg.rxdis().set_bit());
                 });
                 ChLinkData {
                     linkaddr: addr_of!(self.transfer_block[1]) as u32 >> 2,
@@ -383,6 +384,16 @@ impl RamCopy {
             }
         }
 
+    }
+    pub fn unlink(&mut self) {
+        in_free(|peripherals| {
+            while peripherals.eusart2_s.status().read().txc().bit_is_clear() {}
+            deselect_psram(&mut peripherals.gpio_s);
+            peripherals.eusart2_s.txdata().write(|w_reg| unsafe { w_reg.txdata().bits(0) }); // no idea why
+            while peripherals.eusart2_s.status().read().txc().bit_is_clear() {}
+            peripherals.eusart2_s.cmd().write(|w_reg| w_reg.rxen().set_bit());
+
+        });
     }
 }
 

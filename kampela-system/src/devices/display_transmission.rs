@@ -6,7 +6,6 @@ use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
 use crate::{if_in_free, in_free};
 use crate::parallel::{AsyncOperation, Threads};
 
-use crate::devices::display::Bounds;
 use kampela_display_common::display_def::*;
 const X_ADDRESS_WIDTH: usize = (SCREEN_SIZE_Y / 8) as usize;
 
@@ -250,124 +249,6 @@ impl <const LEN: usize> AsyncOperation for EPDData<LEN> {
                     self.threads.change(EPDDataState::Send);
                 } else {
                     self.threads.change(EPDDataState::End);
-                }
-                Some(false)
-            },
-            EPDDataState::End => {
-                Some(true)
-            },
-        }
-    }
-}
-
-pub struct EPDDataBuffer<const LEN: usize>{
-    threads: Threads<EPDDataState, 1>,
-    position: usize,
-    position_borders: Option<[usize;3]>,
-}
-
-impl <const LEN: usize> AsyncOperation for EPDDataBuffer<LEN> {
-    type Init = Option<Bounds>; // Borders of 2D array
-    type Input<'a> = &'a [u8; LEN];
-    type Output = Option<bool>;
-
-    fn new(addresses: Self::Init) -> Self {
-        let (position, position_borders) = match addresses {
-            None => {
-                (0, None)
-            },
-            Some(b) => {
-                let x_start_position = b.0 as usize;
-                let x_end_position = b.1 as usize;
-                let y_start_position = (SCREEN_SIZE_X - 1) as usize - b.2 as usize; //Y coordinates inversed for some reason
-                let y_end_position = (SCREEN_SIZE_X - 1) as usize - b.3 as usize;
-
-                let end_position = X_ADDRESS_WIDTH * y_end_position + x_end_position;
-                (
-                    y_start_position * X_ADDRESS_WIDTH as usize + x_start_position,
-                    Some([x_start_position, x_end_position, end_position]),
-                )
-            }
-        };
-
-        Self {
-            threads: Threads::new(EPDDataState::Init),
-            position,
-            position_borders,
-        }
-    }
-
-    fn advance(&mut self, data: Self::Input<'_>) -> Self::Output {
-        match self.threads.turn() {
-            EPDDataState::Init => {
-                in_free(|peripherals| {
-                    display_select_data(&mut peripherals.gpio_s);
-                });
-                self.threads.change(EPDDataState::Send);
-                Some(false)
-            },
-            EPDDataState::Send => {
-                if if_in_free(|peripherals|
-                    peripherals.usart0_s.status().read().txbl().bit_is_clear()
-                ) {
-                    return None
-                }
-                in_free(|peripherals| {
-                    peripherals
-                        .usart0_s
-                        .txdata()
-                        .write(|w_reg| unsafe { w_reg.txdata().bits(data[self.position]) });
-                });
-                self.threads.change(EPDDataState::WaitSend);
-                Some(false)
-            },
-            EPDDataState::WaitSend => {
-                if if_in_free(|peripherals|
-                    peripherals
-                        .usart0_s
-                        .status()
-                        .read()
-                        .txc()
-                        .bit_is_clear()
-                ) {
-                    return None
-                }
-                in_free(|peripherals| {
-                    peripherals
-                        .usart0_s
-                        .rxdata()
-                        .read()
-                        .rxdata()
-                        .bits();
-                });
-                match self.position_borders {
-                    None => {
-                        if self.position < LEN-1 {
-                            self.position += 1;
-                            self.threads.change(EPDDataState::Send);
-                            if self.position % X_ADDRESS_WIDTH == 0 {
-                                return None // unblock thread
-                            }
-                        } else {
-                            self.threads.change(EPDDataState::End);
-                        }
-                    },
-                    Some(b) => {
-                        if self.position < b[2] {
-                            let x_position = self.position % X_ADDRESS_WIDTH;
-
-                            self.threads.change(EPDDataState::Send);
-                            if x_position >= b[1] {
-                                let y_position = self.position / X_ADDRESS_WIDTH;
-                                self.position = (y_position + 1) * X_ADDRESS_WIDTH + b[0];
-                                return None // unblock thread
-                            } else {
-                                self.position += 1;
-                            }
-                        } else {
-                            self.threads.change(EPDDataState::End);
-                        }
-                    }
                 }
                 Some(false)
             },

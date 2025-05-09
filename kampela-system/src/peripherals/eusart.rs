@@ -97,7 +97,7 @@ pub fn init_eusart(peripherals: &mut Peripherals) {
         .cfg1()
         .write(|w_reg|
             w_reg
-                .txfiw().oneframe()
+                .txfiw().sixteenframes()
                 .rxfiw().oneframe()
         );
     peripherals

@@ -50,7 +50,7 @@ pub struct EventResult{
 
 #[derive(Clone)]
 pub enum UpdateRequest {
-    Hidden,
+    Invocate,
     Slow,
     Fast,
     UltraFast,
@@ -60,6 +60,8 @@ pub enum UpdateRequest {
 
 pub trait UpdateRequestMutate {
     fn propagate(&mut self, new_request: Self);
+
+    fn try_add(&mut self, new_request: Self);
 }
 
 impl UpdateRequestMutate for Option<UpdateRequest> {
@@ -68,15 +70,25 @@ impl UpdateRequestMutate for Option<UpdateRequest> {
             self.replace(r);
         }
     }
+    fn try_add(&mut self, new_request: Self) {
+        if self.is_some() {
+            return
+        }
+        self.propagate(new_request);
+    }
+}
+
+#[derive(Clone, Copy)]
+pub enum Event {
+    Tap(Point),
+    Invocation,
 }
 /// State of UI
-pub struct UIState<P, D> where
-    P: Platform,
-    D: DrawTarget<Color = BinaryColor>,
+pub struct UIState<P> where
+    P: Platform
 {
     screen: Screen<P>,
     pub platform: P,
-    pub display: D,
     unlocked: bool,
 }
 
@@ -134,8 +146,8 @@ impl<P: Platform> Default for Screen<P> {
     fn default() -> Self {Screen::QRAddress}
 }
 
-impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
-    pub fn new(mut platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self
+impl <P: Platform> UIState<P> {
+    pub fn new(mut platform: P, h: &mut <P as Platform>::HAL) -> Self
         where <P as Platform>::AsWordList: Sized {
         platform.read_entropy();
         let initial_screen: Option<UnitScreen>;
@@ -150,7 +162,6 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         let mut state = UIState {
             screen: Screen::Locked, // doesn't matter
             platform,
-            display,
             unlocked,
         };
         state.switch_screen(initial_screen, h);
@@ -213,9 +224,9 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     }
 
     /// Read user touch event
-    pub fn handle_tap(
+    pub fn handle_event(
         &mut self,
-        point: Point,
+        event: Event,
         h: &mut <P as Platform>::HAL,
     ) -> Option<UpdateRequest>
     where <P as Platform>::AsWordList: Sized
@@ -224,28 +235,31 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         let mut new_screen = None;
         match self.screen {
             Screen::PinEntry(ref mut a, _) => {
-                let (res, _) = a.handle_tap_screen(point, self.platform.pin());
+                let (res, _) = a.handle_event_screen(event, self.platform.pin());
                 out = res.request;
                 new_screen = res.state;
             },
             Screen::OnboardingRestore(ref mut a) => {
-                let (res, _) = a.handle_tap_screen(point, ());
+                let (res, _) = a.handle_event_screen(event, ());
                 out = res.request;
                 new_screen = res.state;
             },
             Screen::OnboardingBackup(ref mut a) => {
-                let (res, _) = a.handle_tap_screen(point, ());
+                let (res, entropy) = a.handle_event_screen(event, ());
+                if let Some(e) = entropy {
+                    self.platform.store_entropy(&e);
+                }
                 out = res.request;
                 new_screen = res.state;
             },
             Screen::OnboardingRestoreOrGenerate(ref mut a) |
             Screen::ShowDialog(ref mut a) => {
-                let (res, _) = a.handle_tap_screen(point, ());
+                let (res, _) = a.handle_event_screen(event, ());
                 out = res.request;
                 new_screen = res.state;
             },
             Screen::ShowTransaction(ref mut a) => {
-                let (res, _) = a.handle_tap_screen(point, ());
+                let (res, _) = a.handle_event_screen(event, ());
                 out = res.request;
                 new_screen = res.state;
             },
@@ -283,18 +297,13 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     }
 
     /// Display new screen state; should be called only when needed, is slow
-    pub fn render(
+    pub fn render <D: DrawTarget<Color = BinaryColor>> (
         &mut self,
-        is_clear_update: bool,
+        display: &mut D,
         h: &mut <P as Platform>::HAL,
     ) -> Result<Option<UpdateRequest>, <D as DrawTarget>::Error>
     where <P as Platform>::AsWordList: Sized
     {
-        let display = &mut self.display;
-        if is_clear_update {
-            let clear = PrimitiveStyle::with_fill(BinaryColor::Off);
-            display.bounding_box().into_styled(clear).draw(display)?;
-        }
         let mut out = None;
         let mut new_screen = None;
 
@@ -333,10 +342,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 .draw(display)?;
             },
             Screen::OnboardingBackup(ref mut a) => {
-                let (res, entropy) = a.draw_screen(display, ())?;
-                if let Some(e) = entropy {
-                    self.platform.store_entropy(&e);
-                }
+                let (res, _) = a.draw_screen(display, ())?;
                 out = res.request;
                 new_screen = res.state;
             },

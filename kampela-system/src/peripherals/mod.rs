@@ -6,6 +6,7 @@ pub mod i2c;
 pub mod ldma;
 pub mod ldma_ch_usart;
 pub mod ldma_ch_usart_rx;
+pub mod ldma_ch_eusart;
 pub mod ldma_ch_timer;
 pub mod se_command;
 pub mod timers;
