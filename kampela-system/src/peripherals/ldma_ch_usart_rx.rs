@@ -9,7 +9,7 @@ use crate::devices::display_transmission::{epaper_write_command, epaper_write_da
 use crate::devices::flash::{flash_cmd, flash_write_some};
 use crate::devices::psram::{psram_write_read_byte, psram_write_slice, AddressPsram, PSRAM_WRITE};
 use crate::draw::{Bounds, BoundsTrait};
-use crate::flash_mnemonic::{WORDLIST_BASE, WORDLIST_SIZE};
+use crate::psram_mnemonic::{WORDLIST_BASE, WORDLIST_SIZE};
 use crate::flash_write_addr;
 use crate::in_free;
 

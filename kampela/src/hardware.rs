@@ -8,7 +8,7 @@ use kampela_system::{
         se_aes_gcm::{decode_entropy, encode_entropy, Protected},
         se_rng
     },
-    flash_mnemonic::FlashWordList,
+    psram_mnemonic::PsramWordList,
 };
 
 use crate::nfc::NfcTransactionPsramAccess;
@@ -37,11 +37,11 @@ impl Hardware {
 impl Platform for Hardware {
     type HAL = ();
     type Rng<'c> = se_rng::SeRng;
-    type AsWordList = FlashWordList;
+    type AsWordList = PsramWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
     fn get_wordlist() -> Self::AsWordList {
-        FlashWordList::new()
+        PsramWordList
     }
 
     fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {

@@ -138,6 +138,24 @@ pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
     peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
 }
 
+pub fn psram_write_byte(peripherals: &mut Peripherals, byte: u8) {
+    while peripherals.eusart2_s.status().read().txfl().bit_is_clear() {}
+    peripherals.eusart2_s.txdata().write({|w_reg|
+        unsafe {
+            w_reg
+            // EUSART tx and rx are u16,
+            // single byte is used here because of the commands,
+            // setting used is `.databits().eight()`
+            .txdata().bits(byte as u16)
+        }
+    });
+}
+
+pub fn psram_read_byte(peripherals: &mut Peripherals) -> u8 {
+    while peripherals.eusart2_s.status().read().rxfl().bit_is_clear() {}
+    peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
+}
+
 /// PSRAM dummy command, to send a new item in rx.
 ///
 /// Could have switched into autotx mode instead.
