@@ -3,45 +3,17 @@
 use efm32pg23_fix::Peripherals;
 use crate::in_free;
 
-/// request single ADC measurement
-pub fn request_adc_measure() {
-    in_free(|peripherals| {
-        peripherals
-            .iadc0_s
-            .cmd()
-            .write(|w_reg| w_reg.singlestart().set_bit());
-    });
-}
-
 /// read value from ADC
 pub fn read_adc() -> i32 {
     let mut value = 0;
     in_free(|peripherals|
-        value = peripherals.iadc0_s.singledata().read().data().bits() & 0x00FFFFFF
+        value = peripherals.iadc0_s.scandata().read().data().bits() & 0x00FFFFFF
     );
     (if value & 0x00800000 == 0 {
         value
     } else {
         value | 0xFF000000
     }) as i32
-}
-
-pub fn read_int_flag(peripherals: &mut Peripherals) -> bool {
-    peripherals
-        .iadc0_s
-        .if_()
-        .read()
-        .singledone()
-        .bit()
-}
-
-pub fn reset_int_flags() {
-    in_free(|peripherals|
-        peripherals
-            .iadc0_s
-            .if_()
-            .reset()
-    );
 }
 
 /// Initialize ADC
@@ -68,16 +40,16 @@ pub fn init_adc(peripherals: &mut Peripherals) {
                 .adcclksuspend0().prswudis()
                 .adcclksuspend1().prswudis()
                 .dbghalt().normal()
-                .warmupmode().keepwarm()
+                .warmupmode().normal()
                 .hsclkrate().div1();
             unsafe {
-                w_reg.timebase().bits(18)
+                w_reg.timebase().bits(94)
             }
         });
     peripherals
         .iadc0_s
         .timer()
-        .write(|w_reg| unsafe { w_reg.timer().bits(0) });
+        .write(|w_reg| unsafe { w_reg.timer().bits(950) });
 
     peripherals
         .iadc0_s
@@ -87,10 +59,8 @@ pub fn init_adc(peripherals: &mut Peripherals) {
     cfg0_set(peripherals);
     
     cfg1_set(peripherals);
-    
-    enable_adc(peripherals);
 
-    init_adc_single_reader(peripherals);
+    init_adc_scan_reader(peripherals);
 
     enable_adc(peripherals);
 
@@ -99,15 +69,6 @@ pub fn init_adc(peripherals: &mut Peripherals) {
         .gpio_s
         .abusalloc()
         .write(|w_reg| w_reg.aeven0().adc0());
-
-    //enable interrupts
-    peripherals
-        .iadc0_s
-        .ien()
-        .write(|w_reg| {
-            w_reg
-                .singledone().set_bit()
-        });
 
     //request_adc_measure(peripherals);
 
@@ -119,6 +80,11 @@ pub fn init_adc(peripherals: &mut Peripherals) {
         .emu_s
         .ctrl()
         .write(|w_reg| w_reg.em2dbgen().set_bit());
+
+    peripherals
+        .iadc0_s
+        .cmd()
+        .write(|w_reg| w_reg.scanstart().set_bit().timeren().set_bit());
 }
 
 /// Calibration data for ADC defived from factory values read from memory
@@ -252,18 +218,26 @@ fn cfg1_set(peripherals: &mut Peripherals) {
 }
 
 /// Initialize single ADC read config
-fn init_adc_single_reader(peripherals: &mut Peripherals) {
+fn init_adc_scan_reader(peripherals: &mut Peripherals) {
+    enable_adc(peripherals);
+    peripherals
+        .iadc0_s
+        .maskreq()
+        .write(|w_reg| unsafe {
+            w_reg.maskreq().bits(1 << 0)
+        });
+
     disable_adc(peripherals);
     
     peripherals
         .iadc0_s
-        .singlefifocfg()
+        .scanfifocfg()
         .write(|w_reg| {
             w_reg
                 .alignment().right20()
                 .showid().clear_bit()
                 .dvl().valid1()
-                .dmawufifosingle().disabled()
+                .dmawufifoscan().disabled()
         });
     
     peripherals
@@ -271,17 +245,14 @@ fn init_adc_single_reader(peripherals: &mut Peripherals) {
         .trigger()
         .modify(|_, w_reg| {
             w_reg
-                .singletrigsel().immediate()
-                .singletrigaction().continuous()
-                .singletailgate().tailgateoff()
+                .scantrigsel().timer()
+                .scantrigaction().continuous()
         });
-
-    enable_adc(peripherals);
 
     // measure between GND and PA0
     peripherals
         .iadc0_s
-        .single()
+        .scan0()
         .write(|w_reg| {
             w_reg
                 .portneg().gnd()
@@ -293,7 +264,6 @@ fn init_adc_single_reader(peripherals: &mut Peripherals) {
             }
         });
 
-    disable_adc(peripherals);
 }
 
 /// Enable ADC

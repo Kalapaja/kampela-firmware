@@ -50,6 +50,10 @@ pub struct RegisterBlock {
     scan13: Scan13,
     scan14: Scan14,
     scan15: Scan15,
+    _reserved43: [u8; 0x0f44],
+    if_set: IfSet,
+    _reserved44: [u8; 0x0ffc],
+    if_clr: IfClr,
 }
 impl RegisterBlock {
     #[doc = "0x00 - IPVERSION"]
@@ -267,6 +271,16 @@ impl RegisterBlock {
     pub const fn scan15(&self) -> &Scan15 {
         &self.scan15
     }
+    #[doc = "0x1024 - Interrupt Flag"]
+    #[inline(always)]
+    pub const fn if_set(&self) -> &IfSet {
+        &self.if_set
+    }
+    #[doc = "0x2024 - Interrupt Flag"]
+    #[inline(always)]
+    pub const fn if_clr(&self) -> &IfClr {
+        &self.if_clr
+    }
 }
 #[doc = "IPVERSION (r) register accessor: IPVERSION\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
 #[doc(alias = "IPVERSION")]
@@ -318,6 +332,16 @@ pub mod cmpthr;
 pub type If = crate::Reg<if_::IfSpec>;
 #[doc = "Interrupt Flag"]
 pub mod if_;
+#[doc = "IF_SET (rw) register accessor: Interrupt Flag\n\nYou can [`read`](crate::Reg::read) this register and get [`if_set::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_set::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_set`] module"]
+#[doc(alias = "IF_SET")]
+pub type IfSet = crate::Reg<if_set::IfSetSpec>;
+#[doc = "Interrupt Flag"]
+pub mod if_set;
+#[doc = "IF_CLR (rw) register accessor: Interrupt Flag\n\nYou can [`read`](crate::Reg::read) this register and get [`if_clr::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_clr::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_clr`] module"]
+#[doc(alias = "IF_CLR")]
+pub type IfClr = crate::Reg<if_clr::IfClrSpec>;
+#[doc = "Interrupt Flag"]
+pub mod if_clr;
 #[doc = "IEN (rw) register accessor: Interrupt Enable\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`] module"]
 #[doc(alias = "IEN")]
 pub type Ien = crate::Reg<ien::IenSpec>;

@@ -15,13 +15,13 @@ use embedded_alloc::Heap;
 
 use kampela_system::{
     debug_display::burning_tank, devices::{
-        flash::{flash_sleep, flash_wait_ready, flash_wakeup},
-        power::ADC,
-        psram::psram_reset,
-        touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
-    }, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_usart_rx::{FlashPSRamCopy, LDMAchUSART0Rx, ReceivableUSART}}, CORE_PERIPHERALS, PERIPHERALS
+        flash::flash_copy_to_psram,
+        touch::{clear_touch_if, enable_touch_int}
+    }, parallel::{AsyncOperation, Threads},
+    CORE_PERIPHERALS,
+    PERIPHERALS
 };
-use efm32pg23_fix::{Interrupt, interrupt, Peripherals, NVIC, SYST};
+use efm32pg23_fix::{Interrupt, Peripherals, NVIC, SYST};
 
 mod ui;
 use ui::UI;
@@ -29,7 +29,6 @@ mod hardware;
 mod nfc;
 use nfc::{NfcError, NfcReceiver, NfcResult, NfcStateOutput};
 mod touch;
-use touch::Touches;
 
 #[global_allocator]
 static HEAP: Heap = Heap::empty();
@@ -83,25 +82,21 @@ fn main() -> ! {
 
         NVIC::unpend(Interrupt::LDMA);
         NVIC::mask(Interrupt::LDMA);
+        NVIC::unpend(Interrupt::GPIO_EVEN);
+        NVIC::mask(Interrupt::GPIO_EVEN);
+        NVIC::unpend(Interrupt::TIMER2);
+        NVIC::mask(Interrupt::TIMER2);
         unsafe {
             core_periph.NVIC.set_priority(Interrupt::LDMA, 3);
+            core_periph.NVIC.set_priority(Interrupt::GPIO_EVEN, 5);
+            core_periph.NVIC.set_priority(Interrupt::TIMER2, 4);
             NVIC::unmask(Interrupt::LDMA);
+            NVIC::unmask(Interrupt::GPIO_EVEN);
+            NVIC::unmask(Interrupt::TIMER2);
         }
     });
 
-    in_free(|peripherals| {
-        flash_wakeup(peripherals);
-        flash_wait_ready(peripherals);
-        psram_reset(peripherals);
-    });
-    LDMAchUSART0Rx::set_static_cell(Some(ReceivableUSART::FlashPSRamCopy(FlashPSRamCopy::new())));
-    let mut counter = 0;
-    while !LDMAchUSART0Rx::done() {
-    }
-    LDMAchUSART0Rx::take_static_cell();
-    in_free(|peripherals| {
-        flash_sleep(peripherals);
-    });
+    flash_copy_to_psram();
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
     // Development: erase seed when Pilkki can't
@@ -138,23 +133,20 @@ fn main() -> ! {
 }
 
 enum MainStatus {
-    ADCProbe,
+    Init,
     NFCRead(NfcReceiver),
-    Display(Box<UI>),
-    TouchRead(Option<Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>>),
+    Display(Box<UI>)
 }
 
 impl Default for MainStatus {
     fn default() -> Self {
-        MainStatus::ADCProbe
+        MainStatus::Init
     }
 }
 
 struct MainState {
-    threads: Threads<MainStatus, 3>,
-    adc: ADC,
+    threads: Threads<MainStatus, 2>,
     ui: Option<Box<UI>>,
-    touches: Touches,
 }
 
 impl AsyncOperation for MainState {
@@ -167,26 +159,19 @@ impl AsyncOperation for MainState {
         clear_touch_if();
 
         return Self {
-            threads: Threads::from([
-                MainStatus::ADCProbe,
-                MainStatus::NFCRead(NfcReceiver::new()),
-                //MainStatus::TouchRead(None),
-                //MainStatus::Display(None), // PixelBuffer is boxed in FrameBuffer
-            ]),
-            adc: ADC::new(()),
+            threads: Threads::new(MainStatus::Init),
             ui: Some(Box::new(ui)),
-            touches: Touches::new()
         }
     }
 
     /// Call in event loop to progress through Kampela states
     fn advance(&mut self, _: ()) {
         match self.threads.turn() {
-            MainStatus::ADCProbe => {
-                self.adc.advance(());
+            MainStatus::Init => {
+                self.threads.switch(MainStatus::NFCRead(NfcReceiver::new()));
             },
             MainStatus::NFCRead(receiver) => {
-                if let Some(s) = receiver.advance(self.adc.read()) {
+                if let Some(s) = receiver.advance() {
                     match s {
                         Err(e) => {
                             match e {
@@ -243,7 +228,7 @@ impl AsyncOperation for MainState {
                                         }
                                     }
                                     enable_touch_int();
-                                    self.threads.change(MainStatus::TouchRead(None));
+                                    self.threads.sync();
                                 }
                             }
                         }
@@ -251,28 +236,8 @@ impl AsyncOperation for MainState {
                 }
             },
             MainStatus::Display(ui) => {
-                if ui.advance((self.adc.read(), &mut self.touches)) == Some(false) {
+                if ui.advance(()) == Some(false) {
                     self.threads.hold();
-                }
-            },
-            MainStatus::TouchRead(state) => {
-                match state {
-                    None => {
-                        if is_touch_int() {
-                            self.threads.change(MainStatus::TouchRead(Some(Read::new(()))));
-                        }
-                    },
-                    Some(reader) => {
-                        match reader.advance(()) {
-                            Ok(Some(Some(touch))) => {
-                                self.touches.try_push_touch_data(touch);
-                                self.threads.change(MainStatus::TouchRead(None));
-                            },
-                            Ok(Some(None)) => {self.threads.hold()},
-                            Ok(None) => {}
-                            Err(e) => panic!("{:?}", e),
-                        }
-                    }
                 }
             },
         }

@@ -1,10 +1,11 @@
 
 use efm32pg23_fix::Peripherals;
-use crate::peripherals::gpio_pins::*;
+use crate::{in_free, peripherals::gpio_pins::*};
 
 /// Init timers
 pub fn init_timers(peripherals: &mut Peripherals) {
     init_timer0(peripherals);
+    Timer2::init(peripherals);
 }
 
 /// set up TIMER0 for NFC reading
@@ -102,3 +103,85 @@ fn init_timer0(peripherals: &mut Peripherals) {
  
 }
 
+macro_rules! int_timer {
+    ($(#[$attr:meta] $timer_n: ident, $timer_s: tt), *) => {
+        $(
+            #[$attr]
+            pub struct $timer_n;
+
+            impl $timer_n {
+                fn init(peripherals: &mut Peripherals) {
+                    peripherals
+                        .$timer_s
+                        .en()
+                        .write(|w_reg| w_reg.en().clear_bit());
+            
+                    while peripherals.$timer_s.en().read().disabling().bit_is_set() {}
+            
+                    peripherals
+                        .$timer_s
+                        .cfg()
+                        .write(|w_reg| {
+                            w_reg
+                                .mode().up()
+                                .sync().disable()
+                                .osmen().set_bit()
+                                .debugrun().run()
+                                .clksel().prescem01grpaclk()
+                                .presc().div1024()
+                            });
+            
+                    peripherals
+                        .$timer_s
+                        .en()
+                        .write(|w_reg| w_reg.en().set_bit());
+                }
+            
+                pub fn reset_if_ien() {
+                    in_free(|peripherals| {
+                        peripherals
+                            .$timer_s
+                            .ien()
+                            .write(|w_reg| w_reg.of().clear_bit());
+                        peripherals
+                            .$timer_s
+                            .if_clr()
+                            .write(|w_reg| w_reg.of().set_bit());
+                    });
+                }
+                
+                pub fn load(delay: u32) {
+                    let timer_top = (((19_000 / 1024) * delay) as u16).saturating_sub(1);
+                    in_free(|peripherals| {
+                        peripherals
+                            .$timer_s
+                            .ien()
+                            .write(|w_reg| {
+                                w_reg.of().set_bit()
+                            });
+                        peripherals
+                            .$timer_s
+                            .cnt()
+                            .reset();
+                
+                        peripherals
+                            .$timer_s
+                            .top()
+                            .write(|w_reg| unsafe { w_reg.top().bits(timer_top) });
+                
+                        peripherals
+                            .$timer_s
+                            .cmd()
+                            .write(|w_reg| w_reg.start().set_bit());
+                    });
+                }
+            }
+        )*
+    }
+}
+
+int_timer!{
+    /// set up TIMER2 for Touch non-blocking read
+    Timer2,
+    timer2_s
+}

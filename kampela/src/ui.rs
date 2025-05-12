@@ -1,9 +1,10 @@
 //! Everything high-level related to interfacing with user
 use alloc::{borrow::ToOwned, string::String};
+use cortex_m::interrupt::free;
 use kampela_system::{
     devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::Touches};
+use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::TOUCHES};
 use kampela_ui::{
     platform::Platform,
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
@@ -50,7 +51,7 @@ impl UI {
 
 impl AsyncOperation for UI {
     type Init = ();
-    type Input<'a> = (i32, &'a mut Touches);
+    type Input<'a> = ();
     type Output = Option<bool>;
     
     /// Start of UI.
@@ -70,11 +71,16 @@ impl AsyncOperation for UI {
         }
     }
     /// Call in event loop to progress through UI state
-    fn advance<'a>(&mut self, (voltage, touches): Self::Input<'a>) -> Self::Output {
+    fn advance<'a>(&mut self, _: Self::Input<'a>) -> Self::Output {
         match self.ui_threads.turn() {
             UIStatus::UIUpdate(tapped) => {
                 if !*tapped {
-                    if let Some(point) = touches.take_touch_point() {
+                    let mut point_option = None;
+                    free(|cs| {
+                        let mut touchse = TOUCHES.borrow(cs).borrow_mut();
+                        point_option = touchse.take_touch_point();
+                    });
+                    if let Some(point) = point_option {
                         let u = self.state.handle_event(Event::Tap(point), &mut ());
                         if u.is_some() { *tapped = true; } // one tap handle per update
                         self.update_request.propagate(u);
@@ -103,7 +109,7 @@ impl AsyncOperation for UI {
                 None
             },
             UIStatus::BufferUpdate => {
-                let r = self.frame_buffer.advance((voltage, &mut self.state, &mut self.update_request));
+                let r = self.frame_buffer.advance((&mut self.state, &mut self.update_request));
                 if r == Some(false) {
                     self.ui_threads.hold();
                 }
@@ -139,7 +145,7 @@ impl Default for BufferState {
 
 impl AsyncOperation for FrameBufferOperation {
     type Init = ();
-    type Input<'a> = (i32, &'a mut UIState<Hardware>, &'a mut Option<UpdateRequest>);
+    type Input<'a> = (&'a mut UIState<Hardware>, &'a mut Option<UpdateRequest>);
     type Output = Option<bool>;
 
     fn new(_: ()) -> Self {
@@ -151,10 +157,10 @@ impl AsyncOperation for FrameBufferOperation {
     }
 
     /// Move through display update progress
-    fn advance<'a>(&mut self, (voltage, ui_state, new_update_request): Self::Input<'a>) -> Self::Output {
+    fn advance<'a>(&mut self, (ui_state, new_update_request): Self::Input<'a>) -> Self::Output {
         match self.state.turn() {
             BufferState::UIRender(ui_render) => {
-                let r = ui_render.advance((voltage, ui_state, &mut self.frame_buffer, &mut self.update_request));
+                let r = ui_render.advance((ui_state, &mut self.frame_buffer, &mut self.update_request));
                 if r == Some(true) && matches!(self.update_request, Some(UpdateRequest::Invocate)) {
                     new_update_request.try_add(self.update_request.take()); // no need to wait for invocate request
                 }
@@ -195,7 +201,7 @@ impl Default for UIRenderState {
 
 impl AsyncOperation for UIRender {
     type Init = ();
-    type Input<'a> = (i32, &'a mut UIState<Hardware>, &'a mut FrameBuffer, &'a mut Option<UpdateRequest>);
+    type Input<'a> = (&'a mut UIState<Hardware>, &'a mut FrameBuffer, &'a mut Option<UpdateRequest>);
     type Output = Option<bool>;
 
     fn new(_: ()) -> Self {
@@ -207,7 +213,7 @@ impl AsyncOperation for UIRender {
     }
 
     /// Move through display update progress
-    fn advance<'a>(&mut self, (voltage, ui_state, frame_buffer, new_update_request): Self::Input<'a>) -> Self::Output {
+    fn advance<'a>(&mut self, (ui_state, frame_buffer, new_update_request): Self::Input<'a>) -> Self::Output {
         match self.state.turn() {
             UIRenderState::UIRender => {
                 self.state.sync();
@@ -224,7 +230,7 @@ impl AsyncOperation for UIRender {
             UIRenderState::DisplayUpdate(state) => {
                 match state {
                     None => {
-                        if let Some(m) = frame_buffer.has_update_request(voltage) {
+                        if let Some(m) = frame_buffer.has_update_request() {
                             *state = Some(Request::new(m));
                             Some(false)
                         } else {

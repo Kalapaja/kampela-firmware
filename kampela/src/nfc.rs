@@ -1,10 +1,9 @@
 //! NFC packet collector and decoder
 
-use cortex_m::delay;
 use nfca_parser::frame::Frame;
 
 use kampela_system::{
-    in_free, peripherals::{ldma::LdmaCh, ldma_ch_timer::{ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers, LDMAchTimer0, NfcReceive, ReceivableTIMER}}
+    devices::power::voltage, in_free, peripherals::{ldma::LdmaCh, ldma_ch_timer::{ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers, LDMAchTimer0, NfcReceive, ReceivableTIMER}}
 };
 
 use substrate_crypto_light::sr25519::PUBLIC_LEN;
@@ -304,9 +303,9 @@ impl NfcReceiver {
         }
     }
 
-    pub fn advance(&mut self, voltage: i32) -> Option<Result<NfcStateOutput, NfcError>> {
-        if voltage < NFC_MIN_VOLTAGE { return None }
-        if !LDMAchTimer0::busy() {return None} // todo: check if no nfc packets were sent
+    pub fn advance(&mut self) -> Option<Result<NfcStateOutput, NfcError>> {
+        if voltage() < NFC_MIN_VOLTAGE { return None }
+        //if !LDMAchTimer0::busy() {return None} // todo: check if no nfc packets were sent
 
         match self.state {
             NfcState::Operational(i) => {

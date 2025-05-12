@@ -1,10 +1,13 @@
 use core::cmp;
 use efm32pg23_fix::Peripherals;
+use crate::peripherals::ldma::LdmaCh;
+use crate::peripherals::ldma_ch_usart_rx::{FlashPSRamCopy, LDMAchUSART0Rx, ReceivableUSART};
 use crate::peripherals::usart::*;
 use crate::devices::se_aes_gcm::ENCODED_LEN;
 use crate::in_free;
 use cortex_m::asm::delay;
 
+use super::psram::psram_reset;
 use super::se_aes_gcm::Protected;
 
 const PAGE_SIZE: usize = 256;
@@ -12,6 +15,20 @@ const PAGE_SIZE: usize = 256;
 #[derive(Clone, Copy, Debug)]
 pub enum FlashErr {
     WriteNotMatch
+}
+
+pub fn flash_copy_to_psram() {
+    in_free(|peripherals| {
+        flash_wakeup(peripherals);
+        flash_wait_ready(peripherals);
+        psram_reset(peripherals);
+    });
+    LDMAchUSART0Rx::set_static_cell(Some(ReceivableUSART::FlashPSRamCopy(FlashPSRamCopy::new())));
+    while !LDMAchUSART0Rx::done() {}
+    LDMAchUSART0Rx::take_static_cell();
+    in_free(|peripherals| {
+        flash_sleep(peripherals);
+    });
 }
 
 pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {

@@ -14,7 +14,7 @@ use kampela_display_common::display_def::*;
 use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
 use crate::{
-    devices::display::{EPDInit, PrepareSend},
+    devices::{display::{EPDInit, PrepareSend}, power::voltage},
     parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_usart::{FrameBufferLDMA, LDMAchUSART0, TransmittableUSART}}
 };
 
@@ -124,8 +124,8 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 4000;
-const FULL_REFRESH_POWER: i32 = 4000;
+const FAST_REFRESH_POWER: i32 = 8000;
+const FULL_REFRESH_POWER: i32 = 12000;
 const PART_REFRESH_POWER: i32 = 4000;
 
 const SEQUENCIAL_SELECTIVE_LIMIT: usize = 5; // more sequencial selective refreshes cause to leave traces, less cause artefacts
@@ -364,23 +364,23 @@ impl FrameBuffer {
         }
     }
 
-    pub fn has_update_request(&mut self, voltage: i32) -> Option<UpdateMode> {
+    pub fn has_update_request(&mut self) -> Option<UpdateMode> {
         match &self.update_state {
             UpdateState::UpdateRequest(m) => {
                 match m.get_display_mode() {
                     DisplayMode::Full => {
-                        if voltage < FULL_REFRESH_POWER {
+                        if voltage() < FULL_REFRESH_POWER {
                             return None
                         }
                     },
                     DisplayMode::Fast => {
-                        if voltage < FAST_REFRESH_POWER {
+                        if voltage() < FAST_REFRESH_POWER {
                             return None
                         }
                     },
                     DisplayMode::UltraFast |
                     DisplayMode::UltraFastSelective => {
-                        if voltage < PART_REFRESH_POWER {
+                        if voltage() < PART_REFRESH_POWER {
                             return None
                         }
                     }
