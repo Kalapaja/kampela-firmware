@@ -19,7 +19,7 @@ use kampela_system::{
         power::ADC,
         psram::psram_reset,
         touch::{clear_touch_if, enable_touch_int, is_touch_int, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
-    }, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_eusart::ldma_eusart_interrupt, ldma_ch_usart::ldma_display_interrupt, ldma_ch_usart_rx::{ldma_display_rx_interrupt, FlashPSRamCopy, LDMAchUSART0Rx, ReceivableUSART}}, CORE_PERIPHERALS, PERIPHERALS
+    }, if_in_free, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_usart_rx::{FlashPSRamCopy, LDMAchUSART0Rx, ReceivableUSART}}, CORE_PERIPHERALS, PERIPHERALS
 };
 use efm32pg23_fix::{Interrupt, interrupt, Peripherals, NVIC, SYST};
 
@@ -27,7 +27,7 @@ mod ui;
 use ui::UI;
 mod hardware;
 mod nfc;
-use nfc::{ldma_nfc_interrupt, NfcError, NfcReceiver, NfcResult, NfcStateOutput};
+use nfc::{NfcError, NfcReceiver, NfcResult, NfcStateOutput};
 mod touch;
 use touch::Touches;
 
@@ -68,65 +68,6 @@ unsafe fn HardFault(exception_frame: &ExceptionFrame) -> ! {
     panic!("hard fault: {:?}", exception_frame)
 }
 
-#[interrupt]
-fn LDMA() {
-    if if_in_free(|peripherals| {
-        peripherals.ldma_s.if_().read().done7().bit_is_set()
-    }) {
-        in_free(|peripherals| {
-            peripherals.ldma_s.if_clr().write(|w_reg| {
-                w_reg.done7().set_bit()
-            });
-        });
-        ldma_nfc_interrupt();
-    }
-    if if_in_free(|peripherals| {
-        peripherals.ldma_s.if_().read().done6().bit_is_set()
-    }) {
-        in_free(|peripherals| {
-            peripherals.ldma_s.if_clr().write(|w_reg| {
-                w_reg.done7().set_bit()
-            });
-        });
-        ldma_display_interrupt();
-    }
-    if if_in_free(|peripherals| {
-        peripherals.ldma_s.if_().read().done5().bit_is_set()
-    }) {
-        in_free(|peripherals| {
-            peripherals.ldma_s.if_clr().write(|w_reg| {
-                w_reg.done5().set_bit()
-            });
-        });
-        ldma_display_rx_interrupt();
-    }
-    if if_in_free(|peripherals| {
-        peripherals.ldma_s.if_().read().done4().bit_is_set()
-    }) {
-        in_free(|peripherals| {
-            peripherals.ldma_s.if_clr().write(|w_reg| {
-                w_reg.done4().set_bit()
-            });
-        });
-        ldma_eusart_interrupt();
-    }
-    if if_in_free(|peripherals| {
-        peripherals.ldma_s.if_().read().error().bit_is_set() 
-    }) {
-        in_free(|peripherals| {
-            panic!(
-                "error on ldma interrupt, ldma_status: chnum {:}, fifolevel: {:}, cherror: {:}, chgrant: {:}, anyreq: {:}, anybusy: {:}",
-                peripherals.ldma_s.status().read().chnum().bits(),
-                peripherals.ldma_s.status().read().fifolevel().bits(),
-                peripherals.ldma_s.status().read().cherror().bits(),
-                peripherals.ldma_s.status().read().chgrant().bits(),
-                peripherals.ldma_s.status().read().anyreq().bit_is_set(),
-                peripherals.ldma_s.status().read().anybusy().bit_is_set(),
-            )
-        });
-    }
-}
-
 #[entry]
 fn main() -> ! {
     unsafe { init_heap(); }
@@ -147,6 +88,7 @@ fn main() -> ! {
             NVIC::unmask(Interrupt::LDMA);
         }
     });
+
     in_free(|peripherals| {
         flash_wakeup(peripherals);
         flash_wait_ready(peripherals);

@@ -1,13 +1,13 @@
 use core::cell::Cell;
 
 use cortex_m::interrupt::CriticalSection;
-use efm32pg23_fix::Peripherals;
+use efm32pg23_fix::{interrupt, Peripherals};
 
 use cortex_m::interrupt::free;
 
 use crate::{if_in_free, in_free};
 
-use super::{ldma_ch_eusart::LDMAchEUSART2, ldma_ch_usart::LDMAchUSART0, ldma_ch_usart_rx::LDMAchUSART0Rx};
+use super::{ldma_ch_eusart::{ldma_eusart_interrupt, LDMAchEUSART2}, ldma_ch_timer::{ldma_nfc_interrupt, LDMAchTimer0}, ldma_ch_usart::{ldma_display_interrupt, LDMAchUSART0}, ldma_ch_usart_rx::{ldma_display_rx_interrupt, LDMAchUSART0Rx}};
 
 pub const LINK_TRUE: u32 = 1 << 1;
 pub const LINKMODE_RELATIVE: u32 = 1;
@@ -43,6 +43,66 @@ pub struct ChLinkData {
     pub linkaddr: u32,
     pub loopcnt: u8,
     pub ien: bool,
+}
+
+
+#[interrupt]
+fn LDMA() {
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done7().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done7().set_bit()
+            });
+        });
+        ldma_nfc_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done6().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done7().set_bit()
+            });
+        });
+        ldma_display_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done5().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done5().set_bit()
+            });
+        });
+        ldma_display_rx_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().done4().bit_is_set()
+    }) {
+        in_free(|peripherals| {
+            peripherals.ldma_s.if_clr().write(|w_reg| {
+                w_reg.done4().set_bit()
+            });
+        });
+        ldma_eusart_interrupt();
+    }
+    if if_in_free(|peripherals| {
+        peripherals.ldma_s.if_().read().error().bit_is_set() 
+    }) {
+        in_free(|peripherals| {
+            panic!(
+                "error on ldma interrupt, ldma_status: chnum {:}, fifolevel: {:}, cherror: {:}, chgrant: {:}, anyreq: {:}, anybusy: {:}",
+                peripherals.ldma_s.status().read().chnum().bits(),
+                peripherals.ldma_s.status().read().fifolevel().bits(),
+                peripherals.ldma_s.status().read().cherror().bits(),
+                peripherals.ldma_s.status().read().chgrant().bits(),
+                peripherals.ldma_s.status().read().anyreq().bit_is_set(),
+                peripherals.ldma_s.status().read().anybusy().bit_is_set(),
+            )
+        });
+    }
 }
 
 #[repr(C)]
@@ -118,6 +178,7 @@ pub fn init_ldma(peripherals: &mut Peripherals) {
         .if_()
         .reset();
 
+    LDMAchTimer0::init(peripherals);
     LDMAchUSART0::init(peripherals);
     LDMAchUSART0Rx::init(peripherals);
     LDMAchEUSART2::init(peripherals);
@@ -187,11 +248,11 @@ pub trait LdmaCh<T: ChObjEnum, const CH: u8> {
                 let ChLinkData { linkaddr, loopcnt, ien } = t.link();
                 in_free(|peripherals| {
                     peripherals
-                    .ldma_s
-                    .if_clr()
-                    .write(|w_reg| unsafe{
-                        w_reg.bits(1 << CH)
-                    });
+                        .ldma_s
+                        .if_clr()
+                        .write(|w_reg| unsafe{
+                            w_reg.bits(1 << CH)
+                        });
                     chx_set_loopcnt!(CH, peripherals, loopcnt);
                     chx_set_linkaddr!(CH, peripherals, linkaddr);
                     if ien {

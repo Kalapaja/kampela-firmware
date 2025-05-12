@@ -1,185 +1,22 @@
 //! NFC packet collector and decoder
 
-use lazy_static::lazy_static;
+use cortex_m::delay;
 use nfca_parser::frame::Frame;
 
 use kampela_system::{
-    in_free, peripherals::ldma_ch_timer::NfcBuffer, CH_TIM0, NFC_BUF_THIRD, PERIPHERALS
+    in_free, peripherals::{ldma::LdmaCh, ldma_ch_timer::{ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers, LDMAchTimer0, NfcReceive, ReceivableTIMER}}
 };
-use cortex_m::interrupt::{free, CriticalSection, Mutex};
+
 use substrate_crypto_light::sr25519::PUBLIC_LEN;
-use efm32pg23_fix::{Interrupt, Peripherals, NVIC};
+use efm32pg23_fix::{Interrupt, NVIC};
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
 use substrate_parser::compacts::find_compact;
 
-use core::{cell::RefCell, ops::DerefMut};
-
 pub const FREQ: u16 = 22;
 const NFC_MIN_VOLTAGE: i32 = 4000; //Affects initiation time, but lower values result in unreliable nfc reception
 
-lazy_static!{
-    #[derive(Debug)]
-    static ref BUFFER_STATUS: Mutex<RefCell<BufferStatus>> = Mutex::new(RefCell::new(BufferStatus::new()));
-}
-
-pub fn ldma_nfc_interrupt() {
-    free(|cs| {
-        let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
-        match buffer_status.pass_if_done7() {
-            Ok(_) => {
-                if !buffer_status.is_write_halted() {
-                    in_free(|peripherals| {
-                        peripherals
-                            .ldma_s
-                            .linkload()
-                            .write(|w_reg| unsafe {
-                                w_reg
-                                    .linkload()
-                                    .bits(1 << CH_TIM0)
-                            });
-                    });
-                }
-            },
-            Err(_) => {}
-        }
-    })
-}
-
-#[derive(Clone, Debug)]
-pub enum BufferStatus {
-    R0W1,
-    R0Wh,
-    R1W2,
-    R1Wh,
-    R2W0,
-    R2Wh,
-    RhW0,
-    RhW1,
-    RhW2,
-}
-
-#[derive(Debug)]
-pub enum BufRegion {
-    Reg0,
-    Reg1,
-    Reg2,
-}
-
-
-#[derive(Debug)]
-pub enum BufferError {
-    UnexpectedIfDone7,
-    UnexpectedReadDone,
-}
-
-impl BufferStatus {
-    pub fn new() -> Self {
-        Self::RhW0
-    }
-    pub fn pass_if_done7(&mut self) -> Result<(), BufferError> {
-        let new_self = match self {
-            Self::R0W1 => Self::R0Wh,
-            Self::R0Wh => return Err(BufferError::UnexpectedIfDone7),
-            Self::R1W2 => Self::R1Wh,
-            Self::R1Wh => return Err(BufferError::UnexpectedIfDone7),
-            Self::R2W0 => Self::R2Wh,
-            Self::R2Wh => return Err(BufferError::UnexpectedIfDone7),
-            Self::RhW0 => Self::R0W1,
-            Self::RhW1 => Self::R1W2,
-            Self::RhW2 => Self::R2W0,
-        };
-        *self = new_self;
-        Ok(())
-    }
-    pub fn pass_read_done(&mut self) -> Result<(), BufferError> {
-        let new_self = match self {
-            Self::R0W1 => Self::RhW1,
-            Self::R0Wh => Self::R1W2,
-            Self::R1W2 => Self::RhW2,
-            Self::R1Wh => Self::R2W0,
-            Self::R2W0 => Self::RhW0,
-            Self::R2Wh => Self::R0W1,
-            Self::RhW0 => return Err(BufferError::UnexpectedReadDone),
-            Self::RhW1 => return Err(BufferError::UnexpectedReadDone),
-            Self::RhW2 => return Err(BufferError::UnexpectedReadDone),
-        };
-        *self = new_self;
-        Ok(())
-    }
-    pub fn read_from(&self) -> Option<BufRegion> {
-        match self {
-            Self::R0W1 => Some(BufRegion::Reg0),
-            Self::R0Wh => Some(BufRegion::Reg0),
-            Self::R1W2 => Some(BufRegion::Reg1),
-            Self::R1Wh => Some(BufRegion::Reg1),
-            Self::R2W0 => Some(BufRegion::Reg2),
-            Self::R2Wh => Some(BufRegion::Reg2),
-            Self::RhW0 => None,
-            Self::RhW1 => None,
-            Self::RhW2 => None,
-        }
-    }
-    pub fn is_write_halted(&self) -> bool {
-        match self {
-            Self::R0W1 => false,
-            Self::R0Wh => true,
-            Self::R1W2 => false,
-            Self::R1Wh => true,
-            Self::R2W0 => false,
-            Self::R2Wh => true,
-            Self::RhW0 => false,
-            Self::RhW1 => false,
-            Self::RhW2 => false,
-        }
-    }
-}
-
-pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[u16; 3*NFC_BUF_THIRD]) {
-    let mut read_from = None;
-    free(|cs| {
-        let buffer_status = BUFFER_STATUS.borrow(cs).borrow();
-        read_from = buffer_status.read_from();
-    });
-    let decoder_input = match read_from {
-        Some(BufRegion::Reg0) => &nfc_buffer[..NFC_BUF_THIRD],
-        Some(BufRegion::Reg1) => &nfc_buffer[NFC_BUF_THIRD..2*NFC_BUF_THIRD],
-        Some(BufRegion::Reg2) => &nfc_buffer[2*NFC_BUF_THIRD..],
-        None => return,
-    };
-    let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, |frame| frame_selected(&frame));
-
-    for frame in frames.into_iter() {
-        if let Frame::Standard(standard_frame) = frame {
-            let serialized_packet = standard_frame[standard_frame.len() - PACKET_SIZE..].try_into().expect("static length, always fits");
-            in_free(|peripherals| {
-                let mut external_psram = ExternalPsram{peripherals};
-                let packet = Packet::deserialize(serialized_packet);
-                collector.add_packet(&mut external_psram, packet);
-            });
-        }
-        else {unreachable!()}
-    }
-
-    free(|cs| {
-        let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
-        let was_write_halted = buffer_status.is_write_halted();
-        buffer_status.pass_read_done().expect("to do");
-        if was_write_halted & ! buffer_status.is_write_halted() {
-            let mut peripherals = PERIPHERALS.borrow(cs).borrow_mut();
-            peripherals.ldma_s.linkload().write(|w_reg| unsafe { w_reg.linkload().bits(1 << CH_TIM0) });
-        }
-    });
-}
-
-fn frame_selected(frame: &Frame) -> bool {
-    if let Frame::Standard(standard_frame) = frame {
-        if standard_frame.len() >= PACKET_SIZE {true}
-        else {false}
-    }
-    else {false}
-}
 
 pub enum NfcCollector {
     Empty,
@@ -327,22 +164,55 @@ pub enum NfcStateOutput {
 
 
 pub struct NfcReceiver {
-    buffer: NfcBuffer,
+    buffer: NfcReceive,
     collector: NfcCollector,
     state: NfcState,
 }
 
 impl NfcReceiver {
     pub fn new() -> Self {
+        LDMAchTimer0::set_static_cell(Some(ReceivableTIMER::NfcReceive(NfcReceive::new())));
+        ldma_nfc_set_next(NfcReceive::new());
+
         Self {
-            buffer: NfcBuffer::new(),
+            buffer: NfcReceive::new(),
             collector: NfcCollector::new(),
             state: NfcState::Operational(0),
         }
     }
 
+    fn turn_nfc_collector(&mut self) {
+        if let Some(d) = ldma_nfc_take_done() {
+            ldma_nfc_set_next(core::mem::replace(&mut self.buffer, d));
+        } else {
+            return
+        };
+
+        let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(
+            &(*self.buffer.buffer),
+            |frame| {
+                if let Frame::Standard(standard_frame) = frame {
+                    if standard_frame.len() >= PACKET_SIZE {true}
+                    else {false}
+                } else {false}
+            }
+        );
+    
+        for frame in frames.into_iter() {
+            if let Frame::Standard(standard_frame) = frame {
+                let serialized_packet = standard_frame[standard_frame.len() - PACKET_SIZE..].try_into().expect("static length, always fits");
+                in_free(|peripherals| {
+                    let mut external_psram = ExternalPsram{peripherals};
+                    let packet = Packet::deserialize(serialized_packet);
+                    self.collector.add_packet(&mut external_psram, packet);
+                });
+            }
+            else {unreachable!()}
+        }
+    }
+
     fn process(&mut self) -> Option<Result<NfcResult, NfcError>> {
-        turn_nfc_collector_correctly(&mut self.collector, &self.buffer);
+        self.turn_nfc_collector();
 
         match self.collector {
             NfcCollector::Done(ref a) => {
@@ -427,13 +297,17 @@ impl NfcReceiver {
                     }
                 }
             },
-            NfcCollector::Empty => Some(Ok(NfcResult::Empty)),
+            NfcCollector::Empty => {
+                    Some(Ok(NfcResult::Empty))
+            },
             NfcCollector::InProgress(_) => None,
         }
     }
 
     pub fn advance(&mut self, voltage: i32) -> Option<Result<NfcStateOutput, NfcError>> {
         if voltage < NFC_MIN_VOLTAGE { return None }
+        if !LDMAchTimer0::busy() {return None} // todo: check if no nfc packets were sent
+
         match self.state {
             NfcState::Operational(i) => {
                 let res = self.process();
@@ -458,7 +332,12 @@ impl NfcReceiver {
     }
 }
 
-
+impl Drop for NfcReceiver {
+    fn drop(&mut self) {
+        // receiving should be done at this moment, otherwise will error
+        purge_ldma_nfc_buffers();
+    }
+}
 
 // if got_transaction.is_some() {
 

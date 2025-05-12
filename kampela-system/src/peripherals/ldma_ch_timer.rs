@@ -1,191 +1,179 @@
 use core::{cell::Cell, ptr::addr_of};
 
 use alloc::boxed::Box;
-use cortex_m::interrupt::{free, Mutex};
+use cortex_m::interrupt::{free, CriticalSection, Mutex};
 
 use crate::{in_free, peripherals::ldma::*};
 
 const XFERCNT_2047: u32 = (2048 - 1) << 4; // one less than desired 2048
 const DONEIEN_TRUE: u32 = 1 << 20;
 const SRCINC_NONE: u32 = 3 << 24;
-const LINK_DESCRIPTORS: u32 = SIZE_HALFWORD | SRCINC_NONE | DONEIEN_TRUE | XFERCNT_2047;
+const LINK_DESCRIPTORS: u32 = SIZE_HALFWORD | SRCINC_NONE | XFERCNT_2047;
 
 pub const CH_TIM0: u8 = 7;
 const TIMER0_CC0_ICF: u32 = 0x40048074;
 
 pub const NFC_BUF_THIRD: usize = 2048;
 
-static NFC_BUFFER_EXIST: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
+static LDMA_TIMER0_RECEIVABLE: Mutex<LDMAchTimer0> = Mutex::new(LDMAchTimer0(Cell::new(None)));
+static LDMA_TIMER0_DONE: Mutex<Cell<Option<NfcReceive>>> = Mutex::new(Cell::new(None));
+static LDMA_TIMER0_NEXT: Mutex<Cell<Option<NfcReceive>>> = Mutex::new(Cell::new(None));
 
-pub struct NfcBuffer { // Boxed data is never moved
-    pub buffer: Box<[u16; 3*NFC_BUF_THIRD]>,
-    transfer_block: Box<[Descriptor; 3]>
+pub fn ldma_nfc_interrupt() {
+    in_free(|peripherals| {
+        peripherals
+            .ldma_s
+            .ien()
+            .modify(|r_reg, w_reg| unsafe {
+                w_reg
+                    .chdone().bits(r_reg.chdone().bits() & !(1 << CH_TIM0))  
+            });
+    });
+    free(|cs| {
+        ldma_nfc_switch_buffer(cs);
+    })
+
 }
 
-impl core::ops::Deref for NfcBuffer {
-    type Target = [u16; 3*NFC_BUF_THIRD];
+static LDMA_TIMER0_TRIG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
+fn ldma_nfc_switch_buffer(cs: &CriticalSection) {
+    LDMA_TIMER0_TRIG.borrow(cs).set(true);
+    if let Some(done) = LDMA_TIMER0_DONE.borrow(cs).take() {
+        LDMA_TIMER0_DONE.borrow(cs).set(Some(done))
+    } else {
+        let next = LDMA_TIMER0_NEXT.borrow(cs).take();
+        let done = LDMA_TIMER0_RECEIVABLE.borrow(cs).replace(next.map(|n| ReceivableTIMER::NfcReceive(n)));
+        LDMA_TIMER0_DONE.borrow(cs).set(done.map(|done| match done { ReceivableTIMER::NfcReceive(d) => d}));
+    }
+}
+
+pub fn is_trig() -> bool {
+    free(|cs| {
+        LDMA_TIMER0_TRIG.borrow(cs).take()
+    })
+}
+
+pub fn ldma_nfc_take_done() -> Option<NfcReceive> {
+    free(|cs| {
+        let done = LDMA_TIMER0_DONE.borrow(cs).take();
+        if done.is_none() {
+            return None
+        };
+        if LDMAchTimer0::done() {
+            ldma_nfc_switch_buffer(cs);
+        }
+        done
+    })
+}
+
+pub fn ldma_nfc_set_next(new_next: NfcReceive) {
+    free(|cs| {
+        if LDMA_TIMER0_NEXT.borrow(cs).take().is_none() {
+            LDMA_TIMER0_NEXT.borrow(cs).set(Some(new_next))
+        } else {
+            unreachable!("LDMA Timer0 channel next buffer should be switched at this moment")
+        }
+        if LDMAchTimer0::done() {
+            ldma_nfc_switch_buffer(cs);
+        }
+    })
+}
+
+pub fn purge_ldma_nfc_buffers() {
+    free(|cs| {
+        LDMA_TIMER0_RECEIVABLE.borrow(cs).take();
+        LDMA_TIMER0_NEXT.borrow(cs).take();
+        LDMA_TIMER0_DONE.borrow(cs).take();
+    })
+}
+
+pub struct LDMAchTimer0(Cell<Option<ReceivableTIMER>>);
+
+impl LdmaCh<ReceivableTIMER, CH_TIM0> for LDMAchTimer0 {
+    fn init(peripherals: &efm32pg23_fix::Peripherals) {
+        peripherals
+            .ldmaxbar_s
+            .ch7_reqsel()
+            .write(|w_reg| unsafe {
+                w_reg
+                    .sigsel().bits(0) // _LDMAXBAR_CH_REQSEL_SIGSEL_TIMER0CC0
+                    .sourcesel().bits(2) // _LDMAXBAR_CH_REQSEL_SOURCESEL_TIMER0
+            }
+        );
+    }
+    fn get_static<'a>(cs: &'a cortex_m::interrupt::CriticalSection) -> &'a Self {
+        LDMA_TIMER0_RECEIVABLE.borrow(cs)
+    }
+    fn get_cell<'a>(&'a self) -> &'a Cell<Option<ReceivableTIMER>> {
+        &self.0
+    }
+}
+
+impl Drop for LDMAchTimer0 {
+    fn drop(&mut self) {
+        self.take();
+    }
+}
+
+pub enum ReceivableTIMER {
+    NfcReceive(NfcReceive),
+}
+
+impl ChObjEnum for ReceivableTIMER {
+    fn link(&mut self) -> ChLinkData {
+        match self {
+            ReceivableTIMER::NfcReceive(a) => {
+                a.link()
+            },
+        }
+    }
+    fn unlink(&mut self) {
+        match self {
+            ReceivableTIMER::NfcReceive(a) => {
+                a.unlink();
+            },
+        }
+    }
+}
+
+pub struct NfcReceive { // Boxed data is never moved
+    pub buffer: Box<[u16; NFC_BUF_THIRD]>,
+    transfer_block: Box<Descriptor>
+}
+
+impl core::ops::Deref for NfcReceive {
+    type Target = [u16; NFC_BUF_THIRD];
 
     fn deref(&self) -> &Self::Target {
         &self.buffer
     }
 }
 
-impl NfcBuffer {
+impl NfcReceive {
     pub fn new() -> Self {
-        if free(|cs| {
-            NFC_BUFFER_EXIST.borrow(cs).replace(true)
-        }) {
-            panic!("can't be more than one instance of nfc buffer")
-        }
+        let buffer = Box::new([1; NFC_BUF_THIRD]);
+        let transfer_block = Box::new(
+            Descriptor {
+                ctrl: LINK_DESCRIPTORS,
+                source: TIMER0_CC0_ICF,
+                dest: addr_of!(*buffer) as u32,
+                link: 0,
+            },
+        );
 
-        let buffer = Box::new([1; 3*NFC_BUF_THIRD]);
-        let transfer_block = Box::new([
-            Descriptor {
-                ctrl: LINK_DESCRIPTORS,
-                source: TIMER0_CC0_ICF,
-                dest: addr_of!(buffer[0]) as u32,
-                link: LINK_NEXT,
-            },
-            Descriptor {
-                ctrl: LINK_DESCRIPTORS,
-                source: TIMER0_CC0_ICF,
-                dest: addr_of!(buffer[NFC_BUF_THIRD]) as u32,
-                link: LINK_NEXT,
-            },
-            Descriptor {
-                ctrl: LINK_DESCRIPTORS,
-                source: TIMER0_CC0_ICF,
-                dest: addr_of!(buffer[2*NFC_BUF_THIRD]) as u32,
-                link: LINK_ANTE_PREV,
-            },
-        ]);
-        let a = Self {
+        Self {
             buffer,
             transfer_block
-        };
-        a.init_ldma_nfc();
-        a
+        }
     }
 
-    fn init_ldma_nfc(&self) {
-        in_free(|peripherals| {
-            // start ldma transfer
-            peripherals
-                .ldma_s
-                .if_()
-                .write(|w_reg| {
-                    w_reg
-                        .done7().clear_bit()
-                }
-            );
-
-            peripherals
-                .ldmaxbar_s
-                .ch7_reqsel()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .sigsel().bits(0) // _LDMAXBAR_CH_REQSEL_SIGSEL_TIMER0CC0
-                        .sourcesel().bits(2) // _LDMAXBAR_CH_REQSEL_SOURCESEL_TIMER0
-                }
-            );
-
-            peripherals
-                .ldma_s
-                .ch7_loop()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .loopcnt().bits(0)
-                }
-            );
-
-            peripherals
-                .ldma_s
-                .ch7_cfg()
-                .write(|w_reg| {
-                    w_reg
-                        .arbslots().one()
-                        .srcincsign().positive()
-                        .dstincsign().positive()
-                }
-            );
-            
-            peripherals
-                .ldma_s
-                .ch7_link()
-                .write(|w_reg| {
-                    w_reg
-                        .link().clear_bit();
-                    unsafe {
-                        w_reg.linkaddr().bits(addr_of!(self.transfer_block[0]) as u32 >> 2)
-                    }
-                }
-            );
-
-            // there starts a critical section
-            peripherals
-                .ldma_s
-                .ien()
-                .modify(|r_reg, w_reg| unsafe {
-                    w_reg
-                        .chdone().bits(r_reg.chdone().bits() | (1 << CH_TIM0))
-                }
-            );
-
-            peripherals
-                .ldma_s
-                .synchwen()
-                .reset(); // default values, i.e. 0 for clr_off, clr_on, set_off, set_on
-
-            peripherals
-                .ldma_s
-                .chdone()
-                .write(|w_reg| {
-                    w_reg
-                        .chdone7().clear_bit()
-                }
-            );
-
-            peripherals
-                .ldma_s
-                .linkload()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .linkload().bits(1 << CH_TIM0)
-                }
-            );
-        });
+    fn link(&self) -> ChLinkData {
+        ChLinkData {
+            linkaddr: addr_of!(*self.transfer_block) as u32 >> 2,
+            loopcnt: 0,
+            ien: true, // to switch buffer
+        }
     }
-}
 
-impl Drop for NfcBuffer {
-    fn drop(&mut self) {
-        in_free(|peripherals| {
-            peripherals
-                .ldmaxbar_s
-                .ch7_reqsel()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .sourcesel().bits(0)
-                }
-            );
-            peripherals
-                .ldma_s
-                .ien()
-                .modify(|r_reg, w_reg| unsafe {
-                    w_reg
-                        .chdone().bits(r_reg.chdone().bits() & !(1 << CH_TIM0))
-                }
-            );
-            peripherals
-                .ldma_s
-                .chdis()
-                .write(|w_reg| unsafe {
-                    w_reg
-                        .chdis().bits(1 << CH_TIM0)
-                });
-        });
-        free(|cs| {
-            NFC_BUFFER_EXIST.borrow(cs).set(false);
-        })
-    }
+    fn unlink(&self) {}
 }
