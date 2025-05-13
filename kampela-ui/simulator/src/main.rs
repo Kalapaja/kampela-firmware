@@ -18,17 +18,17 @@ use mnemonic_external::regular::InternalWordList;
 const SLOW_UPDATE_TIME: Duration = Duration::new(1, 0);
 const BLINK_UPDATE_TIME: Duration = Duration::new(0, 5000000);
 const SLOW_UPDATE_ITER: usize = 8;
-const FAST_UPDATE_TIME: Duration = Duration::new(1, 0);
-const ULTRAFAST_UPDATE_TIME: Duration = Duration::new(1, 0);
-const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
+const FAST_UPDATE_TIME: Duration = Duration::new(0, 300000000);
+const ULTRAFAST_UPDATE_TIME: Duration = Duration::new(0, 300000000);
+const UPDATE_DELAY_TIME: Duration = Duration::new(0, 100000000);
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
 use kampela_ui::{
-    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    data_state::{AppStateInit, DataInit, NFCState, StorageState},
     display_def::*,
     platform::{PinCode, Platform},
-    uistate::{UIState, UpdateRequest, UpdateRequestMutate},
+    uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate},
 };
 
 #[derive(Debug)]
@@ -201,8 +201,8 @@ fn main() {
 */
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state);
-    let display = SimulatorDisplay::new(SCREEN_SIZE);
-    let mut state = UIState::new(desktop, display, &mut h);
+    let mut display = SimulatorDisplay::new(SCREEN_SIZE);
+    let mut state = UIState::new(desktop, &mut h);
 
     // Draw
     let output_settings = OutputSettingsBuilder::new()
@@ -223,72 +223,71 @@ fn main() {
     loop {
         // touch event
         if let Some(point) = touches.pop_front() {
-            update.propagate(state.handle_tap(point, &mut h));
+            update.propagate(state.handle_event(Event::Tap(point), &mut h));
         };
         // display event; it would be delayed
         if let Some(u) = update.take() {
             sleep(UPDATE_DELAY_TIME);
-            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
-            let mut previous = state.display.clone();
-            match state.render(is_clear_update, &mut h) {
+            let mut previous = display.clone();
+            match state.render(&mut display, &mut h) {
                 Ok(a) => update.propagate(a),
                 Err(e) => println!("{:?}", e),
             };
 
             match u {
-                UpdateRequest::Hidden => {
-                    window.update(&state.display);
-                    println!("skip {} events in hidden update", window.events().count());
+                UpdateRequest::Invocate => {
+                    update.propagate(state.handle_event(Event::Invocation, &mut h));
+                    println!("invocation event registered");
                 },
                 UpdateRequest::Slow => {
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     sleep(SLOW_UPDATE_TIME);
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     for _i in 0..SLOW_UPDATE_ITER {
-                        invert_display(&mut state.display);
-                        window.update(&state.display);
+                        invert_display(&mut display);
+                        window.update(&display);
                         sleep(BLINK_UPDATE_TIME);
-                        invert_display(&mut state.display);
-                        window.update(&state.display);
+                        invert_display(&mut display);
+                        window.update(&display);
                         sleep(BLINK_UPDATE_TIME);
                     }
 
-                    window.update(&state.display);
+                    window.update(&display);
                     println!("skip {} events in slow update", window.events().count());
                 },
                 UpdateRequest::Fast => {
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     sleep(FAST_UPDATE_TIME);
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     println!("fast update");
                 },
                 UpdateRequest::UltraFast => {
-                    window.update(&state.display);
+                    window.update(&display);
                     println!("ultrafast update");
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
                 UpdateRequest::UltraFastSelective => {
-                    draw_selective(&mut previous, &state.display, None);
-                    state.display = previous;
-                    window.update(&state.display);
+                    draw_selective(&mut previous, &display, None);
+                    display = previous;
+                    window.update(&display);
                     println!("ultrafast selective update");
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
                 UpdateRequest::Part(ref a) => {
-                    draw_selective(&mut previous, &state.display, Some(a));
-                    state.display = previous;
-                    window.update(&state.display);
+                    draw_selective(&mut previous, &display, Some(a));
+                    display = previous;
+                    window.update(&display);
                     println!("part update with white of area {:?}", a);
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
             }
         }
         // this collects ui events, do not remove or simulator will crash
-        window.update(&state.display);
+        //window.update(&display); // removed and didn't crash
 
         // register input (only pushes are valid in Kampela)
         for event in window.events() {

@@ -124,8 +124,8 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 8000;
-const FULL_REFRESH_POWER: i32 = 12000;
+const FAST_REFRESH_POWER: i32 = 4000;
+const FULL_REFRESH_POWER: i32 = 4000;
 const PART_REFRESH_POWER: i32 = 4000;
 
 const SEQUENCIAL_SELECTIVE_LIMIT: usize = 5; // more sequencial selective refreshes cause to leave traces, less cause artefacts

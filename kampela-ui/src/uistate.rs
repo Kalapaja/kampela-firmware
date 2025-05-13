@@ -328,6 +328,7 @@ impl <P: Platform> UIState<P> {
             },
             Screen::Locked => {
                 let linestyle = PrimitiveStyle::with_stroke(BinaryColor::On, 5);
+                display.clear(BinaryColor::Off)?;
                 Line::new(
                     Point::new(0, 0),
                     Point::new(SCREEN_SIZE_X as i32, SCREEN_SIZE_Y as i32),

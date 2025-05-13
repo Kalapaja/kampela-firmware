@@ -151,7 +151,8 @@ impl<P: Platform> ViewScreen for Backup<P> {
         Self: 'a,
     {
         let mut request = None;
-        
+        target.clear(BinaryColor::Off)?;
+
         match self.state {
             BackupState::ShowSeed => {
                 self.draw_backup_screen(target)?;

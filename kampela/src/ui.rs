@@ -1,10 +1,9 @@
 //! Everything high-level related to interfacing with user
 use alloc::{borrow::ToOwned, string::String};
-use cortex_m::interrupt::free;
 use kampela_system::{
     devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::TOUCHES};
+use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::take_touch_point};
 use kampela_ui::{
     platform::Platform,
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
@@ -47,6 +46,17 @@ impl UI {
     pub fn handle_address(&mut self, addr: [u8; 76]) {
         self.update_request.propagate(self.state.handle_address(addr));
     }
+
+    fn update_request_to_display_mode(&mut self, is_tapped: bool) -> Option<UpdateMode> {
+        match self.update_request.take() {
+            Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Bounds::new_fullscreen(), is_tapped)),
+            Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Bounds::new_fullscreen(), is_tapped)),
+            Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Bounds::new_fullscreen(), is_tapped)),
+            Some(UpdateRequest::Part(r)) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::from_rectangle(r), is_tapped)),
+            Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::new_fullscreen(), is_tapped)),
+            _ => None
+        }
+    }
 }
 
 impl AsyncOperation for UI {
@@ -75,12 +85,7 @@ impl AsyncOperation for UI {
         match self.ui_threads.turn() {
             UIStatus::UIUpdate(tapped) => {
                 if !*tapped {
-                    let mut point_option = None;
-                    free(|cs| {
-                        let mut touchse = TOUCHES.borrow(cs).borrow_mut();
-                        point_option = touchse.take_touch_point();
-                    });
-                    if let Some(point) = point_option {
+                    if let Some(point) = take_touch_point() {
                         let u = self.state.handle_event(Event::Tap(point), &mut ());
                         if u.is_some() { *tapped = true; } // one tap handle per update
                         self.update_request.propagate(u);
@@ -88,22 +93,16 @@ impl AsyncOperation for UI {
                     }
                 }
 
-                let m = match self.update_request.take() { 
-                    Some(UpdateRequest::Invocate) => {
-                        let u = self.state.handle_event(Event::Invocation, &mut ());
-                        if u.is_none() { *tapped = false; }
-                        self.update_request.propagate(u);
-                        None
-                    },
-                    Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Bounds::new_fullscreen(), *tapped)),
-                    Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Bounds::new_fullscreen(), *tapped)),
-                    Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Bounds::new_fullscreen(), *tapped)),
-                    Some(UpdateRequest::Part(r)) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::from_rectangle(r), *tapped)),
-                    Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::new_fullscreen(), *tapped)),
-                    _ => None
+                if matches!(self.update_request, Some(UpdateRequest::Invocate)) {
+                    let u = self.state.handle_event(Event::Invocation, &mut ());
+                    if u.is_none() { *tapped = false; }
+                    self.update_request.propagate(u);
                 };
+
+                let t = *tapped;
+                let m = self.update_request_to_display_mode(t);
                 self.frame_buffer.propagate(m);
-                if *tapped {
+                if t {
                     self.ui_threads.sync(); // no need to poll
                 }
                 None

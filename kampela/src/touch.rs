@@ -62,6 +62,13 @@ lazy_static! {
     );
 }
 
+pub fn take_touch_point() -> Option<Point> {
+    free(|cs| {
+        let mut touchse = TOUCHES.borrow(cs).borrow_mut();
+        touchse.take_touch_point()
+    })
+}
+
 pub struct Touches(VecDeque<Point>);
 
 impl Touches {
