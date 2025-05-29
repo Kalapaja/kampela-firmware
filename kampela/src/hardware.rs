@@ -1,6 +1,6 @@
 use alloc::{string::String, vec::Vec};
 use kampela_ui::platform::{PinCode, Platform};
-use substrate_crypto_light::sr25519::Public;
+use substrate_crypto_light::ecdsa::{Public, ChainCode};
 use kampela_system::{
     devices::{
         flash::{read_encoded_entropy, store_encoded_entopy},
@@ -71,7 +71,7 @@ impl Platform for Hardware {
     }
 
     fn public(&self) -> Option<Public> {
-        self.pair().map(|p| p.public())
+        self.pair().map(|p| p.public().unwrap())
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
@@ -152,7 +152,8 @@ impl Platform for Hardware {
 
         let signature = self.pair()
             .expect("entropy should be stored at this point")
-            .sign_external_rng(&data_to_sign, &mut Self::rng(&mut ()));
+            .sign(&data_to_sign)
+            .unwrap();
 
         let mut signature_with_id: [u8; 65] = [1; 65];
         signature_with_id[1..].copy_from_slice(&signature.0);

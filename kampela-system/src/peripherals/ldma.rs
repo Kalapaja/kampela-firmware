@@ -1,4 +1,4 @@
-use core::cell::Cell;
+use core::{cell::Cell, mem::size_of};
 
 use cortex_m::interrupt::CriticalSection;
 use efm32pg23_fix::{interrupt, Peripherals};

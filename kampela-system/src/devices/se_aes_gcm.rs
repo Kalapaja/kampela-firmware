@@ -5,7 +5,7 @@ use core::ptr::addr_of;
 
 use efm32pg23_fix::Peripherals;
 
-use substrate_crypto_light::sr25519::Public;
+use substrate_crypto_light::ecdsa::Public;
 
 use crate::peripherals::se_command::{
     se_command_aes_gsm_decrypt, DataTransfer, RxError, SeCommand, SE_COMMAND_AES_GCM_ENCRYPT,

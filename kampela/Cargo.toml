@@ -17,8 +17,8 @@ lazy_static = { version = "1.4.0", default-features = false, features = ["spin_n
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
-substrate-crypto-light = { version = "0.1.0", default-features = false, features = ["sr25519"] }
-substrate_parser = { version = "0.7.0", default-features = false }
+substrate-crypto-light = { path = "../../substrate-crypto-light", default-features = false, features = ["ecdsa"] }
+substrate_parser = { version = "0.7.1", default-features = false }
 
 [profile.release]
 codegen-units = 1

@@ -8,7 +8,7 @@ clap = { version = "4.2.1", features = ["derive"] }
 embedded-graphics-core = "0.3.3"
 embedded-graphics-simulator = { version = "0.3.0" }
 mnemonic-external = { version = "0.1.0", default-features = false, features = ["sufficient-memory"] }
-substrate-crypto-light = { version = "0.1.0", default-features = false, features = ["sr25519"] }
+substrate-crypto-light = { path = "../../../substrate-crypto-light", default-features = false, features = ["ecdsa"] }
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

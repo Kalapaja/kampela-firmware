@@ -7,7 +7,7 @@ use std::{string::String, vec::Vec};
 
 use rand::{CryptoRng, Rng};
 
-use substrate_crypto_light::sr25519::{Pair, Public};
+use substrate_crypto_light::ecdsa::{ChainCode, PairWithChainCode, Public};
 use substrate_parser::{TransactionUnmarkedParsed, ShortSpecs};
 
 use mnemonic_external::AsWordList;
@@ -74,10 +74,10 @@ pub trait Platform {
         entropy
     }
 
-    fn pair(&self) -> Option<Pair> {
+    fn pair(&self) -> Option<PairWithChainCode> {
         let e = self.entropy()?;
         if e.is_empty() { None } else {
-            Pair::from_entropy_and_pwd(&e, "").ok()
+            PairWithChainCode::from_entropy_and_pwd(&e, "").ok()
         }
     }
 

@@ -10,7 +10,7 @@ use embedded_graphics_simulator::{
 use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
-use substrate_crypto_light::sr25519::Public;
+use substrate_crypto_light::ecdsa::Public;
 use mnemonic_external::regular::InternalWordList;
 
 /// Amount of time required for full screen update; debounce
@@ -143,7 +143,7 @@ impl Platform for DesktopSimulator {
     }
 
     fn public(&self) -> Option<Public> {
-        self.pair().map(|pair| pair.public())
+        self.pair().map(|pair| pair.public().unwrap())
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {

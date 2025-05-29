@@ -17,6 +17,7 @@ mod stdwrap {
     pub use std::vec::Vec;
 }
 
+use minicbor::data::Tag;
 use mnemonic_external::WordSet;
 use stdwrap::*;
 
@@ -32,6 +33,9 @@ use embedded_graphics::{
     },
     Drawable,
 };
+
+use substrate_crypto_light::ecdsa::PairWithChainCode;
+use ur::ur;
 
 use crate::{dialog::Dialog, display_def::*, pin::pin::Pincode, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
 
@@ -384,9 +388,9 @@ impl <P: Platform> UIState<P> {
                 qr::draw(&self.platform.signature(), display)?
             },
             Screen::QRAddress => {
-                let line1 = format!("substrate:0x{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown").0));
-
-                qr::draw(&line1.as_bytes(), display)?
+                let data = hdkey(&self.platform.pair().unwrap()).unwrap();
+                let code = ur::encode(&data, "crypto-hdkey");
+                qr::draw(&code.as_bytes(), display)?
             },
         }
         self.switch_screen(new_screen, h);
@@ -394,4 +398,36 @@ impl <P: Platform> UIState<P> {
     }
 }
 
-
+fn hdkey(pair_with_chain_code: &PairWithChainCode) -> Result<Vec<u8>, minicbor::encode::Error<core::convert::Infallible>> {
+    let mut e = minicbor::Encoder::new(Vec::new());
+    let public = &pair_with_chain_code.public().unwrap().0;
+    let fingerprint = pair_with_chain_code.fingerprint().unwrap();
+    
+    e.tag(Tag::new(303))?.map(4)?
+        // 3 key-data
+        .u8(3)?.bytes(public)?
+        // 4 chain-code
+        .u8(4)?.bytes(&pair_with_chain_code.chain_code())?
+        // 5 coin-info
+        .u8(5)?.tag(Tag::new(305))?.map(1)?
+            // type
+            .u8(1)?.u8(0x3c)?
+        // origin
+        .u8(6)?.tag(Tag::new(304))?.map(2)?
+            // components
+            .u8(1)?.array(8)?
+                .u8(44)?
+                .bool(true)?
+                .u8(60)?
+                .bool(true)?
+                .u8(0)?
+                .bool(true)?
+                .u8(0)?
+                .bool(false)?
+            // source-fingerprint
+            .u8(2)?.u32(fingerprint)?;
+        // parent-fingerprint
+        //.u8(8)?.u32(fingerprint)?; // unnecessary
+ 
+    Ok(e.into_writer())
+}

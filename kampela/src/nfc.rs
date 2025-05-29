@@ -6,7 +6,7 @@ use kampela_system::{
     devices::power::voltage, in_free, peripherals::{ldma::LdmaCh, ldma_ch_timer::{ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers, LDMAchTimer0, NfcReceive, ReceivableTIMER}}
 };
 
-use substrate_crypto_light::sr25519::PUBLIC_LEN;
+use substrate_crypto_light::ecdsa::PUBLIC_LEN;
 use efm32pg23_fix::{Interrupt, NVIC};
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
