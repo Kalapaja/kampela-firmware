@@ -1,6 +1,6 @@
 use alloc::{string::String, vec::Vec};
 use kampela_ui::platform::{PinCode, Platform};
-use substrate_crypto_light::ecdsa::{Public, ChainCode};
+use substrate_crypto_light::ecdsa::{ChainCode, Public, Signature};
 use kampela_system::{
     devices::{
         flash::{read_encoded_entropy, store_encoded_entopy},
@@ -11,13 +11,14 @@ use kampela_system::{
     psram_mnemonic::PsramWordList,
 };
 
-use crate::nfc::NfcTransactionPsramAccess;
+use crate::nfc::{NfcEthSignRequestPsramAccess, NfcTransactionPsramAccess};
 
 pub struct Hardware {
     pin: PinCode,
     protected: Option<Protected>,
     address: Option<[u8; 76]>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
+    eth_sign_request_psram_access: Option<NfcEthSignRequestPsramAccess>,
 }
 
 impl Hardware {
@@ -30,6 +31,7 @@ impl Hardware {
             protected,
             address: None,
             transaction_psram_access: None,
+            eth_sign_request_psram_access: None,
         }
     }
 }
@@ -40,6 +42,8 @@ impl Platform for Hardware {
     type AsWordList = PsramWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
+    type NfcEthSignRequest = NfcEthSignRequestPsramAccess;
+
     fn get_wordlist() -> Self::AsWordList {
         PsramWordList
     }
@@ -66,8 +70,9 @@ impl Platform for Hardware {
         }
     }
 
-    fn read_entropy(&mut self) {
+    fn read_entropy(&mut self) -> bool {
         self.protected = read_encoded_entropy();
+        self.protected.is_some()
     }
 
     fn public(&self) -> Option<Public> {
@@ -84,6 +89,10 @@ impl Platform for Hardware {
 
     fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
         self.transaction_psram_access = Some(transaction);
+    }
+
+    fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest) {
+        self.eth_sign_request_psram_access = Some(sign_request);
     }
 
 
@@ -136,6 +145,20 @@ impl Platform for Hardware {
         Some(extensions)
     }
 
+    fn ethereum(&mut self) -> Option<String> {
+        let eth_sign_request_psram_access = match self.eth_sign_request_psram_access {
+            Some(ref a) => a,
+            None => return None
+        };
+
+        let sign_data = read_from_psram(&eth_sign_request_psram_access.sign_data);
+        let request_id= read_from_psram(&eth_sign_request_psram_access.request_id);
+        let mut out = hex::encode(sign_data);
+        out.push_str("\n");
+        out.push_str(&hex::encode(request_id));
+        Some(out)
+    }
+
     fn signature(&mut self) -> [u8; 130] {
         let transaction_psram_access = match self.transaction_psram_access {
             Some(ref a) => a,
@@ -165,6 +188,24 @@ impl Platform for Hardware {
         signature_with_id_bytes
     }
 
+    fn eth_signature(&mut self) -> Vec<u8> {
+        let eth_sign_request_psram_access = match self.eth_sign_request_psram_access {
+            Some(ref a) => a,
+            None => panic!("qr generation failed")
+        };
+
+        let sign_data = read_from_psram(&eth_sign_request_psram_access.sign_data);
+
+        let signature = self.pair()
+            .expect("entropy should be stored at this point")
+            .sign(&sign_data)
+            .unwrap();
+
+        let request_id= read_from_psram(&eth_sign_request_psram_access.request_id);
+        let cbor = eth_signature(signature, request_id.try_into().unwrap()).unwrap();
+        cbor
+    }
+
     fn address(&mut self) -> &[u8; 76] {
         if let Some(ref a) = self.address {
             a
@@ -173,4 +214,16 @@ impl Platform for Hardware {
         }
     }
 
+}
+
+
+fn eth_signature(signature: Signature, request_id: [u8; 16]) -> Result<Vec<u8>, minicbor::encode::Error<core::convert::Infallible>> {
+    let mut e = minicbor::Encoder::new(Vec::new());
+    e.map(2)?
+        // 1 request-id
+        .u8(1)?.bytes(&request_id)?
+        // 2 signature
+        .u8(2)?.bytes(&signature.0)?;
+
+    Ok(e.into_writer())
 }

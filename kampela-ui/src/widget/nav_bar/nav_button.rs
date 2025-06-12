@@ -32,6 +32,12 @@ impl NavButton {
 			widget,
 		}
 	}
+    pub fn replace_label(&mut self, label: &'static str) -> &'static str {
+        core::mem::replace(&mut self.label, label)
+    }
+    pub fn get_label(&self) -> &'static str {
+        self.label
+    }
 }
 
 impl View for NavButton {

@@ -35,34 +35,21 @@ pub fn ldma_nfc_interrupt() {
 
 }
 
-static LDMA_TIMER0_TRIG: Mutex<Cell<bool>> = Mutex::new(Cell::new(false));
 fn ldma_nfc_switch_buffer(cs: &CriticalSection) {
-    LDMA_TIMER0_TRIG.borrow(cs).set(true);
     if let Some(done) = LDMA_TIMER0_DONE.borrow(cs).take() {
         LDMA_TIMER0_DONE.borrow(cs).set(Some(done))
-    } else {
-        let next = LDMA_TIMER0_NEXT.borrow(cs).take();
-        let done = LDMA_TIMER0_RECEIVABLE.borrow(cs).replace(next.map(|n| ReceivableTIMER::NfcReceive(n)));
-        LDMA_TIMER0_DONE.borrow(cs).set(done.map(|done| match done { ReceivableTIMER::NfcReceive(d) => d}));
-    }
-}
-
-pub fn is_trig() -> bool {
-    free(|cs| {
-        LDMA_TIMER0_TRIG.borrow(cs).take()
-    })
+    } else if let Some(next) = LDMA_TIMER0_NEXT.borrow(cs).take() {
+        if let Some(done) = LDMA_TIMER0_RECEIVABLE.borrow(cs).replace(Some(ReceivableTIMER::NfcReceive(next))) {
+            LDMA_TIMER0_DONE.borrow(cs).set(match done { ReceivableTIMER::NfcReceive(d) => Some(d) });
+        } else {
+            unreachable!("LDMA Timer0 channel buffer should always set in place while receiving")
+        }
+    };
 }
 
 pub fn ldma_nfc_take_done() -> Option<NfcReceive> {
     free(|cs| {
-        let done = LDMA_TIMER0_DONE.borrow(cs).take();
-        if done.is_none() {
-            return None
-        };
-        if LDMAchTimer0::done() {
-            ldma_nfc_switch_buffer(cs);
-        }
-        done
+        LDMA_TIMER0_DONE.borrow(cs).take()
     })
 }
 
@@ -81,6 +68,7 @@ pub fn ldma_nfc_set_next(new_next: NfcReceive) {
 
 pub fn purge_ldma_nfc_buffers() {
     free(|cs| {
+        while !LDMAchTimer0::done() {}
         LDMA_TIMER0_RECEIVABLE.borrow(cs).take();
         LDMA_TIMER0_NEXT.borrow(cs).take();
         LDMA_TIMER0_DONE.borrow(cs).take();

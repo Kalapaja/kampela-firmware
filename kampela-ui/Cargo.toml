@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 embedded-graphics = "0.7.1"
 embedded-text = {version = "0.5.0", default-features = false}
-hex = {version = "0.4.3", default-features = false, features = ["alloc"] }
+#hex = {version = "0.4.3", default-features = false, features = ["alloc"] }
 kampela-display-common = { path = "../kampela-display-common" }
 lazy_static = { version = "1.4.0", default-features = false }
 minicbor = { version = "1.0.0", default-features = false, features = ["alloc"] }

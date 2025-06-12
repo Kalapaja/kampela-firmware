@@ -595,7 +595,6 @@ version = "0.1.0"
 dependencies = [
  "embedded-graphics",
  "embedded-text",
- "hex",
  "kampela-display-common",
  "lazy_static",
  "minicbor 1.0.0",

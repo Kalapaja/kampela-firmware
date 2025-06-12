@@ -27,6 +27,7 @@ use crate::uistate::{EventResult, UpdateRequest, UnitScreen};
 pub enum TransactionPage {
     Call,
     Extension,
+    Eth,
 }
 
 pub struct Transaction {
@@ -39,6 +40,7 @@ impl Transaction {
         let navbar = match page {
             TransactionPage::Call => NavBar::new(("", "next")),
             TransactionPage::Extension => NavBar::new(("previous", "sign")),
+            TransactionPage::Eth => NavBar::new(("", "sign")),
         };
         Transaction {
             page,
@@ -113,7 +115,7 @@ impl ViewScreen for Transaction {
                             request = Some(UpdateRequest::Fast);
                         },
                         NavCommand::Right => {
-                            state = Some(UnitScreen::ShowDialog(
+                            state = Some(UnitScreen::ShowDialog((
                                 "Sign the transaction?",
                                 ("no", "yes"),
                                 (
@@ -127,7 +129,30 @@ impl ViewScreen for Transaction {
                                     }),
                                 ),
                                 true
-                            ));
+                            )));
+                            request = Some(UpdateRequest::UltraFast);
+                        }
+                    }
+                },
+                TransactionPage::Eth => {
+                    match c {
+                        NavCommand::Left => {},
+                        NavCommand::Right => {
+                            state = Some(UnitScreen::ShowDialog((
+                                "Sign the transaction?",
+                                ("no", "yes"),
+                                (
+                                    Box::new(|| EventResult {
+                                        request: Some(UpdateRequest::UltraFast),
+                                        state: Some(UnitScreen::ShowTransaction(TransactionPage::Extension))
+                                    }),
+                                    Box::new(|| EventResult {
+                                        request: Some(UpdateRequest::UltraFast),
+                                        state: Some(UnitScreen::QRSignature)
+                                    }),
+                                ),
+                                true
+                            )));
                             request = Some(UpdateRequest::UltraFast);
                         }
                     }

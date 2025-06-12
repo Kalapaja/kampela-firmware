@@ -28,6 +28,9 @@ pub trait Platform {
     /// Transaction data or addresses for transaction data in psram
     type NfcTransaction;
 
+    /// Transaction data or addresses for transaction data in psram
+    type NfcEthSignRequest;
+
     /// List-set of mnemonic words 
     type AsWordList: AsWordList;
     // Device-specific wordlist implementation
@@ -46,7 +49,7 @@ pub trait Platform {
     fn store_entropy(&mut self, e: &[u8]);
 
     /// Read entropy from flash
-    fn read_entropy(&mut self);
+    fn read_entropy(&mut self) -> bool;
 
     /// Getter for public address
     fn public(&self) -> Option<Public>;
@@ -58,11 +61,17 @@ pub trait Platform {
 
     fn set_transaction(&mut self, transaction: Self::NfcTransaction);
 
+    fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest);
+
     fn call(&mut self) -> Option<String>;
 
     fn extensions(&mut self) -> Option<String>;
 
+    fn ethereum(&mut self) -> Option<String>;
+
     fn signature(&mut self) -> [u8; 130];
+
+    fn eth_signature(&mut self) -> Vec<u8>;
 
     fn address(&mut self) -> &[u8; 76];
 

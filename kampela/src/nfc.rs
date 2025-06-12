@@ -1,5 +1,6 @@
 //! NFC packet collector and decoder
 
+use alloc::borrow::ToOwned;
 use nfca_parser::frame::Frame;
 
 use kampela_system::{
@@ -14,7 +15,7 @@ use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packe
 use substrate_parser::compacts::find_compact;
 
 pub const FREQ: u16 = 22;
-const NFC_MIN_VOLTAGE: i32 = 4000; //Affects initiation time, but lower values result in unreliable nfc reception
+const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
 
 
 pub enum NfcCollector {
@@ -141,26 +142,30 @@ pub struct NfcTransactionPsramAccess {
     pub genesis_hash_bytes_psram_access: PsramAccess,
 }
 
+#[derive(Clone)]
+pub struct NfcEthSignRequestPsramAccess {
+    pub request_id: PsramAccess,
+    pub sign_data: PsramAccess
+}
+
 //TODO: implement more error cases, i.e. old specs
 pub enum NfcError {
     InvalidAddress,
 }
 
+#[derive(Clone)]
 pub enum NfcResult {
     Transaction(NfcTransactionPsramAccess),
+    EthSignRequest(NfcEthSignRequestPsramAccess),
     DisplayAddress,
     Empty,
 }
 
-enum NfcState {
-    Operational(usize),
-    Done,
-}
-pub enum NfcStateOutput {
+#[derive(Clone)]
+pub enum NfcState {
     Operational(usize),
     Done(NfcResult),
 }
-
 
 pub struct NfcReceiver {
     buffer: NfcReceive,
@@ -291,6 +296,19 @@ impl NfcReceiver {
                             genesis_hash_bytes_psram_access,
                         })));
                     },
+                    Some(4) => {
+                        let request_id_address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
+                        let request_id = PsramAccess{start_address: request_id_address, total_len: 16};
+                        let position = 1usize + 16usize;
+                        let mut compact = None;
+                        in_free(|peripherals| {
+                            let mut external_psram = ExternalPsram{peripherals};
+                            compact = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).ok();
+                        });
+                        let start_address = payload.encoded_data.start_address.try_shift(compact.as_ref().unwrap().start_next_unit.to_owned()).unwrap();
+                        let sign_data = PsramAccess{start_address, total_len: compact.unwrap().compact as usize};
+                        return Some(Ok(NfcResult::EthSignRequest(NfcEthSignRequestPsramAccess { request_id, sign_data })))
+                    }
                     _ => {
                         return Some(Ok(NfcResult::Empty))
                     }
@@ -303,8 +321,8 @@ impl NfcReceiver {
         }
     }
 
-    pub fn advance(&mut self) -> Option<Result<NfcStateOutput, NfcError>> {
-        if voltage() < NFC_MIN_VOLTAGE { return None }
+    pub fn advance(&mut self) -> Option<Result<NfcState, NfcError>> {
+        //if voltage() < NFC_MIN_VOLTAGE { return None }
         //if !LDMAchTimer0::busy() {return None} // todo: check if no nfc packets were sent
 
         match self.state {
@@ -313,21 +331,20 @@ impl NfcReceiver {
                 match res {
                     Some(r) => {
                         match r {
-                            Err(e) => { Some(Err(e)) },
+                            Err(e) => { return Some(Err(e)) },
                             Ok(r) => {
-                                self.state = NfcState::Done;
-                                Some(Ok(NfcStateOutput::Done(r)))
+                                self.state = NfcState::Done(r);
                             },
                         }
                     },
                     None => {
                         self.state = NfcState::Operational(i + 1);
-                        Some(Ok(NfcStateOutput::Operational(i + 1)))
                     },
                 }
             },
-            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty))) }
-        }
+            _ => {}
+        };
+        Some(Ok(self.state.clone()))
     }
 }
 

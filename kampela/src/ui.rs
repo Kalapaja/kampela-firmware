@@ -3,7 +3,7 @@ use alloc::{borrow::ToOwned, string::String};
 use kampela_system::{
     devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::take_touch_point};
+use crate::{hardware::Hardware, nfc::{NfcEthSignRequestPsramAccess, NfcTransactionPsramAccess}, touch::take_touch_point};
 use kampela_ui::{
     platform::Platform,
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
@@ -43,6 +43,11 @@ impl UI {
         self.update_request.propagate(self.state.handle_transaction(&mut ()));
     }
 
+    pub fn handle_eth_sign_request(&mut self, eth_sign_request: NfcEthSignRequestPsramAccess) {
+        self.state.platform.set_eth_sign_request(eth_sign_request);
+        self.update_request.propagate(self.state.handle_eth_sign_request(&mut ()));
+    }
+
     pub fn handle_address(&mut self, addr: [u8; 76]) {
         self.update_request.propagate(self.state.handle_address(addr));
     }
@@ -72,7 +77,7 @@ impl AsyncOperation for UI {
 
         return Self {
             state,
-            update_request: Some(UpdateRequest::Slow),
+            update_request: Some(UpdateRequest::Fast),
             frame_buffer,
             ui_threads: Threads::<UIStatus, 2>::from([
                 UIStatus::UIUpdate(false),

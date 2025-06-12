@@ -201,7 +201,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                             request = Some(UpdateRequest::Fast);
                         } else {
                             let buffer = self.get_buffer();
-                            state = Some(UnitScreen::ShowDialog(
+                            state = Some(UnitScreen::ShowDialog((
                                 "Are you sure?\nEntered data will be lost",
                                 ("no", "yes"),
                                 (
@@ -215,7 +215,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                                     })
                                 ),
                                 true,
-                            ));
+                            )));
                             request = Some(UpdateRequest::UltraFast);
                         }
                     },

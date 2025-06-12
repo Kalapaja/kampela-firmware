@@ -15,6 +15,7 @@ kampela-system = { path = "../kampela-system" }
 kampela-ui = { path = "../kampela-ui" , default-features = false }
 lazy_static = { version = "1.4.0", default-features = false, features = ["spin_no_std"]}
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
+minicbor = { version = "1.0.0", default-features = false, features = ["alloc"] }
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
 substrate-crypto-light = { path = "../../substrate-crypto-light", default-features = false, features = ["ecdsa"] }

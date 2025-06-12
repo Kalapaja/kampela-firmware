@@ -38,6 +38,13 @@ const HEADER_WIDGET: Widget = Widget::new(
     SCREEN_ZERO
 );
 
+pub type DialogUnitScreenArgs = (
+    &'static str,
+    (&'static str, &'static str),
+    (Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>),
+    bool
+);
+
 pub struct Dialog {
     navbar: NavBar,
     routes: Option<(Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>)>,
@@ -47,17 +54,25 @@ pub struct Dialog {
 
 impl Dialog {
     pub fn new(
-        message: &'static str,
-        options: (&'static str, &'static str),
-        routes: (Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>),
-        negative: bool,
+        args: DialogUnitScreenArgs
     ) -> Self {
         Dialog{
-            navbar: NavBar::new(options),
-            routes: Some(routes),
-            message,
-            negative,
+            navbar: NavBar::new(args.1),
+            routes: Some(args.2),
+            message: args.0,
+            negative: args.3,
         }
+    }
+
+    pub fn get_unit_screen_args(self) -> Option<DialogUnitScreenArgs> {
+        self.routes.map(|r| {
+            (
+                self.message,
+                self.navbar.get_labels(),
+                r,
+                self.negative,
+            )
+        })
     }
 }
 
@@ -107,7 +122,7 @@ impl ViewScreen for Dialog {
         Self: 'a
     {
         let event_result = if let Some(Some(c)) = self.navbar.handle_event(event, ()) {
-            let routes = core::mem::take(&mut self.routes).unwrap();
+            let routes = core::mem::take(&mut self.routes).expect("routes should be present before routing");
             match c {
                 NavCommand::Left => {
                     routes.0()

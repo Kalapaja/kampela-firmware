@@ -43,6 +43,7 @@ dependencies = [
  "kampela-ui",
  "lazy_static",
  "lt-codes",
+ "minicbor 1.0.0",
  "nalgebra",
  "nfca-parser",
  "substrate-crypto-light 0.2.0",
@@ -766,7 +767,6 @@ version = "0.1.0"
 dependencies = [
  "embedded-graphics",
  "embedded-text",
- "hex",
  "kampela-display-common",
  "lazy_static",
  "minicbor 1.0.0",

@@ -63,6 +63,12 @@ impl NavBar {
             right: NavButton::new(right_label, &NRIGHT_KEY_WIDGET),
         }
     }
+    pub fn replace_labels(&mut self, (left_label, right_label): (&'static str, &'static str)) -> (&'static str, &'static str) {
+        (self.left.replace_label(left_label), self.right.replace_label(right_label))
+    }
+    pub fn get_labels(&self) -> (&'static str, &'static str) {
+        (self.left.get_label(), self.right.get_label())
+    }
 }
 
 impl View for NavBar {
