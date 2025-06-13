@@ -1,10 +1,7 @@
 //! This is simulator to develop Kampela UI mocks
 #![deny(unused_crate_dependencies)]
 use embedded_graphics_core::{
-    primitives::PointsIter,
-    Drawable,
-    pixelcolor::BinaryColor,
-    Pixel,
+    pixelcolor::BinaryColor, prelude::Point, primitives::{PointsIter, Rectangle}, Drawable, Pixel
 };
 
 use embedded_graphics_simulator::{
@@ -21,17 +18,17 @@ use mnemonic_external::regular::InternalWordList;
 const SLOW_UPDATE_TIME: Duration = Duration::new(1, 0);
 const BLINK_UPDATE_TIME: Duration = Duration::new(0, 5000000);
 const SLOW_UPDATE_ITER: usize = 8;
-const FAST_UPDATE_TIME: Duration = Duration::new(1, 0);
-const ULTRAFAST_UPDATE_TIME: Duration = Duration::new(1, 0);
-const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
+const FAST_UPDATE_TIME: Duration = Duration::new(0, 300000000);
+const ULTRAFAST_UPDATE_TIME: Duration = Duration::new(0, 300000000);
+const UPDATE_DELAY_TIME: Duration = Duration::new(0, 100000000);
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
 use kampela_ui::{
-    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    data_state::{AppStateInit, DataInit, NFCState, StorageState},
     display_def::*,
     platform::{PinCode, Platform},
-    uistate::{UIState, UpdateRequest, UpdateRequestMutate},
+    uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate},
 };
 
 #[derive(Debug)]
@@ -204,8 +201,8 @@ fn main() {
 */
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state);
-    let display = SimulatorDisplay::new(SCREEN_SIZE);
-    let mut state = UIState::new(desktop, display, &mut h);
+    let mut display = SimulatorDisplay::new(SCREEN_SIZE);
+    let mut state = UIState::new(desktop, &mut h);
 
     // Draw
     let output_settings = OutputSettingsBuilder::new()
@@ -226,62 +223,71 @@ fn main() {
     loop {
         // touch event
         if let Some(point) = touches.pop_front() {
-            update.propagate(state.handle_tap(point, &mut h));
+            update.propagate(state.handle_event(Event::Tap(point), &mut h));
         };
         // display event; it would be delayed
         if let Some(u) = update.take() {
             sleep(UPDATE_DELAY_TIME);
-            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
-            match state.render(is_clear_update, &mut h) {
+            let mut previous = display.clone();
+            match state.render(&mut display, &mut h) {
                 Ok(a) => update.propagate(a),
                 Err(e) => println!("{:?}", e),
             };
 
             match u {
-                UpdateRequest::Hidden => {
-                    window.update(&state.display);
-                    println!("skip {} events in hidden update", window.events().count());
+                UpdateRequest::Invocate => {
+                    update.propagate(state.handle_event(Event::Invocation, &mut h));
+                    println!("invocation event registered");
                 },
                 UpdateRequest::Slow => {
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     sleep(SLOW_UPDATE_TIME);
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     for _i in 0..SLOW_UPDATE_ITER {
-                        invert_display(&mut state.display);
-                        window.update(&state.display);
+                        invert_display(&mut display);
+                        window.update(&display);
                         sleep(BLINK_UPDATE_TIME);
-                        invert_display(&mut state.display);
-                        window.update(&state.display);
+                        invert_display(&mut display);
+                        window.update(&display);
                         sleep(BLINK_UPDATE_TIME);
                     }
 
-                    window.update(&state.display);
+                    window.update(&display);
                     println!("skip {} events in slow update", window.events().count());
                 },
                 UpdateRequest::Fast => {
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     sleep(FAST_UPDATE_TIME);
-                    invert_display(&mut state.display);
-                    window.update(&state.display);
+                    invert_display(&mut display);
+                    window.update(&display);
                     println!("fast update");
                 },
                 UpdateRequest::UltraFast => {
-                    window.update(&state.display);
+                    window.update(&display);
                     println!("ultrafast update");
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
-                UpdateRequest::Part(a) => {
-                    window.update(&state.display);
-                    println!("part update of area {:?}", a);
+                UpdateRequest::UltraFastSelective => {
+                    draw_selective(&mut previous, &display, None);
+                    display = previous;
+                    window.update(&display);
+                    println!("ultrafast selective update");
+                    sleep(ULTRAFAST_UPDATE_TIME);
+                },
+                UpdateRequest::Part(ref a) => {
+                    draw_selective(&mut previous, &display, Some(a));
+                    display = previous;
+                    window.update(&display);
+                    println!("part update with white of area {:?}", a);
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
             }
         }
         // this collects ui events, do not remove or simulator will crash
-        window.update(&state.display);
+        //window.update(&display); // removed and didn't crash
 
         // register input (only pushes are valid in Kampela)
         for event in window.events() {
@@ -308,7 +314,54 @@ fn main() {
 
 fn invert_display(display: &mut SimulatorDisplay<BinaryColor>) {
     for point in SCREEN_AREA.points() {
-        let dot = Pixel::<BinaryColor>(point, display.get_pixel(point).invert());
-        dot.draw(display).unwrap();
+        let pixel = Pixel::<BinaryColor>(point, display.get_pixel(point).invert());
+        pixel.draw(display).unwrap();
+    };
+}
+
+fn draw_selective(display: &mut SimulatorDisplay<BinaryColor>, new_display: &SimulatorDisplay<BinaryColor>, area: Option<&Rectangle>) {
+    // simulate partial write window
+    let mut area = area.unwrap_or(&SCREEN_AREA).clone();
+    area.top_left.y = if area.top_left.y < 0 {
+        0
+    } else if area.top_left.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y as i32 / 8 - 1) * 8
+    } else {
+        (area.top_left.y / 8) * 8
+    };
+
+    area.top_left.x = if area.top_left.x < 0 {
+        0
+    } else if area.top_left.x > (SCREEN_SIZE_X - 1) as i32{
+        SCREEN_SIZE_X as i32 - 1
+    } else {
+        area.top_left.x
+    };
+
+    let bottom_right = area.top_left + area.size - Point{x: 1, y: 1};
+    
+    area.size.height = if bottom_right.y > (SCREEN_SIZE_Y - 1) as i32 {
+        (SCREEN_SIZE_Y as u32 / 8) * 8 - area.top_left.y as u32
+    } else if bottom_right.y < 0 {
+        0
+    } else {
+        (bottom_right.y as u32 / 8 + 1) * 8 - area.top_left.y as u32
+    };
+
+    area.size.width = if bottom_right.x > (SCREEN_SIZE_X - 1) as i32 {
+        (SCREEN_SIZE_X as u32) - area.top_left.x as u32
+    } else if bottom_right.x < 0 {
+        0
+    } else {
+        (bottom_right.x as u32 + 1) - area.top_left.x as u32
+    };
+    // simulate selective update mode
+    for point in area.points() {
+        let pixel = Pixel::<BinaryColor>(point, new_display.get_pixel(point));
+        let old_pixel = Pixel::<BinaryColor>(point, display.get_pixel(point));
+        if (pixel.1.is_on() && old_pixel.1.is_off()) ||
+        (pixel.1.is_off() && old_pixel.1.is_on()) {
+            pixel.draw(display).unwrap();
+        }
     };
 }

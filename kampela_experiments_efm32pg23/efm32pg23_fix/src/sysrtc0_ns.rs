@@ -1,101 +1,183 @@
-#[doc = r"Register block"]
 #[repr(C)]
+#[doc = "Register block"]
 pub struct RegisterBlock {
-    #[doc = "0x00 - No Description"]
-    pub ipversion: IPVERSION,
-    #[doc = "0x04 - No Description"]
-    pub en: EN,
-    #[doc = "0x08 - No Description"]
-    pub swrst: SWRST,
-    #[doc = "0x0c - No Description"]
-    pub cfg: CFG,
-    #[doc = "0x10 - No Description"]
-    pub cmd: CMD,
-    #[doc = "0x14 - No Description"]
-    pub status: STATUS,
-    #[doc = "0x18 - No Description"]
-    pub cnt: CNT,
-    #[doc = "0x1c - No Description"]
-    pub syncbusy: SYNCBUSY,
-    #[doc = "0x20 - No Description"]
-    pub lock: LOCK,
+    ipversion: Ipversion,
+    en: En,
+    swrst: Swrst,
+    cfg: Cfg,
+    cmd: Cmd,
+    status: Status,
+    cnt: Cnt,
+    syncbusy: Syncbusy,
+    lock: Lock,
     _reserved9: [u8; 0x1c],
-    #[doc = "0x40 - No Description"]
-    pub grp0_if: GRP0_IF,
-    #[doc = "0x44 - No Description"]
-    pub grp0_ien: GRP0_IEN,
-    #[doc = "0x48 - No Description"]
-    pub grp0_ctrl: GRP0_CTRL,
-    #[doc = "0x4c - No Description"]
-    pub grp0_cmp0value: GRP0_CMP0VALUE,
-    #[doc = "0x50 - No Description"]
-    pub grp0_cmp1value: GRP0_CMP1VALUE,
-    #[doc = "0x54 - No Description"]
-    pub grp0_cap0value: GRP0_CAP0VALUE,
-    #[doc = "0x58 - No Description"]
-    pub grp0_syncbusy: GRP0_SYNCBUSY,
+    grp0_if: Grp0If,
+    grp0_ien: Grp0Ien,
+    grp0_ctrl: Grp0Ctrl,
+    grp0_cmp0value: Grp0Cmp0value,
+    grp0_cmp1value: Grp0Cmp1value,
+    grp0_cap0value: Grp0Cap0value,
+    grp0_syncbusy: Grp0Syncbusy,
 }
-#[doc = "IPVERSION (r) register accessor: an alias for `Reg<IPVERSION_SPEC>`"]
-pub type IPVERSION = crate::Reg<ipversion::IPVERSION_SPEC>;
+impl RegisterBlock {
+    #[doc = "0x00 - No Description"]
+    #[inline(always)]
+    pub const fn ipversion(&self) -> &Ipversion {
+        &self.ipversion
+    }
+    #[doc = "0x04 - No Description"]
+    #[inline(always)]
+    pub const fn en(&self) -> &En {
+        &self.en
+    }
+    #[doc = "0x08 - No Description"]
+    #[inline(always)]
+    pub const fn swrst(&self) -> &Swrst {
+        &self.swrst
+    }
+    #[doc = "0x0c - No Description"]
+    #[inline(always)]
+    pub const fn cfg(&self) -> &Cfg {
+        &self.cfg
+    }
+    #[doc = "0x10 - No Description"]
+    #[inline(always)]
+    pub const fn cmd(&self) -> &Cmd {
+        &self.cmd
+    }
+    #[doc = "0x14 - No Description"]
+    #[inline(always)]
+    pub const fn status(&self) -> &Status {
+        &self.status
+    }
+    #[doc = "0x18 - No Description"]
+    #[inline(always)]
+    pub const fn cnt(&self) -> &Cnt {
+        &self.cnt
+    }
+    #[doc = "0x1c - No Description"]
+    #[inline(always)]
+    pub const fn syncbusy(&self) -> &Syncbusy {
+        &self.syncbusy
+    }
+    #[doc = "0x20 - No Description"]
+    #[inline(always)]
+    pub const fn lock(&self) -> &Lock {
+        &self.lock
+    }
+    #[doc = "0x40 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_if(&self) -> &Grp0If {
+        &self.grp0_if
+    }
+    #[doc = "0x44 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_ien(&self) -> &Grp0Ien {
+        &self.grp0_ien
+    }
+    #[doc = "0x48 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_ctrl(&self) -> &Grp0Ctrl {
+        &self.grp0_ctrl
+    }
+    #[doc = "0x4c - No Description"]
+    #[inline(always)]
+    pub const fn grp0_cmp0value(&self) -> &Grp0Cmp0value {
+        &self.grp0_cmp0value
+    }
+    #[doc = "0x50 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_cmp1value(&self) -> &Grp0Cmp1value {
+        &self.grp0_cmp1value
+    }
+    #[doc = "0x54 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_cap0value(&self) -> &Grp0Cap0value {
+        &self.grp0_cap0value
+    }
+    #[doc = "0x58 - No Description"]
+    #[inline(always)]
+    pub const fn grp0_syncbusy(&self) -> &Grp0Syncbusy {
+        &self.grp0_syncbusy
+    }
+}
+#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
+#[doc(alias = "IPVERSION")]
+pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "No Description"]
 pub mod ipversion;
-#[doc = "EN (rw) register accessor: an alias for `Reg<EN_SPEC>`"]
-pub type EN = crate::Reg<en::EN_SPEC>;
+#[doc = "EN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`en::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`en::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@en`] module"]
+#[doc(alias = "EN")]
+pub type En = crate::Reg<en::EnSpec>;
 #[doc = "No Description"]
 pub mod en;
-#[doc = "SWRST (rw) register accessor: an alias for `Reg<SWRST_SPEC>`"]
-pub type SWRST = crate::Reg<swrst::SWRST_SPEC>;
+#[doc = "SWRST (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`swrst::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`swrst::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@swrst`] module"]
+#[doc(alias = "SWRST")]
+pub type Swrst = crate::Reg<swrst::SwrstSpec>;
 #[doc = "No Description"]
 pub mod swrst;
-#[doc = "CFG (rw) register accessor: an alias for `Reg<CFG_SPEC>`"]
-pub type CFG = crate::Reg<cfg::CFG_SPEC>;
+#[doc = "CFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg`] module"]
+#[doc(alias = "CFG")]
+pub type Cfg = crate::Reg<cfg::CfgSpec>;
 #[doc = "No Description"]
 pub mod cfg;
-#[doc = "CMD (w) register accessor: an alias for `Reg<CMD_SPEC>`"]
-pub type CMD = crate::Reg<cmd::CMD_SPEC>;
+#[doc = "CMD (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmd::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cmd`] module"]
+#[doc(alias = "CMD")]
+pub type Cmd = crate::Reg<cmd::CmdSpec>;
 #[doc = "No Description"]
 pub mod cmd;
-#[doc = "STATUS (r) register accessor: an alias for `Reg<STATUS_SPEC>`"]
-pub type STATUS = crate::Reg<status::STATUS_SPEC>;
+#[doc = "STATUS (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`] module"]
+#[doc(alias = "STATUS")]
+pub type Status = crate::Reg<status::StatusSpec>;
 #[doc = "No Description"]
 pub mod status;
-#[doc = "CNT (rw) register accessor: an alias for `Reg<CNT_SPEC>`"]
-pub type CNT = crate::Reg<cnt::CNT_SPEC>;
+#[doc = "CNT (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cnt::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cnt::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cnt`] module"]
+#[doc(alias = "CNT")]
+pub type Cnt = crate::Reg<cnt::CntSpec>;
 #[doc = "No Description"]
 pub mod cnt;
-#[doc = "SYNCBUSY (r) register accessor: an alias for `Reg<SYNCBUSY_SPEC>`"]
-pub type SYNCBUSY = crate::Reg<syncbusy::SYNCBUSY_SPEC>;
+#[doc = "SYNCBUSY (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`syncbusy::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@syncbusy`] module"]
+#[doc(alias = "SYNCBUSY")]
+pub type Syncbusy = crate::Reg<syncbusy::SyncbusySpec>;
 #[doc = "No Description"]
 pub mod syncbusy;
-#[doc = "LOCK (w) register accessor: an alias for `Reg<LOCK_SPEC>`"]
-pub type LOCK = crate::Reg<lock::LOCK_SPEC>;
+#[doc = "LOCK (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lock::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@lock`] module"]
+#[doc(alias = "LOCK")]
+pub type Lock = crate::Reg<lock::LockSpec>;
 #[doc = "No Description"]
 pub mod lock;
-#[doc = "GRP0_IF (rw) register accessor: an alias for `Reg<GRP0_IF_SPEC>`"]
-pub type GRP0_IF = crate::Reg<grp0_if::GRP0_IF_SPEC>;
+#[doc = "GRP0_IF (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_if::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`grp0_if::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_if`] module"]
+#[doc(alias = "GRP0_IF")]
+pub type Grp0If = crate::Reg<grp0_if::Grp0IfSpec>;
 #[doc = "No Description"]
 pub mod grp0_if;
-#[doc = "GRP0_IEN (rw) register accessor: an alias for `Reg<GRP0_IEN_SPEC>`"]
-pub type GRP0_IEN = crate::Reg<grp0_ien::GRP0_IEN_SPEC>;
+#[doc = "GRP0_IEN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`grp0_ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_ien`] module"]
+#[doc(alias = "GRP0_IEN")]
+pub type Grp0Ien = crate::Reg<grp0_ien::Grp0IenSpec>;
 #[doc = "No Description"]
 pub mod grp0_ien;
-#[doc = "GRP0_CTRL (rw) register accessor: an alias for `Reg<GRP0_CTRL_SPEC>`"]
-pub type GRP0_CTRL = crate::Reg<grp0_ctrl::GRP0_CTRL_SPEC>;
+#[doc = "GRP0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`grp0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_ctrl`] module"]
+#[doc(alias = "GRP0_CTRL")]
+pub type Grp0Ctrl = crate::Reg<grp0_ctrl::Grp0CtrlSpec>;
 #[doc = "No Description"]
 pub mod grp0_ctrl;
-#[doc = "GRP0_CMP0VALUE (rw) register accessor: an alias for `Reg<GRP0_CMP0VALUE_SPEC>`"]
-pub type GRP0_CMP0VALUE = crate::Reg<grp0_cmp0value::GRP0_CMP0VALUE_SPEC>;
+#[doc = "GRP0_CMP0VALUE (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_cmp0value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`grp0_cmp0value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_cmp0value`] module"]
+#[doc(alias = "GRP0_CMP0VALUE")]
+pub type Grp0Cmp0value = crate::Reg<grp0_cmp0value::Grp0Cmp0valueSpec>;
 #[doc = "No Description"]
 pub mod grp0_cmp0value;
-#[doc = "GRP0_CMP1VALUE (rw) register accessor: an alias for `Reg<GRP0_CMP1VALUE_SPEC>`"]
-pub type GRP0_CMP1VALUE = crate::Reg<grp0_cmp1value::GRP0_CMP1VALUE_SPEC>;
+#[doc = "GRP0_CMP1VALUE (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_cmp1value::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`grp0_cmp1value::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_cmp1value`] module"]
+#[doc(alias = "GRP0_CMP1VALUE")]
+pub type Grp0Cmp1value = crate::Reg<grp0_cmp1value::Grp0Cmp1valueSpec>;
 #[doc = "No Description"]
 pub mod grp0_cmp1value;
-#[doc = "GRP0_CAP0VALUE (r) register accessor: an alias for `Reg<GRP0_CAP0VALUE_SPEC>`"]
-pub type GRP0_CAP0VALUE = crate::Reg<grp0_cap0value::GRP0_CAP0VALUE_SPEC>;
+#[doc = "GRP0_CAP0VALUE (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_cap0value::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_cap0value`] module"]
+#[doc(alias = "GRP0_CAP0VALUE")]
+pub type Grp0Cap0value = crate::Reg<grp0_cap0value::Grp0Cap0valueSpec>;
 #[doc = "No Description"]
 pub mod grp0_cap0value;
-#[doc = "GRP0_SYNCBUSY (r) register accessor: an alias for `Reg<GRP0_SYNCBUSY_SPEC>`"]
-pub type GRP0_SYNCBUSY = crate::Reg<grp0_syncbusy::GRP0_SYNCBUSY_SPEC>;
+#[doc = "GRP0_SYNCBUSY (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`grp0_syncbusy::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@grp0_syncbusy`] module"]
+#[doc(alias = "GRP0_SYNCBUSY")]
+pub type Grp0Syncbusy = crate::Reg<grp0_syncbusy::Grp0SyncbusySpec>;
 #[doc = "No Description"]
 pub mod grp0_syncbusy;

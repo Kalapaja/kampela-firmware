@@ -1,95 +1,49 @@
 #[doc = "Register `SYNCHWEN` reader"]
-pub struct R(crate::R<SYNCHWEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<SYNCHWEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<SYNCHWEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<SYNCHWEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<SynchwenSpec>;
 #[doc = "Register `SYNCHWEN` writer"]
-pub struct W(crate::W<SYNCHWEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<SYNCHWEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<SYNCHWEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<SYNCHWEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<SynchwenSpec>;
 #[doc = "Field `SYNCSETEN` reader - Hardware Sync Trigger Set Enable"]
-pub type SYNCSETEN_R = crate::FieldReader<u8, u8>;
+pub type SyncsetenR = crate::FieldReader;
 #[doc = "Field `SYNCSETEN` writer - Hardware Sync Trigger Set Enable"]
-pub type SYNCSETEN_W<'a, const O: u8> = crate::FieldWriter<'a, u32, SYNCHWEN_SPEC, u8, u8, 8, O>;
+pub type SyncsetenW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 #[doc = "Field `SYNCCLREN` reader - Hardware Sync Trigger Clear Enable"]
-pub type SYNCCLREN_R = crate::FieldReader<u8, u8>;
+pub type SyncclrenR = crate::FieldReader;
 #[doc = "Field `SYNCCLREN` writer - Hardware Sync Trigger Clear Enable"]
-pub type SYNCCLREN_W<'a, const O: u8> = crate::FieldWriter<'a, u32, SYNCHWEN_SPEC, u8, u8, 8, O>;
+pub type SyncclrenW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Enable"]
     #[inline(always)]
-    pub fn syncseten(&self) -> SYNCSETEN_R {
-        SYNCSETEN_R::new((self.bits & 0xff) as u8)
+    pub fn syncseten(&self) -> SyncsetenR {
+        SyncsetenR::new((self.bits & 0xff) as u8)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Enable"]
     #[inline(always)]
-    pub fn syncclren(&self) -> SYNCCLREN_R {
-        SYNCCLREN_R::new(((self.bits >> 16) & 0xff) as u8)
+    pub fn syncclren(&self) -> SyncclrenR {
+        SyncclrenR::new(((self.bits >> 16) & 0xff) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn syncseten(&mut self) -> SYNCSETEN_W<0> {
-        SYNCSETEN_W::new(self)
+    pub fn syncseten(&mut self) -> SyncsetenW<SynchwenSpec> {
+        SyncsetenW::new(self, 0)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn syncclren(&mut self) -> SYNCCLREN_W<16> {
-        SYNCCLREN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn syncclren(&mut self) -> SyncclrenW<SynchwenSpec> {
+        SyncclrenW::new(self, 16)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [synchwen](index.html) module"]
-pub struct SYNCHWEN_SPEC;
-impl crate::RegisterSpec for SYNCHWEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`synchwen::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`synchwen::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SynchwenSpec;
+impl crate::RegisterSpec for SynchwenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [synchwen::R](R) reader structure"]
-impl crate::Readable for SYNCHWEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [synchwen::W](W) writer structure"]
-impl crate::Writable for SYNCHWEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`synchwen::R`](R) reader structure"]
+impl crate::Readable for SynchwenSpec {}
+#[doc = "`write(|w| ..)` method takes [`synchwen::W`](W) writer structure"]
+impl crate::Writable for SynchwenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets SYNCHWEN to value 0"]
-impl crate::Resettable for SYNCHWEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for SynchwenSpec {}

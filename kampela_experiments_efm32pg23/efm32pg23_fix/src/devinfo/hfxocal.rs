@@ -1,192 +1,181 @@
 #[doc = "Register `HFXOCAL` reader"]
-pub struct R(crate::R<HFXOCAL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<HFXOCAL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<HFXOCAL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<HFXOCAL_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `SHUNTBIASANA` reader - No Description"]
-pub type SHUNTBIASANA_R = crate::FieldReader<u8, SHUNTBIASANA_A>;
+pub type R = crate::R<HfxocalSpec>;
 #[doc = "No Description\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum SHUNTBIASANA_A {
+pub enum Shuntbiasana {
     #[doc = "0: I20UA"]
-    I20UA = 0,
+    I20ua = 0,
     #[doc = "1: I30UA"]
-    I30UA = 1,
+    I30ua = 1,
     #[doc = "2: I40UA"]
-    I40UA = 2,
+    I40ua = 2,
     #[doc = "3: I50UA"]
-    I50UA = 3,
+    I50ua = 3,
     #[doc = "4: I60UA"]
-    I60UA = 4,
+    I60ua = 4,
     #[doc = "5: I70UA"]
-    I70UA = 5,
+    I70ua = 5,
     #[doc = "6: I80UA"]
-    I80UA = 6,
+    I80ua = 6,
     #[doc = "7: I90UA"]
-    I90UA = 7,
+    I90ua = 7,
     #[doc = "8: I100UA"]
-    I100UA = 8,
+    I100ua = 8,
     #[doc = "9: I110UA"]
-    I110UA = 9,
+    I110ua = 9,
     #[doc = "10: I120UA"]
-    I120UA = 10,
+    I120ua = 10,
     #[doc = "11: I130UA"]
-    I130UA = 11,
+    I130ua = 11,
     #[doc = "12: I140UA"]
-    I140UA = 12,
+    I140ua = 12,
     #[doc = "13: I150UA"]
-    I150UA = 13,
+    I150ua = 13,
     #[doc = "14: I160UA"]
-    I160UA = 14,
+    I160ua = 14,
     #[doc = "15: I170UA"]
-    I170UA = 15,
+    I170ua = 15,
 }
-impl From<SHUNTBIASANA_A> for u8 {
+impl From<Shuntbiasana> for u8 {
     #[inline(always)]
-    fn from(variant: SHUNTBIASANA_A) -> Self {
+    fn from(variant: Shuntbiasana) -> Self {
         variant as _
     }
 }
-impl SHUNTBIASANA_R {
+impl crate::FieldSpec for Shuntbiasana {
+    type Ux = u8;
+}
+impl crate::IsEnum for Shuntbiasana {}
+#[doc = "Field `SHUNTBIASANA` reader - No Description"]
+pub type ShuntbiasanaR = crate::FieldReader<Shuntbiasana>;
+impl ShuntbiasanaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> SHUNTBIASANA_A {
+    pub const fn variant(&self) -> Shuntbiasana {
         match self.bits {
-            0 => SHUNTBIASANA_A::I20UA,
-            1 => SHUNTBIASANA_A::I30UA,
-            2 => SHUNTBIASANA_A::I40UA,
-            3 => SHUNTBIASANA_A::I50UA,
-            4 => SHUNTBIASANA_A::I60UA,
-            5 => SHUNTBIASANA_A::I70UA,
-            6 => SHUNTBIASANA_A::I80UA,
-            7 => SHUNTBIASANA_A::I90UA,
-            8 => SHUNTBIASANA_A::I100UA,
-            9 => SHUNTBIASANA_A::I110UA,
-            10 => SHUNTBIASANA_A::I120UA,
-            11 => SHUNTBIASANA_A::I130UA,
-            12 => SHUNTBIASANA_A::I140UA,
-            13 => SHUNTBIASANA_A::I150UA,
-            14 => SHUNTBIASANA_A::I160UA,
-            15 => SHUNTBIASANA_A::I170UA,
+            0 => Shuntbiasana::I20ua,
+            1 => Shuntbiasana::I30ua,
+            2 => Shuntbiasana::I40ua,
+            3 => Shuntbiasana::I50ua,
+            4 => Shuntbiasana::I60ua,
+            5 => Shuntbiasana::I70ua,
+            6 => Shuntbiasana::I80ua,
+            7 => Shuntbiasana::I90ua,
+            8 => Shuntbiasana::I100ua,
+            9 => Shuntbiasana::I110ua,
+            10 => Shuntbiasana::I120ua,
+            11 => Shuntbiasana::I130ua,
+            12 => Shuntbiasana::I140ua,
+            13 => Shuntbiasana::I150ua,
+            14 => Shuntbiasana::I160ua,
+            15 => Shuntbiasana::I170ua,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `I20UA`"]
+    #[doc = "I20UA"]
     #[inline(always)]
     pub fn is_i20ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I20UA
+        *self == Shuntbiasana::I20ua
     }
-    #[doc = "Checks if the value of the field is `I30UA`"]
+    #[doc = "I30UA"]
     #[inline(always)]
     pub fn is_i30ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I30UA
+        *self == Shuntbiasana::I30ua
     }
-    #[doc = "Checks if the value of the field is `I40UA`"]
+    #[doc = "I40UA"]
     #[inline(always)]
     pub fn is_i40ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I40UA
+        *self == Shuntbiasana::I40ua
     }
-    #[doc = "Checks if the value of the field is `I50UA`"]
+    #[doc = "I50UA"]
     #[inline(always)]
     pub fn is_i50ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I50UA
+        *self == Shuntbiasana::I50ua
     }
-    #[doc = "Checks if the value of the field is `I60UA`"]
+    #[doc = "I60UA"]
     #[inline(always)]
     pub fn is_i60ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I60UA
+        *self == Shuntbiasana::I60ua
     }
-    #[doc = "Checks if the value of the field is `I70UA`"]
+    #[doc = "I70UA"]
     #[inline(always)]
     pub fn is_i70ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I70UA
+        *self == Shuntbiasana::I70ua
     }
-    #[doc = "Checks if the value of the field is `I80UA`"]
+    #[doc = "I80UA"]
     #[inline(always)]
     pub fn is_i80ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I80UA
+        *self == Shuntbiasana::I80ua
     }
-    #[doc = "Checks if the value of the field is `I90UA`"]
+    #[doc = "I90UA"]
     #[inline(always)]
     pub fn is_i90ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I90UA
+        *self == Shuntbiasana::I90ua
     }
-    #[doc = "Checks if the value of the field is `I100UA`"]
+    #[doc = "I100UA"]
     #[inline(always)]
     pub fn is_i100ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I100UA
+        *self == Shuntbiasana::I100ua
     }
-    #[doc = "Checks if the value of the field is `I110UA`"]
+    #[doc = "I110UA"]
     #[inline(always)]
     pub fn is_i110ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I110UA
+        *self == Shuntbiasana::I110ua
     }
-    #[doc = "Checks if the value of the field is `I120UA`"]
+    #[doc = "I120UA"]
     #[inline(always)]
     pub fn is_i120ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I120UA
+        *self == Shuntbiasana::I120ua
     }
-    #[doc = "Checks if the value of the field is `I130UA`"]
+    #[doc = "I130UA"]
     #[inline(always)]
     pub fn is_i130ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I130UA
+        *self == Shuntbiasana::I130ua
     }
-    #[doc = "Checks if the value of the field is `I140UA`"]
+    #[doc = "I140UA"]
     #[inline(always)]
     pub fn is_i140ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I140UA
+        *self == Shuntbiasana::I140ua
     }
-    #[doc = "Checks if the value of the field is `I150UA`"]
+    #[doc = "I150UA"]
     #[inline(always)]
     pub fn is_i150ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I150UA
+        *self == Shuntbiasana::I150ua
     }
-    #[doc = "Checks if the value of the field is `I160UA`"]
+    #[doc = "I160UA"]
     #[inline(always)]
     pub fn is_i160ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I160UA
+        *self == Shuntbiasana::I160ua
     }
-    #[doc = "Checks if the value of the field is `I170UA`"]
+    #[doc = "I170UA"]
     #[inline(always)]
     pub fn is_i170ua(&self) -> bool {
-        *self == SHUNTBIASANA_A::I170UA
+        *self == Shuntbiasana::I170ua
     }
 }
 #[doc = "Field `VTRTRIMANA` reader - No Description"]
-pub type VTRTRIMANA_R = crate::FieldReader<u8, u8>;
+pub type VtrtrimanaR = crate::FieldReader;
 impl R {
     #[doc = "Bits 0:3 - No Description"]
     #[inline(always)]
-    pub fn shuntbiasana(&self) -> SHUNTBIASANA_R {
-        SHUNTBIASANA_R::new((self.bits & 0x0f) as u8)
+    pub fn shuntbiasana(&self) -> ShuntbiasanaR {
+        ShuntbiasanaR::new((self.bits & 0x0f) as u8)
     }
     #[doc = "Bits 4:7 - No Description"]
     #[inline(always)]
-    pub fn vtrtrimana(&self) -> VTRTRIMANA_R {
-        VTRTRIMANA_R::new(((self.bits >> 4) & 0x0f) as u8)
+    pub fn vtrtrimana(&self) -> VtrtrimanaR {
+        VtrtrimanaR::new(((self.bits >> 4) & 0x0f) as u8)
     }
 }
-#[doc = "High Frequency Crystal Oscillator Calibration data\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [hfxocal](index.html) module"]
-pub struct HFXOCAL_SPEC;
-impl crate::RegisterSpec for HFXOCAL_SPEC {
+#[doc = "High Frequency Crystal Oscillator Calibration data\n\nYou can [`read`](crate::Reg::read) this register and get [`hfxocal::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct HfxocalSpec;
+impl crate::RegisterSpec for HfxocalSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [hfxocal::R](R) reader structure"]
-impl crate::Readable for HFXOCAL_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`hfxocal::R`](R) reader structure"]
+impl crate::Readable for HfxocalSpec {}
 #[doc = "`reset()` method sets HFXOCAL to value 0xffff_ff00"]
-impl crate::Resettable for HFXOCAL_SPEC {
-    const RESET_VALUE: Self::Ux = 0xffff_ff00;
+impl crate::Resettable for HfxocalSpec {
+    const RESET_VALUE: u32 = 0xffff_ff00;
 }

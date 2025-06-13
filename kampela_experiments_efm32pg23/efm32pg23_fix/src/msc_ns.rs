@@ -1,109 +1,196 @@
-#[doc = r"Register block"]
 #[repr(C)]
+#[doc = "Register block"]
 pub struct RegisterBlock {
-    #[doc = "0x00 - No Description"]
-    pub ipversion: IPVERSION,
-    #[doc = "0x04 - No Description"]
-    pub readctrl: READCTRL,
-    #[doc = "0x08 - No Description"]
-    pub rdatactrl: RDATACTRL,
-    #[doc = "0x0c - No Description"]
-    pub writectrl: WRITECTRL,
-    #[doc = "0x10 - No Description"]
-    pub writecmd: WRITECMD,
-    #[doc = "0x14 - No Description"]
-    pub addrb: ADDRB,
-    #[doc = "0x18 - No Description"]
-    pub wdata: WDATA,
-    #[doc = "0x1c - No Description"]
-    pub status: STATUS,
-    #[doc = "0x20 - No Description"]
-    pub if_: IF,
-    #[doc = "0x24 - No Description"]
-    pub ien: IEN,
+    ipversion: Ipversion,
+    readctrl: Readctrl,
+    rdatactrl: Rdatactrl,
+    writectrl: Writectrl,
+    writecmd: Writecmd,
+    addrb: Addrb,
+    wdata: Wdata,
+    status: Status,
+    if_: If,
+    ien: Ien,
     _reserved10: [u8; 0x0c],
-    #[doc = "0x34 - No Description"]
-    pub userdatasize: USERDATASIZE,
-    #[doc = "0x38 - No Description"]
-    pub cmd: CMD,
-    #[doc = "0x3c - No Description"]
-    pub lock: LOCK,
-    #[doc = "0x40 - No Description"]
-    pub misclockword: MISCLOCKWORD,
+    userdatasize: Userdatasize,
+    cmd: Cmd,
+    lock: Lock,
+    misclockword: Misclockword,
     _reserved14: [u8; 0x0c],
-    #[doc = "0x50 - No Description"]
-    pub pwrctrl: PWRCTRL,
+    pwrctrl: Pwrctrl,
     _reserved15: [u8; 0xcc],
-    #[doc = "0x120 - No Description"]
-    pub pagelock0: PAGELOCK0,
-    #[doc = "0x124 - No Description"]
-    pub pagelock1: PAGELOCK1,
+    pagelock0: Pagelock0,
+    pagelock1: Pagelock1,
 }
-#[doc = "IPVERSION (r) register accessor: an alias for `Reg<IPVERSION_SPEC>`"]
-pub type IPVERSION = crate::Reg<ipversion::IPVERSION_SPEC>;
+impl RegisterBlock {
+    #[doc = "0x00 - No Description"]
+    #[inline(always)]
+    pub const fn ipversion(&self) -> &Ipversion {
+        &self.ipversion
+    }
+    #[doc = "0x04 - No Description"]
+    #[inline(always)]
+    pub const fn readctrl(&self) -> &Readctrl {
+        &self.readctrl
+    }
+    #[doc = "0x08 - No Description"]
+    #[inline(always)]
+    pub const fn rdatactrl(&self) -> &Rdatactrl {
+        &self.rdatactrl
+    }
+    #[doc = "0x0c - No Description"]
+    #[inline(always)]
+    pub const fn writectrl(&self) -> &Writectrl {
+        &self.writectrl
+    }
+    #[doc = "0x10 - No Description"]
+    #[inline(always)]
+    pub const fn writecmd(&self) -> &Writecmd {
+        &self.writecmd
+    }
+    #[doc = "0x14 - No Description"]
+    #[inline(always)]
+    pub const fn addrb(&self) -> &Addrb {
+        &self.addrb
+    }
+    #[doc = "0x18 - No Description"]
+    #[inline(always)]
+    pub const fn wdata(&self) -> &Wdata {
+        &self.wdata
+    }
+    #[doc = "0x1c - No Description"]
+    #[inline(always)]
+    pub const fn status(&self) -> &Status {
+        &self.status
+    }
+    #[doc = "0x20 - No Description"]
+    #[inline(always)]
+    pub const fn if_(&self) -> &If {
+        &self.if_
+    }
+    #[doc = "0x24 - No Description"]
+    #[inline(always)]
+    pub const fn ien(&self) -> &Ien {
+        &self.ien
+    }
+    #[doc = "0x34 - No Description"]
+    #[inline(always)]
+    pub const fn userdatasize(&self) -> &Userdatasize {
+        &self.userdatasize
+    }
+    #[doc = "0x38 - No Description"]
+    #[inline(always)]
+    pub const fn cmd(&self) -> &Cmd {
+        &self.cmd
+    }
+    #[doc = "0x3c - No Description"]
+    #[inline(always)]
+    pub const fn lock(&self) -> &Lock {
+        &self.lock
+    }
+    #[doc = "0x40 - No Description"]
+    #[inline(always)]
+    pub const fn misclockword(&self) -> &Misclockword {
+        &self.misclockword
+    }
+    #[doc = "0x50 - No Description"]
+    #[inline(always)]
+    pub const fn pwrctrl(&self) -> &Pwrctrl {
+        &self.pwrctrl
+    }
+    #[doc = "0x120 - No Description"]
+    #[inline(always)]
+    pub const fn pagelock0(&self) -> &Pagelock0 {
+        &self.pagelock0
+    }
+    #[doc = "0x124 - No Description"]
+    #[inline(always)]
+    pub const fn pagelock1(&self) -> &Pagelock1 {
+        &self.pagelock1
+    }
+}
+#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
+#[doc(alias = "IPVERSION")]
+pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "No Description"]
 pub mod ipversion;
-#[doc = "READCTRL (rw) register accessor: an alias for `Reg<READCTRL_SPEC>`"]
-pub type READCTRL = crate::Reg<readctrl::READCTRL_SPEC>;
+#[doc = "READCTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`readctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`readctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@readctrl`] module"]
+#[doc(alias = "READCTRL")]
+pub type Readctrl = crate::Reg<readctrl::ReadctrlSpec>;
 #[doc = "No Description"]
 pub mod readctrl;
-#[doc = "RDATACTRL (rw) register accessor: an alias for `Reg<RDATACTRL_SPEC>`"]
-pub type RDATACTRL = crate::Reg<rdatactrl::RDATACTRL_SPEC>;
+#[doc = "RDATACTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`rdatactrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rdatactrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@rdatactrl`] module"]
+#[doc(alias = "RDATACTRL")]
+pub type Rdatactrl = crate::Reg<rdatactrl::RdatactrlSpec>;
 #[doc = "No Description"]
 pub mod rdatactrl;
-#[doc = "WRITECTRL (rw) register accessor: an alias for `Reg<WRITECTRL_SPEC>`"]
-pub type WRITECTRL = crate::Reg<writectrl::WRITECTRL_SPEC>;
+#[doc = "WRITECTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`writectrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`writectrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@writectrl`] module"]
+#[doc(alias = "WRITECTRL")]
+pub type Writectrl = crate::Reg<writectrl::WritectrlSpec>;
 #[doc = "No Description"]
 pub mod writectrl;
-#[doc = "WRITECMD (w) register accessor: an alias for `Reg<WRITECMD_SPEC>`"]
-pub type WRITECMD = crate::Reg<writecmd::WRITECMD_SPEC>;
+#[doc = "WRITECMD (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`writecmd::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@writecmd`] module"]
+#[doc(alias = "WRITECMD")]
+pub type Writecmd = crate::Reg<writecmd::WritecmdSpec>;
 #[doc = "No Description"]
 pub mod writecmd;
-#[doc = "ADDRB (rw) register accessor: an alias for `Reg<ADDRB_SPEC>`"]
-pub type ADDRB = crate::Reg<addrb::ADDRB_SPEC>;
+#[doc = "ADDRB (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`addrb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`addrb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@addrb`] module"]
+#[doc(alias = "ADDRB")]
+pub type Addrb = crate::Reg<addrb::AddrbSpec>;
 #[doc = "No Description"]
 pub mod addrb;
-#[doc = "WDATA (rw) register accessor: an alias for `Reg<WDATA_SPEC>`"]
-pub type WDATA = crate::Reg<wdata::WDATA_SPEC>;
+#[doc = "WDATA (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`wdata::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`wdata::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@wdata`] module"]
+#[doc(alias = "WDATA")]
+pub type Wdata = crate::Reg<wdata::WdataSpec>;
 #[doc = "No Description"]
 pub mod wdata;
-#[doc = "STATUS (r) register accessor: an alias for `Reg<STATUS_SPEC>`"]
-pub type STATUS = crate::Reg<status::STATUS_SPEC>;
+#[doc = "STATUS (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`] module"]
+#[doc(alias = "STATUS")]
+pub type Status = crate::Reg<status::StatusSpec>;
 #[doc = "No Description"]
 pub mod status;
-#[doc = "IF (rw) register accessor: an alias for `Reg<IF_SPEC>`"]
-pub type IF = crate::Reg<if_::IF_SPEC>;
+#[doc = "IF (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`if_::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_`] module"]
+#[doc(alias = "IF")]
+pub type If = crate::Reg<if_::IfSpec>;
 #[doc = "No Description"]
 pub mod if_;
-#[doc = "IEN (rw) register accessor: an alias for `Reg<IEN_SPEC>`"]
-pub type IEN = crate::Reg<ien::IEN_SPEC>;
+#[doc = "IEN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`] module"]
+#[doc(alias = "IEN")]
+pub type Ien = crate::Reg<ien::IenSpec>;
 #[doc = "No Description"]
 pub mod ien;
-#[doc = "USERDATASIZE (r) register accessor: an alias for `Reg<USERDATASIZE_SPEC>`"]
-pub type USERDATASIZE = crate::Reg<userdatasize::USERDATASIZE_SPEC>;
+#[doc = "USERDATASIZE (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`userdatasize::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@userdatasize`] module"]
+#[doc(alias = "USERDATASIZE")]
+pub type Userdatasize = crate::Reg<userdatasize::UserdatasizeSpec>;
 #[doc = "No Description"]
 pub mod userdatasize;
-#[doc = "CMD (w) register accessor: an alias for `Reg<CMD_SPEC>`"]
-pub type CMD = crate::Reg<cmd::CMD_SPEC>;
+#[doc = "CMD (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmd::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cmd`] module"]
+#[doc(alias = "CMD")]
+pub type Cmd = crate::Reg<cmd::CmdSpec>;
 #[doc = "No Description"]
 pub mod cmd;
-#[doc = "LOCK (w) register accessor: an alias for `Reg<LOCK_SPEC>`"]
-pub type LOCK = crate::Reg<lock::LOCK_SPEC>;
+#[doc = "LOCK (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lock::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@lock`] module"]
+#[doc(alias = "LOCK")]
+pub type Lock = crate::Reg<lock::LockSpec>;
 #[doc = "No Description"]
 pub mod lock;
-#[doc = "MISCLOCKWORD (rw) register accessor: an alias for `Reg<MISCLOCKWORD_SPEC>`"]
-pub type MISCLOCKWORD = crate::Reg<misclockword::MISCLOCKWORD_SPEC>;
+#[doc = "MISCLOCKWORD (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`misclockword::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`misclockword::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@misclockword`] module"]
+#[doc(alias = "MISCLOCKWORD")]
+pub type Misclockword = crate::Reg<misclockword::MisclockwordSpec>;
 #[doc = "No Description"]
 pub mod misclockword;
-#[doc = "PWRCTRL (rw) register accessor: an alias for `Reg<PWRCTRL_SPEC>`"]
-pub type PWRCTRL = crate::Reg<pwrctrl::PWRCTRL_SPEC>;
+#[doc = "PWRCTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`pwrctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pwrctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pwrctrl`] module"]
+#[doc(alias = "PWRCTRL")]
+pub type Pwrctrl = crate::Reg<pwrctrl::PwrctrlSpec>;
 #[doc = "No Description"]
 pub mod pwrctrl;
-#[doc = "PAGELOCK0 (rw) register accessor: an alias for `Reg<PAGELOCK0_SPEC>`"]
-pub type PAGELOCK0 = crate::Reg<pagelock0::PAGELOCK0_SPEC>;
+#[doc = "PAGELOCK0 (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`pagelock0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pagelock0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pagelock0`] module"]
+#[doc(alias = "PAGELOCK0")]
+pub type Pagelock0 = crate::Reg<pagelock0::Pagelock0Spec>;
 #[doc = "No Description"]
 pub mod pagelock0;
-#[doc = "PAGELOCK1 (rw) register accessor: an alias for `Reg<PAGELOCK1_SPEC>`"]
-pub type PAGELOCK1 = crate::Reg<pagelock1::PAGELOCK1_SPEC>;
+#[doc = "PAGELOCK1 (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`pagelock1::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pagelock1::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pagelock1`] module"]
+#[doc(alias = "PAGELOCK1")]
+pub type Pagelock1 = crate::Reg<pagelock1::Pagelock1Spec>;
 #[doc = "No Description"]
 pub mod pagelock1;

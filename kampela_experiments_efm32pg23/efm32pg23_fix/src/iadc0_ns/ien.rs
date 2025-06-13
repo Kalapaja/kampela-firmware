@@ -1,275 +1,217 @@
 #[doc = "Register `IEN` reader"]
-pub struct R(crate::R<IEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<IEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<IEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub struct W(crate::W<IEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<IEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<IEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `SINGLEFIFODVL` reader - Single FIFO Data Valid Level Enable"]
-pub type SINGLEFIFODVL_R = crate::BitReader<bool>;
+pub type SinglefifodvlR = crate::BitReader;
 #[doc = "Field `SINGLEFIFODVL` writer - Single FIFO Data Valid Level Enable"]
-pub type SINGLEFIFODVL_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SinglefifodvlW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANFIFODVL` reader - Scan FIFO Data Valid Level Enable"]
-pub type SCANFIFODVL_R = crate::BitReader<bool>;
+pub type ScanfifodvlR = crate::BitReader;
 #[doc = "Field `SCANFIFODVL` writer - Scan FIFO Data Valid Level Enable"]
-pub type SCANFIFODVL_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScanfifodvlW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLECMP` reader - Single Result Window Compare Enable"]
-pub type SINGLECMP_R = crate::BitReader<bool>;
+pub type SinglecmpR = crate::BitReader;
 #[doc = "Field `SINGLECMP` writer - Single Result Window Compare Enable"]
-pub type SINGLECMP_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SinglecmpW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANCMP` reader - Scan Result Window Compare Enable"]
-pub type SCANCMP_R = crate::BitReader<bool>;
+pub type ScancmpR = crate::BitReader;
 #[doc = "Field `SCANCMP` writer - Scan Result Window Compare Enable"]
-pub type SCANCMP_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScancmpW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANENTRYDONE` reader - Scan Entry Done Enable"]
-pub type SCANENTRYDONE_R = crate::BitReader<bool>;
+pub type ScanentrydoneR = crate::BitReader;
 #[doc = "Field `SCANENTRYDONE` writer - Scan Entry Done Enable"]
-pub type SCANENTRYDONE_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScanentrydoneW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANTABLEDONE` reader - Scan Table Done Enable"]
-pub type SCANTABLEDONE_R = crate::BitReader<bool>;
+pub type ScantabledoneR = crate::BitReader;
 #[doc = "Field `SCANTABLEDONE` writer - Scan Table Done Enable"]
-pub type SCANTABLEDONE_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScantabledoneW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLEDONE` reader - Single Conversion Done Enable"]
-pub type SINGLEDONE_R = crate::BitReader<bool>;
+pub type SingledoneR = crate::BitReader;
 #[doc = "Field `SINGLEDONE` writer - Single Conversion Done Enable"]
-pub type SINGLEDONE_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SingledoneW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `POLARITYERR` reader - Polarity Error Enable"]
-pub type POLARITYERR_R = crate::BitReader<bool>;
+pub type PolarityerrR = crate::BitReader;
 #[doc = "Field `POLARITYERR` writer - Polarity Error Enable"]
-pub type POLARITYERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type PolarityerrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PORTALLOCERR` reader - Port Allocation Error Enable"]
-pub type PORTALLOCERR_R = crate::BitReader<bool>;
+pub type PortallocerrR = crate::BitReader;
 #[doc = "Field `PORTALLOCERR` writer - Port Allocation Error Enable"]
-pub type PORTALLOCERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type PortallocerrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLEFIFOOF` reader - Single FIFO Overflow Enable"]
-pub type SINGLEFIFOOF_R = crate::BitReader<bool>;
+pub type SinglefifoofR = crate::BitReader;
 #[doc = "Field `SINGLEFIFOOF` writer - Single FIFO Overflow Enable"]
-pub type SINGLEFIFOOF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SinglefifoofW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANFIFOOF` reader - Scan FIFO Overflow Enable"]
-pub type SCANFIFOOF_R = crate::BitReader<bool>;
+pub type ScanfifoofR = crate::BitReader;
 #[doc = "Field `SCANFIFOOF` writer - Scan FIFO Overflow Enable"]
-pub type SCANFIFOOF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScanfifoofW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLEFIFOUF` reader - Single FIFO Underflow Enable"]
-pub type SINGLEFIFOUF_R = crate::BitReader<bool>;
+pub type SinglefifoufR = crate::BitReader;
 #[doc = "Field `SINGLEFIFOUF` writer - Single FIFO Underflow Enable"]
-pub type SINGLEFIFOUF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SinglefifoufW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANFIFOUF` reader - Scan FIFO Underflow Enable"]
-pub type SCANFIFOUF_R = crate::BitReader<bool>;
+pub type ScanfifoufR = crate::BitReader;
 #[doc = "Field `SCANFIFOUF` writer - Scan FIFO Underflow Enable"]
-pub type SCANFIFOUF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ScanfifoufW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EM23ABORTERROR` reader - EM2/3 Abort Error Enable"]
-pub type EM23ABORTERROR_R = crate::BitReader<bool>;
+pub type Em23aborterrorR = crate::BitReader;
 #[doc = "Field `EM23ABORTERROR` writer - EM2/3 Abort Error Enable"]
-pub type EM23ABORTERROR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Em23aborterrorW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Single FIFO Data Valid Level Enable"]
     #[inline(always)]
-    pub fn singlefifodvl(&self) -> SINGLEFIFODVL_R {
-        SINGLEFIFODVL_R::new((self.bits & 1) != 0)
+    pub fn singlefifodvl(&self) -> SinglefifodvlR {
+        SinglefifodvlR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Scan FIFO Data Valid Level Enable"]
     #[inline(always)]
-    pub fn scanfifodvl(&self) -> SCANFIFODVL_R {
-        SCANFIFODVL_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn scanfifodvl(&self) -> ScanfifodvlR {
+        ScanfifodvlR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Single Result Window Compare Enable"]
     #[inline(always)]
-    pub fn singlecmp(&self) -> SINGLECMP_R {
-        SINGLECMP_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn singlecmp(&self) -> SinglecmpR {
+        SinglecmpR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Scan Result Window Compare Enable"]
     #[inline(always)]
-    pub fn scancmp(&self) -> SCANCMP_R {
-        SCANCMP_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn scancmp(&self) -> ScancmpR {
+        ScancmpR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 7 - Scan Entry Done Enable"]
     #[inline(always)]
-    pub fn scanentrydone(&self) -> SCANENTRYDONE_R {
-        SCANENTRYDONE_R::new(((self.bits >> 7) & 1) != 0)
+    pub fn scanentrydone(&self) -> ScanentrydoneR {
+        ScanentrydoneR::new(((self.bits >> 7) & 1) != 0)
     }
     #[doc = "Bit 8 - Scan Table Done Enable"]
     #[inline(always)]
-    pub fn scantabledone(&self) -> SCANTABLEDONE_R {
-        SCANTABLEDONE_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn scantabledone(&self) -> ScantabledoneR {
+        ScantabledoneR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - Single Conversion Done Enable"]
     #[inline(always)]
-    pub fn singledone(&self) -> SINGLEDONE_R {
-        SINGLEDONE_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn singledone(&self) -> SingledoneR {
+        SingledoneR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 12 - Polarity Error Enable"]
     #[inline(always)]
-    pub fn polarityerr(&self) -> POLARITYERR_R {
-        POLARITYERR_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn polarityerr(&self) -> PolarityerrR {
+        PolarityerrR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - Port Allocation Error Enable"]
     #[inline(always)]
-    pub fn portallocerr(&self) -> PORTALLOCERR_R {
-        PORTALLOCERR_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn portallocerr(&self) -> PortallocerrR {
+        PortallocerrR::new(((self.bits >> 13) & 1) != 0)
     }
     #[doc = "Bit 16 - Single FIFO Overflow Enable"]
     #[inline(always)]
-    pub fn singlefifoof(&self) -> SINGLEFIFOOF_R {
-        SINGLEFIFOOF_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn singlefifoof(&self) -> SinglefifoofR {
+        SinglefifoofR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - Scan FIFO Overflow Enable"]
     #[inline(always)]
-    pub fn scanfifoof(&self) -> SCANFIFOOF_R {
-        SCANFIFOOF_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn scanfifoof(&self) -> ScanfifoofR {
+        ScanfifoofR::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - Single FIFO Underflow Enable"]
     #[inline(always)]
-    pub fn singlefifouf(&self) -> SINGLEFIFOUF_R {
-        SINGLEFIFOUF_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn singlefifouf(&self) -> SinglefifoufR {
+        SinglefifoufR::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 19 - Scan FIFO Underflow Enable"]
     #[inline(always)]
-    pub fn scanfifouf(&self) -> SCANFIFOUF_R {
-        SCANFIFOUF_R::new(((self.bits >> 19) & 1) != 0)
+    pub fn scanfifouf(&self) -> ScanfifoufR {
+        ScanfifoufR::new(((self.bits >> 19) & 1) != 0)
     }
     #[doc = "Bit 31 - EM2/3 Abort Error Enable"]
     #[inline(always)]
-    pub fn em23aborterror(&self) -> EM23ABORTERROR_R {
-        EM23ABORTERROR_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn em23aborterror(&self) -> Em23aborterrorR {
+        Em23aborterrorR::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Single FIFO Data Valid Level Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlefifodvl(&mut self) -> SINGLEFIFODVL_W<0> {
-        SINGLEFIFODVL_W::new(self)
+    pub fn singlefifodvl(&mut self) -> SinglefifodvlW<IenSpec> {
+        SinglefifodvlW::new(self, 0)
     }
     #[doc = "Bit 1 - Scan FIFO Data Valid Level Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanfifodvl(&mut self) -> SCANFIFODVL_W<1> {
-        SCANFIFODVL_W::new(self)
+    pub fn scanfifodvl(&mut self) -> ScanfifodvlW<IenSpec> {
+        ScanfifodvlW::new(self, 1)
     }
     #[doc = "Bit 2 - Single Result Window Compare Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlecmp(&mut self) -> SINGLECMP_W<2> {
-        SINGLECMP_W::new(self)
+    pub fn singlecmp(&mut self) -> SinglecmpW<IenSpec> {
+        SinglecmpW::new(self, 2)
     }
     #[doc = "Bit 3 - Scan Result Window Compare Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scancmp(&mut self) -> SCANCMP_W<3> {
-        SCANCMP_W::new(self)
+    pub fn scancmp(&mut self) -> ScancmpW<IenSpec> {
+        ScancmpW::new(self, 3)
     }
     #[doc = "Bit 7 - Scan Entry Done Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanentrydone(&mut self) -> SCANENTRYDONE_W<7> {
-        SCANENTRYDONE_W::new(self)
+    pub fn scanentrydone(&mut self) -> ScanentrydoneW<IenSpec> {
+        ScanentrydoneW::new(self, 7)
     }
     #[doc = "Bit 8 - Scan Table Done Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scantabledone(&mut self) -> SCANTABLEDONE_W<8> {
-        SCANTABLEDONE_W::new(self)
+    pub fn scantabledone(&mut self) -> ScantabledoneW<IenSpec> {
+        ScantabledoneW::new(self, 8)
     }
     #[doc = "Bit 9 - Single Conversion Done Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn singledone(&mut self) -> SINGLEDONE_W<9> {
-        SINGLEDONE_W::new(self)
+    pub fn singledone(&mut self) -> SingledoneW<IenSpec> {
+        SingledoneW::new(self, 9)
     }
     #[doc = "Bit 12 - Polarity Error Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn polarityerr(&mut self) -> POLARITYERR_W<12> {
-        POLARITYERR_W::new(self)
+    pub fn polarityerr(&mut self) -> PolarityerrW<IenSpec> {
+        PolarityerrW::new(self, 12)
     }
     #[doc = "Bit 13 - Port Allocation Error Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn portallocerr(&mut self) -> PORTALLOCERR_W<13> {
-        PORTALLOCERR_W::new(self)
+    pub fn portallocerr(&mut self) -> PortallocerrW<IenSpec> {
+        PortallocerrW::new(self, 13)
     }
     #[doc = "Bit 16 - Single FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlefifoof(&mut self) -> SINGLEFIFOOF_W<16> {
-        SINGLEFIFOOF_W::new(self)
+    pub fn singlefifoof(&mut self) -> SinglefifoofW<IenSpec> {
+        SinglefifoofW::new(self, 16)
     }
     #[doc = "Bit 17 - Scan FIFO Overflow Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanfifoof(&mut self) -> SCANFIFOOF_W<17> {
-        SCANFIFOOF_W::new(self)
+    pub fn scanfifoof(&mut self) -> ScanfifoofW<IenSpec> {
+        ScanfifoofW::new(self, 17)
     }
     #[doc = "Bit 18 - Single FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlefifouf(&mut self) -> SINGLEFIFOUF_W<18> {
-        SINGLEFIFOUF_W::new(self)
+    pub fn singlefifouf(&mut self) -> SinglefifoufW<IenSpec> {
+        SinglefifoufW::new(self, 18)
     }
     #[doc = "Bit 19 - Scan FIFO Underflow Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanfifouf(&mut self) -> SCANFIFOUF_W<19> {
-        SCANFIFOUF_W::new(self)
+    pub fn scanfifouf(&mut self) -> ScanfifoufW<IenSpec> {
+        ScanfifoufW::new(self, 19)
     }
     #[doc = "Bit 31 - EM2/3 Abort Error Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn em23aborterror(&mut self) -> EM23ABORTERROR_W<31> {
-        EM23ABORTERROR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn em23aborterror(&mut self) -> Em23aborterrorW<IenSpec> {
+        Em23aborterrorW::new(self, 31)
     }
 }
-#[doc = "Interrupt Enable\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ien](index.html) module"]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "Interrupt Enable\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ien::R](R) reader structure"]
-impl crate::Readable for IEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ien::W](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ien::R`](R) reader structure"]
+impl crate::Readable for IenSpec {}
+#[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IenSpec {}

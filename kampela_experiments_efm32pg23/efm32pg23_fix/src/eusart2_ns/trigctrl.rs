@@ -1,110 +1,63 @@
 #[doc = "Register `TRIGCTRL` reader"]
-pub struct R(crate::R<TRIGCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<TRIGCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<TRIGCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<TRIGCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<TrigctrlSpec>;
 #[doc = "Register `TRIGCTRL` writer"]
-pub struct W(crate::W<TRIGCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<TRIGCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<TRIGCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<TRIGCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<TrigctrlSpec>;
 #[doc = "Field `RXTEN` reader - Receive Trigger Enable"]
-pub type RXTEN_R = crate::BitReader<bool>;
+pub type RxtenR = crate::BitReader;
 #[doc = "Field `RXTEN` writer - Receive Trigger Enable"]
-pub type RXTEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, TRIGCTRL_SPEC, bool, O>;
+pub type RxtenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXTEN` reader - Transmit Trigger Enable"]
-pub type TXTEN_R = crate::BitReader<bool>;
+pub type TxtenR = crate::BitReader;
 #[doc = "Field `TXTEN` writer - Transmit Trigger Enable"]
-pub type TXTEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, TRIGCTRL_SPEC, bool, O>;
+pub type TxtenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUTOTXTEN` reader - AUTOTX Trigger Enable"]
-pub type AUTOTXTEN_R = crate::BitReader<bool>;
+pub type AutotxtenR = crate::BitReader;
 #[doc = "Field `AUTOTXTEN` writer - AUTOTX Trigger Enable"]
-pub type AUTOTXTEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, TRIGCTRL_SPEC, bool, O>;
+pub type AutotxtenW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Receive Trigger Enable"]
     #[inline(always)]
-    pub fn rxten(&self) -> RXTEN_R {
-        RXTEN_R::new((self.bits & 1) != 0)
+    pub fn rxten(&self) -> RxtenR {
+        RxtenR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Transmit Trigger Enable"]
     #[inline(always)]
-    pub fn txten(&self) -> TXTEN_R {
-        TXTEN_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn txten(&self) -> TxtenR {
+        TxtenR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - AUTOTX Trigger Enable"]
     #[inline(always)]
-    pub fn autotxten(&self) -> AUTOTXTEN_R {
-        AUTOTXTEN_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn autotxten(&self) -> AutotxtenR {
+        AutotxtenR::new(((self.bits >> 2) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Receive Trigger Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxten(&mut self) -> RXTEN_W<0> {
-        RXTEN_W::new(self)
+    pub fn rxten(&mut self) -> RxtenW<TrigctrlSpec> {
+        RxtenW::new(self, 0)
     }
     #[doc = "Bit 1 - Transmit Trigger Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn txten(&mut self) -> TXTEN_W<1> {
-        TXTEN_W::new(self)
+    pub fn txten(&mut self) -> TxtenW<TrigctrlSpec> {
+        TxtenW::new(self, 1)
     }
     #[doc = "Bit 2 - AUTOTX Trigger Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn autotxten(&mut self) -> AUTOTXTEN_W<2> {
-        AUTOTXTEN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn autotxten(&mut self) -> AutotxtenW<TrigctrlSpec> {
+        AutotxtenW::new(self, 2)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [trigctrl](index.html) module"]
-pub struct TRIGCTRL_SPEC;
-impl crate::RegisterSpec for TRIGCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`trigctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`trigctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct TrigctrlSpec;
+impl crate::RegisterSpec for TrigctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [trigctrl::R](R) reader structure"]
-impl crate::Readable for TRIGCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [trigctrl::W](W) writer structure"]
-impl crate::Writable for TRIGCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`trigctrl::R`](R) reader structure"]
+impl crate::Readable for TrigctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`trigctrl::W`](W) writer structure"]
+impl crate::Writable for TrigctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets TRIGCTRL to value 0"]
-impl crate::Resettable for TRIGCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for TrigctrlSpec {}

@@ -1,132 +1,92 @@
 #[doc = "Register `SYNC_CH2_CTRL` reader"]
-pub struct R(crate::R<SYNC_CH2_CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<SYNC_CH2_CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<SYNC_CH2_CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<SYNC_CH2_CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<SyncCh2CtrlSpec>;
 #[doc = "Register `SYNC_CH2_CTRL` writer"]
-pub struct W(crate::W<SYNC_CH2_CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<SYNC_CH2_CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<SYNC_CH2_CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<SYNC_CH2_CTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `SIGSEL` reader - Signal Select"]
-pub type SIGSEL_R = crate::FieldReader<u8, SIGSEL_A>;
+pub type W = crate::W<SyncCh2CtrlSpec>;
 #[doc = "Signal Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum SIGSEL_A {
+pub enum Sigsel {
     #[doc = "0: NONE"]
-    NONE = 0,
+    None = 0,
 }
-impl From<SIGSEL_A> for u8 {
+impl From<Sigsel> for u8 {
     #[inline(always)]
-    fn from(variant: SIGSEL_A) -> Self {
+    fn from(variant: Sigsel) -> Self {
         variant as _
     }
 }
-impl SIGSEL_R {
+impl crate::FieldSpec for Sigsel {
+    type Ux = u8;
+}
+impl crate::IsEnum for Sigsel {}
+#[doc = "Field `SIGSEL` reader - Signal Select"]
+pub type SigselR = crate::FieldReader<Sigsel>;
+impl SigselR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<SIGSEL_A> {
+    pub const fn variant(&self) -> Option<Sigsel> {
         match self.bits {
-            0 => Some(SIGSEL_A::NONE),
+            0 => Some(Sigsel::None),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `NONE`"]
+    #[doc = "NONE"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == SIGSEL_A::NONE
+        *self == Sigsel::None
     }
 }
 #[doc = "Field `SIGSEL` writer - Signal Select"]
-pub type SIGSEL_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, SYNC_CH2_CTRL_SPEC, u8, SIGSEL_A, 3, O>;
-impl<'a, const O: u8> SIGSEL_W<'a, O> {
+pub type SigselW<'a, REG> = crate::FieldWriter<'a, REG, 3, Sigsel>;
+impl<'a, REG> SigselW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
     #[doc = "NONE"]
     #[inline(always)]
-    pub fn none(self) -> &'a mut W {
-        self.variant(SIGSEL_A::NONE)
+    pub fn none(self) -> &'a mut crate::W<REG> {
+        self.variant(Sigsel::None)
     }
 }
 #[doc = "Field `SOURCESEL` reader - Source Select"]
-pub type SOURCESEL_R = crate::FieldReader<u8, u8>;
+pub type SourceselR = crate::FieldReader;
 #[doc = "Field `SOURCESEL` writer - Source Select"]
-pub type SOURCESEL_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, SYNC_CH2_CTRL_SPEC, u8, u8, 7, O>;
+pub type SourceselW<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 impl R {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    pub fn sigsel(&self) -> SIGSEL_R {
-        SIGSEL_R::new((self.bits & 7) as u8)
+    pub fn sigsel(&self) -> SigselR {
+        SigselR::new((self.bits & 7) as u8)
     }
     #[doc = "Bits 8:14 - Source Select"]
     #[inline(always)]
-    pub fn sourcesel(&self) -> SOURCESEL_R {
-        SOURCESEL_R::new(((self.bits >> 8) & 0x7f) as u8)
+    pub fn sourcesel(&self) -> SourceselR {
+        SourceselR::new(((self.bits >> 8) & 0x7f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sigsel(&mut self) -> SIGSEL_W<0> {
-        SIGSEL_W::new(self)
+    pub fn sigsel(&mut self) -> SigselW<SyncCh2CtrlSpec> {
+        SigselW::new(self, 0)
     }
     #[doc = "Bits 8:14 - Source Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sourcesel(&mut self) -> SOURCESEL_W<8> {
-        SOURCESEL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn sourcesel(&mut self) -> SourceselW<SyncCh2CtrlSpec> {
+        SourceselW::new(self, 8)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [sync_ch2_ctrl](index.html) module"]
-pub struct SYNC_CH2_CTRL_SPEC;
-impl crate::RegisterSpec for SYNC_CH2_CTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sync_ch2_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sync_ch2_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SyncCh2CtrlSpec;
+impl crate::RegisterSpec for SyncCh2CtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [sync_ch2_ctrl::R](R) reader structure"]
-impl crate::Readable for SYNC_CH2_CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [sync_ch2_ctrl::W](W) writer structure"]
-impl crate::Writable for SYNC_CH2_CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`sync_ch2_ctrl::R`](R) reader structure"]
+impl crate::Readable for SyncCh2CtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`sync_ch2_ctrl::W`](W) writer structure"]
+impl crate::Writable for SyncCh2CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets SYNC_CH2_CTRL to value 0"]
-impl crate::Resettable for SYNC_CH2_CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for SyncCh2CtrlSpec {}

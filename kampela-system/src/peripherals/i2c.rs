@@ -3,7 +3,7 @@ use efm32pg23_fix::Peripherals;
 use crate::peripherals::gpio_pins::*;
 use cortex_m::asm::delay;
 use crate::{if_in_free, in_free, FreeError};
-use crate::parallel::Operation;
+use crate::parallel::{AsyncOperation, Threads};
 
 
 #[derive(Debug)]
@@ -25,189 +25,114 @@ impl From<FreeError> for I2CError {
 
 pub fn init_i2c(peripherals: &mut Peripherals) {
     peripherals
-        .GPIO_S
-        .i2c0_routeen
+        .gpio_s
+        .i2c0_routeen()
         .write(|w_reg| w_reg.sclpen().set_bit().sdapen().set_bit());
     peripherals
-        .GPIO_S
-        .i2c0_sdaroute
-        .write(|w_reg| w_reg.port().variant(0).pin().variant(SDA_PIN));
+        .gpio_s
+        .i2c0_sdaroute()
+        .write(|w_reg| unsafe { w_reg.port().bits(PORT_A).pin().bits(SDA_PIN) });
     peripherals
-        .GPIO_S
-        .i2c0_sclroute
-        .write(|w_reg| w_reg.port().variant(0).pin().variant(SCL_PIN));
+        .gpio_s
+        .i2c0_sclroute()
+        .write(|w_reg| unsafe { w_reg.port().bits(PORT_A).pin().bits(SCL_PIN) });
     
     peripherals
-        .I2C0_S
-        .ien
+        .i2c0_s
+        .ien()
         .reset();
     peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .reset();
     peripherals
-        .I2C0_S
-        .ctrl
+        .i2c0_s
+        .ctrl()
         .write(|w_reg| w_reg.slave().disable().clhr().standard());
     peripherals
-        .I2C0_S
-        .clkdiv
-        .write(|w_reg| w_reg.div().variant(12)); // divider calculated as 10, set to 12 for debug
+        .i2c0_s
+        .clkdiv()
+        .write(|w_reg| unsafe { w_reg.div().bits(12) }); // divider calculated as 10, set to 12 for debug
     peripherals
-        .I2C0_S
-        .en
+        .i2c0_s
+        .en()
         .write(|w_reg| w_reg.en().enable());
     peripherals
-        .I2C0_S
-        .ctrl
+        .i2c0_s
+        .ctrl()
         .write(|w_reg| w_reg.corerst().enable());
     delay(10000);
     peripherals
-        .I2C0_S
-        .ctrl
+        .i2c0_s
+        .ctrl()
         .write(|w_reg| w_reg.corerst().disable());
     delay(100000);
 }
 
 /// I2C bus reader for our touchpad, not generalized until someone needs it
 pub struct ReadI2C {
-    state: ReadI2CState,
+    threads: Threads<ReadI2CState, 1>,
     value: Option<u8>,
-    timer: usize
 }
 
 pub enum ReadI2CState {
-    /// Initial state; here the read is done
-    Init,
-    /// Handle errata and cleanup after read; output
-    ErrataCleanup1,
-    /// Another operation for errata cleanup, usually not entered; Also outputs.
-    ErrataCleanup2,
+    /// Read data register
+    Read,
+    /// Clean state registers and output data
+    OutputData
 }
 
-impl ReadI2C {
-    fn count(&mut self) -> bool {
-        if self.timer == 0 {
-            false
-        } else {
-            self.timer -= 1;
-            true
-        }
-    }
+impl Default for ReadI2CState {
+    fn default() -> Self { ReadI2CState::OutputData }
 }
 
-impl Operation for ReadI2C {
+impl AsyncOperation for ReadI2C {
     type Init = ();
     type Input<'a> = ();
-    type Output = Result<Option<u8>, I2CError>;
-    type StateEnum = ReadI2CState;
+    type Output = Result<Option<Option<u8>>, I2CError>;
 
     fn new(_: ()) -> Self {
         Self {
-            state: ReadI2CState::Init,
+            threads: Threads::new(ReadI2CState::Read),
             value: None,
-            timer: 0,
         }
     }
 
-    fn wind(&mut self, state: ReadI2CState, delay: usize) {
-        self.state = state;
-        self.timer = delay;
-    }
-
     fn advance(&mut self, _: ()) -> Self::Output {
-        if self.count() { return Ok(None) };
-        match self.state {
-            ReadI2CState::Init => {
+        match self.threads.turn() {
+            ReadI2CState::Read => {
                 check_i2c_errors()?;
-                if !if_in_free(|peripherals|
+                if if_in_free(|peripherals|
                     peripherals
-                        .I2C0_S
-                        .if_
+                        .i2c0_s
+                        .status()
                         .read()
                         .rxdatav()
-                        .bit_is_clear()
-                )? {
+                        .bit_is_set()
+                ) {
                     in_free(|peripherals| 
                         self.value = Some(
                             peripherals
-                                .I2C0_S
-                                .rxdata
+                                .i2c0_s
+                                .rxdata()
                                 .read()
                                 .rxdata()
                                 .bits()
                         )
                     );
-                    self.wind_d(ReadI2CState::ErrataCleanup1);
-                }
-                Ok(None)
-            },
-            ReadI2CState::ErrataCleanup1 => {
-                // Errata I2C_E303, patch follows sdk
-                if if_in_free(|peripherals| 
-                    peripherals
-                        .I2C0_S
-                        .status
-                        .read()
-                        .rxdatav()
-                        .bit_is_clear() 
-                    &
-                    peripherals
-                        .I2C0_S
-                        .status
-                        .read()
-                        .rxfull()
-                        .bit_is_set()
-                )? {
-                    in_free(|peripherals| {
-                        let _dummy_data = peripherals
-                            .I2C0_S
-                            .rxdata
-                            .read()
-                            .bits();
-                        }
-                    );
-                    self.wind_d(ReadI2CState::ErrataCleanup2);
-                    Ok(None)
+                    self.threads.change(ReadI2CState::OutputData);
+                    Ok(Some(None))
                 } else {
-                    in_free(|peripherals|
-                        peripherals
-                            .I2C0_S
-                            .if_
-                            .write(|w_reg| w_reg.rxdatav().clear_bit().rxfull().clear_bit())
-                    );
-
-                    if let Some(out) = self.value {
-                        Ok(Some(out))
-                    } else {
-                        Err(I2CError::SequenceError)
-                    }
+                    Ok(None)
                 }
             },
-            ReadI2CState::ErrataCleanup2 => {
-                in_free(|peripherals| {
-                    peripherals
-                        .I2C0_S
-                        .if_
-                        .write(|w_reg| w_reg.rxuf().clear_bit());
-                    peripherals
-                        .I2C0_S
-                        .if_
-                        .write(|w_reg| 
-                            w_reg
-                                .rxdatav()
-                                .clear_bit()
-                                .rxfull()
-                                .clear_bit()
-                            );
-                });
-
+            ReadI2CState::OutputData => {
                 if let Some(out) = self.value {
-                    Ok(Some(out))
+                    Ok(Some(Some(out)))
                 } else {
                     Err(I2CError::SequenceError)
                 }
-            },
+            }
         }
     }
 }
@@ -231,26 +156,84 @@ pub fn check_i2c_errors() -> Result<(), I2CError> {
     out
 }
 
-pub fn acknowledge_i2c_tx() -> Result<(), I2CError> {
-    let mut out = Ok(());
-    in_free(|peripherals| {
-        out = acknowledge_i2c_tx_free(peripherals)
-    });
-    out
+pub fn acknowledge_i2c_tx() -> Result<bool, I2CError> {
+    check_i2c_errors()?;
+
+    if if_in_free(|peripherals|
+        peripherals
+            .i2c0_s
+            .if_()
+            .read()
+            .ack()
+            .bit_is_clear()
+    ) {
+        check_i2c_errors()?;
+
+        if if_in_free(|peripherals|
+            peripherals
+                .i2c0_s
+                .if_()
+                .read()
+                .nack()
+                .bit_is_set()
+         ) {
+            in_free(|peripherals| {
+                // clear interrupt flag
+                peripherals
+                    .i2c0_s
+                    .if_()
+                    .write(|w_reg| w_reg.nack().clear_bit());
+                // stop
+                peripherals
+                    .i2c0_s
+                    .cmd()
+                    .write(|w_reg| w_reg.stop().set_bit());
+            });
+
+            delay(100000);
+            return Err(I2CError::TransferNack)
+        }
+
+        Ok(false)
+    } else {
+        in_free(|peripherals| {
+            // clear interrupt flag
+            peripherals
+                .i2c0_s
+                .if_()
+                .write(|w_reg| w_reg.ack().clear_bit());
+        });
+        Ok(true)
+    }
 }
 
-pub fn mstop_i2c_wait_and_clear() -> Result<(), I2CError> {
-    let mut out = Ok(());
-    in_free(|peripherals| {
-        out = check_i2c_errors_free(peripherals)
-    });
-    out
+pub fn mstop_i2c_wait_and_clear() -> Result<bool, I2CError> {
+    check_i2c_errors()?;
+    if if_in_free(|peripherals|
+        peripherals
+            .i2c0_s
+            .if_()
+            .read()
+            .mstop()
+            .bit_is_clear()
+    ) {
+        check_i2c_errors()?;
+        Ok(false)
+    } else {
+        in_free(|peripherals| {
+            peripherals
+            .i2c0_s
+            .if_()
+            .write(|w_reg| w_reg.mstop().clear_bit());
+        });
+        Ok(true)
+    }
 }
 
 pub fn check_i2c_errors_free(peripherals: &mut Peripherals) -> Result<(), I2CError> {
     let if_read = peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .read();
     if if_read.arblost().bit_is_set() {return Err(I2CError::ArbitrationLost)}
     if if_read.buserr().bit_is_set() {return Err(I2CError::BusError)}
@@ -260,8 +243,8 @@ pub fn check_i2c_errors_free(peripherals: &mut Peripherals) -> Result<(), I2CErr
 pub fn acknowledge_i2c_tx_free(peripherals: &mut Peripherals) -> Result<(), I2CError> {
     check_i2c_errors_free(peripherals)?;
     while peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .read()
         .ack()
         .bit_is_clear()
@@ -269,21 +252,21 @@ pub fn acknowledge_i2c_tx_free(peripherals: &mut Peripherals) -> Result<(), I2CE
         check_i2c_errors_free(peripherals)?;
 
         if peripherals
-            .I2C0_S
-            .if_
+            .i2c0_s
+            .if_()
             .read()
             .nack()
             .bit_is_set()
         {
             // clear interrupt flag
             peripherals
-                .I2C0_S
-                .if_
+                .i2c0_s
+                .if_()
                 .write(|w_reg| w_reg.nack().clear_bit());
             // stop
             peripherals
-                .I2C0_S
-                .cmd
+                .i2c0_s
+                .cmd()
                 .write(|w_reg| w_reg.stop().set_bit());
             delay(100000);
             return Err(I2CError::TransferNack)
@@ -291,8 +274,8 @@ pub fn acknowledge_i2c_tx_free(peripherals: &mut Peripherals) -> Result<(), I2CE
     }
     // clear interrupt flag
     peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .write(|w_reg| w_reg.ack().clear_bit());
 
     Ok(())
@@ -301,8 +284,8 @@ pub fn acknowledge_i2c_tx_free(peripherals: &mut Peripherals) -> Result<(), I2CE
 pub fn mstop_i2c_wait_and_clear_free(peripherals: &mut Peripherals) -> Result<(), I2CError> {
     check_i2c_errors_free(peripherals)?;
     while peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .read()
         .mstop()
         .bit_is_clear()
@@ -310,8 +293,8 @@ pub fn mstop_i2c_wait_and_clear_free(peripherals: &mut Peripherals) -> Result<()
         check_i2c_errors_free(peripherals)?;
     }
     peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .write(|w_reg| w_reg.mstop().clear_bit());
     Ok(())
 }

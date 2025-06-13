@@ -1,116 +1,78 @@
 #[doc = "Register `PD1PARETCTRL` reader"]
-pub struct R(crate::R<PD1PARETCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<PD1PARETCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<PD1PARETCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<PD1PARETCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Pd1paretctrlSpec>;
 #[doc = "Register `PD1PARETCTRL` writer"]
-pub struct W(crate::W<PD1PARETCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<PD1PARETCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<PD1PARETCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<PD1PARETCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `PD1PARETDIS` reader - Disable PD1 Partial Retention"]
-pub type PD1PARETDIS_R = crate::FieldReader<u16, PD1PARETDIS_A>;
+pub type W = crate::W<Pd1paretctrlSpec>;
 #[doc = "Disable PD1 Partial Retention\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u16)]
-pub enum PD1PARETDIS_A {
+pub enum Pd1paretdis {
     #[doc = "1: Retain associated registers when in EM2/3"]
-    PERIPHNORETAIN = 1,
+    Periphnoretain = 1,
 }
-impl From<PD1PARETDIS_A> for u16 {
+impl From<Pd1paretdis> for u16 {
     #[inline(always)]
-    fn from(variant: PD1PARETDIS_A) -> Self {
+    fn from(variant: Pd1paretdis) -> Self {
         variant as _
     }
 }
-impl PD1PARETDIS_R {
+impl crate::FieldSpec for Pd1paretdis {
+    type Ux = u16;
+}
+impl crate::IsEnum for Pd1paretdis {}
+#[doc = "Field `PD1PARETDIS` reader - Disable PD1 Partial Retention"]
+pub type Pd1paretdisR = crate::FieldReader<Pd1paretdis>;
+impl Pd1paretdisR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PD1PARETDIS_A> {
+    pub const fn variant(&self) -> Option<Pd1paretdis> {
         match self.bits {
-            1 => Some(PD1PARETDIS_A::PERIPHNORETAIN),
+            1 => Some(Pd1paretdis::Periphnoretain),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `PERIPHNORETAIN`"]
+    #[doc = "Retain associated registers when in EM2/3"]
     #[inline(always)]
     pub fn is_periphnoretain(&self) -> bool {
-        *self == PD1PARETDIS_A::PERIPHNORETAIN
+        *self == Pd1paretdis::Periphnoretain
     }
 }
 #[doc = "Field `PD1PARETDIS` writer - Disable PD1 Partial Retention"]
-pub type PD1PARETDIS_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, PD1PARETCTRL_SPEC, u16, PD1PARETDIS_A, 16, O>;
-impl<'a, const O: u8> PD1PARETDIS_W<'a, O> {
+pub type Pd1paretdisW<'a, REG> = crate::FieldWriter<'a, REG, 16, Pd1paretdis>;
+impl<'a, REG> Pd1paretdisW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u16>,
+{
     #[doc = "Retain associated registers when in EM2/3"]
     #[inline(always)]
-    pub fn periphnoretain(self) -> &'a mut W {
-        self.variant(PD1PARETDIS_A::PERIPHNORETAIN)
+    pub fn periphnoretain(self) -> &'a mut crate::W<REG> {
+        self.variant(Pd1paretdis::Periphnoretain)
     }
 }
 impl R {
     #[doc = "Bits 0:15 - Disable PD1 Partial Retention"]
     #[inline(always)]
-    pub fn pd1paretdis(&self) -> PD1PARETDIS_R {
-        PD1PARETDIS_R::new((self.bits & 0xffff) as u16)
+    pub fn pd1paretdis(&self) -> Pd1paretdisR {
+        Pd1paretdisR::new((self.bits & 0xffff) as u16)
     }
 }
 impl W {
     #[doc = "Bits 0:15 - Disable PD1 Partial Retention"]
     #[inline(always)]
-    #[must_use]
-    pub fn pd1paretdis(&mut self) -> PD1PARETDIS_W<0> {
-        PD1PARETDIS_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn pd1paretdis(&mut self) -> Pd1paretdisW<Pd1paretctrlSpec> {
+        Pd1paretdisW::new(self, 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [pd1paretctrl](index.html) module"]
-pub struct PD1PARETCTRL_SPEC;
-impl crate::RegisterSpec for PD1PARETCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`pd1paretctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pd1paretctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Pd1paretctrlSpec;
+impl crate::RegisterSpec for Pd1paretctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [pd1paretctrl::R](R) reader structure"]
-impl crate::Readable for PD1PARETCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [pd1paretctrl::W](W) writer structure"]
-impl crate::Writable for PD1PARETCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`pd1paretctrl::R`](R) reader structure"]
+impl crate::Readable for Pd1paretctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`pd1paretctrl::W`](W) writer structure"]
+impl crate::Writable for Pd1paretctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets PD1PARETCTRL to value 0"]
-impl crate::Resettable for PD1PARETCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Pd1paretctrlSpec {}

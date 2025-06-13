@@ -1,11 +1,11 @@
 //! Clock management unit initializations
 
-use efm32pg23_fix::CMU_S;
+use efm32pg23_fix::CmuS;
 
 /// Initialize all needed clock units
-pub fn init_cmu(cmu: &mut CMU_S) {
+pub fn init_cmu(cmu: &mut CmuS) {
     cmu
-        .clken0
+        .clken0()
         .write(|w_reg| {
             w_reg
                 .gpio().set_bit()
@@ -15,11 +15,12 @@ pub fn init_cmu(cmu: &mut CMU_S) {
                 .ldma().set_bit()
                 .ldmaxbar().set_bit()
                 .timer0().set_bit()
+                .timer2().set_bit()
                 .usart0().set_bit()
     });
 
     cmu
-        .clken1
+        .clken1()
         .write(|w_reg| {
             w_reg
                 .eusart2().set_bit()

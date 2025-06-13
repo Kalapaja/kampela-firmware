@@ -1,95 +1,49 @@
 #[doc = "Register `EUSART0_RXROUTE` reader"]
-pub struct R(crate::R<EUSART0_RXROUTE_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<EUSART0_RXROUTE_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<EUSART0_RXROUTE_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<EUSART0_RXROUTE_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Eusart0RxrouteSpec>;
 #[doc = "Register `EUSART0_RXROUTE` writer"]
-pub struct W(crate::W<EUSART0_RXROUTE_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<EUSART0_RXROUTE_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<EUSART0_RXROUTE_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<EUSART0_RXROUTE_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Eusart0RxrouteSpec>;
 #[doc = "Field `PORT` reader - RX port select register"]
-pub type PORT_R = crate::FieldReader<u8, u8>;
+pub type PortR = crate::FieldReader;
 #[doc = "Field `PORT` writer - RX port select register"]
-pub type PORT_W<'a, const O: u8> = crate::FieldWriter<'a, u32, EUSART0_RXROUTE_SPEC, u8, u8, 2, O>;
+pub type PortW<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 #[doc = "Field `PIN` reader - RX pin select register"]
-pub type PIN_R = crate::FieldReader<u8, u8>;
+pub type PinR = crate::FieldReader;
 #[doc = "Field `PIN` writer - RX pin select register"]
-pub type PIN_W<'a, const O: u8> = crate::FieldWriter<'a, u32, EUSART0_RXROUTE_SPEC, u8, u8, 4, O>;
+pub type PinW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
     #[doc = "Bits 0:1 - RX port select register"]
     #[inline(always)]
-    pub fn port(&self) -> PORT_R {
-        PORT_R::new((self.bits & 3) as u8)
+    pub fn port(&self) -> PortR {
+        PortR::new((self.bits & 3) as u8)
     }
     #[doc = "Bits 16:19 - RX pin select register"]
     #[inline(always)]
-    pub fn pin(&self) -> PIN_R {
-        PIN_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn pin(&self) -> PinR {
+        PinR::new(((self.bits >> 16) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:1 - RX port select register"]
     #[inline(always)]
-    #[must_use]
-    pub fn port(&mut self) -> PORT_W<0> {
-        PORT_W::new(self)
+    pub fn port(&mut self) -> PortW<Eusart0RxrouteSpec> {
+        PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - RX pin select register"]
     #[inline(always)]
-    #[must_use]
-    pub fn pin(&mut self) -> PIN_W<16> {
-        PIN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn pin(&mut self) -> PinW<Eusart0RxrouteSpec> {
+        PinW::new(self, 16)
     }
 }
-#[doc = "RX port/pin select\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [eusart0_rxroute](index.html) module"]
-pub struct EUSART0_RXROUTE_SPEC;
-impl crate::RegisterSpec for EUSART0_RXROUTE_SPEC {
+#[doc = "RX port/pin select\n\nYou can [`read`](crate::Reg::read) this register and get [`eusart0_rxroute::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`eusart0_rxroute::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Eusart0RxrouteSpec;
+impl crate::RegisterSpec for Eusart0RxrouteSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [eusart0_rxroute::R](R) reader structure"]
-impl crate::Readable for EUSART0_RXROUTE_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [eusart0_rxroute::W](W) writer structure"]
-impl crate::Writable for EUSART0_RXROUTE_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`eusart0_rxroute::R`](R) reader structure"]
+impl crate::Readable for Eusart0RxrouteSpec {}
+#[doc = "`write(|w| ..)` method takes [`eusart0_rxroute::W`](W) writer structure"]
+impl crate::Writable for Eusart0RxrouteSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EUSART0_RXROUTE to value 0"]
-impl crate::Resettable for EUSART0_RXROUTE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Eusart0RxrouteSpec {}

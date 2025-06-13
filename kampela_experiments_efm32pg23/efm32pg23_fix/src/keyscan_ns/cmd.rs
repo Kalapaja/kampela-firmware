@@ -1,60 +1,29 @@
 #[doc = "Register `CMD` writer"]
-pub struct W(crate::W<CMD_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CMD_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CMD_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CMD_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<CmdSpec>;
 #[doc = "Field `KEYSCANSTART` writer - Keyscan Start"]
-pub type KEYSCANSTART_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type KeyscanstartW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `KEYSCANSTOP` writer - Keyscan Stop"]
-pub type KEYSCANSTOP_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type KeyscanstopW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Keyscan Start"]
     #[inline(always)]
-    #[must_use]
-    pub fn keyscanstart(&mut self) -> KEYSCANSTART_W<0> {
-        KEYSCANSTART_W::new(self)
+    pub fn keyscanstart(&mut self) -> KeyscanstartW<CmdSpec> {
+        KeyscanstartW::new(self, 0)
     }
     #[doc = "Bit 1 - Keyscan Stop"]
     #[inline(always)]
-    #[must_use]
-    pub fn keyscanstop(&mut self) -> KEYSCANSTOP_W<1> {
-        KEYSCANSTOP_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn keyscanstop(&mut self) -> KeyscanstopW<CmdSpec> {
+        KeyscanstopW::new(self, 1)
     }
 }
-#[doc = "Command\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [cmd](index.html) module"]
-pub struct CMD_SPEC;
-impl crate::RegisterSpec for CMD_SPEC {
+#[doc = "Command\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmd::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CmdSpec;
+impl crate::RegisterSpec for CmdSpec {
     type Ux = u32;
 }
-#[doc = "`write(|w| ..)` method takes [cmd::W](W) writer structure"]
-impl crate::Writable for CMD_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
+impl crate::Writable for CmdSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CMD_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CmdSpec {}

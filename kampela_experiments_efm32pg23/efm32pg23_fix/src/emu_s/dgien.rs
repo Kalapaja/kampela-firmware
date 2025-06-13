@@ -1,125 +1,77 @@
 #[doc = "Register `DGIEN` reader"]
-pub struct R(crate::R<DGIEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<DGIEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<DGIEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<DGIEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<DgienSpec>;
 #[doc = "Register `DGIEN` writer"]
-pub struct W(crate::W<DGIEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<DGIEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<DGIEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<DGIEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<DgienSpec>;
 #[doc = "Field `EM23WAKEUPDGIEN` reader - EM23 Wake up Interrupt enable"]
-pub type EM23WAKEUPDGIEN_R = crate::BitReader<bool>;
+pub type Em23wakeupdgienR = crate::BitReader;
 #[doc = "Field `EM23WAKEUPDGIEN` writer - EM23 Wake up Interrupt enable"]
-pub type EM23WAKEUPDGIEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, DGIEN_SPEC, bool, O>;
+pub type Em23wakeupdgienW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TEMPDGIEN` reader - Temperature Interrupt enable"]
-pub type TEMPDGIEN_R = crate::BitReader<bool>;
+pub type TempdgienR = crate::BitReader;
 #[doc = "Field `TEMPDGIEN` writer - Temperature Interrupt enable"]
-pub type TEMPDGIEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, DGIEN_SPEC, bool, O>;
+pub type TempdgienW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TEMPLOWDGIEN` reader - Temperature low Interrupt enable"]
-pub type TEMPLOWDGIEN_R = crate::BitReader<bool>;
+pub type TemplowdgienR = crate::BitReader;
 #[doc = "Field `TEMPLOWDGIEN` writer - Temperature low Interrupt enable"]
-pub type TEMPLOWDGIEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, DGIEN_SPEC, bool, O>;
+pub type TemplowdgienW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TEMPHIGHDGIEN` reader - Temperature high Interrupt enable"]
-pub type TEMPHIGHDGIEN_R = crate::BitReader<bool>;
+pub type TemphighdgienR = crate::BitReader;
 #[doc = "Field `TEMPHIGHDGIEN` writer - Temperature high Interrupt enable"]
-pub type TEMPHIGHDGIEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, DGIEN_SPEC, bool, O>;
+pub type TemphighdgienW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
-    pub fn em23wakeupdgien(&self) -> EM23WAKEUPDGIEN_R {
-        EM23WAKEUPDGIEN_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn em23wakeupdgien(&self) -> Em23wakeupdgienR {
+        Em23wakeupdgienR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
-    pub fn tempdgien(&self) -> TEMPDGIEN_R {
-        TEMPDGIEN_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn tempdgien(&self) -> TempdgienR {
+        TempdgienR::new(((self.bits >> 29) & 1) != 0)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
-    pub fn templowdgien(&self) -> TEMPLOWDGIEN_R {
-        TEMPLOWDGIEN_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn templowdgien(&self) -> TemplowdgienR {
+        TemplowdgienR::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
-    pub fn temphighdgien(&self) -> TEMPHIGHDGIEN_R {
-        TEMPHIGHDGIEN_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn temphighdgien(&self) -> TemphighdgienR {
+        TemphighdgienR::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn em23wakeupdgien(&mut self) -> EM23WAKEUPDGIEN_W<24> {
-        EM23WAKEUPDGIEN_W::new(self)
+    pub fn em23wakeupdgien(&mut self) -> Em23wakeupdgienW<DgienSpec> {
+        Em23wakeupdgienW::new(self, 24)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn tempdgien(&mut self) -> TEMPDGIEN_W<29> {
-        TEMPDGIEN_W::new(self)
+    pub fn tempdgien(&mut self) -> TempdgienW<DgienSpec> {
+        TempdgienW::new(self, 29)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn templowdgien(&mut self) -> TEMPLOWDGIEN_W<30> {
-        TEMPLOWDGIEN_W::new(self)
+    pub fn templowdgien(&mut self) -> TemplowdgienW<DgienSpec> {
+        TemplowdgienW::new(self, 30)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn temphighdgien(&mut self) -> TEMPHIGHDGIEN_W<31> {
-        TEMPHIGHDGIEN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn temphighdgien(&mut self) -> TemphighdgienW<DgienSpec> {
+        TemphighdgienW::new(self, 31)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [dgien](index.html) module"]
-pub struct DGIEN_SPEC;
-impl crate::RegisterSpec for DGIEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dgien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dgien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DgienSpec;
+impl crate::RegisterSpec for DgienSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [dgien::R](R) reader structure"]
-impl crate::Readable for DGIEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [dgien::W](W) writer structure"]
-impl crate::Writable for DGIEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`dgien::R`](R) reader structure"]
+impl crate::Readable for DgienSpec {}
+#[doc = "`write(|w| ..)` method takes [`dgien::W`](W) writer structure"]
+impl crate::Writable for DgienSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DGIEN to value 0"]
-impl crate::Resettable for DGIEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for DgienSpec {}

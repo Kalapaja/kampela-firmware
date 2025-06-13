@@ -5,9 +5,9 @@ use efm32pg23_fix::Peripherals;
 use cortex_m::asm::delay;
 
 use crate::peripherals::i2c::{acknowledge_i2c_tx, acknowledge_i2c_tx_free, check_i2c_errors, check_i2c_errors_free, I2CError, mstop_i2c_wait_and_clear, mstop_i2c_wait_and_clear_free, ReadI2C};
-use crate::peripherals::gpio_pins::{touch_res_set, touch_res_clear, is_touch_int};
-use crate::parallel::{DELAY, Operation};
-use crate::{FreeError, in_free, if_in_free};
+use crate::peripherals::gpio_pins::{disable_touch_int_flag, enable_touch_int_flag, touch_res_clear};
+use crate::parallel::{AsyncOperation, Timer, DELAY, Threads, WithDelay};
+use crate::{in_free, if_in_free};
 
 pub const FT6X36_REG_CHIPID: u8 = 0xA3;
 pub const LEN_CHIPID: usize = 1;
@@ -21,14 +21,14 @@ pub const LEN_NUM_TOUCHES: usize = 5;
 pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) -> Result<(), I2CError> {
     // abort unexpected processes
     if peripherals
-        .I2C0_S
+        .i2c0_s
         .state
         .read()
         .busy()
         .bit_is_set()
     {
         peripherals
-            .I2C0_S
+            .i2c0_s
             .cmd
             .write(|w_reg| w_reg.abort().set_bit());
         delay(10000);
@@ -36,21 +36,21 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
 
     // clear pending commands and tx
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
     delay(10000);
 
     // clear rx buffer content
     while peripherals
-        .I2C0_S
+        .i2c0_s
         .status
         .read()
         .rxdatav()
         .bit_is_set()
     {
         let _dummy_data = peripherals
-            .I2C0_S
+            .i2c0_s
             .rxdata
             .read()
             .bits();
@@ -59,13 +59,13 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
     
     // clear interrupt flags
     peripherals
-        .I2C0_S
+        .i2c0_s
         .if_
         .reset();
     
     // enable interrupts sources
     peripherals
-        .I2C0_S
+        .i2c0_s
         .ien
         .write(|w_reg| w_reg.nack().set_bit().ack().set_bit().mstop().set_bit().rxdatav().set_bit().arblost().set_bit().buserr().set_bit());
 
@@ -75,12 +75,12 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
     
     // send address `0x38 << 1`, for writing data
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(0b1110000));
     delay(10000);
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.start().set_bit());
     delay(10000);
@@ -89,7 +89,7 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
     
     // send position, single byte
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(position));
     delay(10000);
@@ -98,7 +98,7 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
 
     // send data to record at position, single byte
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(data));
     delay(10000);
@@ -106,7 +106,7 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
     acknowledge_i2c_tx(peripherals)?;
     
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.stop().set_bit());
     delay(10000);
@@ -115,7 +115,7 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
     
     // disable interrupts sources
     peripherals
-        .I2C0_S
+        .i2c0_s
         .ien
         .reset();
     
@@ -128,14 +128,14 @@ pub fn ft6336_write_to(peripherals: &mut Peripherals, position: u8, data: u8) ->
 pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position: u8) -> Result<[u8; LEN], I2CError> {
     // abort unexpected processes
     if peripherals
-        .I2C0_S
+        .i2c0_s
         .state
         .read()
         .busy()
         .bit_is_set()
     {
         peripherals
-            .I2C0_S
+            .i2c0_s
             .cmd
             .write(|w_reg| w_reg.abort().set_bit());
         delay(10000);
@@ -143,21 +143,21 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
 
     // clear pending commands and tx
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
     delay(10000);
 
     // clear rx buffer content
     while peripherals
-        .I2C0_S
+        .i2c0_s
         .status
         .read()
         .rxdatav()
         .bit_is_set()
     {
         let _dummy_data = peripherals
-            .I2C0_S
+            .i2c0_s
             .rxdata
             .read()
             .bits();
@@ -166,13 +166,13 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
     
     // clear interrupt flags
     peripherals
-        .I2C0_S
+        .i2c0_s
         .if_
         .reset();
     
     // enable interrupts sources
     peripherals
-        .I2C0_S
+        .i2c0_s
         .ien
         .write(|w_reg| w_reg.nack().set_bit().ack().set_bit().mstop().set_bit().rxdatav().set_bit().arblost().set_bit().buserr().set_bit());
 
@@ -182,12 +182,12 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
     
     // send address `0x38 << 1`, for writing data
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(0b1110000));
     delay(10000);
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.start().set_bit());
     delay(10000);
@@ -196,7 +196,7 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
     
     // transfer write data, single byte
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(position));
     delay(10000);
@@ -205,12 +205,12 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
 
     // send address `(0x38 << 1)|1`, for reading data
     peripherals
-        .I2C0_S
+        .i2c0_s
         .cmd
         .write(|w_reg| w_reg.start().set_bit());
     delay(10000);
     peripherals
-        .I2C0_S
+        .i2c0_s
         .txdata
         .write(|w_reg| w_reg.txdata().variant(0b1110001));
     delay(10000);
@@ -223,18 +223,18 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
         rx_data_collected.push(read_i2c_rx(peripherals)?);
         if i == LEN-1 {
             peripherals
-                .I2C0_S
+                .i2c0_s
                 .cmd
                 .write(|w_reg| w_reg.nack().set_bit());
             delay(10000);
             peripherals
-                .I2C0_S
+                .i2c0_s
                 .cmd
                 .write(|w_reg| w_reg.stop().set_bit());
             delay(10000);
         } else {
             peripherals
-                .I2C0_S
+                .i2c0_s
                 .cmd
                 .write(|w_reg| w_reg.ack().set_bit());
             delay(10000);
@@ -245,56 +245,79 @@ pub fn ft6336_read_at<const LEN: usize>(peripherals: &mut Peripherals, position:
     
     // disable interrupts sources
     peripherals
-        .I2C0_S
+        .i2c0_s
         .ien
         .reset();
     
     Ok(rx_data_collected.try_into().expect("constant size, always fit"))
 }
 */
+pub fn clear_touch_if() {
+    in_free(|peripherals| {
+        peripherals
+            .gpio_s
+            .if_clr()
+            .write(|w_reg| w_reg.extif0().set_bit());
+    })
+}
 
-pub fn touch_detected() -> Result<bool, FreeError> {
-    if_in_free(|peripherals| { //TODO: use Interupt Flag
-        is_touch_int(&mut peripherals.GPIO_S)
+pub fn is_touch_int() -> bool {
+    if_in_free(|peripherals| {
+        peripherals
+            .gpio_s
+            .if_()
+            .read()
+            .extif0()
+            .bit_is_set()
+    })
+}
+
+pub fn enable_touch_int() {
+    in_free(|peripherals| { //TODO: use Interupt Flag
+        enable_touch_int_flag(&mut peripherals.gpio_s)
+    })
+}
+
+pub fn disable_touch_int() {
+    in_free(|peripherals| { //TODO: use Interupt Flag
+        disable_touch_int_flag(&mut peripherals.gpio_s)
     })
 }
 
 pub fn init_touch(peripherals: &mut Peripherals) {
-    touch_res_set(&mut peripherals.GPIO_S); // datasheet: pulse width >=1ms
-    delay(10000);
-    touch_res_clear(&mut peripherals.GPIO_S);
-    delay(4000000);  // picked up timing
+    touch_res_clear(&mut peripherals.gpio_s);
+    delay(6000000); // datasheet: 300ms after resetting
     // abort previous operations
     if peripherals
-        .I2C0_S
-        .state
+        .i2c0_s
+        .state()
         .read()
         .busy()
         .bit_is_set()
     {
         peripherals
-            .I2C0_S
-            .cmd
+            .i2c0_s
+            .cmd()
             .write(|w_reg| w_reg.abort().set_bit());
         delay(10000);
     }
     // clear command and tx
     peripherals
-        .I2C0_S
-        .cmd
+        .i2c0_s
+        .cmd()
         .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
     delay(10000);
 
     // clear interrupt flags
     peripherals
-        .I2C0_S
-        .if_
+        .i2c0_s
+        .if_()
         .reset();
 
     // enable interrupts sources
     peripherals
-        .I2C0_S
-        .ien
+        .i2c0_s
+        .ien()
         .write(|w_reg| 
             w_reg
                 .nack().set_bit()
@@ -303,49 +326,50 @@ pub fn init_touch(peripherals: &mut Peripherals) {
                 .arblost().set_bit()
                 .buserr().set_bit()
         );
-    // sending device ID
+
+    // i2c transfer sequence
     peripherals
-        .I2C0_S
-        .cmd
+        .i2c0_s
+        .cmd()
         .write(|w_reg| w_reg.start().set_bit());
     delay(10000);
 
-    // i2c transfer sequence
+    // sending device ID
     check_i2c_errors_free(peripherals).unwrap();
     // send address `0x38 << 1`, for writing data
     peripherals
-        .I2C0_S
-        .txdata
-        .write(|w_reg| w_reg.txdata().variant(0b1110000));
+        .i2c0_s
+        .txdata()
+        .write(|w_reg| unsafe {w_reg.txdata().bits(0b1110000) });
     delay(10000);
 
     // Send address to write data
     acknowledge_i2c_tx_free(peripherals).unwrap();
     peripherals
-        .I2C0_S
-        .txdata
-        .write(|w_reg| w_reg.txdata().variant(0xA4));
+        .i2c0_s
+        .txdata()
+        .write(|w_reg| unsafe { w_reg.txdata().bits(0xA4) });
     delay(10000);
 
     // send data
     acknowledge_i2c_tx_free(peripherals).unwrap();
     peripherals
-        .I2C0_S
-        .txdata
-        .write(|w_reg| w_reg.txdata().variant(0x00));
+        .i2c0_s
+        .txdata()
+        .write(|w_reg| unsafe { w_reg.txdata().bits(0x00) });
     delay(10000);
 
     // stop communication
     peripherals
-        .I2C0_S
-        .cmd
+        .i2c0_s
+        .cmd()
         .write(|w_reg| w_reg.stop().set_bit());
     mstop_i2c_wait_and_clear_free(peripherals).unwrap();
 
     // cleanup
     peripherals
-        .I2C0_S
-        .ien
+        .i2c0_s
+        .ien()
         .reset();
 }
 
@@ -353,9 +377,8 @@ pub fn init_touch(peripherals: &mut Peripherals) {
 /// weirdness - on count to 0 operation is supposed to be executed. Timer check does not capture
 /// critical section, operation does.
 pub struct Read<const LEN: usize, const POS: u8> {
-    state: ReadState<LEN>,
     buffer: [u8; LEN],
-    timer: usize,
+    threads: Threads<ReadState<LEN>, 1>,
 }
 
 pub enum ReadState<const LEN: usize> {
@@ -367,288 +390,354 @@ pub enum ReadState<const LEN: usize> {
     ClearCommand,
     /// Make sure Rx is clear and start operation by preparing to send device address
     ClearRx,
-    /// Initiate write communication by sending device ID (address)
-    SendId,
-    /// Prepare address to write data
-    PrepareAddress,
-    /// Send address to write data
-    SendAddress,
-    /// Transmit read address to device
-    PrepareRead,
-    /// Initiate read communication
-    Read(ReadLoop<LEN>),
+    /// Prepare sending address to read data
+    PrepareAddress(Option<Timer>),
+    /// Initiate address write communication by sending device ID
+    AddressSendId(Option<()>),
+    /// Send data to write address
+    SendAddress(Option<WithDelay<()>>),
+    /// Prepare reading answer
+    PrepareRead(Option<Timer>),
+    /// Initiate read communication by sending device ID
+    ReadSendId(Option<()>),
+    /// Reading
+    Read(Option<ReadLoop<LEN>>),
     /// Final state, to cleanup and report result
     Aftermath,
+
+    Error,
+}
+
+impl <const LEN: usize> Default for ReadState<LEN> {
+    fn default() -> Self { ReadState::Error }
 }
 
 impl <const LEN: usize, const POS: u8> Read<LEN, POS> {
-    fn count(&mut self) -> bool {
-        if self.timer == 0 {
-            false
-        } else {
-            self.timer -= 1;
-            true
-        }
-    }
+
 }
 
-impl <const LEN: usize, const POS: u8> Operation for Read<LEN, POS> {
+impl <const LEN: usize, const POS: u8> AsyncOperation for Read<LEN, POS> {
     type Init = ();
     type Input<'a> = ();
-    type Output = Result<Option<[u8; LEN]>, I2CError>;
-    type StateEnum = ReadState<LEN>;
+    type Output = Result<Option<Option<[u8; LEN]>>, I2CError>;
 
     fn new(_: ()) -> Self {
         Self {
-            state: ReadState::Init,
             buffer: [0; LEN],
-            timer: 0,
+            threads: Threads::new(ReadState::Init), // better to calculate maximum simultaneous threads and initiate with capacity
         }
     }
 
-    fn wind(&mut self, state: ReadState<LEN>, delay: usize) {
-        self.state = state;
-        self.timer = delay;
-    }
-
-    fn advance(&mut self, _: ()) -> Result<Option<[u8; LEN]>, I2CError> {
-        if self.count() { return Ok(None) };
-        match self.state {
+    fn advance(&mut self, _: ()) -> Self::Output {
+        match self.threads.turn() {
             ReadState::Init => {
                 // abort unexpected processes
                 in_free(|peripherals|
-                if peripherals
-                    .I2C0_S
-                    .state
-                    .read()
-                    .busy()
-                    .bit_is_set()
-                {
-                    peripherals
-                        .I2C0_S
-                        .cmd
-                        .write(|w_reg| w_reg.abort().set_bit());
-                    self.wind_d(ReadState::ClearCommand);
-                } else { self.change(ReadState::ClearCommand); }
+                    if peripherals
+                        .i2c0_s
+                        .state()
+                        .read()
+                        .busy()
+                        .bit_is_set()
+                    {
+                        peripherals
+                            .i2c0_s
+                            .cmd()
+                            .write(|w_reg| w_reg.abort().set_bit());
+                    }
                 );
-                Ok(None)
+                self.threads.change(ReadState::ClearCommand);
+                Ok(Some(None))
             },
             ReadState::ClearCommand => {
-                in_free(|peripherals|
-                peripherals
-                    .I2C0_S
-                    .cmd
-                    .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit())
-                    );
-                self.wind_d(ReadState::ClearRx);
-                Ok(None)
+                in_free(|peripherals| {
+                    peripherals
+                        .i2c0_s
+                        .cmd()
+                        .write(|w_reg| w_reg.clearpc().set_bit().cleartx().set_bit());
+                });
+                self.threads.change(ReadState::ClearRx);
+                Ok(Some(None))
             },
             ReadState::ClearRx => {
                 if if_in_free(|peripherals|
                     peripherals
-                        .I2C0_S
-                        .status
+                        .i2c0_s
+                        .status()
                         .read()
                         .rxdatav()
                         .bit_is_set()
-                )? {
+                ) {
                     in_free(|peripherals| {
                         let _dummy_data = peripherals
-                            .I2C0_S
-                            .rxdata
+                            .i2c0_s
+                            .rxdata()
                             .read()
                             .bits();
                     });
-                    self.wind_d(ReadState::ClearRx);
+                    return Ok(None)
                 } else {
                     in_free(|peripherals| {
                         // clear interrupt flags
                         peripherals
-                            .I2C0_S
-                            .if_
+                            .i2c0_s
+                            .if_()
                             .reset();
-    
+
                         // enable interrupts sources
                         peripherals
-                            .I2C0_S
-                            .ien
+                            .i2c0_s
+                            .ien()
                             .write(|w_reg| 
                                 w_reg
                                     .nack().set_bit()
                                     .ack().set_bit()
                                     .mstop().set_bit()
-                                    .rxdatav().set_bit()
                                     .arblost().set_bit()
                                     .buserr().set_bit()
                             );
                     });
-
-                    // i2c transfer sequence
-
-                    check_i2c_errors()?;
-                    // send address `0x38 << 1`, for writing data
-                    in_free(|peripherals|
-                        peripherals
-                            .I2C0_S
-                            .txdata
-                            .write(|w_reg| w_reg.txdata().variant(0b1110000))
-                    );
-                    self.wind_d(ReadState::SendId);
-                };
+                    self.threads.change(ReadState::PrepareAddress(None));
+                }
+                Ok(Some(None))
+            },
+            ReadState::PrepareAddress(state) => {
+                match state {
+                    None => {
+                        in_free(|peripherals| {
+                            peripherals
+                                .i2c0_s
+                                .cmd()
+                                .write(|w_reg| w_reg.start().set_bit());
+                        });
+                        self.threads.change(ReadState::PrepareAddress(Some(Timer::new(DELAY)))); // setup time 4.7μs
+                    },
+                    Some(t) => {
+                        if t.tick() {
+                            return Ok(None)
+                        }
+                        self.threads.change(ReadState::AddressSendId(None));
+                    }
+                }
+                Ok(Some(None))
+            }
+            ReadState::AddressSendId(state) => {
+                match state {
+                    None => {
+                        // i2c transfer sequence
+                        check_i2c_errors()?;
+                        // send address `0x38 << 1`, for writing data
+                        in_free(|peripherals| {
+                            peripherals
+                                .i2c0_s
+                                .txdata()
+                                .write(|w_reg| unsafe { w_reg.txdata().bits(0b1110000) });
+                        });
+                        self.threads.change(ReadState::AddressSendId(Some(())));
+                    },
+                    Some(_) => {
+                        if !acknowledge_i2c_tx()? {
+                            return Ok(None)
+                        }
+                        self.threads.change(ReadState::SendAddress(None));
+                    }
+                }
                 Ok(None)
             },
-            ReadState::SendId => {
-                in_free(|peripherals|
-                peripherals
-                    .I2C0_S
-                    .cmd
-                    .write(|w_reg| w_reg.start().set_bit())
-                );
-                self.wind_d(ReadState::PrepareAddress);
-                Ok(None)
+            ReadState::SendAddress(state) => { //TODO expand this
+                match state {
+                    None => {
+                        in_free(|peripherals| {
+                            peripherals
+                                .i2c0_s
+                                .txdata()
+                                .write(|w_reg| unsafe { w_reg.txdata().bits(POS) });
+                        });
+                        self.threads.change(ReadState::SendAddress(Some(WithDelay::Do(()))));
+                    },
+                    Some(w) => {
+                        match w {
+                            WithDelay::Do(_) => {
+                                if !acknowledge_i2c_tx()? {
+                                    return Ok(None)
+                                };
+                                self.threads.change(ReadState::SendAddress(Some(WithDelay::Wait(Timer::new(DELAY)))));
+                            },
+                            WithDelay::Wait(t) => {
+                                if t.tick() {
+                                    return Ok(None)
+                                }
+                                self.threads.change(ReadState::PrepareRead(None));
+                            }
+                        }
+                    }
+                }
+                Ok(Some(None))
             },
-            ReadState::PrepareAddress => { //TODO expand this
-                acknowledge_i2c_tx()?;
-                in_free(|peripherals| 
-                peripherals
-                    .I2C0_S
-                    .txdata
-                    .write(|w_reg| w_reg.txdata().variant(POS))
-                );
-                self.wind_d(ReadState::SendAddress);
-                Ok(None)
+            ReadState::PrepareRead(state) => {
+                match state {
+                    None => {
+                        in_free(|peripherals| {
+                            peripherals
+                                .i2c0_s
+                                .cmd()
+                                .write(|w_reg| w_reg.start().set_bit());
+                        });
+                        self.threads.change(ReadState::PrepareRead(Some(Timer::new(DELAY)))); // setup time 4.7μs
+                    },
+                    Some(t) => {
+                        if t.tick() {
+                            return Ok(None)
+                        }
+                        self.threads.change(ReadState::ReadSendId(None));
+                    }
+                }
+                Ok(Some(None))
             },
-            ReadState::SendAddress => {
-                acknowledge_i2c_tx()?;
-                in_free(|peripherals|
-                    peripherals
-                        .I2C0_S
-                        .cmd
-                        .write(|w_reg| w_reg.start().set_bit())
-                    );
-                self.wind_d(ReadState::PrepareRead);
-                Ok(None)
+            ReadState::ReadSendId(state) => {
+                match state {
+                    None => {
+                        // i2c transfer sequence
+                        check_i2c_errors()?;
+                        in_free(|peripherals| {
+                            peripherals
+                                .i2c0_s
+                                .txdata()
+                                .write(|w_reg| unsafe {w_reg.txdata().bits(0b1110001) });
+                        });
+                        self.threads.change(ReadState::ReadSendId(Some(())));
+                    },
+                    Some(_) => {
+                        if !acknowledge_i2c_tx()? {
+                            return Ok(None)
+                        };
+                        self.threads.change(ReadState::Read(None));
+                    }
+                }
+                Ok(Some(None))
             },
-            ReadState::PrepareRead => {
-                in_free(|peripherals|
-                peripherals
-                    .I2C0_S
-                    .txdata
-                    .write(|w_reg| w_reg.txdata().variant(0b1110001))
-                    );
-                self.change(ReadState::Read(ReadLoop::<LEN>::new(())));
-                Ok(None)
-            },
-            ReadState::Read(ref mut a) => {
-                if let Some (b) = a.advance(())? {
-                    self.buffer = b;
-                    self.wind_d(ReadState::Aftermath);
-                };
-                Ok(None)
+            ReadState::Read(state) => {
+                match state {
+                    None => {
+                        self.threads.change(ReadState::Read(Some(ReadLoop::<LEN>::new(()))));
+                    },
+                    Some(a) => {
+                        match a.advance(())? {
+                            Some(Some(b)) => {
+                                self.buffer = b;
+                                self.threads.change(ReadState::Aftermath);
+                            },
+                            Some(None) => {
+                                return Ok(Some(None))
+                            },
+                            None => {
+                                return Ok(None)
+                            }
+                        }
+                    }
+                }
+                Ok(Some(None))
             },
             ReadState::Aftermath => {
-                mstop_i2c_wait_and_clear()?;
+                if !mstop_i2c_wait_and_clear()? {
+                    return Ok(None)
+                };
                 in_free(|peripherals|
                     peripherals
-                        .I2C0_S
-                        .ien
+                        .i2c0_s
+                        .ien()
                         .reset()
                 );
-                self.change(ReadState::Init);
-                Ok(Some(self.buffer))
+                Ok(Some(Some(self.buffer)))
             },
+            ReadState::Error => {
+                panic!("Unknown ReadState while reading touch")
+            }
         }
     }
 }
 
 pub struct ReadLoop<const LEN: usize> {
-    position: usize,
+    threads: Threads<ReadLoopState, 1>,
     value: [u8; LEN],
-    state: ReadLoopState,
-    timer: usize,
 }
 
 pub enum ReadLoopState {
-    /// Wait and ack
-    AckRead,
     /// Read cycle
-    Read(ReadI2C),
+    Read(Option<(ReadI2C, usize)>),
     /// Stop reading and report result
     Aftermath,
+    Error,
 }
 
-impl <const LEN: usize> ReadLoop<LEN> {
-    fn count(&mut self) -> bool {
-        if self.timer == 0 {
-            false
-        } else {
-            self.timer -= 1;
-            true
-        }
-    }
+impl Default for ReadLoopState {
+    fn default() -> Self { ReadLoopState::Error }
 }
 
-impl <const LEN: usize> Operation for ReadLoop<LEN> {
+impl <const LEN: usize> AsyncOperation for ReadLoop<LEN> {
     type Init = ();
     type Input<'a> = ();
-    type Output = Result<Option<[u8; LEN]>, I2CError>;
-    type StateEnum = ReadLoopState;
+    type Output = Result<Option<Option<[u8; LEN]>>, I2CError>;
 
     fn new(_: ()) -> Self {
         Self {
-            position: 0,
+            threads: Threads::new(ReadLoopState::Read(None)),
             value: [0; LEN],
-            state: ReadLoopState::AckRead,
-            timer: DELAY,
         }
     }
 
-    fn wind(&mut self, state: ReadLoopState, delay: usize) {
-        self.state = state;
-        self.timer = delay;
-    }
-
-
-    fn advance(&mut self, _: ()) -> Result<Option<[u8; LEN]>, I2CError> {
-        if self.count() { return Ok(None) };
-        match self.state {
-            ReadLoopState::AckRead => {
-                acknowledge_i2c_tx()?;
-                self.change(ReadLoopState::Read(ReadI2C::new(())));
-                Ok(None)
-            },
-            ReadLoopState::Read(ref mut a) => {
-                if let Some(b) = a.advance(())? {
-                    self.value[self.position] = b;
-                    if self.position == LEN-1 {
-                        in_free(|peripherals| 
-                            peripherals
-                                .I2C0_S
-                                .cmd
-                                .write(|w_reg| w_reg.nack().set_bit())
-                        );
-                        self.wind_d(ReadLoopState::Aftermath);
-                    } else {
-                        in_free(|peripherals|
-                            peripherals
-                                .I2C0_S
-                                .cmd
-                                .write(|w_reg| w_reg.ack().set_bit())
-                        );
-                        self.wind_d(ReadLoopState::Read(ReadI2C::new(())));
-                        self.position += 1;
+    fn advance(&mut self, _: ()) -> Self::Output {
+        match self.threads.turn() {
+            ReadLoopState::Read(ref mut state) => {
+                match state {
+                    None => {
+                        self.threads.change(ReadLoopState::Read(Some((ReadI2C::new(()), 0))));
+                    },
+                    Some((a, i)) => {
+                        match a.advance(())? {
+                            Some(Some(b)) => {
+                                self.value[*i] = b;
+                                *a = ReadI2C::new(());
+                                if *i == LEN-1 {
+                                    in_free(|peripherals| {
+                                        peripherals
+                                            .i2c0_s
+                                            .cmd()
+                                            .write(|w_reg| w_reg.nack().set_bit());
+                                    });
+                                    self.threads.change(ReadLoopState::Aftermath);
+                                } else {
+                                    in_free(|peripherals| {
+                                        peripherals
+                                            .i2c0_s
+                                            .cmd()
+                                            .write(|w_reg| w_reg.ack().set_bit());
+                                    });
+                                    *i += 1;
+                                }
+                            },
+                            Some(None) => {
+                                return Ok(Some(None))
+                            },
+                            None => {
+                                return Ok(None)
+                            }
+                        }
                     }
                 }
-                Ok(None)
+                Ok(Some(None))
             },
             ReadLoopState::Aftermath => {
-                in_free(|peripherals|
+                in_free(|peripherals| {
                     peripherals
-                        .I2C0_S
-                        .cmd
-                        .write(|w_reg| w_reg.stop().set_bit())
-                );
-                Ok(Some(self.value))
+                        .i2c0_s
+                        .cmd()
+                        .write(|w_reg| w_reg.stop().set_bit());
+                });
+                Ok(Some(Some(self.value)))
+            },
+            ReadLoopState::Error => {
+                panic!("Unknown ReadLoopState while reading touch")
             }
         }
     }

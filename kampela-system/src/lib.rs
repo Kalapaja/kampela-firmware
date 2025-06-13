@@ -12,20 +12,20 @@
 
 extern crate alloc;
 
-pub mod init;
+mod init;
 pub mod peripherals;
 pub mod devices;
 pub mod draw;
-pub mod flash_mnemonic;
+pub mod psram_mnemonic;
 pub mod debug_display;
 pub mod parallel;
 
 use efm32pg23_fix::{CorePeripherals, Peripherals};
 
-pub use peripherals::ldma::{BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock};
+use init::init_peripherals;
+pub use peripherals::ldma_ch_timer::{CH_TIM0, NFC_BUF_THIRD};
 
 use core::cell::RefCell;
-use core::ops::DerefMut;
 use cortex_m::interrupt::free;
 use cortex_m::interrupt::Mutex;
 
@@ -33,7 +33,11 @@ use lazy_static::lazy_static;
 
 lazy_static!{
     pub static ref CORE_PERIPHERALS: Mutex<RefCell<CorePeripherals>> = Mutex::new(RefCell::new(CorePeripherals::take().unwrap()));
-    pub static ref PERIPHERALS: Mutex<RefCell<Option<Peripherals>>> = Mutex::new(RefCell::new(None));
+    pub static ref PERIPHERALS: Mutex<RefCell<Peripherals>> = Mutex::new(RefCell::new({
+        let mut peripherals = Peripherals::take().unwrap();
+        init_peripherals(&mut peripherals);
+        peripherals
+    }));
 }
 
 /// Mutexed global access to peripherals
@@ -41,22 +45,18 @@ pub fn in_free<F>(mut action: F)
     where F: FnMut(&mut Peripherals)
 {
     free(|cs| {
-        if let Some(ref mut peripherals) = PERIPHERALS.borrow(cs).borrow_mut().deref_mut() {
-            action(peripherals);
-        }
-    });
+        let mut peripherals = PERIPHERALS.borrow(cs).borrow_mut();
+        action(&mut peripherals);
+    })
 }
 
 /// Mutexed global access to peripherals
-pub fn if_in_free<F>(mut action: F) -> Result<bool, FreeError>
+pub fn if_in_free<F>(mut action: F) -> bool
     where F: FnMut(&mut Peripherals) -> bool
 {
     free(|cs| {
-        if let Some(ref mut peripherals) = PERIPHERALS.borrow(cs).borrow_mut().deref_mut() {
-            return Ok(action(peripherals))
-        } else {
-            return Err(FreeError::MutexLocked)
-        }
+        let mut peripherals = PERIPHERALS.borrow(cs).borrow_mut();
+        action(&mut peripherals)
     })
 }
 

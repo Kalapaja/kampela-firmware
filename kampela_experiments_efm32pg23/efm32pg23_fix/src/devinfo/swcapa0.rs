@@ -1,451 +1,462 @@
 #[doc = "Register `SWCAPA0` reader"]
-pub struct R(crate::R<SWCAPA0_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<SWCAPA0_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<SWCAPA0_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<SWCAPA0_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `ZIGBEE` reader - Zigbee Capability"]
-pub type ZIGBEE_R = crate::FieldReader<u8, ZIGBEE_A>;
+pub type R = crate::R<Swcapa0Spec>;
 #[doc = "Zigbee Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum ZIGBEE_A {
+pub enum Zigbee {
     #[doc = "0: ZigBee stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: GreenPower only"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: ZigBee and GreenPower"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: ZigBee Only"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<ZIGBEE_A> for u8 {
+impl From<Zigbee> for u8 {
     #[inline(always)]
-    fn from(variant: ZIGBEE_A) -> Self {
+    fn from(variant: Zigbee) -> Self {
         variant as _
     }
 }
-impl ZIGBEE_R {
+impl crate::FieldSpec for Zigbee {
+    type Ux = u8;
+}
+impl crate::IsEnum for Zigbee {}
+#[doc = "Field `ZIGBEE` reader - Zigbee Capability"]
+pub type ZigbeeR = crate::FieldReader<Zigbee>;
+impl ZigbeeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> ZIGBEE_A {
+    pub const fn variant(&self) -> Zigbee {
         match self.bits {
-            0 => ZIGBEE_A::LEVEL0,
-            1 => ZIGBEE_A::LEVEL1,
-            2 => ZIGBEE_A::LEVEL2,
-            3 => ZIGBEE_A::LEVEL3,
+            0 => Zigbee::Level0,
+            1 => Zigbee::Level1,
+            2 => Zigbee::Level2,
+            3 => Zigbee::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "ZigBee stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == ZIGBEE_A::LEVEL0
+        *self == Zigbee::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "GreenPower only"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == ZIGBEE_A::LEVEL1
+        *self == Zigbee::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "ZigBee and GreenPower"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == ZIGBEE_A::LEVEL2
+        *self == Zigbee::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "ZigBee Only"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == ZIGBEE_A::LEVEL3
+        *self == Zigbee::Level3
     }
 }
-#[doc = "Field `THREAD` reader - Thread Capability"]
-pub type THREAD_R = crate::FieldReader<u8, THREAD_A>;
 #[doc = "Thread Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum THREAD_A {
+pub enum Thread {
     #[doc = "0: RF4CE stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: RF4CE stack enabled"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: N/A"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: N/A"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<THREAD_A> for u8 {
+impl From<Thread> for u8 {
     #[inline(always)]
-    fn from(variant: THREAD_A) -> Self {
+    fn from(variant: Thread) -> Self {
         variant as _
     }
 }
-impl THREAD_R {
+impl crate::FieldSpec for Thread {
+    type Ux = u8;
+}
+impl crate::IsEnum for Thread {}
+#[doc = "Field `THREAD` reader - Thread Capability"]
+pub type ThreadR = crate::FieldReader<Thread>;
+impl ThreadR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> THREAD_A {
+    pub const fn variant(&self) -> Thread {
         match self.bits {
-            0 => THREAD_A::LEVEL0,
-            1 => THREAD_A::LEVEL1,
-            2 => THREAD_A::LEVEL2,
-            3 => THREAD_A::LEVEL3,
+            0 => Thread::Level0,
+            1 => Thread::Level1,
+            2 => Thread::Level2,
+            3 => Thread::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "RF4CE stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == THREAD_A::LEVEL0
+        *self == Thread::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "RF4CE stack enabled"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == THREAD_A::LEVEL1
+        *self == Thread::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == THREAD_A::LEVEL2
+        *self == Thread::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == THREAD_A::LEVEL3
+        *self == Thread::Level3
     }
 }
-#[doc = "Field `RF4CE` reader - RF4CE Capability"]
-pub type RF4CE_R = crate::FieldReader<u8, RF4CE_A>;
 #[doc = "RF4CE Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum RF4CE_A {
+pub enum Rf4ce {
     #[doc = "0: Thread stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: Thread stack enabled"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: N/A"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: N/A"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<RF4CE_A> for u8 {
+impl From<Rf4ce> for u8 {
     #[inline(always)]
-    fn from(variant: RF4CE_A) -> Self {
+    fn from(variant: Rf4ce) -> Self {
         variant as _
     }
 }
-impl RF4CE_R {
+impl crate::FieldSpec for Rf4ce {
+    type Ux = u8;
+}
+impl crate::IsEnum for Rf4ce {}
+#[doc = "Field `RF4CE` reader - RF4CE Capability"]
+pub type Rf4ceR = crate::FieldReader<Rf4ce>;
+impl Rf4ceR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RF4CE_A {
+    pub const fn variant(&self) -> Rf4ce {
         match self.bits {
-            0 => RF4CE_A::LEVEL0,
-            1 => RF4CE_A::LEVEL1,
-            2 => RF4CE_A::LEVEL2,
-            3 => RF4CE_A::LEVEL3,
+            0 => Rf4ce::Level0,
+            1 => Rf4ce::Level1,
+            2 => Rf4ce::Level2,
+            3 => Rf4ce::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "Thread stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == RF4CE_A::LEVEL0
+        *self == Rf4ce::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "Thread stack enabled"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == RF4CE_A::LEVEL1
+        *self == Rf4ce::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == RF4CE_A::LEVEL2
+        *self == Rf4ce::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == RF4CE_A::LEVEL3
+        *self == Rf4ce::Level3
     }
 }
-#[doc = "Field `BTSMART` reader - Bluetooth Smart Capability"]
-pub type BTSMART_R = crate::FieldReader<u8, BTSMART_A>;
 #[doc = "Bluetooth Smart Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum BTSMART_A {
+pub enum Btsmart {
     #[doc = "0: Bluetooth SMART stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: Bluetooth SMART enabled"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: N/A"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: N/A"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<BTSMART_A> for u8 {
+impl From<Btsmart> for u8 {
     #[inline(always)]
-    fn from(variant: BTSMART_A) -> Self {
+    fn from(variant: Btsmart) -> Self {
         variant as _
     }
 }
-impl BTSMART_R {
+impl crate::FieldSpec for Btsmart {
+    type Ux = u8;
+}
+impl crate::IsEnum for Btsmart {}
+#[doc = "Field `BTSMART` reader - Bluetooth Smart Capability"]
+pub type BtsmartR = crate::FieldReader<Btsmart>;
+impl BtsmartR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> BTSMART_A {
+    pub const fn variant(&self) -> Btsmart {
         match self.bits {
-            0 => BTSMART_A::LEVEL0,
-            1 => BTSMART_A::LEVEL1,
-            2 => BTSMART_A::LEVEL2,
-            3 => BTSMART_A::LEVEL3,
+            0 => Btsmart::Level0,
+            1 => Btsmart::Level1,
+            2 => Btsmart::Level2,
+            3 => Btsmart::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "Bluetooth SMART stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == BTSMART_A::LEVEL0
+        *self == Btsmart::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "Bluetooth SMART enabled"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == BTSMART_A::LEVEL1
+        *self == Btsmart::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == BTSMART_A::LEVEL2
+        *self == Btsmart::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == BTSMART_A::LEVEL3
+        *self == Btsmart::Level3
     }
 }
-#[doc = "Field `CONNECT` reader - Connect Capability"]
-pub type CONNECT_R = crate::FieldReader<u8, CONNECT_A>;
 #[doc = "Connect Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CONNECT_A {
+pub enum Connect {
     #[doc = "0: Connect stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: Connect enabled"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: N/A"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: N/A"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<CONNECT_A> for u8 {
+impl From<Connect> for u8 {
     #[inline(always)]
-    fn from(variant: CONNECT_A) -> Self {
+    fn from(variant: Connect) -> Self {
         variant as _
     }
 }
-impl CONNECT_R {
+impl crate::FieldSpec for Connect {
+    type Ux = u8;
+}
+impl crate::IsEnum for Connect {}
+#[doc = "Field `CONNECT` reader - Connect Capability"]
+pub type ConnectR = crate::FieldReader<Connect>;
+impl ConnectR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CONNECT_A {
+    pub const fn variant(&self) -> Connect {
         match self.bits {
-            0 => CONNECT_A::LEVEL0,
-            1 => CONNECT_A::LEVEL1,
-            2 => CONNECT_A::LEVEL2,
-            3 => CONNECT_A::LEVEL3,
+            0 => Connect::Level0,
+            1 => Connect::Level1,
+            2 => Connect::Level2,
+            3 => Connect::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "Connect stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == CONNECT_A::LEVEL0
+        *self == Connect::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "Connect enabled"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == CONNECT_A::LEVEL1
+        *self == Connect::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == CONNECT_A::LEVEL2
+        *self == Connect::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == CONNECT_A::LEVEL3
+        *self == Connect::Level3
     }
 }
-#[doc = "Field `SRI` reader - RAIL Capability"]
-pub type SRI_R = crate::FieldReader<u8, SRI_A>;
 #[doc = "RAIL Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum SRI_A {
+pub enum Sri {
     #[doc = "0: RAIL capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: RAIL enabled"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: N/A"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: N/A"]
-    LEVEL3 = 3,
+    Level3 = 3,
 }
-impl From<SRI_A> for u8 {
+impl From<Sri> for u8 {
     #[inline(always)]
-    fn from(variant: SRI_A) -> Self {
+    fn from(variant: Sri) -> Self {
         variant as _
     }
 }
-impl SRI_R {
+impl crate::FieldSpec for Sri {
+    type Ux = u8;
+}
+impl crate::IsEnum for Sri {}
+#[doc = "Field `SRI` reader - RAIL Capability"]
+pub type SriR = crate::FieldReader<Sri>;
+impl SriR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> SRI_A {
+    pub const fn variant(&self) -> Sri {
         match self.bits {
-            0 => SRI_A::LEVEL0,
-            1 => SRI_A::LEVEL1,
-            2 => SRI_A::LEVEL2,
-            3 => SRI_A::LEVEL3,
+            0 => Sri::Level0,
+            1 => Sri::Level1,
+            2 => Sri::Level2,
+            3 => Sri::Level3,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "RAIL capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == SRI_A::LEVEL0
+        *self == Sri::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "RAIL enabled"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == SRI_A::LEVEL1
+        *self == Sri::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == SRI_A::LEVEL2
+        *self == Sri::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "N/A"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == SRI_A::LEVEL3
+        *self == Sri::Level3
     }
 }
-#[doc = "Field `ZWAVE` reader - Z-Wave Capability"]
-pub type ZWAVE_R = crate::FieldReader<u8, ZWAVE_A>;
 #[doc = "Z-Wave Capability\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum ZWAVE_A {
+pub enum Zwave {
     #[doc = "0: Z-Wave stack capability not available"]
-    LEVEL0 = 0,
+    Level0 = 0,
     #[doc = "1: Z-Wave Gateway"]
-    LEVEL1 = 1,
+    Level1 = 1,
     #[doc = "2: Z-Wave End Device"]
-    LEVEL2 = 2,
+    Level2 = 2,
     #[doc = "3: Z-Wave Sensor"]
-    LEVEL3 = 3,
+    Level3 = 3,
     #[doc = "4: Z-Wave Lighting"]
-    LEVEL4 = 4,
+    Level4 = 4,
 }
-impl From<ZWAVE_A> for u8 {
+impl From<Zwave> for u8 {
     #[inline(always)]
-    fn from(variant: ZWAVE_A) -> Self {
+    fn from(variant: Zwave) -> Self {
         variant as _
     }
 }
-impl ZWAVE_R {
+impl crate::FieldSpec for Zwave {
+    type Ux = u8;
+}
+impl crate::IsEnum for Zwave {}
+#[doc = "Field `ZWAVE` reader - Z-Wave Capability"]
+pub type ZwaveR = crate::FieldReader<Zwave>;
+impl ZwaveR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<ZWAVE_A> {
+    pub const fn variant(&self) -> Option<Zwave> {
         match self.bits {
-            0 => Some(ZWAVE_A::LEVEL0),
-            1 => Some(ZWAVE_A::LEVEL1),
-            2 => Some(ZWAVE_A::LEVEL2),
-            3 => Some(ZWAVE_A::LEVEL3),
-            4 => Some(ZWAVE_A::LEVEL4),
+            0 => Some(Zwave::Level0),
+            1 => Some(Zwave::Level1),
+            2 => Some(Zwave::Level2),
+            3 => Some(Zwave::Level3),
+            4 => Some(Zwave::Level4),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `LEVEL0`"]
+    #[doc = "Z-Wave stack capability not available"]
     #[inline(always)]
     pub fn is_level0(&self) -> bool {
-        *self == ZWAVE_A::LEVEL0
+        *self == Zwave::Level0
     }
-    #[doc = "Checks if the value of the field is `LEVEL1`"]
+    #[doc = "Z-Wave Gateway"]
     #[inline(always)]
     pub fn is_level1(&self) -> bool {
-        *self == ZWAVE_A::LEVEL1
+        *self == Zwave::Level1
     }
-    #[doc = "Checks if the value of the field is `LEVEL2`"]
+    #[doc = "Z-Wave End Device"]
     #[inline(always)]
     pub fn is_level2(&self) -> bool {
-        *self == ZWAVE_A::LEVEL2
+        *self == Zwave::Level2
     }
-    #[doc = "Checks if the value of the field is `LEVEL3`"]
+    #[doc = "Z-Wave Sensor"]
     #[inline(always)]
     pub fn is_level3(&self) -> bool {
-        *self == ZWAVE_A::LEVEL3
+        *self == Zwave::Level3
     }
-    #[doc = "Checks if the value of the field is `LEVEL4`"]
+    #[doc = "Z-Wave Lighting"]
     #[inline(always)]
     pub fn is_level4(&self) -> bool {
-        *self == ZWAVE_A::LEVEL4
+        *self == Zwave::Level4
     }
 }
 impl R {
     #[doc = "Bits 0:1 - Zigbee Capability"]
     #[inline(always)]
-    pub fn zigbee(&self) -> ZIGBEE_R {
-        ZIGBEE_R::new((self.bits & 3) as u8)
+    pub fn zigbee(&self) -> ZigbeeR {
+        ZigbeeR::new((self.bits & 3) as u8)
     }
     #[doc = "Bits 4:5 - Thread Capability"]
     #[inline(always)]
-    pub fn thread(&self) -> THREAD_R {
-        THREAD_R::new(((self.bits >> 4) & 3) as u8)
+    pub fn thread(&self) -> ThreadR {
+        ThreadR::new(((self.bits >> 4) & 3) as u8)
     }
     #[doc = "Bits 8:9 - RF4CE Capability"]
     #[inline(always)]
-    pub fn rf4ce(&self) -> RF4CE_R {
-        RF4CE_R::new(((self.bits >> 8) & 3) as u8)
+    pub fn rf4ce(&self) -> Rf4ceR {
+        Rf4ceR::new(((self.bits >> 8) & 3) as u8)
     }
     #[doc = "Bits 12:13 - Bluetooth Smart Capability"]
     #[inline(always)]
-    pub fn btsmart(&self) -> BTSMART_R {
-        BTSMART_R::new(((self.bits >> 12) & 3) as u8)
+    pub fn btsmart(&self) -> BtsmartR {
+        BtsmartR::new(((self.bits >> 12) & 3) as u8)
     }
     #[doc = "Bits 16:17 - Connect Capability"]
     #[inline(always)]
-    pub fn connect(&self) -> CONNECT_R {
-        CONNECT_R::new(((self.bits >> 16) & 3) as u8)
+    pub fn connect(&self) -> ConnectR {
+        ConnectR::new(((self.bits >> 16) & 3) as u8)
     }
     #[doc = "Bits 20:21 - RAIL Capability"]
     #[inline(always)]
-    pub fn sri(&self) -> SRI_R {
-        SRI_R::new(((self.bits >> 20) & 3) as u8)
+    pub fn sri(&self) -> SriR {
+        SriR::new(((self.bits >> 20) & 3) as u8)
     }
     #[doc = "Bits 24:26 - Z-Wave Capability"]
     #[inline(always)]
-    pub fn zwave(&self) -> ZWAVE_R {
-        ZWAVE_R::new(((self.bits >> 24) & 7) as u8)
+    pub fn zwave(&self) -> ZwaveR {
+        ZwaveR::new(((self.bits >> 24) & 7) as u8)
     }
 }
-#[doc = "Software Capability Vector 0\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [swcapa0](index.html) module"]
-pub struct SWCAPA0_SPEC;
-impl crate::RegisterSpec for SWCAPA0_SPEC {
+#[doc = "Software Capability Vector 0\n\nYou can [`read`](crate::Reg::read) this register and get [`swcapa0::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Swcapa0Spec;
+impl crate::RegisterSpec for Swcapa0Spec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [swcapa0::R](R) reader structure"]
-impl crate::Readable for SWCAPA0_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`swcapa0::R`](R) reader structure"]
+impl crate::Readable for Swcapa0Spec {}
 #[doc = "`reset()` method sets SWCAPA0 to value 0"]
-impl crate::Resettable for SWCAPA0_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Swcapa0Spec {}

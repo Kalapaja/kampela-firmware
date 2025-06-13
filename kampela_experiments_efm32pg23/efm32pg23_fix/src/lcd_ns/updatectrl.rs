@@ -1,255 +1,219 @@
 #[doc = "Register `UPDATECTRL` reader"]
-pub struct R(crate::R<UPDATECTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<UPDATECTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<UPDATECTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<UPDATECTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<UpdatectrlSpec>;
 #[doc = "Register `UPDATECTRL` writer"]
-pub struct W(crate::W<UPDATECTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<UPDATECTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<UPDATECTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<UPDATECTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `AUTOLOAD` reader - Auto Load"]
-pub type AUTOLOAD_R = crate::BitReader<AUTOLOAD_A>;
+pub type W = crate::W<UpdatectrlSpec>;
 #[doc = "Auto Load\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum AUTOLOAD_A {
+pub enum Autoload {
     #[doc = "0: CLK_BUS register to CLK_PER register loads must be done manually with a write to CMD.LOAD."]
-    MANUAL = 0,
+    Manual = 0,
     #[doc = "1: CLK_BUS register to CLK_PER register loads will be started automatically after a write to the register in UPDATECTRL.LOADADDR is detected."]
-    AUTO = 1,
+    Auto = 1,
 }
-impl From<AUTOLOAD_A> for bool {
+impl From<Autoload> for bool {
     #[inline(always)]
-    fn from(variant: AUTOLOAD_A) -> Self {
+    fn from(variant: Autoload) -> Self {
         variant as u8 != 0
     }
 }
-impl AUTOLOAD_R {
+#[doc = "Field `AUTOLOAD` reader - Auto Load"]
+pub type AutoloadR = crate::BitReader<Autoload>;
+impl AutoloadR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> AUTOLOAD_A {
+    pub const fn variant(&self) -> Autoload {
         match self.bits {
-            false => AUTOLOAD_A::MANUAL,
-            true => AUTOLOAD_A::AUTO,
+            false => Autoload::Manual,
+            true => Autoload::Auto,
         }
     }
-    #[doc = "Checks if the value of the field is `MANUAL`"]
-    #[inline(always)]
-    pub fn is_manual(&self) -> bool {
-        *self == AUTOLOAD_A::MANUAL
-    }
-    #[doc = "Checks if the value of the field is `AUTO`"]
-    #[inline(always)]
-    pub fn is_auto(&self) -> bool {
-        *self == AUTOLOAD_A::AUTO
-    }
-}
-#[doc = "Field `AUTOLOAD` writer - Auto Load"]
-pub type AUTOLOAD_W<'a, const O: u8> = crate::BitWriter<'a, u32, UPDATECTRL_SPEC, AUTOLOAD_A, O>;
-impl<'a, const O: u8> AUTOLOAD_W<'a, O> {
     #[doc = "CLK_BUS register to CLK_PER register loads must be done manually with a write to CMD.LOAD."]
     #[inline(always)]
-    pub fn manual(self) -> &'a mut W {
-        self.variant(AUTOLOAD_A::MANUAL)
+    pub fn is_manual(&self) -> bool {
+        *self == Autoload::Manual
     }
     #[doc = "CLK_BUS register to CLK_PER register loads will be started automatically after a write to the register in UPDATECTRL.LOADADDR is detected."]
     #[inline(always)]
-    pub fn auto(self) -> &'a mut W {
-        self.variant(AUTOLOAD_A::AUTO)
+    pub fn is_auto(&self) -> bool {
+        *self == Autoload::Auto
     }
 }
-#[doc = "Field `LOADADDR` reader - Load Address"]
-pub type LOADADDR_R = crate::FieldReader<u8, LOADADDR_A>;
+#[doc = "Field `AUTOLOAD` writer - Auto Load"]
+pub type AutoloadW<'a, REG> = crate::BitWriter<'a, REG, Autoload>;
+impl<'a, REG> AutoloadW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "CLK_BUS register to CLK_PER register loads must be done manually with a write to CMD.LOAD."]
+    #[inline(always)]
+    pub fn manual(self) -> &'a mut crate::W<REG> {
+        self.variant(Autoload::Manual)
+    }
+    #[doc = "CLK_BUS register to CLK_PER register loads will be started automatically after a write to the register in UPDATECTRL.LOADADDR is detected."]
+    #[inline(always)]
+    pub fn auto(self) -> &'a mut crate::W<REG> {
+        self.variant(Autoload::Auto)
+    }
+}
 #[doc = "Load Address\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum LOADADDR_A {
+pub enum Loadaddr {
     #[doc = "0: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to BACTRL. Use with UPDATECTRL.AUTOLOAD"]
-    BACTRLWR = 0,
+    Bactrlwr = 0,
     #[doc = "1: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGA. Use with UPDATECTRL.AUTOLOAD"]
-    AREGAWR = 1,
+    Aregawr = 1,
     #[doc = "2: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGB. Use with UPDATECTRL.AUTOLOAD"]
-    AREGBWR = 2,
+    Aregbwr = 2,
     #[doc = "3: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD0. Use with UPDATECTRL.AUTOLOAD"]
-    SEGD0WR = 3,
+    Segd0wr = 3,
     #[doc = "4: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD1. Use with UPDATECTRL.AUTOLOAD"]
-    SEGD1WR = 4,
+    Segd1wr = 4,
     #[doc = "5: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD2. Use with UPDATECTRL.AUTOLOAD"]
-    SEGD2WR = 5,
+    Segd2wr = 5,
     #[doc = "6: Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD3. Use with UPDATECTRL.AUTOLOAD"]
-    SEGD3WR = 6,
+    Segd3wr = 6,
 }
-impl From<LOADADDR_A> for u8 {
+impl From<Loadaddr> for u8 {
     #[inline(always)]
-    fn from(variant: LOADADDR_A) -> Self {
+    fn from(variant: Loadaddr) -> Self {
         variant as _
     }
 }
-impl LOADADDR_R {
+impl crate::FieldSpec for Loadaddr {
+    type Ux = u8;
+}
+impl crate::IsEnum for Loadaddr {}
+#[doc = "Field `LOADADDR` reader - Load Address"]
+pub type LoadaddrR = crate::FieldReader<Loadaddr>;
+impl LoadaddrR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<LOADADDR_A> {
+    pub const fn variant(&self) -> Option<Loadaddr> {
         match self.bits {
-            0 => Some(LOADADDR_A::BACTRLWR),
-            1 => Some(LOADADDR_A::AREGAWR),
-            2 => Some(LOADADDR_A::AREGBWR),
-            3 => Some(LOADADDR_A::SEGD0WR),
-            4 => Some(LOADADDR_A::SEGD1WR),
-            5 => Some(LOADADDR_A::SEGD2WR),
-            6 => Some(LOADADDR_A::SEGD3WR),
+            0 => Some(Loadaddr::Bactrlwr),
+            1 => Some(Loadaddr::Aregawr),
+            2 => Some(Loadaddr::Aregbwr),
+            3 => Some(Loadaddr::Segd0wr),
+            4 => Some(Loadaddr::Segd1wr),
+            5 => Some(Loadaddr::Segd2wr),
+            6 => Some(Loadaddr::Segd3wr),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `BACTRLWR`"]
-    #[inline(always)]
-    pub fn is_bactrlwr(&self) -> bool {
-        *self == LOADADDR_A::BACTRLWR
-    }
-    #[doc = "Checks if the value of the field is `AREGAWR`"]
-    #[inline(always)]
-    pub fn is_aregawr(&self) -> bool {
-        *self == LOADADDR_A::AREGAWR
-    }
-    #[doc = "Checks if the value of the field is `AREGBWR`"]
-    #[inline(always)]
-    pub fn is_aregbwr(&self) -> bool {
-        *self == LOADADDR_A::AREGBWR
-    }
-    #[doc = "Checks if the value of the field is `SEGD0WR`"]
-    #[inline(always)]
-    pub fn is_segd0wr(&self) -> bool {
-        *self == LOADADDR_A::SEGD0WR
-    }
-    #[doc = "Checks if the value of the field is `SEGD1WR`"]
-    #[inline(always)]
-    pub fn is_segd1wr(&self) -> bool {
-        *self == LOADADDR_A::SEGD1WR
-    }
-    #[doc = "Checks if the value of the field is `SEGD2WR`"]
-    #[inline(always)]
-    pub fn is_segd2wr(&self) -> bool {
-        *self == LOADADDR_A::SEGD2WR
-    }
-    #[doc = "Checks if the value of the field is `SEGD3WR`"]
-    #[inline(always)]
-    pub fn is_segd3wr(&self) -> bool {
-        *self == LOADADDR_A::SEGD3WR
-    }
-}
-#[doc = "Field `LOADADDR` writer - Load Address"]
-pub type LOADADDR_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, UPDATECTRL_SPEC, u8, LOADADDR_A, 4, O>;
-impl<'a, const O: u8> LOADADDR_W<'a, O> {
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to BACTRL. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn bactrlwr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::BACTRLWR)
+    pub fn is_bactrlwr(&self) -> bool {
+        *self == Loadaddr::Bactrlwr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGA. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn aregawr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::AREGAWR)
+    pub fn is_aregawr(&self) -> bool {
+        *self == Loadaddr::Aregawr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGB. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn aregbwr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::AREGBWR)
+    pub fn is_aregbwr(&self) -> bool {
+        *self == Loadaddr::Aregbwr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD0. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn segd0wr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::SEGD0WR)
+    pub fn is_segd0wr(&self) -> bool {
+        *self == Loadaddr::Segd0wr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD1. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn segd1wr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::SEGD1WR)
+    pub fn is_segd1wr(&self) -> bool {
+        *self == Loadaddr::Segd1wr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD2. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn segd2wr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::SEGD2WR)
+    pub fn is_segd2wr(&self) -> bool {
+        *self == Loadaddr::Segd2wr
     }
     #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD3. Use with UPDATECTRL.AUTOLOAD"]
     #[inline(always)]
-    pub fn segd3wr(self) -> &'a mut W {
-        self.variant(LOADADDR_A::SEGD3WR)
+    pub fn is_segd3wr(&self) -> bool {
+        *self == Loadaddr::Segd3wr
+    }
+}
+#[doc = "Field `LOADADDR` writer - Load Address"]
+pub type LoadaddrW<'a, REG> = crate::FieldWriter<'a, REG, 4, Loadaddr>;
+impl<'a, REG> LoadaddrW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to BACTRL. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn bactrlwr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Bactrlwr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGA. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn aregawr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Aregawr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to AREGB. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn aregbwr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Aregbwr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD0. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn segd0wr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Segd0wr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD1. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn segd1wr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Segd1wr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD2. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn segd2wr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Segd2wr)
+    }
+    #[doc = "Starts synchronizing registers from CLK_BUS to CLK_PER after a write to SEGD3. Use with UPDATECTRL.AUTOLOAD"]
+    #[inline(always)]
+    pub fn segd3wr(self) -> &'a mut crate::W<REG> {
+        self.variant(Loadaddr::Segd3wr)
     }
 }
 impl R {
     #[doc = "Bit 8 - Auto Load"]
     #[inline(always)]
-    pub fn autoload(&self) -> AUTOLOAD_R {
-        AUTOLOAD_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn autoload(&self) -> AutoloadR {
+        AutoloadR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bits 13:16 - Load Address"]
     #[inline(always)]
-    pub fn loadaddr(&self) -> LOADADDR_R {
-        LOADADDR_R::new(((self.bits >> 13) & 0x0f) as u8)
+    pub fn loadaddr(&self) -> LoadaddrR {
+        LoadaddrR::new(((self.bits >> 13) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bit 8 - Auto Load"]
     #[inline(always)]
-    #[must_use]
-    pub fn autoload(&mut self) -> AUTOLOAD_W<8> {
-        AUTOLOAD_W::new(self)
+    pub fn autoload(&mut self) -> AutoloadW<UpdatectrlSpec> {
+        AutoloadW::new(self, 8)
     }
     #[doc = "Bits 13:16 - Load Address"]
     #[inline(always)]
-    #[must_use]
-    pub fn loadaddr(&mut self) -> LOADADDR_W<13> {
-        LOADADDR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn loadaddr(&mut self) -> LoadaddrW<UpdatectrlSpec> {
+        LoadaddrW::new(self, 13)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [updatectrl](index.html) module"]
-pub struct UPDATECTRL_SPEC;
-impl crate::RegisterSpec for UPDATECTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`updatectrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`updatectrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct UpdatectrlSpec;
+impl crate::RegisterSpec for UpdatectrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [updatectrl::R](R) reader structure"]
-impl crate::Readable for UPDATECTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [updatectrl::W](W) writer structure"]
-impl crate::Writable for UPDATECTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`updatectrl::R`](R) reader structure"]
+impl crate::Readable for UpdatectrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`updatectrl::W`](W) writer structure"]
+impl crate::Writable for UpdatectrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets UPDATECTRL to value 0"]
-impl crate::Resettable for UPDATECTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for UpdatectrlSpec {}

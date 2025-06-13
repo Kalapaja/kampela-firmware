@@ -1,148 +1,133 @@
 #[doc = "Register `STATUS` reader"]
-pub struct R(crate::R<STATUS_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<STATUS_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<STATUS_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<STATUS_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<StatusSpec>;
 #[doc = "Field `BUSY` reader - Erase/Write Busy"]
-pub type BUSY_R = crate::BitReader<bool>;
+pub type BusyR = crate::BitReader;
 #[doc = "Field `LOCKED` reader - Access Locked"]
-pub type LOCKED_R = crate::BitReader<bool>;
+pub type LockedR = crate::BitReader;
 #[doc = "Field `INVADDR` reader - Invalid Write Address or Erase Page"]
-pub type INVADDR_R = crate::BitReader<bool>;
+pub type InvaddrR = crate::BitReader;
 #[doc = "Field `WDATAREADY` reader - WDATA Write Ready"]
-pub type WDATAREADY_R = crate::BitReader<bool>;
-#[doc = "Field `ERASEABORTED` reader - The Current Flash Erase Operation Aborte"]
-pub type ERASEABORTED_R = crate::BitReader<bool>;
-#[doc = "Field `PENDING` reader - Write command is in queue"]
-pub type PENDING_R = crate::BitReader<bool>;
-#[doc = "Field `TIMEOUT` reader - Write command timeout flag"]
-pub type TIMEOUT_R = crate::BitReader<bool>;
+pub type WdatareadyR = crate::BitReader;
+#[doc = "Field `ERASEABORTED` reader - Erase Operation Aborted"]
+pub type EraseabortedR = crate::BitReader;
+#[doc = "Field `PENDING` reader - Write Command In Queue"]
+pub type PendingR = crate::BitReader;
+#[doc = "Field `TIMEOUT` reader - Write Command Timeout"]
+pub type TimeoutR = crate::BitReader;
 #[doc = "Field `RANGEPARTIAL` reader - EraseRange with skipped locked pages"]
-pub type RANGEPARTIAL_R = crate::BitReader<bool>;
-#[doc = "Field `REGLOCK` reader - Register Lock Status"]
-pub type REGLOCK_R = crate::BitReader<REGLOCK_A>;
+pub type RangepartialR = crate::BitReader;
 #[doc = "Register Lock Status\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum REGLOCK_A {
+pub enum Reglock {
     #[doc = "0: UNLOCKED"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: LOCKED"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<REGLOCK_A> for bool {
+impl From<Reglock> for bool {
     #[inline(always)]
-    fn from(variant: REGLOCK_A) -> Self {
+    fn from(variant: Reglock) -> Self {
         variant as u8 != 0
     }
 }
-impl REGLOCK_R {
+#[doc = "Field `REGLOCK` reader - Register Lock Status"]
+pub type ReglockR = crate::BitReader<Reglock>;
+impl ReglockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> REGLOCK_A {
+    pub const fn variant(&self) -> Reglock {
         match self.bits {
-            false => REGLOCK_A::UNLOCKED,
-            true => REGLOCK_A::LOCKED,
+            false => Reglock::Unlocked,
+            true => Reglock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "UNLOCKED"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == REGLOCK_A::UNLOCKED
+        *self == Reglock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "LOCKED"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == REGLOCK_A::LOCKED
+        *self == Reglock::Locked
     }
 }
 #[doc = "Field `PWRON` reader - Flash power on status"]
-pub type PWRON_R = crate::BitReader<bool>;
+pub type PwronR = crate::BitReader;
 #[doc = "Field `WREADY` reader - Flash Write Ready"]
-pub type WREADY_R = crate::BitReader<bool>;
+pub type WreadyR = crate::BitReader;
 #[doc = "Field `PWRUPCKBDFAILCOUNT` reader - Flash power up checkerboard pattern chec"]
-pub type PWRUPCKBDFAILCOUNT_R = crate::FieldReader<u8, u8>;
+pub type PwrupckbdfailcountR = crate::FieldReader;
 impl R {
     #[doc = "Bit 0 - Erase/Write Busy"]
     #[inline(always)]
-    pub fn busy(&self) -> BUSY_R {
-        BUSY_R::new((self.bits & 1) != 0)
+    pub fn busy(&self) -> BusyR {
+        BusyR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Access Locked"]
     #[inline(always)]
-    pub fn locked(&self) -> LOCKED_R {
-        LOCKED_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn locked(&self) -> LockedR {
+        LockedR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Invalid Write Address or Erase Page"]
     #[inline(always)]
-    pub fn invaddr(&self) -> INVADDR_R {
-        INVADDR_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn invaddr(&self) -> InvaddrR {
+        InvaddrR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - WDATA Write Ready"]
     #[inline(always)]
-    pub fn wdataready(&self) -> WDATAREADY_R {
-        WDATAREADY_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn wdataready(&self) -> WdatareadyR {
+        WdatareadyR::new(((self.bits >> 3) & 1) != 0)
     }
-    #[doc = "Bit 4 - The Current Flash Erase Operation Aborte"]
+    #[doc = "Bit 4 - Erase Operation Aborted"]
     #[inline(always)]
-    pub fn eraseaborted(&self) -> ERASEABORTED_R {
-        ERASEABORTED_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn eraseaborted(&self) -> EraseabortedR {
+        EraseabortedR::new(((self.bits >> 4) & 1) != 0)
     }
-    #[doc = "Bit 5 - Write command is in queue"]
+    #[doc = "Bit 5 - Write Command In Queue"]
     #[inline(always)]
-    pub fn pending(&self) -> PENDING_R {
-        PENDING_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn pending(&self) -> PendingR {
+        PendingR::new(((self.bits >> 5) & 1) != 0)
     }
-    #[doc = "Bit 6 - Write command timeout flag"]
+    #[doc = "Bit 6 - Write Command Timeout"]
     #[inline(always)]
-    pub fn timeout(&self) -> TIMEOUT_R {
-        TIMEOUT_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn timeout(&self) -> TimeoutR {
+        TimeoutR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 7 - EraseRange with skipped locked pages"]
     #[inline(always)]
-    pub fn rangepartial(&self) -> RANGEPARTIAL_R {
-        RANGEPARTIAL_R::new(((self.bits >> 7) & 1) != 0)
+    pub fn rangepartial(&self) -> RangepartialR {
+        RangepartialR::new(((self.bits >> 7) & 1) != 0)
     }
     #[doc = "Bit 16 - Register Lock Status"]
     #[inline(always)]
-    pub fn reglock(&self) -> REGLOCK_R {
-        REGLOCK_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn reglock(&self) -> ReglockR {
+        ReglockR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 24 - Flash power on status"]
     #[inline(always)]
-    pub fn pwron(&self) -> PWRON_R {
-        PWRON_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn pwron(&self) -> PwronR {
+        PwronR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 27 - Flash Write Ready"]
     #[inline(always)]
-    pub fn wready(&self) -> WREADY_R {
-        WREADY_R::new(((self.bits >> 27) & 1) != 0)
+    pub fn wready(&self) -> WreadyR {
+        WreadyR::new(((self.bits >> 27) & 1) != 0)
     }
     #[doc = "Bits 28:31 - Flash power up checkerboard pattern chec"]
     #[inline(always)]
-    pub fn pwrupckbdfailcount(&self) -> PWRUPCKBDFAILCOUNT_R {
-        PWRUPCKBDFAILCOUNT_R::new(((self.bits >> 28) & 0x0f) as u8)
+    pub fn pwrupckbdfailcount(&self) -> PwrupckbdfailcountR {
+        PwrupckbdfailcountR::new(((self.bits >> 28) & 0x0f) as u8)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [status](index.html) module"]
-pub struct STATUS_SPEC;
-impl crate::RegisterSpec for STATUS_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct StatusSpec;
+impl crate::RegisterSpec for StatusSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [status::R](R) reader structure"]
-impl crate::Readable for STATUS_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`status::R`](R) reader structure"]
+impl crate::Readable for StatusSpec {}
 #[doc = "`reset()` method sets STATUS to value 0x0800_0008"]
-impl crate::Resettable for STATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0800_0008;
+impl crate::Resettable for StatusSpec {
+    const RESET_VALUE: u32 = 0x0800_0008;
 }

@@ -114,26 +114,46 @@ pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
 }
 
 pub fn psram_reset(peripherals: &mut Peripherals) {
-    deselect_psram(&mut peripherals.GPIO_S);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_RESET_ENABLE);
-    deselect_psram(&mut peripherals.GPIO_S);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_RESET);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
 }
 
 pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
-    while peripherals.EUSART2_S.status.read().txfl().bit_is_clear() {}
-    peripherals.EUSART2_S.txdata.write({|w_reg|
-        w_reg
+    while peripherals.eusart2_s.status().read().txfl().bit_is_clear() {}
+    peripherals.eusart2_s.txdata().write({|w_reg|
+        unsafe {
+            w_reg
             // EUSART tx and rx are u16,
             // single byte is used here because of the commands,
             // setting used is `.databits().eight()`
-            .txdata().variant(byte as u16)
+            .txdata().bits(byte as u16)
+        }
     });
-    while peripherals.EUSART2_S.status.read().rxfl().bit_is_clear() {}
-    peripherals.EUSART2_S.rxdata.read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
+    while peripherals.eusart2_s.status().read().rxfl().bit_is_clear() {}
+    peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
+}
+
+pub fn psram_write_byte(peripherals: &mut Peripherals, byte: u8) {
+    while peripherals.eusart2_s.status().read().txfl().bit_is_clear() {}
+    peripherals.eusart2_s.txdata().write({|w_reg|
+        unsafe {
+            w_reg
+            // EUSART tx and rx are u16,
+            // single byte is used here because of the commands,
+            // setting used is `.databits().eight()`
+            .txdata().bits(byte as u16)
+        }
+    });
+}
+
+pub fn psram_read_byte(peripherals: &mut Peripherals) -> u8 {
+    while peripherals.eusart2_s.status().read().rxfl().bit_is_clear() {}
+    peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
 }
 
 /// PSRAM dummy command, to send a new item in rx.
@@ -142,7 +162,7 @@ pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
 pub const PSRAM_DUMMY: u8 = 0xff;
 
 pub fn psram_read_id(peripherals: &mut Peripherals) -> [u8; ID_LEN] {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_READ_ID);
     psram_write_slice(peripherals, &[PSRAM_DUMMY; ADDR_LEN]);
     psram_read_vec(peripherals, ID_LEN).try_into().expect("static length, always fits")
@@ -217,11 +237,11 @@ pub fn psram_read_at_address_native(peripherals: &mut Peripherals, address: Addr
 }
 
 fn psram_read_at_address_helper(peripherals: &mut Peripherals, address: AddressPsram, len: usize) -> Vec<u8> {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_READ);
     psram_write_slice(peripherals, &address.inner());
     let out = psram_read_vec(peripherals, len);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
     out
 }
 pub fn psram_read_at_address(peripherals: &mut Peripherals, address: AddressPsram, len: usize) -> Result<Vec<u8>, MemoryError> {
@@ -265,11 +285,11 @@ pub fn psram_write_at_address_native(peripherals: &mut Peripherals, address: Add
 ///
 /// Use only as a part of function with reset.
 fn psram_write_at_address_helper(peripherals: &mut Peripherals, address: AddressPsram, slice: &[u8]) {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_WRITE);
     psram_write_slice(peripherals, &address.inner());
     psram_write_slice(peripherals, slice);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
 }
 /// Write at address seamlessly, i.e. without wrapping.
 ///
@@ -311,7 +331,7 @@ pub const PSRAM_PAGE_SIZE: u32 = 1024;
 /// Limits maximum address available to `AddressPsram([0x8f, ff, ff])`.
 pub const PSRAM_TOTAL_SIZE: u32 = 67_108_864;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PsramAccess {
     pub start_address: AddressPsram,
     pub total_len: usize,

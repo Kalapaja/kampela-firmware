@@ -1,126 +1,79 @@
 #[doc = "Register `PORTD_CTRL` reader"]
-pub struct R(crate::R<PORTD_CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<PORTD_CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<PORTD_CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<PORTD_CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<PortdCtrlSpec>;
 #[doc = "Register `PORTD_CTRL` writer"]
-pub struct W(crate::W<PORTD_CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<PORTD_CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<PORTD_CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<PORTD_CTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<PortdCtrlSpec>;
 #[doc = "Field `SLEWRATE` reader - Slew Rate"]
-pub type SLEWRATE_R = crate::FieldReader<u8, u8>;
+pub type SlewrateR = crate::FieldReader;
 #[doc = "Field `SLEWRATE` writer - Slew Rate"]
-pub type SLEWRATE_W<'a, const O: u8> = crate::FieldWriter<'a, u32, PORTD_CTRL_SPEC, u8, u8, 3, O>;
+pub type SlewrateW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Field `DINDIS` reader - Data In Disable"]
-pub type DINDIS_R = crate::BitReader<bool>;
+pub type DindisR = crate::BitReader;
 #[doc = "Field `DINDIS` writer - Data In Disable"]
-pub type DINDIS_W<'a, const O: u8> = crate::BitWriter<'a, u32, PORTD_CTRL_SPEC, bool, O>;
+pub type DindisW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SLEWRATEALT` reader - Slew Rate Alt"]
-pub type SLEWRATEALT_R = crate::FieldReader<u8, u8>;
+pub type SlewratealtR = crate::FieldReader;
 #[doc = "Field `SLEWRATEALT` writer - Slew Rate Alt"]
-pub type SLEWRATEALT_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, PORTD_CTRL_SPEC, u8, u8, 3, O>;
+pub type SlewratealtW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Field `DINDISALT` reader - Data In Disable Alt"]
-pub type DINDISALT_R = crate::BitReader<bool>;
+pub type DindisaltR = crate::BitReader;
 #[doc = "Field `DINDISALT` writer - Data In Disable Alt"]
-pub type DINDISALT_W<'a, const O: u8> = crate::BitWriter<'a, u32, PORTD_CTRL_SPEC, bool, O>;
+pub type DindisaltW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 4:6 - Slew Rate"]
     #[inline(always)]
-    pub fn slewrate(&self) -> SLEWRATE_R {
-        SLEWRATE_R::new(((self.bits >> 4) & 7) as u8)
+    pub fn slewrate(&self) -> SlewrateR {
+        SlewrateR::new(((self.bits >> 4) & 7) as u8)
     }
     #[doc = "Bit 12 - Data In Disable"]
     #[inline(always)]
-    pub fn dindis(&self) -> DINDIS_R {
-        DINDIS_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn dindis(&self) -> DindisR {
+        DindisR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bits 20:22 - Slew Rate Alt"]
     #[inline(always)]
-    pub fn slewratealt(&self) -> SLEWRATEALT_R {
-        SLEWRATEALT_R::new(((self.bits >> 20) & 7) as u8)
+    pub fn slewratealt(&self) -> SlewratealtR {
+        SlewratealtR::new(((self.bits >> 20) & 7) as u8)
     }
     #[doc = "Bit 28 - Data In Disable Alt"]
     #[inline(always)]
-    pub fn dindisalt(&self) -> DINDISALT_R {
-        DINDISALT_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn dindisalt(&self) -> DindisaltR {
+        DindisaltR::new(((self.bits >> 28) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 4:6 - Slew Rate"]
     #[inline(always)]
-    #[must_use]
-    pub fn slewrate(&mut self) -> SLEWRATE_W<4> {
-        SLEWRATE_W::new(self)
+    pub fn slewrate(&mut self) -> SlewrateW<PortdCtrlSpec> {
+        SlewrateW::new(self, 4)
     }
     #[doc = "Bit 12 - Data In Disable"]
     #[inline(always)]
-    #[must_use]
-    pub fn dindis(&mut self) -> DINDIS_W<12> {
-        DINDIS_W::new(self)
+    pub fn dindis(&mut self) -> DindisW<PortdCtrlSpec> {
+        DindisW::new(self, 12)
     }
     #[doc = "Bits 20:22 - Slew Rate Alt"]
     #[inline(always)]
-    #[must_use]
-    pub fn slewratealt(&mut self) -> SLEWRATEALT_W<20> {
-        SLEWRATEALT_W::new(self)
+    pub fn slewratealt(&mut self) -> SlewratealtW<PortdCtrlSpec> {
+        SlewratealtW::new(self, 20)
     }
     #[doc = "Bit 28 - Data In Disable Alt"]
     #[inline(always)]
-    #[must_use]
-    pub fn dindisalt(&mut self) -> DINDISALT_W<28> {
-        DINDISALT_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn dindisalt(&mut self) -> DindisaltW<PortdCtrlSpec> {
+        DindisaltW::new(self, 28)
     }
 }
-#[doc = "Port control\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [portd_ctrl](index.html) module"]
-pub struct PORTD_CTRL_SPEC;
-impl crate::RegisterSpec for PORTD_CTRL_SPEC {
+#[doc = "Port control\n\nYou can [`read`](crate::Reg::read) this register and get [`portd_ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`portd_ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PortdCtrlSpec;
+impl crate::RegisterSpec for PortdCtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [portd_ctrl::R](R) reader structure"]
-impl crate::Readable for PORTD_CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [portd_ctrl::W](W) writer structure"]
-impl crate::Writable for PORTD_CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`portd_ctrl::R`](R) reader structure"]
+impl crate::Readable for PortdCtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`portd_ctrl::W`](W) writer structure"]
+impl crate::Writable for PortdCtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets PORTD_CTRL to value 0x0040_0040"]
-impl crate::Resettable for PORTD_CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0040_0040;
+impl crate::Resettable for PortdCtrlSpec {
+    const RESET_VALUE: u32 = 0x0040_0040;
 }

@@ -1,80 +1,35 @@
 #[doc = "Register `EFPIEN` reader"]
-pub struct R(crate::R<EFPIEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<EFPIEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<EFPIEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<EFPIEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<EfpienSpec>;
 #[doc = "Register `EFPIEN` writer"]
-pub struct W(crate::W<EFPIEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<EFPIEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<EFPIEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<EFPIEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<EfpienSpec>;
 #[doc = "Field `EFPIEN` reader - EFP Interrupt enable"]
-pub type EFPIEN_R = crate::BitReader<bool>;
+pub type EfpienR = crate::BitReader;
 #[doc = "Field `EFPIEN` writer - EFP Interrupt enable"]
-pub type EFPIEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, EFPIEN_SPEC, bool, O>;
+pub type EfpienW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - EFP Interrupt enable"]
     #[inline(always)]
-    pub fn efpien(&self) -> EFPIEN_R {
-        EFPIEN_R::new((self.bits & 1) != 0)
+    pub fn efpien(&self) -> EfpienR {
+        EfpienR::new((self.bits & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - EFP Interrupt enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn efpien(&mut self) -> EFPIEN_W<0> {
-        EFPIEN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn efpien(&mut self) -> EfpienW<EfpienSpec> {
+        EfpienW::new(self, 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [efpien](index.html) module"]
-pub struct EFPIEN_SPEC;
-impl crate::RegisterSpec for EFPIEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`efpien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`efpien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct EfpienSpec;
+impl crate::RegisterSpec for EfpienSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [efpien::R](R) reader structure"]
-impl crate::Readable for EFPIEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [efpien::W](W) writer structure"]
-impl crate::Writable for EFPIEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`efpien::R`](R) reader structure"]
+impl crate::Readable for EfpienSpec {}
+#[doc = "`write(|w| ..)` method takes [`efpien::W`](W) writer structure"]
+impl crate::Writable for EfpienSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EFPIEN to value 0"]
-impl crate::Resettable for EFPIEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for EfpienSpec {}

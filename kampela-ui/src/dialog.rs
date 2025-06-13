@@ -19,7 +19,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{uistate::EventResult, widget::view::View};
+use crate::{uistate::{Event, EventResult}, widget::view::View};
 use crate::widget::{view::{Widget, ViewScreen}, nav_bar::nav_bar::{NavBar, NavCommand, NAV_BAR_WIDGET}};
 
 use crate::display_def::*;
@@ -64,8 +64,8 @@ impl Dialog {
 impl ViewScreen for Dialog {
     type DrawInput<'a> = ();
     type DrawOutput = ();
-    type TapInput<'a> = ();
-    type TapOutput = ();
+    type EventInput<'a> = ();
+    type EventOutput = ();
 
     
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, Self::DrawOutput), D::Error>
@@ -102,11 +102,11 @@ impl ViewScreen for Dialog {
 
         Ok((EventResult { request, state }, ()))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: ()) -> (EventResult, ())
+    fn handle_event_screen<'a>(&mut self, event: Event, _: ()) -> (EventResult, ())
     where
         Self: 'a
     {
-        let event_result = if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
+        let event_result = if let Some(Some(c)) = self.navbar.handle_event(event, ()) {
             let routes = core::mem::take(&mut self.routes).unwrap();
             match c {
                 NavCommand::Left => {

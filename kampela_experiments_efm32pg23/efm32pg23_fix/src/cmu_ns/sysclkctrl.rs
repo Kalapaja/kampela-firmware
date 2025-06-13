@@ -1,319 +1,291 @@
 #[doc = "Register `SYSCLKCTRL` reader"]
-pub struct R(crate::R<SYSCLKCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<SYSCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<SYSCLKCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<SYSCLKCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<SysclkctrlSpec>;
 #[doc = "Register `SYSCLKCTRL` writer"]
-pub struct W(crate::W<SYSCLKCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<SYSCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<SYSCLKCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<SYSCLKCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `CLKSEL` reader - Clock Select"]
-pub type CLKSEL_R = crate::FieldReader<u8, CLKSEL_A>;
+pub type W = crate::W<SysclkctrlSpec>;
 #[doc = "Clock Select\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CLKSEL_A {
+pub enum Clksel {
     #[doc = "1: FSRCO is clocking SYSCLK"]
-    FSRCO = 1,
+    Fsrco = 1,
     #[doc = "2: HFRCODPLL is clocking SYSCLK"]
-    HFRCODPLL = 2,
+    Hfrcodpll = 2,
     #[doc = "3: HFXO is clocking SYSCLK"]
-    HFXO = 3,
+    Hfxo = 3,
     #[doc = "4: CLKIN0 is clocking SYSCLK"]
-    CLKIN0 = 4,
+    Clkin0 = 4,
 }
-impl From<CLKSEL_A> for u8 {
+impl From<Clksel> for u8 {
     #[inline(always)]
-    fn from(variant: CLKSEL_A) -> Self {
+    fn from(variant: Clksel) -> Self {
         variant as _
     }
 }
-impl CLKSEL_R {
+impl crate::FieldSpec for Clksel {
+    type Ux = u8;
+}
+impl crate::IsEnum for Clksel {}
+#[doc = "Field `CLKSEL` reader - Clock Select"]
+pub type ClkselR = crate::FieldReader<Clksel>;
+impl ClkselR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CLKSEL_A> {
+    pub const fn variant(&self) -> Option<Clksel> {
         match self.bits {
-            1 => Some(CLKSEL_A::FSRCO),
-            2 => Some(CLKSEL_A::HFRCODPLL),
-            3 => Some(CLKSEL_A::HFXO),
-            4 => Some(CLKSEL_A::CLKIN0),
+            1 => Some(Clksel::Fsrco),
+            2 => Some(Clksel::Hfrcodpll),
+            3 => Some(Clksel::Hfxo),
+            4 => Some(Clksel::Clkin0),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `FSRCO`"]
-    #[inline(always)]
-    pub fn is_fsrco(&self) -> bool {
-        *self == CLKSEL_A::FSRCO
-    }
-    #[doc = "Checks if the value of the field is `HFRCODPLL`"]
-    #[inline(always)]
-    pub fn is_hfrcodpll(&self) -> bool {
-        *self == CLKSEL_A::HFRCODPLL
-    }
-    #[doc = "Checks if the value of the field is `HFXO`"]
-    #[inline(always)]
-    pub fn is_hfxo(&self) -> bool {
-        *self == CLKSEL_A::HFXO
-    }
-    #[doc = "Checks if the value of the field is `CLKIN0`"]
-    #[inline(always)]
-    pub fn is_clkin0(&self) -> bool {
-        *self == CLKSEL_A::CLKIN0
-    }
-}
-#[doc = "Field `CLKSEL` writer - Clock Select"]
-pub type CLKSEL_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, SYSCLKCTRL_SPEC, u8, CLKSEL_A, 3, O>;
-impl<'a, const O: u8> CLKSEL_W<'a, O> {
     #[doc = "FSRCO is clocking SYSCLK"]
     #[inline(always)]
-    pub fn fsrco(self) -> &'a mut W {
-        self.variant(CLKSEL_A::FSRCO)
+    pub fn is_fsrco(&self) -> bool {
+        *self == Clksel::Fsrco
     }
     #[doc = "HFRCODPLL is clocking SYSCLK"]
     #[inline(always)]
-    pub fn hfrcodpll(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFRCODPLL)
+    pub fn is_hfrcodpll(&self) -> bool {
+        *self == Clksel::Hfrcodpll
     }
     #[doc = "HFXO is clocking SYSCLK"]
     #[inline(always)]
-    pub fn hfxo(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFXO)
+    pub fn is_hfxo(&self) -> bool {
+        *self == Clksel::Hfxo
     }
     #[doc = "CLKIN0 is clocking SYSCLK"]
     #[inline(always)]
-    pub fn clkin0(self) -> &'a mut W {
-        self.variant(CLKSEL_A::CLKIN0)
+    pub fn is_clkin0(&self) -> bool {
+        *self == Clksel::Clkin0
     }
 }
-#[doc = "Field `PCLKPRESC` reader - PCLK Prescaler"]
-pub type PCLKPRESC_R = crate::BitReader<PCLKPRESC_A>;
+#[doc = "Field `CLKSEL` writer - Clock Select"]
+pub type ClkselW<'a, REG> = crate::FieldWriter<'a, REG, 3, Clksel>;
+impl<'a, REG> ClkselW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "FSRCO is clocking SYSCLK"]
+    #[inline(always)]
+    pub fn fsrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Fsrco)
+    }
+    #[doc = "HFRCODPLL is clocking SYSCLK"]
+    #[inline(always)]
+    pub fn hfrcodpll(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfrcodpll)
+    }
+    #[doc = "HFXO is clocking SYSCLK"]
+    #[inline(always)]
+    pub fn hfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfxo)
+    }
+    #[doc = "CLKIN0 is clocking SYSCLK"]
+    #[inline(always)]
+    pub fn clkin0(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Clkin0)
+    }
+}
 #[doc = "PCLK Prescaler\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PCLKPRESC_A {
+pub enum Pclkpresc {
     #[doc = "0: PCLK is HCLK divided by 1"]
-    DIV1 = 0,
+    Div1 = 0,
     #[doc = "1: PCLK is HCLK divided by 2"]
-    DIV2 = 1,
+    Div2 = 1,
 }
-impl From<PCLKPRESC_A> for bool {
+impl From<Pclkpresc> for bool {
     #[inline(always)]
-    fn from(variant: PCLKPRESC_A) -> Self {
+    fn from(variant: Pclkpresc) -> Self {
         variant as u8 != 0
     }
 }
-impl PCLKPRESC_R {
+#[doc = "Field `PCLKPRESC` reader - PCLK Prescaler"]
+pub type PclkprescR = crate::BitReader<Pclkpresc>;
+impl PclkprescR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> PCLKPRESC_A {
+    pub const fn variant(&self) -> Pclkpresc {
         match self.bits {
-            false => PCLKPRESC_A::DIV1,
-            true => PCLKPRESC_A::DIV2,
+            false => Pclkpresc::Div1,
+            true => Pclkpresc::Div2,
         }
     }
-    #[doc = "Checks if the value of the field is `DIV1`"]
-    #[inline(always)]
-    pub fn is_div1(&self) -> bool {
-        *self == PCLKPRESC_A::DIV1
-    }
-    #[doc = "Checks if the value of the field is `DIV2`"]
-    #[inline(always)]
-    pub fn is_div2(&self) -> bool {
-        *self == PCLKPRESC_A::DIV2
-    }
-}
-#[doc = "Field `PCLKPRESC` writer - PCLK Prescaler"]
-pub type PCLKPRESC_W<'a, const O: u8> = crate::BitWriter<'a, u32, SYSCLKCTRL_SPEC, PCLKPRESC_A, O>;
-impl<'a, const O: u8> PCLKPRESC_W<'a, O> {
     #[doc = "PCLK is HCLK divided by 1"]
     #[inline(always)]
-    pub fn div1(self) -> &'a mut W {
-        self.variant(PCLKPRESC_A::DIV1)
+    pub fn is_div1(&self) -> bool {
+        *self == Pclkpresc::Div1
     }
     #[doc = "PCLK is HCLK divided by 2"]
     #[inline(always)]
-    pub fn div2(self) -> &'a mut W {
-        self.variant(PCLKPRESC_A::DIV2)
+    pub fn is_div2(&self) -> bool {
+        *self == Pclkpresc::Div2
     }
 }
-#[doc = "Field `HCLKPRESC` reader - HCLK Prescaler"]
-pub type HCLKPRESC_R = crate::FieldReader<u8, HCLKPRESC_A>;
+#[doc = "Field `PCLKPRESC` writer - PCLK Prescaler"]
+pub type PclkprescW<'a, REG> = crate::BitWriter<'a, REG, Pclkpresc>;
+impl<'a, REG> PclkprescW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "PCLK is HCLK divided by 1"]
+    #[inline(always)]
+    pub fn div1(self) -> &'a mut crate::W<REG> {
+        self.variant(Pclkpresc::Div1)
+    }
+    #[doc = "PCLK is HCLK divided by 2"]
+    #[inline(always)]
+    pub fn div2(self) -> &'a mut crate::W<REG> {
+        self.variant(Pclkpresc::Div2)
+    }
+}
 #[doc = "HCLK Prescaler\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum HCLKPRESC_A {
+pub enum Hclkpresc {
     #[doc = "0: HCLK is SYSCLK divided by 1"]
-    DIV1 = 0,
+    Div1 = 0,
     #[doc = "1: HCLK is SYSCLK divided by 2"]
-    DIV2 = 1,
+    Div2 = 1,
     #[doc = "3: HCLK is SYSCLK divided by 4"]
-    DIV4 = 3,
+    Div4 = 3,
     #[doc = "7: HCLK is SYSCLK divided by 8"]
-    DIV8 = 7,
+    Div8 = 7,
     #[doc = "15: HCLK is SYSCLK divided by 16"]
-    DIV16 = 15,
+    Div16 = 15,
 }
-impl From<HCLKPRESC_A> for u8 {
+impl From<Hclkpresc> for u8 {
     #[inline(always)]
-    fn from(variant: HCLKPRESC_A) -> Self {
+    fn from(variant: Hclkpresc) -> Self {
         variant as _
     }
 }
-impl HCLKPRESC_R {
+impl crate::FieldSpec for Hclkpresc {
+    type Ux = u8;
+}
+impl crate::IsEnum for Hclkpresc {}
+#[doc = "Field `HCLKPRESC` reader - HCLK Prescaler"]
+pub type HclkprescR = crate::FieldReader<Hclkpresc>;
+impl HclkprescR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<HCLKPRESC_A> {
+    pub const fn variant(&self) -> Option<Hclkpresc> {
         match self.bits {
-            0 => Some(HCLKPRESC_A::DIV1),
-            1 => Some(HCLKPRESC_A::DIV2),
-            3 => Some(HCLKPRESC_A::DIV4),
-            7 => Some(HCLKPRESC_A::DIV8),
-            15 => Some(HCLKPRESC_A::DIV16),
+            0 => Some(Hclkpresc::Div1),
+            1 => Some(Hclkpresc::Div2),
+            3 => Some(Hclkpresc::Div4),
+            7 => Some(Hclkpresc::Div8),
+            15 => Some(Hclkpresc::Div16),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DIV1`"]
-    #[inline(always)]
-    pub fn is_div1(&self) -> bool {
-        *self == HCLKPRESC_A::DIV1
-    }
-    #[doc = "Checks if the value of the field is `DIV2`"]
-    #[inline(always)]
-    pub fn is_div2(&self) -> bool {
-        *self == HCLKPRESC_A::DIV2
-    }
-    #[doc = "Checks if the value of the field is `DIV4`"]
-    #[inline(always)]
-    pub fn is_div4(&self) -> bool {
-        *self == HCLKPRESC_A::DIV4
-    }
-    #[doc = "Checks if the value of the field is `DIV8`"]
-    #[inline(always)]
-    pub fn is_div8(&self) -> bool {
-        *self == HCLKPRESC_A::DIV8
-    }
-    #[doc = "Checks if the value of the field is `DIV16`"]
-    #[inline(always)]
-    pub fn is_div16(&self) -> bool {
-        *self == HCLKPRESC_A::DIV16
-    }
-}
-#[doc = "Field `HCLKPRESC` writer - HCLK Prescaler"]
-pub type HCLKPRESC_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, SYSCLKCTRL_SPEC, u8, HCLKPRESC_A, 4, O>;
-impl<'a, const O: u8> HCLKPRESC_W<'a, O> {
     #[doc = "HCLK is SYSCLK divided by 1"]
     #[inline(always)]
-    pub fn div1(self) -> &'a mut W {
-        self.variant(HCLKPRESC_A::DIV1)
+    pub fn is_div1(&self) -> bool {
+        *self == Hclkpresc::Div1
     }
     #[doc = "HCLK is SYSCLK divided by 2"]
     #[inline(always)]
-    pub fn div2(self) -> &'a mut W {
-        self.variant(HCLKPRESC_A::DIV2)
+    pub fn is_div2(&self) -> bool {
+        *self == Hclkpresc::Div2
     }
     #[doc = "HCLK is SYSCLK divided by 4"]
     #[inline(always)]
-    pub fn div4(self) -> &'a mut W {
-        self.variant(HCLKPRESC_A::DIV4)
+    pub fn is_div4(&self) -> bool {
+        *self == Hclkpresc::Div4
     }
     #[doc = "HCLK is SYSCLK divided by 8"]
     #[inline(always)]
-    pub fn div8(self) -> &'a mut W {
-        self.variant(HCLKPRESC_A::DIV8)
+    pub fn is_div8(&self) -> bool {
+        *self == Hclkpresc::Div8
     }
     #[doc = "HCLK is SYSCLK divided by 16"]
     #[inline(always)]
-    pub fn div16(self) -> &'a mut W {
-        self.variant(HCLKPRESC_A::DIV16)
+    pub fn is_div16(&self) -> bool {
+        *self == Hclkpresc::Div16
+    }
+}
+#[doc = "Field `HCLKPRESC` writer - HCLK Prescaler"]
+pub type HclkprescW<'a, REG> = crate::FieldWriter<'a, REG, 4, Hclkpresc>;
+impl<'a, REG> HclkprescW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "HCLK is SYSCLK divided by 1"]
+    #[inline(always)]
+    pub fn div1(self) -> &'a mut crate::W<REG> {
+        self.variant(Hclkpresc::Div1)
+    }
+    #[doc = "HCLK is SYSCLK divided by 2"]
+    #[inline(always)]
+    pub fn div2(self) -> &'a mut crate::W<REG> {
+        self.variant(Hclkpresc::Div2)
+    }
+    #[doc = "HCLK is SYSCLK divided by 4"]
+    #[inline(always)]
+    pub fn div4(self) -> &'a mut crate::W<REG> {
+        self.variant(Hclkpresc::Div4)
+    }
+    #[doc = "HCLK is SYSCLK divided by 8"]
+    #[inline(always)]
+    pub fn div8(self) -> &'a mut crate::W<REG> {
+        self.variant(Hclkpresc::Div8)
+    }
+    #[doc = "HCLK is SYSCLK divided by 16"]
+    #[inline(always)]
+    pub fn div16(self) -> &'a mut crate::W<REG> {
+        self.variant(Hclkpresc::Div16)
     }
 }
 impl R {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    pub fn clksel(&self) -> CLKSEL_R {
-        CLKSEL_R::new((self.bits & 7) as u8)
+    pub fn clksel(&self) -> ClkselR {
+        ClkselR::new((self.bits & 7) as u8)
     }
     #[doc = "Bit 10 - PCLK Prescaler"]
     #[inline(always)]
-    pub fn pclkpresc(&self) -> PCLKPRESC_R {
-        PCLKPRESC_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn pclkpresc(&self) -> PclkprescR {
+        PclkprescR::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bits 12:15 - HCLK Prescaler"]
     #[inline(always)]
-    pub fn hclkpresc(&self) -> HCLKPRESC_R {
-        HCLKPRESC_R::new(((self.bits >> 12) & 0x0f) as u8)
+    pub fn hclkpresc(&self) -> HclkprescR {
+        HclkprescR::new(((self.bits >> 12) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn clksel(&mut self) -> CLKSEL_W<0> {
-        CLKSEL_W::new(self)
+    pub fn clksel(&mut self) -> ClkselW<SysclkctrlSpec> {
+        ClkselW::new(self, 0)
     }
     #[doc = "Bit 10 - PCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
-    pub fn pclkpresc(&mut self) -> PCLKPRESC_W<10> {
-        PCLKPRESC_W::new(self)
+    pub fn pclkpresc(&mut self) -> PclkprescW<SysclkctrlSpec> {
+        PclkprescW::new(self, 10)
     }
     #[doc = "Bits 12:15 - HCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
-    pub fn hclkpresc(&mut self) -> HCLKPRESC_W<12> {
-        HCLKPRESC_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn hclkpresc(&mut self) -> HclkprescW<SysclkctrlSpec> {
+        HclkprescW::new(self, 12)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [sysclkctrl](index.html) module"]
-pub struct SYSCLKCTRL_SPEC;
-impl crate::RegisterSpec for SYSCLKCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`sysclkctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`sysclkctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct SysclkctrlSpec;
+impl crate::RegisterSpec for SysclkctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [sysclkctrl::R](R) reader structure"]
-impl crate::Readable for SYSCLKCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [sysclkctrl::W](W) writer structure"]
-impl crate::Writable for SYSCLKCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`sysclkctrl::R`](R) reader structure"]
+impl crate::Readable for SysclkctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`sysclkctrl::W`](W) writer structure"]
+impl crate::Writable for SysclkctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets SYSCLKCTRL to value 0x01"]
-impl crate::Resettable for SYSCLKCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x01;
+impl crate::Resettable for SysclkctrlSpec {
+    const RESET_VALUE: u32 = 0x01;
 }

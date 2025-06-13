@@ -1,380 +1,315 @@
 #[doc = "Register `IEN` reader"]
-pub struct R(crate::R<IEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<IEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<IEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub struct W(crate::W<IEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<IEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<IEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `START` reader - START condition Interrupt Flag"]
-pub type START_R = crate::BitReader<bool>;
+pub type StartR = crate::BitReader;
 #[doc = "Field `START` writer - START condition Interrupt Flag"]
-pub type START_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type StartW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RSTART` reader - Repeated START condition Interrupt Flag"]
-pub type RSTART_R = crate::BitReader<bool>;
+pub type RstartR = crate::BitReader;
 #[doc = "Field `RSTART` writer - Repeated START condition Interrupt Flag"]
-pub type RSTART_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type RstartW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ADDR` reader - Address Interrupt Flag"]
-pub type ADDR_R = crate::BitReader<bool>;
+pub type AddrR = crate::BitReader;
 #[doc = "Field `ADDR` writer - Address Interrupt Flag"]
-pub type ADDR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type AddrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXC` reader - Transfer Completed Interrupt Flag"]
-pub type TXC_R = crate::BitReader<bool>;
+pub type TxcR = crate::BitReader;
 #[doc = "Field `TXC` writer - Transfer Completed Interrupt Flag"]
-pub type TXC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type TxcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXBL` reader - Transmit Buffer Level Interrupt Flag"]
-pub type TXBL_R = crate::BitReader<bool>;
+pub type TxblR = crate::BitReader;
 #[doc = "Field `TXBL` writer - Transmit Buffer Level Interrupt Flag"]
-pub type TXBL_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type TxblW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXDATAV` reader - Receive Data Valid Interrupt Flag"]
-pub type RXDATAV_R = crate::BitReader<bool>;
+pub type RxdatavR = crate::BitReader;
 #[doc = "Field `RXDATAV` writer - Receive Data Valid Interrupt Flag"]
-pub type RXDATAV_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type RxdatavW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ACK` reader - Acknowledge Received Interrupt Flag"]
-pub type ACK_R = crate::BitReader<bool>;
+pub type AckR = crate::BitReader;
 #[doc = "Field `ACK` writer - Acknowledge Received Interrupt Flag"]
-pub type ACK_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type AckW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `NACK` reader - Not Acknowledge Received Interrupt Flag"]
-pub type NACK_R = crate::BitReader<bool>;
+pub type NackR = crate::BitReader;
 #[doc = "Field `NACK` writer - Not Acknowledge Received Interrupt Flag"]
-pub type NACK_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type NackW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `MSTOP` reader - Leader STOP Condition Interrupt Flag"]
-pub type MSTOP_R = crate::BitReader<bool>;
+pub type MstopR = crate::BitReader;
 #[doc = "Field `MSTOP` writer - Leader STOP Condition Interrupt Flag"]
-pub type MSTOP_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type MstopW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ARBLOST` reader - Arbitration Lost Interrupt Flag"]
-pub type ARBLOST_R = crate::BitReader<bool>;
+pub type ArblostR = crate::BitReader;
 #[doc = "Field `ARBLOST` writer - Arbitration Lost Interrupt Flag"]
-pub type ARBLOST_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ArblostW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUSERR` reader - Bus Error Interrupt Flag"]
-pub type BUSERR_R = crate::BitReader<bool>;
+pub type BuserrR = crate::BitReader;
 #[doc = "Field `BUSERR` writer - Bus Error Interrupt Flag"]
-pub type BUSERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BuserrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUSHOLD` reader - Bus Held Interrupt Flag"]
-pub type BUSHOLD_R = crate::BitReader<bool>;
+pub type BusholdR = crate::BitReader;
 #[doc = "Field `BUSHOLD` writer - Bus Held Interrupt Flag"]
-pub type BUSHOLD_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BusholdW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXOF` reader - Transmit Buffer Overflow Interrupt Flag"]
-pub type TXOF_R = crate::BitReader<bool>;
+pub type TxofR = crate::BitReader;
 #[doc = "Field `TXOF` writer - Transmit Buffer Overflow Interrupt Flag"]
-pub type TXOF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type TxofW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXUF` reader - Receive Buffer Underflow Interrupt Flag"]
-pub type RXUF_R = crate::BitReader<bool>;
+pub type RxufR = crate::BitReader;
 #[doc = "Field `RXUF` writer - Receive Buffer Underflow Interrupt Flag"]
-pub type RXUF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type RxufW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BITO` reader - Bus Idle Timeout Interrupt Flag"]
-pub type BITO_R = crate::BitReader<bool>;
+pub type BitoR = crate::BitReader;
 #[doc = "Field `BITO` writer - Bus Idle Timeout Interrupt Flag"]
-pub type BITO_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BitoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CLTO` reader - Clock Low Timeout Interrupt Flag"]
-pub type CLTO_R = crate::BitReader<bool>;
+pub type CltoR = crate::BitReader;
 #[doc = "Field `CLTO` writer - Clock Low Timeout Interrupt Flag"]
-pub type CLTO_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type CltoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SSTOP` reader - Follower STOP condition Interrupt Flag"]
-pub type SSTOP_R = crate::BitReader<bool>;
+pub type SstopR = crate::BitReader;
 #[doc = "Field `SSTOP` writer - Follower STOP condition Interrupt Flag"]
-pub type SSTOP_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SstopW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXFULL` reader - Receive Buffer Full Interrupt Flag"]
-pub type RXFULL_R = crate::BitReader<bool>;
+pub type RxfullR = crate::BitReader;
 #[doc = "Field `RXFULL` writer - Receive Buffer Full Interrupt Flag"]
-pub type RXFULL_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type RxfullW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CLERR` reader - Clock Low Error Interrupt Flag"]
-pub type CLERR_R = crate::BitReader<bool>;
+pub type ClerrR = crate::BitReader;
 #[doc = "Field `CLERR` writer - Clock Low Error Interrupt Flag"]
-pub type CLERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type ClerrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCLERR` reader - SCL Error Interrupt Flag"]
-pub type SCLERR_R = crate::BitReader<bool>;
+pub type SclerrR = crate::BitReader;
 #[doc = "Field `SCLERR` writer - SCL Error Interrupt Flag"]
-pub type SCLERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SclerrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SDAERR` reader - SDA Error Interrupt Flag"]
-pub type SDAERR_R = crate::BitReader<bool>;
+pub type SdaerrR = crate::BitReader;
 #[doc = "Field `SDAERR` writer - SDA Error Interrupt Flag"]
-pub type SDAERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type SdaerrW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - START condition Interrupt Flag"]
     #[inline(always)]
-    pub fn start(&self) -> START_R {
-        START_R::new((self.bits & 1) != 0)
+    pub fn start(&self) -> StartR {
+        StartR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Repeated START condition Interrupt Flag"]
     #[inline(always)]
-    pub fn rstart(&self) -> RSTART_R {
-        RSTART_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn rstart(&self) -> RstartR {
+        RstartR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Address Interrupt Flag"]
     #[inline(always)]
-    pub fn addr(&self) -> ADDR_R {
-        ADDR_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn addr(&self) -> AddrR {
+        AddrR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Transfer Completed Interrupt Flag"]
     #[inline(always)]
-    pub fn txc(&self) -> TXC_R {
-        TXC_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn txc(&self) -> TxcR {
+        TxcR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - Transmit Buffer Level Interrupt Flag"]
     #[inline(always)]
-    pub fn txbl(&self) -> TXBL_R {
-        TXBL_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn txbl(&self) -> TxblR {
+        TxblR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - Receive Data Valid Interrupt Flag"]
     #[inline(always)]
-    pub fn rxdatav(&self) -> RXDATAV_R {
-        RXDATAV_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn rxdatav(&self) -> RxdatavR {
+        RxdatavR::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    pub fn ack(&self) -> ACK_R {
-        ACK_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn ack(&self) -> AckR {
+        AckR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 7 - Not Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    pub fn nack(&self) -> NACK_R {
-        NACK_R::new(((self.bits >> 7) & 1) != 0)
+    pub fn nack(&self) -> NackR {
+        NackR::new(((self.bits >> 7) & 1) != 0)
     }
     #[doc = "Bit 8 - Leader STOP Condition Interrupt Flag"]
     #[inline(always)]
-    pub fn mstop(&self) -> MSTOP_R {
-        MSTOP_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn mstop(&self) -> MstopR {
+        MstopR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - Arbitration Lost Interrupt Flag"]
     #[inline(always)]
-    pub fn arblost(&self) -> ARBLOST_R {
-        ARBLOST_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn arblost(&self) -> ArblostR {
+        ArblostR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - Bus Error Interrupt Flag"]
     #[inline(always)]
-    pub fn buserr(&self) -> BUSERR_R {
-        BUSERR_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn buserr(&self) -> BuserrR {
+        BuserrR::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bit 11 - Bus Held Interrupt Flag"]
     #[inline(always)]
-    pub fn bushold(&self) -> BUSHOLD_R {
-        BUSHOLD_R::new(((self.bits >> 11) & 1) != 0)
+    pub fn bushold(&self) -> BusholdR {
+        BusholdR::new(((self.bits >> 11) & 1) != 0)
     }
     #[doc = "Bit 12 - Transmit Buffer Overflow Interrupt Flag"]
     #[inline(always)]
-    pub fn txof(&self) -> TXOF_R {
-        TXOF_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn txof(&self) -> TxofR {
+        TxofR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - Receive Buffer Underflow Interrupt Flag"]
     #[inline(always)]
-    pub fn rxuf(&self) -> RXUF_R {
-        RXUF_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn rxuf(&self) -> RxufR {
+        RxufR::new(((self.bits >> 13) & 1) != 0)
     }
     #[doc = "Bit 14 - Bus Idle Timeout Interrupt Flag"]
     #[inline(always)]
-    pub fn bito(&self) -> BITO_R {
-        BITO_R::new(((self.bits >> 14) & 1) != 0)
+    pub fn bito(&self) -> BitoR {
+        BitoR::new(((self.bits >> 14) & 1) != 0)
     }
     #[doc = "Bit 15 - Clock Low Timeout Interrupt Flag"]
     #[inline(always)]
-    pub fn clto(&self) -> CLTO_R {
-        CLTO_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn clto(&self) -> CltoR {
+        CltoR::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bit 16 - Follower STOP condition Interrupt Flag"]
     #[inline(always)]
-    pub fn sstop(&self) -> SSTOP_R {
-        SSTOP_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn sstop(&self) -> SstopR {
+        SstopR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - Receive Buffer Full Interrupt Flag"]
     #[inline(always)]
-    pub fn rxfull(&self) -> RXFULL_R {
-        RXFULL_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn rxfull(&self) -> RxfullR {
+        RxfullR::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - Clock Low Error Interrupt Flag"]
     #[inline(always)]
-    pub fn clerr(&self) -> CLERR_R {
-        CLERR_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn clerr(&self) -> ClerrR {
+        ClerrR::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 19 - SCL Error Interrupt Flag"]
     #[inline(always)]
-    pub fn sclerr(&self) -> SCLERR_R {
-        SCLERR_R::new(((self.bits >> 19) & 1) != 0)
+    pub fn sclerr(&self) -> SclerrR {
+        SclerrR::new(((self.bits >> 19) & 1) != 0)
     }
     #[doc = "Bit 20 - SDA Error Interrupt Flag"]
     #[inline(always)]
-    pub fn sdaerr(&self) -> SDAERR_R {
-        SDAERR_R::new(((self.bits >> 20) & 1) != 0)
+    pub fn sdaerr(&self) -> SdaerrR {
+        SdaerrR::new(((self.bits >> 20) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - START condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn start(&mut self) -> START_W<0> {
-        START_W::new(self)
+    pub fn start(&mut self) -> StartW<IenSpec> {
+        StartW::new(self, 0)
     }
     #[doc = "Bit 1 - Repeated START condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn rstart(&mut self) -> RSTART_W<1> {
-        RSTART_W::new(self)
+    pub fn rstart(&mut self) -> RstartW<IenSpec> {
+        RstartW::new(self, 1)
     }
     #[doc = "Bit 2 - Address Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn addr(&mut self) -> ADDR_W<2> {
-        ADDR_W::new(self)
+    pub fn addr(&mut self) -> AddrW<IenSpec> {
+        AddrW::new(self, 2)
     }
     #[doc = "Bit 3 - Transfer Completed Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn txc(&mut self) -> TXC_W<3> {
-        TXC_W::new(self)
+    pub fn txc(&mut self) -> TxcW<IenSpec> {
+        TxcW::new(self, 3)
     }
     #[doc = "Bit 4 - Transmit Buffer Level Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn txbl(&mut self) -> TXBL_W<4> {
-        TXBL_W::new(self)
+    pub fn txbl(&mut self) -> TxblW<IenSpec> {
+        TxblW::new(self, 4)
     }
     #[doc = "Bit 5 - Receive Data Valid Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxdatav(&mut self) -> RXDATAV_W<5> {
-        RXDATAV_W::new(self)
+    pub fn rxdatav(&mut self) -> RxdatavW<IenSpec> {
+        RxdatavW::new(self, 5)
     }
     #[doc = "Bit 6 - Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn ack(&mut self) -> ACK_W<6> {
-        ACK_W::new(self)
+    pub fn ack(&mut self) -> AckW<IenSpec> {
+        AckW::new(self, 6)
     }
     #[doc = "Bit 7 - Not Acknowledge Received Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn nack(&mut self) -> NACK_W<7> {
-        NACK_W::new(self)
+    pub fn nack(&mut self) -> NackW<IenSpec> {
+        NackW::new(self, 7)
     }
     #[doc = "Bit 8 - Leader STOP Condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn mstop(&mut self) -> MSTOP_W<8> {
-        MSTOP_W::new(self)
+    pub fn mstop(&mut self) -> MstopW<IenSpec> {
+        MstopW::new(self, 8)
     }
     #[doc = "Bit 9 - Arbitration Lost Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn arblost(&mut self) -> ARBLOST_W<9> {
-        ARBLOST_W::new(self)
+    pub fn arblost(&mut self) -> ArblostW<IenSpec> {
+        ArblostW::new(self, 9)
     }
     #[doc = "Bit 10 - Bus Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn buserr(&mut self) -> BUSERR_W<10> {
-        BUSERR_W::new(self)
+    pub fn buserr(&mut self) -> BuserrW<IenSpec> {
+        BuserrW::new(self, 10)
     }
     #[doc = "Bit 11 - Bus Held Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn bushold(&mut self) -> BUSHOLD_W<11> {
-        BUSHOLD_W::new(self)
+    pub fn bushold(&mut self) -> BusholdW<IenSpec> {
+        BusholdW::new(self, 11)
     }
     #[doc = "Bit 12 - Transmit Buffer Overflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn txof(&mut self) -> TXOF_W<12> {
-        TXOF_W::new(self)
+    pub fn txof(&mut self) -> TxofW<IenSpec> {
+        TxofW::new(self, 12)
     }
     #[doc = "Bit 13 - Receive Buffer Underflow Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxuf(&mut self) -> RXUF_W<13> {
-        RXUF_W::new(self)
+    pub fn rxuf(&mut self) -> RxufW<IenSpec> {
+        RxufW::new(self, 13)
     }
     #[doc = "Bit 14 - Bus Idle Timeout Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn bito(&mut self) -> BITO_W<14> {
-        BITO_W::new(self)
+    pub fn bito(&mut self) -> BitoW<IenSpec> {
+        BitoW::new(self, 14)
     }
     #[doc = "Bit 15 - Clock Low Timeout Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn clto(&mut self) -> CLTO_W<15> {
-        CLTO_W::new(self)
+    pub fn clto(&mut self) -> CltoW<IenSpec> {
+        CltoW::new(self, 15)
     }
     #[doc = "Bit 16 - Follower STOP condition Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn sstop(&mut self) -> SSTOP_W<16> {
-        SSTOP_W::new(self)
+    pub fn sstop(&mut self) -> SstopW<IenSpec> {
+        SstopW::new(self, 16)
     }
     #[doc = "Bit 17 - Receive Buffer Full Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxfull(&mut self) -> RXFULL_W<17> {
-        RXFULL_W::new(self)
+    pub fn rxfull(&mut self) -> RxfullW<IenSpec> {
+        RxfullW::new(self, 17)
     }
     #[doc = "Bit 18 - Clock Low Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn clerr(&mut self) -> CLERR_W<18> {
-        CLERR_W::new(self)
+    pub fn clerr(&mut self) -> ClerrW<IenSpec> {
+        ClerrW::new(self, 18)
     }
     #[doc = "Bit 19 - SCL Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn sclerr(&mut self) -> SCLERR_W<19> {
-        SCLERR_W::new(self)
+    pub fn sclerr(&mut self) -> SclerrW<IenSpec> {
+        SclerrW::new(self, 19)
     }
     #[doc = "Bit 20 - SDA Error Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn sdaerr(&mut self) -> SDAERR_W<20> {
-        SDAERR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn sdaerr(&mut self) -> SdaerrW<IenSpec> {
+        SdaerrW::new(self, 20)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ien](index.html) module"]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ien::R](R) reader structure"]
-impl crate::Readable for IEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ien::W](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ien::R`](R) reader structure"]
+impl crate::Readable for IenSpec {}
+#[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IenSpec {}

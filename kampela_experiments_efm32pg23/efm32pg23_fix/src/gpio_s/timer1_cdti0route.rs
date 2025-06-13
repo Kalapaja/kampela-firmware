@@ -1,96 +1,49 @@
 #[doc = "Register `TIMER1_CDTI0ROUTE` reader"]
-pub struct R(crate::R<TIMER1_CDTI0ROUTE_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<TIMER1_CDTI0ROUTE_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<TIMER1_CDTI0ROUTE_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<TIMER1_CDTI0ROUTE_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Timer1Cdti0routeSpec>;
 #[doc = "Register `TIMER1_CDTI0ROUTE` writer"]
-pub struct W(crate::W<TIMER1_CDTI0ROUTE_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<TIMER1_CDTI0ROUTE_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<TIMER1_CDTI0ROUTE_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<TIMER1_CDTI0ROUTE_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Timer1Cdti0routeSpec>;
 #[doc = "Field `PORT` reader - CDTI0 port select register"]
-pub type PORT_R = crate::FieldReader<u8, u8>;
+pub type PortR = crate::FieldReader;
 #[doc = "Field `PORT` writer - CDTI0 port select register"]
-pub type PORT_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, TIMER1_CDTI0ROUTE_SPEC, u8, u8, 2, O>;
+pub type PortW<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 #[doc = "Field `PIN` reader - CDTI0 pin select register"]
-pub type PIN_R = crate::FieldReader<u8, u8>;
+pub type PinR = crate::FieldReader;
 #[doc = "Field `PIN` writer - CDTI0 pin select register"]
-pub type PIN_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TIMER1_CDTI0ROUTE_SPEC, u8, u8, 4, O>;
+pub type PinW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
     #[doc = "Bits 0:1 - CDTI0 port select register"]
     #[inline(always)]
-    pub fn port(&self) -> PORT_R {
-        PORT_R::new((self.bits & 3) as u8)
+    pub fn port(&self) -> PortR {
+        PortR::new((self.bits & 3) as u8)
     }
     #[doc = "Bits 16:19 - CDTI0 pin select register"]
     #[inline(always)]
-    pub fn pin(&self) -> PIN_R {
-        PIN_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn pin(&self) -> PinR {
+        PinR::new(((self.bits >> 16) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:1 - CDTI0 port select register"]
     #[inline(always)]
-    #[must_use]
-    pub fn port(&mut self) -> PORT_W<0> {
-        PORT_W::new(self)
+    pub fn port(&mut self) -> PortW<Timer1Cdti0routeSpec> {
+        PortW::new(self, 0)
     }
     #[doc = "Bits 16:19 - CDTI0 pin select register"]
     #[inline(always)]
-    #[must_use]
-    pub fn pin(&mut self) -> PIN_W<16> {
-        PIN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn pin(&mut self) -> PinW<Timer1Cdti0routeSpec> {
+        PinW::new(self, 16)
     }
 }
-#[doc = "CDTI0 port/pin select\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [timer1_cdti0route](index.html) module"]
-pub struct TIMER1_CDTI0ROUTE_SPEC;
-impl crate::RegisterSpec for TIMER1_CDTI0ROUTE_SPEC {
+#[doc = "CDTI0 port/pin select\n\nYou can [`read`](crate::Reg::read) this register and get [`timer1_cdti0route::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`timer1_cdti0route::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Timer1Cdti0routeSpec;
+impl crate::RegisterSpec for Timer1Cdti0routeSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [timer1_cdti0route::R](R) reader structure"]
-impl crate::Readable for TIMER1_CDTI0ROUTE_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [timer1_cdti0route::W](W) writer structure"]
-impl crate::Writable for TIMER1_CDTI0ROUTE_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`timer1_cdti0route::R`](R) reader structure"]
+impl crate::Readable for Timer1Cdti0routeSpec {}
+#[doc = "`write(|w| ..)` method takes [`timer1_cdti0route::W`](W) writer structure"]
+impl crate::Writable for Timer1Cdti0routeSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets TIMER1_CDTI0ROUTE to value 0"]
-impl crate::Resettable for TIMER1_CDTI0ROUTE_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Timer1Cdti0routeSpec {}

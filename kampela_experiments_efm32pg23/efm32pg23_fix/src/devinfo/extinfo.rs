@@ -1,115 +1,106 @@
 #[doc = "Register `EXTINFO` reader"]
-pub struct R(crate::R<EXTINFO_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<EXTINFO_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<EXTINFO_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<EXTINFO_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `TYPE` reader - Type"]
-pub type TYPE_R = crate::FieldReader<u8, TYPE_A>;
+pub type R = crate::R<ExtinfoSpec>;
 #[doc = "Type\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TYPE_A {
+pub enum Type {
     #[doc = "255: NONE"]
-    NONE = 255,
+    None = 255,
 }
-impl From<TYPE_A> for u8 {
+impl From<Type> for u8 {
     #[inline(always)]
-    fn from(variant: TYPE_A) -> Self {
+    fn from(variant: Type) -> Self {
         variant as _
     }
 }
-impl TYPE_R {
+impl crate::FieldSpec for Type {
+    type Ux = u8;
+}
+impl crate::IsEnum for Type {}
+#[doc = "Field `TYPE` reader - Type"]
+pub type TypeR = crate::FieldReader<Type>;
+impl TypeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TYPE_A> {
+    pub const fn variant(&self) -> Option<Type> {
         match self.bits {
-            255 => Some(TYPE_A::NONE),
+            255 => Some(Type::None),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `NONE`"]
+    #[doc = "NONE"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == TYPE_A::NONE
+        *self == Type::None
     }
 }
-#[doc = "Field `CONNECTION` reader - Connection"]
-pub type CONNECTION_R = crate::FieldReader<u8, CONNECTION_A>;
 #[doc = "Connection\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CONNECTION_A {
+pub enum Connection {
     #[doc = "0: SPI control interface"]
-    SPI = 0,
+    Spi = 0,
     #[doc = "255: No interface"]
-    NONE = 255,
+    None = 255,
 }
-impl From<CONNECTION_A> for u8 {
+impl From<Connection> for u8 {
     #[inline(always)]
-    fn from(variant: CONNECTION_A) -> Self {
+    fn from(variant: Connection) -> Self {
         variant as _
     }
 }
-impl CONNECTION_R {
+impl crate::FieldSpec for Connection {
+    type Ux = u8;
+}
+impl crate::IsEnum for Connection {}
+#[doc = "Field `CONNECTION` reader - Connection"]
+pub type ConnectionR = crate::FieldReader<Connection>;
+impl ConnectionR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CONNECTION_A> {
+    pub const fn variant(&self) -> Option<Connection> {
         match self.bits {
-            0 => Some(CONNECTION_A::SPI),
-            255 => Some(CONNECTION_A::NONE),
+            0 => Some(Connection::Spi),
+            255 => Some(Connection::None),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `SPI`"]
+    #[doc = "SPI control interface"]
     #[inline(always)]
     pub fn is_spi(&self) -> bool {
-        *self == CONNECTION_A::SPI
+        *self == Connection::Spi
     }
-    #[doc = "Checks if the value of the field is `NONE`"]
+    #[doc = "No interface"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == CONNECTION_A::NONE
+        *self == Connection::None
     }
 }
 #[doc = "Field `REV` reader - Revision"]
-pub type REV_R = crate::FieldReader<u8, u8>;
+pub type RevR = crate::FieldReader;
 impl R {
     #[doc = "Bits 0:7 - Type"]
     #[inline(always)]
-    pub fn type_(&self) -> TYPE_R {
-        TYPE_R::new((self.bits & 0xff) as u8)
+    pub fn type_(&self) -> TypeR {
+        TypeR::new((self.bits & 0xff) as u8)
     }
     #[doc = "Bits 8:15 - Connection"]
     #[inline(always)]
-    pub fn connection(&self) -> CONNECTION_R {
-        CONNECTION_R::new(((self.bits >> 8) & 0xff) as u8)
+    pub fn connection(&self) -> ConnectionR {
+        ConnectionR::new(((self.bits >> 8) & 0xff) as u8)
     }
     #[doc = "Bits 16:23 - Revision"]
     #[inline(always)]
-    pub fn rev(&self) -> REV_R {
-        REV_R::new(((self.bits >> 16) & 0xff) as u8)
+    pub fn rev(&self) -> RevR {
+        RevR::new(((self.bits >> 16) & 0xff) as u8)
     }
 }
-#[doc = "External component description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [extinfo](index.html) module"]
-pub struct EXTINFO_SPEC;
-impl crate::RegisterSpec for EXTINFO_SPEC {
+#[doc = "External component description\n\nYou can [`read`](crate::Reg::read) this register and get [`extinfo::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ExtinfoSpec;
+impl crate::RegisterSpec for ExtinfoSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [extinfo::R](R) reader structure"]
-impl crate::Readable for EXTINFO_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`extinfo::R`](R) reader structure"]
+impl crate::Readable for ExtinfoSpec {}
 #[doc = "`reset()` method sets EXTINFO to value 0"]
-impl crate::Resettable for EXTINFO_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for ExtinfoSpec {}

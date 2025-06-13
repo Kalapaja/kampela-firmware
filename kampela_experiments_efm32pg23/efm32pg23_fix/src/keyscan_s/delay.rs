@@ -1,803 +1,777 @@
 #[doc = "Register `DELAY` reader"]
-pub struct R(crate::R<DELAY_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<DELAY_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<DELAY_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<DELAY_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<DelaySpec>;
 #[doc = "Register `DELAY` writer"]
-pub struct W(crate::W<DELAY_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<DELAY_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<DELAY_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<DELAY_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `SCANDLY` reader - Scan Delay"]
-pub type SCANDLY_R = crate::FieldReader<u8, SCANDLY_A>;
+pub type W = crate::W<DelaySpec>;
 #[doc = "Scan Delay\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum SCANDLY_A {
+pub enum Scandly {
     #[doc = "0: 2ms Scan Delay"]
-    SCANDLY2 = 0,
+    Scandly2 = 0,
     #[doc = "1: 4ms Scan Delay"]
-    SCANDLY4 = 1,
+    Scandly4 = 1,
     #[doc = "2: 6ms Scan Delay"]
-    SCANDLY6 = 2,
+    Scandly6 = 2,
     #[doc = "3: 8ms Scan Delay"]
-    SCANDLY8 = 3,
+    Scandly8 = 3,
     #[doc = "4: 10ms Scan Delay"]
-    SCANDLY10 = 4,
+    Scandly10 = 4,
     #[doc = "5: 12ms Scan Delay"]
-    SCANDLY12 = 5,
+    Scandly12 = 5,
     #[doc = "6: 14ms Scan Delay"]
-    SCANDLY14 = 6,
+    Scandly14 = 6,
     #[doc = "7: 16ms Scan Delay"]
-    SCANDLY16 = 7,
+    Scandly16 = 7,
     #[doc = "8: 18ms Scan Delay"]
-    SCANDLY18 = 8,
+    Scandly18 = 8,
     #[doc = "9: 20ms Scan Delay"]
-    SCANDLY20 = 9,
+    Scandly20 = 9,
     #[doc = "10: 22ms Scan Delay"]
-    SCANDLY22 = 10,
+    Scandly22 = 10,
     #[doc = "11: 24ms Scan Delay"]
-    SCANDLY24 = 11,
+    Scandly24 = 11,
     #[doc = "12: 26ms Scan Delay"]
-    SCANDLY26 = 12,
+    Scandly26 = 12,
     #[doc = "13: 28ms Scan Delay"]
-    SCANDLY28 = 13,
+    Scandly28 = 13,
     #[doc = "14: 30ms Scan Delay"]
-    SCANDLY30 = 14,
+    Scandly30 = 14,
     #[doc = "15: 32ms Scan Delay"]
-    SCANDLY32 = 15,
+    Scandly32 = 15,
 }
-impl From<SCANDLY_A> for u8 {
+impl From<Scandly> for u8 {
     #[inline(always)]
-    fn from(variant: SCANDLY_A) -> Self {
+    fn from(variant: Scandly) -> Self {
         variant as _
     }
 }
-impl SCANDLY_R {
+impl crate::FieldSpec for Scandly {
+    type Ux = u8;
+}
+impl crate::IsEnum for Scandly {}
+#[doc = "Field `SCANDLY` reader - Scan Delay"]
+pub type ScandlyR = crate::FieldReader<Scandly>;
+impl ScandlyR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> SCANDLY_A {
+    pub const fn variant(&self) -> Scandly {
         match self.bits {
-            0 => SCANDLY_A::SCANDLY2,
-            1 => SCANDLY_A::SCANDLY4,
-            2 => SCANDLY_A::SCANDLY6,
-            3 => SCANDLY_A::SCANDLY8,
-            4 => SCANDLY_A::SCANDLY10,
-            5 => SCANDLY_A::SCANDLY12,
-            6 => SCANDLY_A::SCANDLY14,
-            7 => SCANDLY_A::SCANDLY16,
-            8 => SCANDLY_A::SCANDLY18,
-            9 => SCANDLY_A::SCANDLY20,
-            10 => SCANDLY_A::SCANDLY22,
-            11 => SCANDLY_A::SCANDLY24,
-            12 => SCANDLY_A::SCANDLY26,
-            13 => SCANDLY_A::SCANDLY28,
-            14 => SCANDLY_A::SCANDLY30,
-            15 => SCANDLY_A::SCANDLY32,
+            0 => Scandly::Scandly2,
+            1 => Scandly::Scandly4,
+            2 => Scandly::Scandly6,
+            3 => Scandly::Scandly8,
+            4 => Scandly::Scandly10,
+            5 => Scandly::Scandly12,
+            6 => Scandly::Scandly14,
+            7 => Scandly::Scandly16,
+            8 => Scandly::Scandly18,
+            9 => Scandly::Scandly20,
+            10 => Scandly::Scandly22,
+            11 => Scandly::Scandly24,
+            12 => Scandly::Scandly26,
+            13 => Scandly::Scandly28,
+            14 => Scandly::Scandly30,
+            15 => Scandly::Scandly32,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `SCANDLY2`"]
-    #[inline(always)]
-    pub fn is_scandly2(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY2
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY4`"]
-    #[inline(always)]
-    pub fn is_scandly4(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY4
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY6`"]
-    #[inline(always)]
-    pub fn is_scandly6(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY6
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY8`"]
-    #[inline(always)]
-    pub fn is_scandly8(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY8
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY10`"]
-    #[inline(always)]
-    pub fn is_scandly10(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY10
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY12`"]
-    #[inline(always)]
-    pub fn is_scandly12(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY12
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY14`"]
-    #[inline(always)]
-    pub fn is_scandly14(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY14
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY16`"]
-    #[inline(always)]
-    pub fn is_scandly16(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY16
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY18`"]
-    #[inline(always)]
-    pub fn is_scandly18(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY18
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY20`"]
-    #[inline(always)]
-    pub fn is_scandly20(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY20
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY22`"]
-    #[inline(always)]
-    pub fn is_scandly22(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY22
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY24`"]
-    #[inline(always)]
-    pub fn is_scandly24(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY24
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY26`"]
-    #[inline(always)]
-    pub fn is_scandly26(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY26
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY28`"]
-    #[inline(always)]
-    pub fn is_scandly28(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY28
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY30`"]
-    #[inline(always)]
-    pub fn is_scandly30(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY30
-    }
-    #[doc = "Checks if the value of the field is `SCANDLY32`"]
-    #[inline(always)]
-    pub fn is_scandly32(&self) -> bool {
-        *self == SCANDLY_A::SCANDLY32
-    }
-}
-#[doc = "Field `SCANDLY` writer - Scan Delay"]
-pub type SCANDLY_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, DELAY_SPEC, u8, SCANDLY_A, 4, O>;
-impl<'a, const O: u8> SCANDLY_W<'a, O> {
     #[doc = "2ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly2(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY2)
+    pub fn is_scandly2(&self) -> bool {
+        *self == Scandly::Scandly2
     }
     #[doc = "4ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly4(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY4)
+    pub fn is_scandly4(&self) -> bool {
+        *self == Scandly::Scandly4
     }
     #[doc = "6ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly6(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY6)
+    pub fn is_scandly6(&self) -> bool {
+        *self == Scandly::Scandly6
     }
     #[doc = "8ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly8(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY8)
+    pub fn is_scandly8(&self) -> bool {
+        *self == Scandly::Scandly8
     }
     #[doc = "10ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly10(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY10)
+    pub fn is_scandly10(&self) -> bool {
+        *self == Scandly::Scandly10
     }
     #[doc = "12ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly12(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY12)
+    pub fn is_scandly12(&self) -> bool {
+        *self == Scandly::Scandly12
     }
     #[doc = "14ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly14(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY14)
+    pub fn is_scandly14(&self) -> bool {
+        *self == Scandly::Scandly14
     }
     #[doc = "16ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly16(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY16)
+    pub fn is_scandly16(&self) -> bool {
+        *self == Scandly::Scandly16
     }
     #[doc = "18ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly18(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY18)
+    pub fn is_scandly18(&self) -> bool {
+        *self == Scandly::Scandly18
     }
     #[doc = "20ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly20(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY20)
+    pub fn is_scandly20(&self) -> bool {
+        *self == Scandly::Scandly20
     }
     #[doc = "22ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly22(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY22)
+    pub fn is_scandly22(&self) -> bool {
+        *self == Scandly::Scandly22
     }
     #[doc = "24ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly24(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY24)
+    pub fn is_scandly24(&self) -> bool {
+        *self == Scandly::Scandly24
     }
     #[doc = "26ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly26(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY26)
+    pub fn is_scandly26(&self) -> bool {
+        *self == Scandly::Scandly26
     }
     #[doc = "28ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly28(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY28)
+    pub fn is_scandly28(&self) -> bool {
+        *self == Scandly::Scandly28
     }
     #[doc = "30ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly30(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY30)
+    pub fn is_scandly30(&self) -> bool {
+        *self == Scandly::Scandly30
     }
     #[doc = "32ms Scan Delay"]
     #[inline(always)]
-    pub fn scandly32(self) -> &'a mut W {
-        self.variant(SCANDLY_A::SCANDLY32)
+    pub fn is_scandly32(&self) -> bool {
+        *self == Scandly::Scandly32
     }
 }
-#[doc = "Field `DEBDLY` reader - Debounce Delay"]
-pub type DEBDLY_R = crate::FieldReader<u8, DEBDLY_A>;
+#[doc = "Field `SCANDLY` writer - Scan Delay"]
+pub type ScandlyW<'a, REG> = crate::FieldWriter<'a, REG, 4, Scandly, crate::Safe>;
+impl<'a, REG> ScandlyW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "2ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly2(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly2)
+    }
+    #[doc = "4ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly4(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly4)
+    }
+    #[doc = "6ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly6(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly6)
+    }
+    #[doc = "8ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly8(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly8)
+    }
+    #[doc = "10ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly10(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly10)
+    }
+    #[doc = "12ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly12(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly12)
+    }
+    #[doc = "14ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly14(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly14)
+    }
+    #[doc = "16ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly16(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly16)
+    }
+    #[doc = "18ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly18(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly18)
+    }
+    #[doc = "20ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly20(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly20)
+    }
+    #[doc = "22ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly22(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly22)
+    }
+    #[doc = "24ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly24(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly24)
+    }
+    #[doc = "26ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly26(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly26)
+    }
+    #[doc = "28ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly28(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly28)
+    }
+    #[doc = "30ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly30(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly30)
+    }
+    #[doc = "32ms Scan Delay"]
+    #[inline(always)]
+    pub fn scandly32(self) -> &'a mut crate::W<REG> {
+        self.variant(Scandly::Scandly32)
+    }
+}
 #[doc = "Debounce Delay\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum DEBDLY_A {
+pub enum Debdly {
     #[doc = "0: 2ms Debounce Delay"]
-    DEBDLY2 = 0,
+    Debdly2 = 0,
     #[doc = "1: 4ms Debounce Delay"]
-    DEBDLY4 = 1,
+    Debdly4 = 1,
     #[doc = "2: 6ms Debounce Delay"]
-    DEBDLY6 = 2,
+    Debdly6 = 2,
     #[doc = "3: 8ms Debounce Delay"]
-    DEBDLY8 = 3,
+    Debdly8 = 3,
     #[doc = "4: 10ms Debounce Delay"]
-    DEBDLY10 = 4,
+    Debdly10 = 4,
     #[doc = "5: 12ms Debounce Delay"]
-    DEBDLY12 = 5,
+    Debdly12 = 5,
     #[doc = "6: 14ms Debounce Delay"]
-    DEBDLY14 = 6,
+    Debdly14 = 6,
     #[doc = "7: 16ms Debounce Delay"]
-    DEBDLY16 = 7,
+    Debdly16 = 7,
     #[doc = "8: 18ms Debounce Delay"]
-    DEBDLY18 = 8,
+    Debdly18 = 8,
     #[doc = "9: 20ms Debounce Delay"]
-    DEBDLY20 = 9,
+    Debdly20 = 9,
     #[doc = "10: 22ms Debounce Delay"]
-    DEBDLY22 = 10,
+    Debdly22 = 10,
     #[doc = "11: 24ms Debounce Delay"]
-    DEBDLY24 = 11,
+    Debdly24 = 11,
     #[doc = "12: 26ms Debounce Delay"]
-    DEBDLY26 = 12,
+    Debdly26 = 12,
     #[doc = "13: 28ms Debounce Delay"]
-    DEBDLY28 = 13,
+    Debdly28 = 13,
     #[doc = "14: 30ms Debounce Delay"]
-    DEBDLY30 = 14,
+    Debdly30 = 14,
     #[doc = "15: 32ms Debounce Delay"]
-    DEBDLY32 = 15,
+    Debdly32 = 15,
 }
-impl From<DEBDLY_A> for u8 {
+impl From<Debdly> for u8 {
     #[inline(always)]
-    fn from(variant: DEBDLY_A) -> Self {
+    fn from(variant: Debdly) -> Self {
         variant as _
     }
 }
-impl DEBDLY_R {
+impl crate::FieldSpec for Debdly {
+    type Ux = u8;
+}
+impl crate::IsEnum for Debdly {}
+#[doc = "Field `DEBDLY` reader - Debounce Delay"]
+pub type DebdlyR = crate::FieldReader<Debdly>;
+impl DebdlyR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> DEBDLY_A {
+    pub const fn variant(&self) -> Debdly {
         match self.bits {
-            0 => DEBDLY_A::DEBDLY2,
-            1 => DEBDLY_A::DEBDLY4,
-            2 => DEBDLY_A::DEBDLY6,
-            3 => DEBDLY_A::DEBDLY8,
-            4 => DEBDLY_A::DEBDLY10,
-            5 => DEBDLY_A::DEBDLY12,
-            6 => DEBDLY_A::DEBDLY14,
-            7 => DEBDLY_A::DEBDLY16,
-            8 => DEBDLY_A::DEBDLY18,
-            9 => DEBDLY_A::DEBDLY20,
-            10 => DEBDLY_A::DEBDLY22,
-            11 => DEBDLY_A::DEBDLY24,
-            12 => DEBDLY_A::DEBDLY26,
-            13 => DEBDLY_A::DEBDLY28,
-            14 => DEBDLY_A::DEBDLY30,
-            15 => DEBDLY_A::DEBDLY32,
+            0 => Debdly::Debdly2,
+            1 => Debdly::Debdly4,
+            2 => Debdly::Debdly6,
+            3 => Debdly::Debdly8,
+            4 => Debdly::Debdly10,
+            5 => Debdly::Debdly12,
+            6 => Debdly::Debdly14,
+            7 => Debdly::Debdly16,
+            8 => Debdly::Debdly18,
+            9 => Debdly::Debdly20,
+            10 => Debdly::Debdly22,
+            11 => Debdly::Debdly24,
+            12 => Debdly::Debdly26,
+            13 => Debdly::Debdly28,
+            14 => Debdly::Debdly30,
+            15 => Debdly::Debdly32,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `DEBDLY2`"]
-    #[inline(always)]
-    pub fn is_debdly2(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY2
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY4`"]
-    #[inline(always)]
-    pub fn is_debdly4(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY4
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY6`"]
-    #[inline(always)]
-    pub fn is_debdly6(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY6
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY8`"]
-    #[inline(always)]
-    pub fn is_debdly8(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY8
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY10`"]
-    #[inline(always)]
-    pub fn is_debdly10(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY10
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY12`"]
-    #[inline(always)]
-    pub fn is_debdly12(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY12
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY14`"]
-    #[inline(always)]
-    pub fn is_debdly14(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY14
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY16`"]
-    #[inline(always)]
-    pub fn is_debdly16(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY16
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY18`"]
-    #[inline(always)]
-    pub fn is_debdly18(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY18
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY20`"]
-    #[inline(always)]
-    pub fn is_debdly20(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY20
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY22`"]
-    #[inline(always)]
-    pub fn is_debdly22(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY22
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY24`"]
-    #[inline(always)]
-    pub fn is_debdly24(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY24
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY26`"]
-    #[inline(always)]
-    pub fn is_debdly26(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY26
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY28`"]
-    #[inline(always)]
-    pub fn is_debdly28(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY28
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY30`"]
-    #[inline(always)]
-    pub fn is_debdly30(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY30
-    }
-    #[doc = "Checks if the value of the field is `DEBDLY32`"]
-    #[inline(always)]
-    pub fn is_debdly32(&self) -> bool {
-        *self == DEBDLY_A::DEBDLY32
-    }
-}
-#[doc = "Field `DEBDLY` writer - Debounce Delay"]
-pub type DEBDLY_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, DELAY_SPEC, u8, DEBDLY_A, 4, O>;
-impl<'a, const O: u8> DEBDLY_W<'a, O> {
     #[doc = "2ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly2(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY2)
+    pub fn is_debdly2(&self) -> bool {
+        *self == Debdly::Debdly2
     }
     #[doc = "4ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly4(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY4)
+    pub fn is_debdly4(&self) -> bool {
+        *self == Debdly::Debdly4
     }
     #[doc = "6ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly6(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY6)
+    pub fn is_debdly6(&self) -> bool {
+        *self == Debdly::Debdly6
     }
     #[doc = "8ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly8(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY8)
+    pub fn is_debdly8(&self) -> bool {
+        *self == Debdly::Debdly8
     }
     #[doc = "10ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly10(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY10)
+    pub fn is_debdly10(&self) -> bool {
+        *self == Debdly::Debdly10
     }
     #[doc = "12ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly12(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY12)
+    pub fn is_debdly12(&self) -> bool {
+        *self == Debdly::Debdly12
     }
     #[doc = "14ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly14(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY14)
+    pub fn is_debdly14(&self) -> bool {
+        *self == Debdly::Debdly14
     }
     #[doc = "16ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly16(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY16)
+    pub fn is_debdly16(&self) -> bool {
+        *self == Debdly::Debdly16
     }
     #[doc = "18ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly18(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY18)
+    pub fn is_debdly18(&self) -> bool {
+        *self == Debdly::Debdly18
     }
     #[doc = "20ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly20(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY20)
+    pub fn is_debdly20(&self) -> bool {
+        *self == Debdly::Debdly20
     }
     #[doc = "22ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly22(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY22)
+    pub fn is_debdly22(&self) -> bool {
+        *self == Debdly::Debdly22
     }
     #[doc = "24ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly24(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY24)
+    pub fn is_debdly24(&self) -> bool {
+        *self == Debdly::Debdly24
     }
     #[doc = "26ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly26(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY26)
+    pub fn is_debdly26(&self) -> bool {
+        *self == Debdly::Debdly26
     }
     #[doc = "28ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly28(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY28)
+    pub fn is_debdly28(&self) -> bool {
+        *self == Debdly::Debdly28
     }
     #[doc = "30ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly30(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY30)
+    pub fn is_debdly30(&self) -> bool {
+        *self == Debdly::Debdly30
     }
     #[doc = "32ms Debounce Delay"]
     #[inline(always)]
-    pub fn debdly32(self) -> &'a mut W {
-        self.variant(DEBDLY_A::DEBDLY32)
+    pub fn is_debdly32(&self) -> bool {
+        *self == Debdly::Debdly32
     }
 }
-#[doc = "Field `STABDLY` reader - Row stable Delay"]
-pub type STABDLY_R = crate::FieldReader<u8, STABDLY_A>;
+#[doc = "Field `DEBDLY` writer - Debounce Delay"]
+pub type DebdlyW<'a, REG> = crate::FieldWriter<'a, REG, 4, Debdly, crate::Safe>;
+impl<'a, REG> DebdlyW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "2ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly2(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly2)
+    }
+    #[doc = "4ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly4(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly4)
+    }
+    #[doc = "6ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly6(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly6)
+    }
+    #[doc = "8ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly8(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly8)
+    }
+    #[doc = "10ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly10(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly10)
+    }
+    #[doc = "12ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly12(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly12)
+    }
+    #[doc = "14ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly14(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly14)
+    }
+    #[doc = "16ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly16(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly16)
+    }
+    #[doc = "18ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly18(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly18)
+    }
+    #[doc = "20ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly20(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly20)
+    }
+    #[doc = "22ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly22(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly22)
+    }
+    #[doc = "24ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly24(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly24)
+    }
+    #[doc = "26ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly26(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly26)
+    }
+    #[doc = "28ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly28(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly28)
+    }
+    #[doc = "30ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly30(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly30)
+    }
+    #[doc = "32ms Debounce Delay"]
+    #[inline(always)]
+    pub fn debdly32(self) -> &'a mut crate::W<REG> {
+        self.variant(Debdly::Debdly32)
+    }
+}
 #[doc = "Row stable Delay\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum STABDLY_A {
+pub enum Stabdly {
     #[doc = "0: 2ms Row Stable Delay"]
-    STABDLY2 = 0,
+    Stabdly2 = 0,
     #[doc = "1: 4ms Row Stable Delay"]
-    STABDLY4 = 1,
+    Stabdly4 = 1,
     #[doc = "2: 6ms Row Stable Delay"]
-    STABDLY6 = 2,
+    Stabdly6 = 2,
     #[doc = "3: 8ms Row Stable Delay"]
-    STABDLY8 = 3,
+    Stabdly8 = 3,
     #[doc = "4: 10ms Row Stable Delay"]
-    STABDLY10 = 4,
+    Stabdly10 = 4,
     #[doc = "5: 12ms Row Stable Delay"]
-    STABDLY12 = 5,
+    Stabdly12 = 5,
     #[doc = "6: 14ms Row Stable Delay"]
-    STABDLY14 = 6,
+    Stabdly14 = 6,
     #[doc = "7: 16ms Row Stable Delay"]
-    STABDLY16 = 7,
+    Stabdly16 = 7,
     #[doc = "8: 18ms Row Stable Delay"]
-    STABDLY18 = 8,
+    Stabdly18 = 8,
     #[doc = "9: 20ms Row Stable Delay"]
-    STABDLY20 = 9,
+    Stabdly20 = 9,
     #[doc = "10: 22ms Row Stable Delay"]
-    STABDLY22 = 10,
+    Stabdly22 = 10,
     #[doc = "11: 24ms Row Stable Delay"]
-    STABDLY24 = 11,
+    Stabdly24 = 11,
     #[doc = "12: 26ms Row Stable Delay"]
-    STABDLY26 = 12,
+    Stabdly26 = 12,
     #[doc = "13: 28ms Row Stable Delay"]
-    STABDLY28 = 13,
+    Stabdly28 = 13,
     #[doc = "14: 30ms Row Stable Delay"]
-    STABDLY30 = 14,
+    Stabdly30 = 14,
     #[doc = "15: 32ms Row Stable Delay"]
-    STABDLY32 = 15,
+    Stabdly32 = 15,
 }
-impl From<STABDLY_A> for u8 {
+impl From<Stabdly> for u8 {
     #[inline(always)]
-    fn from(variant: STABDLY_A) -> Self {
+    fn from(variant: Stabdly) -> Self {
         variant as _
     }
 }
-impl STABDLY_R {
+impl crate::FieldSpec for Stabdly {
+    type Ux = u8;
+}
+impl crate::IsEnum for Stabdly {}
+#[doc = "Field `STABDLY` reader - Row stable Delay"]
+pub type StabdlyR = crate::FieldReader<Stabdly>;
+impl StabdlyR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> STABDLY_A {
+    pub const fn variant(&self) -> Stabdly {
         match self.bits {
-            0 => STABDLY_A::STABDLY2,
-            1 => STABDLY_A::STABDLY4,
-            2 => STABDLY_A::STABDLY6,
-            3 => STABDLY_A::STABDLY8,
-            4 => STABDLY_A::STABDLY10,
-            5 => STABDLY_A::STABDLY12,
-            6 => STABDLY_A::STABDLY14,
-            7 => STABDLY_A::STABDLY16,
-            8 => STABDLY_A::STABDLY18,
-            9 => STABDLY_A::STABDLY20,
-            10 => STABDLY_A::STABDLY22,
-            11 => STABDLY_A::STABDLY24,
-            12 => STABDLY_A::STABDLY26,
-            13 => STABDLY_A::STABDLY28,
-            14 => STABDLY_A::STABDLY30,
-            15 => STABDLY_A::STABDLY32,
+            0 => Stabdly::Stabdly2,
+            1 => Stabdly::Stabdly4,
+            2 => Stabdly::Stabdly6,
+            3 => Stabdly::Stabdly8,
+            4 => Stabdly::Stabdly10,
+            5 => Stabdly::Stabdly12,
+            6 => Stabdly::Stabdly14,
+            7 => Stabdly::Stabdly16,
+            8 => Stabdly::Stabdly18,
+            9 => Stabdly::Stabdly20,
+            10 => Stabdly::Stabdly22,
+            11 => Stabdly::Stabdly24,
+            12 => Stabdly::Stabdly26,
+            13 => Stabdly::Stabdly28,
+            14 => Stabdly::Stabdly30,
+            15 => Stabdly::Stabdly32,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `STABDLY2`"]
-    #[inline(always)]
-    pub fn is_stabdly2(&self) -> bool {
-        *self == STABDLY_A::STABDLY2
-    }
-    #[doc = "Checks if the value of the field is `STABDLY4`"]
-    #[inline(always)]
-    pub fn is_stabdly4(&self) -> bool {
-        *self == STABDLY_A::STABDLY4
-    }
-    #[doc = "Checks if the value of the field is `STABDLY6`"]
-    #[inline(always)]
-    pub fn is_stabdly6(&self) -> bool {
-        *self == STABDLY_A::STABDLY6
-    }
-    #[doc = "Checks if the value of the field is `STABDLY8`"]
-    #[inline(always)]
-    pub fn is_stabdly8(&self) -> bool {
-        *self == STABDLY_A::STABDLY8
-    }
-    #[doc = "Checks if the value of the field is `STABDLY10`"]
-    #[inline(always)]
-    pub fn is_stabdly10(&self) -> bool {
-        *self == STABDLY_A::STABDLY10
-    }
-    #[doc = "Checks if the value of the field is `STABDLY12`"]
-    #[inline(always)]
-    pub fn is_stabdly12(&self) -> bool {
-        *self == STABDLY_A::STABDLY12
-    }
-    #[doc = "Checks if the value of the field is `STABDLY14`"]
-    #[inline(always)]
-    pub fn is_stabdly14(&self) -> bool {
-        *self == STABDLY_A::STABDLY14
-    }
-    #[doc = "Checks if the value of the field is `STABDLY16`"]
-    #[inline(always)]
-    pub fn is_stabdly16(&self) -> bool {
-        *self == STABDLY_A::STABDLY16
-    }
-    #[doc = "Checks if the value of the field is `STABDLY18`"]
-    #[inline(always)]
-    pub fn is_stabdly18(&self) -> bool {
-        *self == STABDLY_A::STABDLY18
-    }
-    #[doc = "Checks if the value of the field is `STABDLY20`"]
-    #[inline(always)]
-    pub fn is_stabdly20(&self) -> bool {
-        *self == STABDLY_A::STABDLY20
-    }
-    #[doc = "Checks if the value of the field is `STABDLY22`"]
-    #[inline(always)]
-    pub fn is_stabdly22(&self) -> bool {
-        *self == STABDLY_A::STABDLY22
-    }
-    #[doc = "Checks if the value of the field is `STABDLY24`"]
-    #[inline(always)]
-    pub fn is_stabdly24(&self) -> bool {
-        *self == STABDLY_A::STABDLY24
-    }
-    #[doc = "Checks if the value of the field is `STABDLY26`"]
-    #[inline(always)]
-    pub fn is_stabdly26(&self) -> bool {
-        *self == STABDLY_A::STABDLY26
-    }
-    #[doc = "Checks if the value of the field is `STABDLY28`"]
-    #[inline(always)]
-    pub fn is_stabdly28(&self) -> bool {
-        *self == STABDLY_A::STABDLY28
-    }
-    #[doc = "Checks if the value of the field is `STABDLY30`"]
-    #[inline(always)]
-    pub fn is_stabdly30(&self) -> bool {
-        *self == STABDLY_A::STABDLY30
-    }
-    #[doc = "Checks if the value of the field is `STABDLY32`"]
-    #[inline(always)]
-    pub fn is_stabdly32(&self) -> bool {
-        *self == STABDLY_A::STABDLY32
-    }
-}
-#[doc = "Field `STABDLY` writer - Row stable Delay"]
-pub type STABDLY_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, DELAY_SPEC, u8, STABDLY_A, 4, O>;
-impl<'a, const O: u8> STABDLY_W<'a, O> {
     #[doc = "2ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly2(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY2)
+    pub fn is_stabdly2(&self) -> bool {
+        *self == Stabdly::Stabdly2
     }
     #[doc = "4ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly4(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY4)
+    pub fn is_stabdly4(&self) -> bool {
+        *self == Stabdly::Stabdly4
     }
     #[doc = "6ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly6(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY6)
+    pub fn is_stabdly6(&self) -> bool {
+        *self == Stabdly::Stabdly6
     }
     #[doc = "8ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly8(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY8)
+    pub fn is_stabdly8(&self) -> bool {
+        *self == Stabdly::Stabdly8
     }
     #[doc = "10ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly10(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY10)
+    pub fn is_stabdly10(&self) -> bool {
+        *self == Stabdly::Stabdly10
     }
     #[doc = "12ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly12(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY12)
+    pub fn is_stabdly12(&self) -> bool {
+        *self == Stabdly::Stabdly12
     }
     #[doc = "14ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly14(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY14)
+    pub fn is_stabdly14(&self) -> bool {
+        *self == Stabdly::Stabdly14
     }
     #[doc = "16ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly16(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY16)
+    pub fn is_stabdly16(&self) -> bool {
+        *self == Stabdly::Stabdly16
     }
     #[doc = "18ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly18(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY18)
+    pub fn is_stabdly18(&self) -> bool {
+        *self == Stabdly::Stabdly18
     }
     #[doc = "20ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly20(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY20)
+    pub fn is_stabdly20(&self) -> bool {
+        *self == Stabdly::Stabdly20
     }
     #[doc = "22ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly22(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY22)
+    pub fn is_stabdly22(&self) -> bool {
+        *self == Stabdly::Stabdly22
     }
     #[doc = "24ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly24(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY24)
+    pub fn is_stabdly24(&self) -> bool {
+        *self == Stabdly::Stabdly24
     }
     #[doc = "26ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly26(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY26)
+    pub fn is_stabdly26(&self) -> bool {
+        *self == Stabdly::Stabdly26
     }
     #[doc = "28ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly28(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY28)
+    pub fn is_stabdly28(&self) -> bool {
+        *self == Stabdly::Stabdly28
     }
     #[doc = "30ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly30(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY30)
+    pub fn is_stabdly30(&self) -> bool {
+        *self == Stabdly::Stabdly30
     }
     #[doc = "32ms Row Stable Delay"]
     #[inline(always)]
-    pub fn stabdly32(self) -> &'a mut W {
-        self.variant(STABDLY_A::STABDLY32)
+    pub fn is_stabdly32(&self) -> bool {
+        *self == Stabdly::Stabdly32
+    }
+}
+#[doc = "Field `STABDLY` writer - Row stable Delay"]
+pub type StabdlyW<'a, REG> = crate::FieldWriter<'a, REG, 4, Stabdly, crate::Safe>;
+impl<'a, REG> StabdlyW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "2ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly2(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly2)
+    }
+    #[doc = "4ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly4(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly4)
+    }
+    #[doc = "6ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly6(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly6)
+    }
+    #[doc = "8ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly8(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly8)
+    }
+    #[doc = "10ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly10(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly10)
+    }
+    #[doc = "12ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly12(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly12)
+    }
+    #[doc = "14ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly14(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly14)
+    }
+    #[doc = "16ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly16(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly16)
+    }
+    #[doc = "18ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly18(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly18)
+    }
+    #[doc = "20ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly20(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly20)
+    }
+    #[doc = "22ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly22(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly22)
+    }
+    #[doc = "24ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly24(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly24)
+    }
+    #[doc = "26ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly26(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly26)
+    }
+    #[doc = "28ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly28(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly28)
+    }
+    #[doc = "30ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly30(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly30)
+    }
+    #[doc = "32ms Row Stable Delay"]
+    #[inline(always)]
+    pub fn stabdly32(self) -> &'a mut crate::W<REG> {
+        self.variant(Stabdly::Stabdly32)
     }
 }
 impl R {
     #[doc = "Bits 8:11 - Scan Delay"]
     #[inline(always)]
-    pub fn scandly(&self) -> SCANDLY_R {
-        SCANDLY_R::new(((self.bits >> 8) & 0x0f) as u8)
+    pub fn scandly(&self) -> ScandlyR {
+        ScandlyR::new(((self.bits >> 8) & 0x0f) as u8)
     }
     #[doc = "Bits 16:19 - Debounce Delay"]
     #[inline(always)]
-    pub fn debdly(&self) -> DEBDLY_R {
-        DEBDLY_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn debdly(&self) -> DebdlyR {
+        DebdlyR::new(((self.bits >> 16) & 0x0f) as u8)
     }
     #[doc = "Bits 24:27 - Row stable Delay"]
     #[inline(always)]
-    pub fn stabdly(&self) -> STABDLY_R {
-        STABDLY_R::new(((self.bits >> 24) & 0x0f) as u8)
+    pub fn stabdly(&self) -> StabdlyR {
+        StabdlyR::new(((self.bits >> 24) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 8:11 - Scan Delay"]
     #[inline(always)]
-    #[must_use]
-    pub fn scandly(&mut self) -> SCANDLY_W<8> {
-        SCANDLY_W::new(self)
+    pub fn scandly(&mut self) -> ScandlyW<DelaySpec> {
+        ScandlyW::new(self, 8)
     }
     #[doc = "Bits 16:19 - Debounce Delay"]
     #[inline(always)]
-    #[must_use]
-    pub fn debdly(&mut self) -> DEBDLY_W<16> {
-        DEBDLY_W::new(self)
+    pub fn debdly(&mut self) -> DebdlyW<DelaySpec> {
+        DebdlyW::new(self, 16)
     }
     #[doc = "Bits 24:27 - Row stable Delay"]
     #[inline(always)]
-    #[must_use]
-    pub fn stabdly(&mut self) -> STABDLY_W<24> {
-        STABDLY_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn stabdly(&mut self) -> StabdlyW<DelaySpec> {
+        StabdlyW::new(self, 24)
     }
 }
-#[doc = "Delay\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [delay](index.html) module"]
-pub struct DELAY_SPEC;
-impl crate::RegisterSpec for DELAY_SPEC {
+#[doc = "Delay\n\nYou can [`read`](crate::Reg::read) this register and get [`delay::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`delay::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DelaySpec;
+impl crate::RegisterSpec for DelaySpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [delay::R](R) reader structure"]
-impl crate::Readable for DELAY_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [delay::W](W) writer structure"]
-impl crate::Writable for DELAY_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`delay::R`](R) reader structure"]
+impl crate::Readable for DelaySpec {}
+#[doc = "`write(|w| ..)` method takes [`delay::W`](W) writer structure"]
+impl crate::Writable for DelaySpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DELAY to value 0"]
-impl crate::Resettable for DELAY_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for DelaySpec {}

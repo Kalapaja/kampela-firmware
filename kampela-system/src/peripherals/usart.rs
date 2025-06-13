@@ -1,44 +1,44 @@
 //! all low level usart operations
 
-use efm32pg23_fix::{GPIO_S, Peripherals};
+use efm32pg23_fix::{GpioS, Peripherals};
 use crate::peripherals::gpio_pins::*;
 
-pub const BAUDRATE_USART: u32 = 10_000_000;
+pub const BAUDRATE_USART: u32 = 2_500_000;
 
 /// Select display channel
-pub fn select_display(gpio: &mut GPIO_S) {
+pub fn select_display(gpio: &mut GpioS) {
     display_chip_select_clear(gpio);
 }
 
 /// Deselect display channel
-pub fn deselect_display(gpio: &mut GPIO_S) {
+pub fn deselect_display(gpio: &mut GpioS) {
     display_chip_select_set(gpio);
 }
 
 /// Select flash channel
-pub fn select_flash(gpio: &mut GPIO_S) {
+pub fn select_flash(gpio: &mut GpioS) {
     flash_chip_select_clear(gpio);
 }
 
 /// Deselect flash channel
-pub fn deselect_flash(gpio: &mut GPIO_S) {
+pub fn deselect_flash(gpio: &mut GpioS) {
     flash_chip_select_set(gpio);
 }
 
 
 /// Indicate that command is sent
-pub fn display_select_command(gpio: &mut GPIO_S) {
+pub fn display_select_command(gpio: &mut GpioS) {
     spi_data_command_clear(gpio);
 }
 
 /// Indicate that data is sent
-pub fn display_select_data(gpio: &mut GPIO_S) {
+pub fn display_select_data(gpio: &mut GpioS) {
     spi_data_command_set(gpio);
 }
 
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].
-pub fn spi_is_busy(gpio: &mut GPIO_S) -> bool {
-    let portb_din_bits = gpio.portb_din.read().din().bits();
+pub fn spi_is_busy(gpio: &mut GpioS) -> bool {
+    let portb_din_bits = gpio.portb_din().read().din().bits();
     portb_din_bits & (1 << SPI_BUSY_PIN) == (1 << SPI_BUSY_PIN)
 }
 
@@ -47,15 +47,15 @@ pub fn spi_is_busy(gpio: &mut GPIO_S) -> bool {
 /// Assumes that clocks are enabled
 pub fn init_usart(peripherals: &mut Peripherals) {
     peripherals
-        .USART0_S
-        .en
+        .usart0_s
+        .en()
         .write(|w_reg| {
             w_reg
                 .en().set_bit()
     });
     peripherals
-        .USART0_S
-        .ctrl
+        .usart0_s
+        .ctrl()
         .write(|w_reg| {
             w_reg
                 .sync().enable()
@@ -64,8 +64,8 @@ pub fn init_usart(peripherals: &mut Peripherals) {
                 .autotx().clear_bit()
     });
     peripherals
-        .USART0_S
-        .frame
+        .usart0_s
+        .frame()
         .write(|w_reg| {
             w_reg
                 .databits().eight()
@@ -73,19 +73,18 @@ pub fn init_usart(peripherals: &mut Peripherals) {
                 .parity().none()
     });
 
-
-    let clkdiv = ((19_000_000 - 1)/(2*BAUDRATE_USART)) << 8;
+    let clkdiv = ((19_000_000 << 4)/(BAUDRATE_USART)).saturating_sub(32); // ((19_000_000 - 1)/(2*BAUDRATE_USART)) << 8 preventing overflow
 
     peripherals
-        .USART0_S
-        .clkdiv
-        .write(|w_reg| {
+        .usart0_s
+        .clkdiv()
+        .write(|w_reg| unsafe {
             w_reg
-                .div().variant(clkdiv)
+                .div().bits(clkdiv)
     });
     peripherals
-        .USART0_S
-        .cmd
+        .usart0_s
+        .cmd()
         .write(|w_reg| {
             w_reg
                 .masteren().set_bit()
@@ -94,35 +93,35 @@ pub fn init_usart(peripherals: &mut Peripherals) {
     });
     // display MOSI
     peripherals
-        .GPIO_S
-        .usart0_txroute
-        .write(|w_reg| {
+        .gpio_s
+        .usart0_txroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(E_MOSI_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(E_MOSI_PIN)
     });
     // display MISO
     peripherals
-        .GPIO_S
-        .usart0_rxroute
-        .write(|w_reg| {
+        .gpio_s
+        .usart0_rxroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(E_MISO_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(E_MISO_PIN)
     });
     // display SCK
     peripherals
-        .GPIO_S
-        .usart0_clkroute
-        .write(|w_reg| {
+        .gpio_s
+        .usart0_clkroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(E_SCK_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(E_SCK_PIN)
     });
     // route enable
     peripherals
-        .GPIO_S
-        .usart0_routeen
+        .gpio_s
+        .usart0_routeen()
         .write(|w_reg| {
             w_reg
                 .txpen().set_bit()
@@ -136,15 +135,15 @@ pub fn init_usart(peripherals: &mut Peripherals) {
 ///
 /// At this point USART must be already clocked from elsewhere.
 pub fn write_to_usart(peripherals: &mut Peripherals, data: u8) -> u8 {
-    while peripherals.USART0_S.status.read().txbl().bit_is_clear() {}
+    while peripherals.usart0_s.status().read().txbl().bit_is_clear() {}
 
     peripherals
-        .USART0_S
-        .txdata
-        .write(|w_reg| w_reg.txdata().variant(data));
+        .usart0_s
+        .txdata()
+        .write(|w_reg| unsafe { w_reg.txdata().bits(data) });
 
-    while peripherals.USART0_S.status.read().txc().bit_is_clear() {}
+    while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
 
-    peripherals.USART0_S.rxdata.read().rxdata().bits()
+    peripherals.usart0_s.rxdata().read().rxdata().bits()
 }
 

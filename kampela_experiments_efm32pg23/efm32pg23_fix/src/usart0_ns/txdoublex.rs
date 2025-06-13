@@ -1,140 +1,99 @@
 #[doc = "Register `TXDOUBLEX` writer"]
-pub struct W(crate::W<TXDOUBLEX_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<TXDOUBLEX_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<TXDOUBLEX_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<TXDOUBLEX_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<TxdoublexSpec>;
 #[doc = "Field `TXDATA0` writer - TX Data"]
-pub type TXDATA0_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TXDOUBLEX_SPEC, u16, u16, 9, O>;
+pub type Txdata0W<'a, REG> = crate::FieldWriter<'a, REG, 9, u16>;
 #[doc = "Field `UBRXAT0` writer - Unblock RX After Transmission"]
-pub type UBRXAT0_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Ubrxat0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXTRIAT0` writer - Set TXTRI After Transmission"]
-pub type TXTRIAT0_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txtriat0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXBREAK0` writer - Transmit Data As Break"]
-pub type TXBREAK0_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txbreak0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXDISAT0` writer - Clear TXEN After Transmission"]
-pub type TXDISAT0_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txdisat0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXENAT0` writer - Enable RX After Transmission"]
-pub type RXENAT0_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Rxenat0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXDATA1` writer - TX Data"]
-pub type TXDATA1_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TXDOUBLEX_SPEC, u16, u16, 9, O>;
+pub type Txdata1W<'a, REG> = crate::FieldWriter<'a, REG, 9, u16>;
 #[doc = "Field `UBRXAT1` writer - Unblock RX After Transmission"]
-pub type UBRXAT1_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Ubrxat1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXTRIAT1` writer - Set TXTRI After Transmission"]
-pub type TXTRIAT1_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txtriat1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXBREAK1` writer - Transmit Data As Break"]
-pub type TXBREAK1_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txbreak1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TXDISAT1` writer - Clear TXEN After Transmission"]
-pub type TXDISAT1_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Txdisat1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXENAT1` writer - Enable RX After Transmission"]
-pub type RXENAT1_W<'a, const O: u8> = crate::BitWriter<'a, u32, TXDOUBLEX_SPEC, bool, O>;
+pub type Rxenat1W<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bits 0:8 - TX Data"]
     #[inline(always)]
-    #[must_use]
-    pub fn txdata0(&mut self) -> TXDATA0_W<0> {
-        TXDATA0_W::new(self)
+    pub fn txdata0(&mut self) -> Txdata0W<TxdoublexSpec> {
+        Txdata0W::new(self, 0)
     }
     #[doc = "Bit 11 - Unblock RX After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn ubrxat0(&mut self) -> UBRXAT0_W<11> {
-        UBRXAT0_W::new(self)
+    pub fn ubrxat0(&mut self) -> Ubrxat0W<TxdoublexSpec> {
+        Ubrxat0W::new(self, 11)
     }
     #[doc = "Bit 12 - Set TXTRI After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn txtriat0(&mut self) -> TXTRIAT0_W<12> {
-        TXTRIAT0_W::new(self)
+    pub fn txtriat0(&mut self) -> Txtriat0W<TxdoublexSpec> {
+        Txtriat0W::new(self, 12)
     }
     #[doc = "Bit 13 - Transmit Data As Break"]
     #[inline(always)]
-    #[must_use]
-    pub fn txbreak0(&mut self) -> TXBREAK0_W<13> {
-        TXBREAK0_W::new(self)
+    pub fn txbreak0(&mut self) -> Txbreak0W<TxdoublexSpec> {
+        Txbreak0W::new(self, 13)
     }
     #[doc = "Bit 14 - Clear TXEN After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn txdisat0(&mut self) -> TXDISAT0_W<14> {
-        TXDISAT0_W::new(self)
+    pub fn txdisat0(&mut self) -> Txdisat0W<TxdoublexSpec> {
+        Txdisat0W::new(self, 14)
     }
     #[doc = "Bit 15 - Enable RX After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxenat0(&mut self) -> RXENAT0_W<15> {
-        RXENAT0_W::new(self)
+    pub fn rxenat0(&mut self) -> Rxenat0W<TxdoublexSpec> {
+        Rxenat0W::new(self, 15)
     }
     #[doc = "Bits 16:24 - TX Data"]
     #[inline(always)]
-    #[must_use]
-    pub fn txdata1(&mut self) -> TXDATA1_W<16> {
-        TXDATA1_W::new(self)
+    pub fn txdata1(&mut self) -> Txdata1W<TxdoublexSpec> {
+        Txdata1W::new(self, 16)
     }
     #[doc = "Bit 27 - Unblock RX After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn ubrxat1(&mut self) -> UBRXAT1_W<27> {
-        UBRXAT1_W::new(self)
+    pub fn ubrxat1(&mut self) -> Ubrxat1W<TxdoublexSpec> {
+        Ubrxat1W::new(self, 27)
     }
     #[doc = "Bit 28 - Set TXTRI After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn txtriat1(&mut self) -> TXTRIAT1_W<28> {
-        TXTRIAT1_W::new(self)
+    pub fn txtriat1(&mut self) -> Txtriat1W<TxdoublexSpec> {
+        Txtriat1W::new(self, 28)
     }
     #[doc = "Bit 29 - Transmit Data As Break"]
     #[inline(always)]
-    #[must_use]
-    pub fn txbreak1(&mut self) -> TXBREAK1_W<29> {
-        TXBREAK1_W::new(self)
+    pub fn txbreak1(&mut self) -> Txbreak1W<TxdoublexSpec> {
+        Txbreak1W::new(self, 29)
     }
     #[doc = "Bit 30 - Clear TXEN After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn txdisat1(&mut self) -> TXDISAT1_W<30> {
-        TXDISAT1_W::new(self)
+    pub fn txdisat1(&mut self) -> Txdisat1W<TxdoublexSpec> {
+        Txdisat1W::new(self, 30)
     }
     #[doc = "Bit 31 - Enable RX After Transmission"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxenat1(&mut self) -> RXENAT1_W<31> {
-        RXENAT1_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn rxenat1(&mut self) -> Rxenat1W<TxdoublexSpec> {
+        Rxenat1W::new(self, 31)
     }
 }
-#[doc = "No Description\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [txdoublex](index.html) module"]
-pub struct TXDOUBLEX_SPEC;
-impl crate::RegisterSpec for TXDOUBLEX_SPEC {
+#[doc = "No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`txdoublex::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct TxdoublexSpec;
+impl crate::RegisterSpec for TxdoublexSpec {
     type Ux = u32;
 }
-#[doc = "`write(|w| ..)` method takes [txdoublex::W](W) writer structure"]
-impl crate::Writable for TXDOUBLEX_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`write(|w| ..)` method takes [`txdoublex::W`](W) writer structure"]
+impl crate::Writable for TxdoublexSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets TXDOUBLEX to value 0"]
-impl crate::Resettable for TXDOUBLEX_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for TxdoublexSpec {}

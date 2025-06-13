@@ -3,7 +3,7 @@ use embedded_graphics::{
     prelude::{Drawable, Dimensions, DrawTarget, Point, Size},
     primitives::{Primitive, Rectangle, PrimitiveStyle},
 };
-use crate::{display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{display_def::*, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use crate::widget::nav_bar::nav_button::NavButton;
 
@@ -68,7 +68,7 @@ impl NavBar {
 impl View for NavBar {
     type DrawInput<'a> = bool;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = Option<NavCommand>;
 
     fn bounding_box(&self) -> Rectangle {
@@ -96,13 +96,13 @@ impl View for NavBar {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, point: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
     where Self: 'a
     {
-        if self.left.handle_tap(point, ()).is_some() {
+        if self.left.handle_event(event, ()) == Some(true) {
             return Some(NavCommand::Left)
         };
-        if self.right.handle_tap(point, ()).is_some() {
+        if self.right.handle_event(event, ()) == Some(true) {
             return Some(NavCommand::Right)
         };
         None

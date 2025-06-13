@@ -8,14 +8,13 @@ use embedded_graphics::{
         ascii::FONT_10X20, MonoFont, MonoTextStyle
     },
     pixelcolor::BinaryColor,
-    prelude::{Dimensions, DrawTarget, Point, Size},
+    prelude::{Dimensions, DrawTarget, Size},
     primitives::{
         CornerRadii,
         Primitive,
         PrimitiveStyleBuilder,
         Rectangle,
         RoundedRectangle,
-        StrokeAlignment
     },
     Drawable
 };
@@ -26,7 +25,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::widget::view::{Widget, View, DrawView};
+use crate::{uistate::Event, widget::view::{DrawView, View, Widget}};
 
 const KEY_FONT: MonoFont = FONT_10X20;
 const KEY_RADIUS: u32 = 4;
@@ -51,10 +50,10 @@ impl Key {
 }
 
 impl View for Key {
-    type DrawInput<'a> = bool;
+    type DrawInput<'a> = (bool, bool);
     type DrawOutput = bool;
-    type TapInput<'a> = ();
-    type TapOutput = char;
+    type EventInput<'a> = ();
+    type TapOutput = Option<char>;
 
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -64,24 +63,32 @@ impl View for Key {
         self.widget.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
         where 
             D: DrawTarget<Color = BinaryColor>,
             Self: 'a,
         {
         let mut was_tapped = false;
-        self.draw_initial(target, n)?;
+
+        if !t {
+            self.draw_initial(target, n)?;
+        }
         if self.this_tapped {
             was_tapped = true;
             self.draw_tapped(target, n)?;
+            self.draw_initial(target, !n)?;
         }
         Ok(was_tapped)
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
     where Self: 'a {
-        self.this_tapped = true;
-        self.get_char()
+        if matches!(event, Event::Tap(_)) {
+            self.this_tapped = true;
+            Some(self.get_char())
+        } else {
+            None
+        }
     }
 }
 
@@ -121,17 +128,15 @@ impl Key {
             (BinaryColor::On, BinaryColor::Off)
         };
         self.this_tapped = false;
-        let thin_stroke = PrimitiveStyleBuilder::new()
-            .stroke_color(on)
-            .stroke_width(2)
-            .stroke_alignment(StrokeAlignment::Inside)
+        let flll = PrimitiveStyleBuilder::new()
+            .fill_color(on)
             .build();
         let area = self.bounding_box_view();
         let rounded = RoundedRectangle::new(
             area,
             CornerRadii::new(Size::new(KEY_RADIUS, KEY_RADIUS))
         );
-        rounded.into_styled(thin_stroke).draw(target)?;
+        rounded.into_styled(flll).draw(target)?;
 
         Ok(())
     }

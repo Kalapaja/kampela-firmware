@@ -1,81 +1,35 @@
 #[doc = "Register `CONSUMER_CMU_CALUP` reader"]
-pub struct R(crate::R<CONSUMER_CMU_CALUP_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CONSUMER_CMU_CALUP_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CONSUMER_CMU_CALUP_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CONSUMER_CMU_CALUP_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<ConsumerCmuCalupSpec>;
 #[doc = "Register `CONSUMER_CMU_CALUP` writer"]
-pub struct W(crate::W<CONSUMER_CMU_CALUP_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CONSUMER_CMU_CALUP_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CONSUMER_CMU_CALUP_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CONSUMER_CMU_CALUP_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<ConsumerCmuCalupSpec>;
 #[doc = "Field `PRSSEL` reader - CALUP async channel select"]
-pub type PRSSEL_R = crate::FieldReader<u8, u8>;
+pub type PrsselR = crate::FieldReader;
 #[doc = "Field `PRSSEL` writer - CALUP async channel select"]
-pub type PRSSEL_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, CONSUMER_CMU_CALUP_SPEC, u8, u8, 4, O>;
+pub type PrsselW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 impl R {
     #[doc = "Bits 0:3 - CALUP async channel select"]
     #[inline(always)]
-    pub fn prssel(&self) -> PRSSEL_R {
-        PRSSEL_R::new((self.bits & 0x0f) as u8)
+    pub fn prssel(&self) -> PrsselR {
+        PrsselR::new((self.bits & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:3 - CALUP async channel select"]
     #[inline(always)]
-    #[must_use]
-    pub fn prssel(&mut self) -> PRSSEL_W<0> {
-        PRSSEL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn prssel(&mut self) -> PrsselW<ConsumerCmuCalupSpec> {
+        PrsselW::new(self, 0)
     }
 }
-#[doc = "CALUP Consumer register\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [consumer_cmu_calup](index.html) module"]
-pub struct CONSUMER_CMU_CALUP_SPEC;
-impl crate::RegisterSpec for CONSUMER_CMU_CALUP_SPEC {
+#[doc = "CALUP Consumer register\n\nYou can [`read`](crate::Reg::read) this register and get [`consumer_cmu_calup::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`consumer_cmu_calup::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ConsumerCmuCalupSpec;
+impl crate::RegisterSpec for ConsumerCmuCalupSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [consumer_cmu_calup::R](R) reader structure"]
-impl crate::Readable for CONSUMER_CMU_CALUP_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [consumer_cmu_calup::W](W) writer structure"]
-impl crate::Writable for CONSUMER_CMU_CALUP_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`consumer_cmu_calup::R`](R) reader structure"]
+impl crate::Readable for ConsumerCmuCalupSpec {}
+#[doc = "`write(|w| ..)` method takes [`consumer_cmu_calup::W`](W) writer structure"]
+impl crate::Writable for ConsumerCmuCalupSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CONSUMER_CMU_CALUP to value 0"]
-impl crate::Resettable for CONSUMER_CMU_CALUP_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for ConsumerCmuCalupSpec {}

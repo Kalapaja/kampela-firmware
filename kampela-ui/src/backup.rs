@@ -24,7 +24,7 @@ use embedded_text::{
 };
 use mnemonic_external::{AsWordList, Bits11, WordListElement, WordSet};
 
-use crate::{display_def::*, message, platform::Platform, uistate::UnitScreen, widget::nav_bar::nav_bar::NavCommand};
+use crate::{display_def::*, message, platform::Platform, uistate::{Event, UnitScreen}, widget::nav_bar::nav_bar::NavCommand};
 
 use crate::widget::{view::{ViewScreen, View, Widget}, nav_bar::nav_bar::{NavBar, NAV_BAR_WIDGET}};
 
@@ -141,9 +141,9 @@ impl<P: Platform> Backup<P> {
 
 impl<P: Platform> ViewScreen for Backup<P> {
     type DrawInput<'a> = () where P: 'a;
-    type DrawOutput = Option<Vec<u8>>;
-    type TapInput<'a> = () where P: 'a;
-    type TapOutput = ();
+    type DrawOutput = ();
+    type EventInput<'a> = () where P: 'a;
+    type EventOutput = Option<Vec<u8>>;
 
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
@@ -151,16 +151,15 @@ impl<P: Platform> ViewScreen for Backup<P> {
         Self: 'a,
     {
         let mut request = None;
-        let mut state = None;
-        let mut entropy = None;
-        
+        target.clear(BinaryColor::Off)?;
+
         match self.state {
             BackupState::ShowSeed => {
                 self.draw_backup_screen(target)?;
             },
             BackupState::Message => {
                 message::draw(target, "Storing into flash...", true)?;
-                request = Some(UpdateRequest::Hidden);
+                request = Some(UpdateRequest::Invocate);
                 self.state = BackupState::Storing;
             },
             BackupState::Error => {
@@ -171,36 +170,43 @@ impl<P: Platform> ViewScreen for Backup<P> {
                 )?;
             },
             BackupState::Storing => {
-                entropy = Some(self.get_entropy().unwrap());
-                state = Some(UnitScreen::QRAddress);
-                request = Some(UpdateRequest::Slow);
             },
         }
 
-        Ok((EventResult { request, state }, entropy))
+        Ok((EventResult { request, state: None }, ()))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: ()) -> (EventResult, ()) 
+    fn handle_event_screen<'a>(&mut self, event: Event, _: ()) -> (EventResult, Self::EventOutput) 
     where
         Self: 'a
     {
         let mut state = None;
         let mut request = None;
+        let mut entropy = None;
 
-        if matches!(self.state, BackupState::ShowSeed) {
-            if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
-                match c {
-                    NavCommand::Left => {
-                        state = Some(core::mem::take(&mut self.prev_screen));
-                        request = Some(UpdateRequest::Fast);
-                    },
-                    NavCommand::Right => {
-                        self.state = BackupState::Message;
-                        request = Some(UpdateRequest::UltraFast);
+        match self.state {
+            BackupState::ShowSeed => {
+                if let Some(Some(c)) = self.navbar.handle_event(event, ()) {
+                    match c {
+                        NavCommand::Left => {
+                            state = Some(core::mem::take(&mut self.prev_screen));
+                            request = Some(UpdateRequest::Fast);
+                        },
+                        NavCommand::Right => {
+                            self.state = BackupState::Message;
+                            request = Some(UpdateRequest::UltraFast);
+                        }
                     }
                 }
-            }
+            },
+            BackupState::Storing => {
+                if matches!(event, Event::Invocation) {
+                    entropy = self.get_entropy();
+                    state = Some(UnitScreen::QRAddress);
+                    request = Some(UpdateRequest::Slow);
+                }
+            },
+            _ => {}
         }
-
-        (EventResult{ request, state }, ())
+        (EventResult{ request, state }, entropy)
     }
 }

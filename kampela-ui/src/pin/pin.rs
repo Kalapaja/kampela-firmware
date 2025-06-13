@@ -4,10 +4,10 @@ use alloc::vec::Vec;
 use std::vec::Vec;
 
 use embedded_graphics::{
-    pixelcolor::BinaryColor, prelude::{Drawable, DrawTarget, Point}, primitives::{Primitive, PrimitiveStyle}
+    pixelcolor::BinaryColor, prelude::{Drawable, DrawTarget}, primitives::{Primitive, PrimitiveStyle}
 };
 
-use crate::{message, uistate::UpdateRequest, widget::view::ViewScreen};
+use crate::{message, uistate::{Event, UpdateRequest}, widget::view::ViewScreen};
 use crate::uistate::EventResult;
 use crate::widget::view::View;
 use crate::platform::{PinCode, Platform};
@@ -95,8 +95,8 @@ impl<P> ViewScreen for Pincode<P> where
 {
     type DrawInput<'a> = &'a mut <P as Platform>::HAL where P: 'a;
     type DrawOutput = bool;
-    type TapInput<'a> = &'a PinCode where P: 'a;
-    type TapOutput = ();
+    type EventInput<'a> = &'a PinCode where P: 'a;
+    type EventOutput = ();
     fn draw_screen<'a, D>(&mut self, target: &mut D, h: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
@@ -117,32 +117,30 @@ impl<P> ViewScreen for Pincode<P> where
         }
 
         let t = self.switch_tapped();
-        let filled = if t {
-            PrimitiveStyle::with_fill(BinaryColor::On)
-        } else {
-            PrimitiveStyle::with_fill(BinaryColor::Off)
-        };
+        let filled = PrimitiveStyle::with_fill(BinaryColor::Off);
         target.bounding_box().into_styled(filled).draw(target)?;
-        
-        self.pindots.draw(target, (self.entered_nums.len(), t))?;
+        self.pindots.draw(target, self.entered_nums.len())?;
         self.pinpad.draw(target, (t, h))?;
 
         if t {
-            request = Some(UpdateRequest::UltraFast);
+            request = Some(UpdateRequest::UltraFastSelective);
         }
 
         Ok((EventResult { request, state }, false))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, pin: Self::TapInput<'a>) -> (EventResult, Self::TapOutput)
+    fn handle_event_screen<'a>(&mut self, event: Event, pin: Self::EventInput<'a>) -> (EventResult, Self::EventOutput)
     where Self: 'a {
         let state = None;
         let mut request = None;
         if !matches!(self.tapped, PinpadState::Initial) { // ignore taps until permutated
             return (EventResult{ request, state }, ());
         }
-        if let Some(b) = self.pinpad.handle_tap(point, ()) {
+        if !matches!(event, Event::Tap(_)) {
+            return (EventResult{ request, state }, ());
+        }
+        if let Some((b, r)) = self.pinpad.handle_event(event, ()) {
             self.tapped = PinpadState::Tapped;
-            request = Some(UpdateRequest::UltraFast);
+            request = Some(UpdateRequest::Part(r));
             self.push_entered(self.pinpad.buttons[b].num());
             self.check_pin(pin);
         }

@@ -1,78 +1,61 @@
 #[doc = "Register `STATUS` reader"]
-pub struct R(crate::R<STATUS_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<STATUS_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<STATUS_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<STATUS_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `SMULOCK` reader - SMU Lock"]
-pub type SMULOCK_R = crate::BitReader<SMULOCK_A>;
+pub type R = crate::R<StatusSpec>;
 #[doc = "SMU Lock\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum SMULOCK_A {
+pub enum Smulock {
     #[doc = "0: UNLOCKED"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: LOCKED"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<SMULOCK_A> for bool {
+impl From<Smulock> for bool {
     #[inline(always)]
-    fn from(variant: SMULOCK_A) -> Self {
+    fn from(variant: Smulock) -> Self {
         variant as u8 != 0
     }
 }
-impl SMULOCK_R {
+#[doc = "Field `SMULOCK` reader - SMU Lock"]
+pub type SmulockR = crate::BitReader<Smulock>;
+impl SmulockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> SMULOCK_A {
+    pub const fn variant(&self) -> Smulock {
         match self.bits {
-            false => SMULOCK_A::UNLOCKED,
-            true => SMULOCK_A::LOCKED,
+            false => Smulock::Unlocked,
+            true => Smulock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "UNLOCKED"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == SMULOCK_A::UNLOCKED
+        *self == Smulock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "LOCKED"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == SMULOCK_A::LOCKED
+        *self == Smulock::Locked
     }
 }
 #[doc = "Field `SMUPRGERR` reader - SMU Programming Error"]
-pub type SMUPRGERR_R = crate::BitReader<bool>;
+pub type SmuprgerrR = crate::BitReader;
 impl R {
     #[doc = "Bit 0 - SMU Lock"]
     #[inline(always)]
-    pub fn smulock(&self) -> SMULOCK_R {
-        SMULOCK_R::new((self.bits & 1) != 0)
+    pub fn smulock(&self) -> SmulockR {
+        SmulockR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - SMU Programming Error"]
     #[inline(always)]
-    pub fn smuprgerr(&self) -> SMUPRGERR_R {
-        SMUPRGERR_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn smuprgerr(&self) -> SmuprgerrR {
+        SmuprgerrR::new(((self.bits >> 1) & 1) != 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [status](index.html) module"]
-pub struct STATUS_SPEC;
-impl crate::RegisterSpec for STATUS_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct StatusSpec;
+impl crate::RegisterSpec for StatusSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [status::R](R) reader structure"]
-impl crate::Readable for STATUS_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`status::R`](R) reader structure"]
+impl crate::Readable for StatusSpec {}
 #[doc = "`reset()` method sets STATUS to value 0"]
-impl crate::Resettable for STATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for StatusSpec {}

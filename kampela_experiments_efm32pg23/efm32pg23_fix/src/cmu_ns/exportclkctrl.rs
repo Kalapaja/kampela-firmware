@@ -1,584 +1,557 @@
 #[doc = "Register `EXPORTCLKCTRL` reader"]
-pub struct R(crate::R<EXPORTCLKCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<EXPORTCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<EXPORTCLKCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<EXPORTCLKCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<ExportclkctrlSpec>;
 #[doc = "Register `EXPORTCLKCTRL` writer"]
-pub struct W(crate::W<EXPORTCLKCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<EXPORTCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<EXPORTCLKCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<EXPORTCLKCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `CLKOUTSEL0` reader - Clock Output Select 0"]
-pub type CLKOUTSEL0_R = crate::FieldReader<u8, CLKOUTSEL0_A>;
+pub type W = crate::W<ExportclkctrlSpec>;
 #[doc = "Clock Output Select 0\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CLKOUTSEL0_A {
+pub enum Clkoutsel0 {
     #[doc = "0: CLKOUT0 is not clocked"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: HCLK is clocking CLKOUT0"]
-    HCLK = 1,
+    Hclk = 1,
     #[doc = "2: EXPORTCLK is clocking CLKOUT0"]
-    HFEXPCLK = 2,
+    Hfexpclk = 2,
     #[doc = "3: ULFRCO is clocking CLKOUT0"]
-    ULFRCO = 3,
+    Ulfrco = 3,
     #[doc = "4: LFRCO is clocking CLKOUT0"]
-    LFRCO = 4,
+    Lfrco = 4,
     #[doc = "5: LFXO is clocking CLKOUT0"]
-    LFXO = 5,
+    Lfxo = 5,
     #[doc = "6: HFRCODPLL is clocking CLKOUT0"]
-    HFRCODPLL = 6,
+    Hfrcodpll = 6,
     #[doc = "7: HFXO is clocking CLKOUT0"]
-    HFXO = 7,
+    Hfxo = 7,
     #[doc = "8: FSRCO is clocking CLKOUT0"]
-    FSRCO = 8,
+    Fsrco = 8,
     #[doc = "9: HFRCOEM23 is clocking CLKOUT0"]
-    HFRCOEM23 = 9,
+    Hfrcoem23 = 9,
 }
-impl From<CLKOUTSEL0_A> for u8 {
+impl From<Clkoutsel0> for u8 {
     #[inline(always)]
-    fn from(variant: CLKOUTSEL0_A) -> Self {
+    fn from(variant: Clkoutsel0) -> Self {
         variant as _
     }
 }
-impl CLKOUTSEL0_R {
+impl crate::FieldSpec for Clkoutsel0 {
+    type Ux = u8;
+}
+impl crate::IsEnum for Clkoutsel0 {}
+#[doc = "Field `CLKOUTSEL0` reader - Clock Output Select 0"]
+pub type Clkoutsel0R = crate::FieldReader<Clkoutsel0>;
+impl Clkoutsel0R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CLKOUTSEL0_A> {
+    pub const fn variant(&self) -> Option<Clkoutsel0> {
         match self.bits {
-            0 => Some(CLKOUTSEL0_A::DISABLED),
-            1 => Some(CLKOUTSEL0_A::HCLK),
-            2 => Some(CLKOUTSEL0_A::HFEXPCLK),
-            3 => Some(CLKOUTSEL0_A::ULFRCO),
-            4 => Some(CLKOUTSEL0_A::LFRCO),
-            5 => Some(CLKOUTSEL0_A::LFXO),
-            6 => Some(CLKOUTSEL0_A::HFRCODPLL),
-            7 => Some(CLKOUTSEL0_A::HFXO),
-            8 => Some(CLKOUTSEL0_A::FSRCO),
-            9 => Some(CLKOUTSEL0_A::HFRCOEM23),
+            0 => Some(Clkoutsel0::Disabled),
+            1 => Some(Clkoutsel0::Hclk),
+            2 => Some(Clkoutsel0::Hfexpclk),
+            3 => Some(Clkoutsel0::Ulfrco),
+            4 => Some(Clkoutsel0::Lfrco),
+            5 => Some(Clkoutsel0::Lfxo),
+            6 => Some(Clkoutsel0::Hfrcodpll),
+            7 => Some(Clkoutsel0::Hfxo),
+            8 => Some(Clkoutsel0::Fsrco),
+            9 => Some(Clkoutsel0::Hfrcoem23),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
-    #[inline(always)]
-    pub fn is_disabled(&self) -> bool {
-        *self == CLKOUTSEL0_A::DISABLED
-    }
-    #[doc = "Checks if the value of the field is `HCLK`"]
-    #[inline(always)]
-    pub fn is_hclk(&self) -> bool {
-        *self == CLKOUTSEL0_A::HCLK
-    }
-    #[doc = "Checks if the value of the field is `HFEXPCLK`"]
-    #[inline(always)]
-    pub fn is_hfexpclk(&self) -> bool {
-        *self == CLKOUTSEL0_A::HFEXPCLK
-    }
-    #[doc = "Checks if the value of the field is `ULFRCO`"]
-    #[inline(always)]
-    pub fn is_ulfrco(&self) -> bool {
-        *self == CLKOUTSEL0_A::ULFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFRCO`"]
-    #[inline(always)]
-    pub fn is_lfrco(&self) -> bool {
-        *self == CLKOUTSEL0_A::LFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFXO`"]
-    #[inline(always)]
-    pub fn is_lfxo(&self) -> bool {
-        *self == CLKOUTSEL0_A::LFXO
-    }
-    #[doc = "Checks if the value of the field is `HFRCODPLL`"]
-    #[inline(always)]
-    pub fn is_hfrcodpll(&self) -> bool {
-        *self == CLKOUTSEL0_A::HFRCODPLL
-    }
-    #[doc = "Checks if the value of the field is `HFXO`"]
-    #[inline(always)]
-    pub fn is_hfxo(&self) -> bool {
-        *self == CLKOUTSEL0_A::HFXO
-    }
-    #[doc = "Checks if the value of the field is `FSRCO`"]
-    #[inline(always)]
-    pub fn is_fsrco(&self) -> bool {
-        *self == CLKOUTSEL0_A::FSRCO
-    }
-    #[doc = "Checks if the value of the field is `HFRCOEM23`"]
-    #[inline(always)]
-    pub fn is_hfrcoem23(&self) -> bool {
-        *self == CLKOUTSEL0_A::HFRCOEM23
-    }
-}
-#[doc = "Field `CLKOUTSEL0` writer - Clock Output Select 0"]
-pub type CLKOUTSEL0_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, EXPORTCLKCTRL_SPEC, u8, CLKOUTSEL0_A, 4, O>;
-impl<'a, const O: u8> CLKOUTSEL0_W<'a, O> {
     #[doc = "CLKOUT0 is not clocked"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::DISABLED)
+    pub fn is_disabled(&self) -> bool {
+        *self == Clkoutsel0::Disabled
     }
     #[doc = "HCLK is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn hclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::HCLK)
+    pub fn is_hclk(&self) -> bool {
+        *self == Clkoutsel0::Hclk
     }
     #[doc = "EXPORTCLK is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn hfexpclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::HFEXPCLK)
+    pub fn is_hfexpclk(&self) -> bool {
+        *self == Clkoutsel0::Hfexpclk
     }
     #[doc = "ULFRCO is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn ulfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::ULFRCO)
+    pub fn is_ulfrco(&self) -> bool {
+        *self == Clkoutsel0::Ulfrco
     }
     #[doc = "LFRCO is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn lfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::LFRCO)
+    pub fn is_lfrco(&self) -> bool {
+        *self == Clkoutsel0::Lfrco
     }
     #[doc = "LFXO is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn lfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::LFXO)
+    pub fn is_lfxo(&self) -> bool {
+        *self == Clkoutsel0::Lfxo
     }
     #[doc = "HFRCODPLL is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn hfrcodpll(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::HFRCODPLL)
+    pub fn is_hfrcodpll(&self) -> bool {
+        *self == Clkoutsel0::Hfrcodpll
     }
     #[doc = "HFXO is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn hfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::HFXO)
+    pub fn is_hfxo(&self) -> bool {
+        *self == Clkoutsel0::Hfxo
     }
     #[doc = "FSRCO is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn fsrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::FSRCO)
+    pub fn is_fsrco(&self) -> bool {
+        *self == Clkoutsel0::Fsrco
     }
     #[doc = "HFRCOEM23 is clocking CLKOUT0"]
     #[inline(always)]
-    pub fn hfrcoem23(self) -> &'a mut W {
-        self.variant(CLKOUTSEL0_A::HFRCOEM23)
+    pub fn is_hfrcoem23(&self) -> bool {
+        *self == Clkoutsel0::Hfrcoem23
     }
 }
-#[doc = "Field `CLKOUTSEL1` reader - Clock Output Select 1"]
-pub type CLKOUTSEL1_R = crate::FieldReader<u8, CLKOUTSEL1_A>;
+#[doc = "Field `CLKOUTSEL0` writer - Clock Output Select 0"]
+pub type Clkoutsel0W<'a, REG> = crate::FieldWriter<'a, REG, 4, Clkoutsel0>;
+impl<'a, REG> Clkoutsel0W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "CLKOUT0 is not clocked"]
+    #[inline(always)]
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Disabled)
+    }
+    #[doc = "HCLK is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn hclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Hclk)
+    }
+    #[doc = "EXPORTCLK is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn hfexpclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Hfexpclk)
+    }
+    #[doc = "ULFRCO is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn ulfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Ulfrco)
+    }
+    #[doc = "LFRCO is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn lfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Lfrco)
+    }
+    #[doc = "LFXO is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn lfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Lfxo)
+    }
+    #[doc = "HFRCODPLL is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn hfrcodpll(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Hfrcodpll)
+    }
+    #[doc = "HFXO is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn hfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Hfxo)
+    }
+    #[doc = "FSRCO is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn fsrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Fsrco)
+    }
+    #[doc = "HFRCOEM23 is clocking CLKOUT0"]
+    #[inline(always)]
+    pub fn hfrcoem23(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel0::Hfrcoem23)
+    }
+}
 #[doc = "Clock Output Select 1\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CLKOUTSEL1_A {
+pub enum Clkoutsel1 {
     #[doc = "0: CLKOUT1 is not clocked"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: HCLK is clocking CLKOUT1"]
-    HCLK = 1,
+    Hclk = 1,
     #[doc = "2: EXPORTCLK is clocking CLKOUT1"]
-    HFEXPCLK = 2,
+    Hfexpclk = 2,
     #[doc = "3: ULFRCO is clocking CLKOUT1"]
-    ULFRCO = 3,
+    Ulfrco = 3,
     #[doc = "4: LFRCO is clocking CLKOUT1"]
-    LFRCO = 4,
+    Lfrco = 4,
     #[doc = "5: LFXO is clocking CLKOUT1"]
-    LFXO = 5,
+    Lfxo = 5,
     #[doc = "6: HFRCODPLL is clocking CLKOUT1"]
-    HFRCODPLL = 6,
+    Hfrcodpll = 6,
     #[doc = "7: HFXO is clocking CLKOUT1"]
-    HFXO = 7,
+    Hfxo = 7,
     #[doc = "8: FSRCO is clocking CLKOUT1"]
-    FSRCO = 8,
+    Fsrco = 8,
     #[doc = "9: HFRCOEM23 is clocking CLKOUT1"]
-    HFRCOEM23 = 9,
+    Hfrcoem23 = 9,
 }
-impl From<CLKOUTSEL1_A> for u8 {
+impl From<Clkoutsel1> for u8 {
     #[inline(always)]
-    fn from(variant: CLKOUTSEL1_A) -> Self {
+    fn from(variant: Clkoutsel1) -> Self {
         variant as _
     }
 }
-impl CLKOUTSEL1_R {
+impl crate::FieldSpec for Clkoutsel1 {
+    type Ux = u8;
+}
+impl crate::IsEnum for Clkoutsel1 {}
+#[doc = "Field `CLKOUTSEL1` reader - Clock Output Select 1"]
+pub type Clkoutsel1R = crate::FieldReader<Clkoutsel1>;
+impl Clkoutsel1R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CLKOUTSEL1_A> {
+    pub const fn variant(&self) -> Option<Clkoutsel1> {
         match self.bits {
-            0 => Some(CLKOUTSEL1_A::DISABLED),
-            1 => Some(CLKOUTSEL1_A::HCLK),
-            2 => Some(CLKOUTSEL1_A::HFEXPCLK),
-            3 => Some(CLKOUTSEL1_A::ULFRCO),
-            4 => Some(CLKOUTSEL1_A::LFRCO),
-            5 => Some(CLKOUTSEL1_A::LFXO),
-            6 => Some(CLKOUTSEL1_A::HFRCODPLL),
-            7 => Some(CLKOUTSEL1_A::HFXO),
-            8 => Some(CLKOUTSEL1_A::FSRCO),
-            9 => Some(CLKOUTSEL1_A::HFRCOEM23),
+            0 => Some(Clkoutsel1::Disabled),
+            1 => Some(Clkoutsel1::Hclk),
+            2 => Some(Clkoutsel1::Hfexpclk),
+            3 => Some(Clkoutsel1::Ulfrco),
+            4 => Some(Clkoutsel1::Lfrco),
+            5 => Some(Clkoutsel1::Lfxo),
+            6 => Some(Clkoutsel1::Hfrcodpll),
+            7 => Some(Clkoutsel1::Hfxo),
+            8 => Some(Clkoutsel1::Fsrco),
+            9 => Some(Clkoutsel1::Hfrcoem23),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
-    #[inline(always)]
-    pub fn is_disabled(&self) -> bool {
-        *self == CLKOUTSEL1_A::DISABLED
-    }
-    #[doc = "Checks if the value of the field is `HCLK`"]
-    #[inline(always)]
-    pub fn is_hclk(&self) -> bool {
-        *self == CLKOUTSEL1_A::HCLK
-    }
-    #[doc = "Checks if the value of the field is `HFEXPCLK`"]
-    #[inline(always)]
-    pub fn is_hfexpclk(&self) -> bool {
-        *self == CLKOUTSEL1_A::HFEXPCLK
-    }
-    #[doc = "Checks if the value of the field is `ULFRCO`"]
-    #[inline(always)]
-    pub fn is_ulfrco(&self) -> bool {
-        *self == CLKOUTSEL1_A::ULFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFRCO`"]
-    #[inline(always)]
-    pub fn is_lfrco(&self) -> bool {
-        *self == CLKOUTSEL1_A::LFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFXO`"]
-    #[inline(always)]
-    pub fn is_lfxo(&self) -> bool {
-        *self == CLKOUTSEL1_A::LFXO
-    }
-    #[doc = "Checks if the value of the field is `HFRCODPLL`"]
-    #[inline(always)]
-    pub fn is_hfrcodpll(&self) -> bool {
-        *self == CLKOUTSEL1_A::HFRCODPLL
-    }
-    #[doc = "Checks if the value of the field is `HFXO`"]
-    #[inline(always)]
-    pub fn is_hfxo(&self) -> bool {
-        *self == CLKOUTSEL1_A::HFXO
-    }
-    #[doc = "Checks if the value of the field is `FSRCO`"]
-    #[inline(always)]
-    pub fn is_fsrco(&self) -> bool {
-        *self == CLKOUTSEL1_A::FSRCO
-    }
-    #[doc = "Checks if the value of the field is `HFRCOEM23`"]
-    #[inline(always)]
-    pub fn is_hfrcoem23(&self) -> bool {
-        *self == CLKOUTSEL1_A::HFRCOEM23
-    }
-}
-#[doc = "Field `CLKOUTSEL1` writer - Clock Output Select 1"]
-pub type CLKOUTSEL1_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, EXPORTCLKCTRL_SPEC, u8, CLKOUTSEL1_A, 4, O>;
-impl<'a, const O: u8> CLKOUTSEL1_W<'a, O> {
     #[doc = "CLKOUT1 is not clocked"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::DISABLED)
+    pub fn is_disabled(&self) -> bool {
+        *self == Clkoutsel1::Disabled
     }
     #[doc = "HCLK is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn hclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::HCLK)
+    pub fn is_hclk(&self) -> bool {
+        *self == Clkoutsel1::Hclk
     }
     #[doc = "EXPORTCLK is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn hfexpclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::HFEXPCLK)
+    pub fn is_hfexpclk(&self) -> bool {
+        *self == Clkoutsel1::Hfexpclk
     }
     #[doc = "ULFRCO is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn ulfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::ULFRCO)
+    pub fn is_ulfrco(&self) -> bool {
+        *self == Clkoutsel1::Ulfrco
     }
     #[doc = "LFRCO is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn lfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::LFRCO)
+    pub fn is_lfrco(&self) -> bool {
+        *self == Clkoutsel1::Lfrco
     }
     #[doc = "LFXO is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn lfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::LFXO)
+    pub fn is_lfxo(&self) -> bool {
+        *self == Clkoutsel1::Lfxo
     }
     #[doc = "HFRCODPLL is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn hfrcodpll(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::HFRCODPLL)
+    pub fn is_hfrcodpll(&self) -> bool {
+        *self == Clkoutsel1::Hfrcodpll
     }
     #[doc = "HFXO is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn hfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::HFXO)
+    pub fn is_hfxo(&self) -> bool {
+        *self == Clkoutsel1::Hfxo
     }
     #[doc = "FSRCO is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn fsrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::FSRCO)
+    pub fn is_fsrco(&self) -> bool {
+        *self == Clkoutsel1::Fsrco
     }
     #[doc = "HFRCOEM23 is clocking CLKOUT1"]
     #[inline(always)]
-    pub fn hfrcoem23(self) -> &'a mut W {
-        self.variant(CLKOUTSEL1_A::HFRCOEM23)
+    pub fn is_hfrcoem23(&self) -> bool {
+        *self == Clkoutsel1::Hfrcoem23
     }
 }
-#[doc = "Field `CLKOUTSEL2` reader - Clock Output Select 2"]
-pub type CLKOUTSEL2_R = crate::FieldReader<u8, CLKOUTSEL2_A>;
+#[doc = "Field `CLKOUTSEL1` writer - Clock Output Select 1"]
+pub type Clkoutsel1W<'a, REG> = crate::FieldWriter<'a, REG, 4, Clkoutsel1>;
+impl<'a, REG> Clkoutsel1W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "CLKOUT1 is not clocked"]
+    #[inline(always)]
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Disabled)
+    }
+    #[doc = "HCLK is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn hclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Hclk)
+    }
+    #[doc = "EXPORTCLK is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn hfexpclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Hfexpclk)
+    }
+    #[doc = "ULFRCO is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn ulfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Ulfrco)
+    }
+    #[doc = "LFRCO is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn lfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Lfrco)
+    }
+    #[doc = "LFXO is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn lfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Lfxo)
+    }
+    #[doc = "HFRCODPLL is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn hfrcodpll(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Hfrcodpll)
+    }
+    #[doc = "HFXO is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn hfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Hfxo)
+    }
+    #[doc = "FSRCO is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn fsrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Fsrco)
+    }
+    #[doc = "HFRCOEM23 is clocking CLKOUT1"]
+    #[inline(always)]
+    pub fn hfrcoem23(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel1::Hfrcoem23)
+    }
+}
 #[doc = "Clock Output Select 2\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CLKOUTSEL2_A {
+pub enum Clkoutsel2 {
     #[doc = "0: CLKOUT2 is not clocked"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: HCLK is clocking CLKOUT2"]
-    HCLK = 1,
+    Hclk = 1,
     #[doc = "2: EXPORTCLK is clocking CLKOUT2"]
-    HFEXPCLK = 2,
+    Hfexpclk = 2,
     #[doc = "3: ULFRCO is clocking CLKOUT2"]
-    ULFRCO = 3,
+    Ulfrco = 3,
     #[doc = "4: LFRCO is clocking CLKOUT2"]
-    LFRCO = 4,
+    Lfrco = 4,
     #[doc = "5: LFXO is clocking CLKOUT2"]
-    LFXO = 5,
+    Lfxo = 5,
     #[doc = "6: HFRCODPLL is clocking CLKOUT2"]
-    HFRCODPLL = 6,
+    Hfrcodpll = 6,
     #[doc = "7: HFXO is clocking CLKOUT2"]
-    HFXO = 7,
+    Hfxo = 7,
     #[doc = "8: FSRCO is clocking CLKOUT2"]
-    FSRCO = 8,
+    Fsrco = 8,
     #[doc = "9: HFRCOEM23 is clocking CLKOUT2"]
-    HFRCOEM23 = 9,
+    Hfrcoem23 = 9,
 }
-impl From<CLKOUTSEL2_A> for u8 {
+impl From<Clkoutsel2> for u8 {
     #[inline(always)]
-    fn from(variant: CLKOUTSEL2_A) -> Self {
+    fn from(variant: Clkoutsel2) -> Self {
         variant as _
     }
 }
-impl CLKOUTSEL2_R {
+impl crate::FieldSpec for Clkoutsel2 {
+    type Ux = u8;
+}
+impl crate::IsEnum for Clkoutsel2 {}
+#[doc = "Field `CLKOUTSEL2` reader - Clock Output Select 2"]
+pub type Clkoutsel2R = crate::FieldReader<Clkoutsel2>;
+impl Clkoutsel2R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CLKOUTSEL2_A> {
+    pub const fn variant(&self) -> Option<Clkoutsel2> {
         match self.bits {
-            0 => Some(CLKOUTSEL2_A::DISABLED),
-            1 => Some(CLKOUTSEL2_A::HCLK),
-            2 => Some(CLKOUTSEL2_A::HFEXPCLK),
-            3 => Some(CLKOUTSEL2_A::ULFRCO),
-            4 => Some(CLKOUTSEL2_A::LFRCO),
-            5 => Some(CLKOUTSEL2_A::LFXO),
-            6 => Some(CLKOUTSEL2_A::HFRCODPLL),
-            7 => Some(CLKOUTSEL2_A::HFXO),
-            8 => Some(CLKOUTSEL2_A::FSRCO),
-            9 => Some(CLKOUTSEL2_A::HFRCOEM23),
+            0 => Some(Clkoutsel2::Disabled),
+            1 => Some(Clkoutsel2::Hclk),
+            2 => Some(Clkoutsel2::Hfexpclk),
+            3 => Some(Clkoutsel2::Ulfrco),
+            4 => Some(Clkoutsel2::Lfrco),
+            5 => Some(Clkoutsel2::Lfxo),
+            6 => Some(Clkoutsel2::Hfrcodpll),
+            7 => Some(Clkoutsel2::Hfxo),
+            8 => Some(Clkoutsel2::Fsrco),
+            9 => Some(Clkoutsel2::Hfrcoem23),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
-    #[inline(always)]
-    pub fn is_disabled(&self) -> bool {
-        *self == CLKOUTSEL2_A::DISABLED
-    }
-    #[doc = "Checks if the value of the field is `HCLK`"]
-    #[inline(always)]
-    pub fn is_hclk(&self) -> bool {
-        *self == CLKOUTSEL2_A::HCLK
-    }
-    #[doc = "Checks if the value of the field is `HFEXPCLK`"]
-    #[inline(always)]
-    pub fn is_hfexpclk(&self) -> bool {
-        *self == CLKOUTSEL2_A::HFEXPCLK
-    }
-    #[doc = "Checks if the value of the field is `ULFRCO`"]
-    #[inline(always)]
-    pub fn is_ulfrco(&self) -> bool {
-        *self == CLKOUTSEL2_A::ULFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFRCO`"]
-    #[inline(always)]
-    pub fn is_lfrco(&self) -> bool {
-        *self == CLKOUTSEL2_A::LFRCO
-    }
-    #[doc = "Checks if the value of the field is `LFXO`"]
-    #[inline(always)]
-    pub fn is_lfxo(&self) -> bool {
-        *self == CLKOUTSEL2_A::LFXO
-    }
-    #[doc = "Checks if the value of the field is `HFRCODPLL`"]
-    #[inline(always)]
-    pub fn is_hfrcodpll(&self) -> bool {
-        *self == CLKOUTSEL2_A::HFRCODPLL
-    }
-    #[doc = "Checks if the value of the field is `HFXO`"]
-    #[inline(always)]
-    pub fn is_hfxo(&self) -> bool {
-        *self == CLKOUTSEL2_A::HFXO
-    }
-    #[doc = "Checks if the value of the field is `FSRCO`"]
-    #[inline(always)]
-    pub fn is_fsrco(&self) -> bool {
-        *self == CLKOUTSEL2_A::FSRCO
-    }
-    #[doc = "Checks if the value of the field is `HFRCOEM23`"]
-    #[inline(always)]
-    pub fn is_hfrcoem23(&self) -> bool {
-        *self == CLKOUTSEL2_A::HFRCOEM23
-    }
-}
-#[doc = "Field `CLKOUTSEL2` writer - Clock Output Select 2"]
-pub type CLKOUTSEL2_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, EXPORTCLKCTRL_SPEC, u8, CLKOUTSEL2_A, 4, O>;
-impl<'a, const O: u8> CLKOUTSEL2_W<'a, O> {
     #[doc = "CLKOUT2 is not clocked"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::DISABLED)
+    pub fn is_disabled(&self) -> bool {
+        *self == Clkoutsel2::Disabled
     }
     #[doc = "HCLK is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn hclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::HCLK)
+    pub fn is_hclk(&self) -> bool {
+        *self == Clkoutsel2::Hclk
     }
     #[doc = "EXPORTCLK is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn hfexpclk(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::HFEXPCLK)
+    pub fn is_hfexpclk(&self) -> bool {
+        *self == Clkoutsel2::Hfexpclk
     }
     #[doc = "ULFRCO is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn ulfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::ULFRCO)
+    pub fn is_ulfrco(&self) -> bool {
+        *self == Clkoutsel2::Ulfrco
     }
     #[doc = "LFRCO is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn lfrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::LFRCO)
+    pub fn is_lfrco(&self) -> bool {
+        *self == Clkoutsel2::Lfrco
     }
     #[doc = "LFXO is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn lfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::LFXO)
+    pub fn is_lfxo(&self) -> bool {
+        *self == Clkoutsel2::Lfxo
     }
     #[doc = "HFRCODPLL is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn hfrcodpll(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::HFRCODPLL)
+    pub fn is_hfrcodpll(&self) -> bool {
+        *self == Clkoutsel2::Hfrcodpll
     }
     #[doc = "HFXO is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn hfxo(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::HFXO)
+    pub fn is_hfxo(&self) -> bool {
+        *self == Clkoutsel2::Hfxo
     }
     #[doc = "FSRCO is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn fsrco(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::FSRCO)
+    pub fn is_fsrco(&self) -> bool {
+        *self == Clkoutsel2::Fsrco
     }
     #[doc = "HFRCOEM23 is clocking CLKOUT2"]
     #[inline(always)]
-    pub fn hfrcoem23(self) -> &'a mut W {
-        self.variant(CLKOUTSEL2_A::HFRCOEM23)
+    pub fn is_hfrcoem23(&self) -> bool {
+        *self == Clkoutsel2::Hfrcoem23
+    }
+}
+#[doc = "Field `CLKOUTSEL2` writer - Clock Output Select 2"]
+pub type Clkoutsel2W<'a, REG> = crate::FieldWriter<'a, REG, 4, Clkoutsel2>;
+impl<'a, REG> Clkoutsel2W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "CLKOUT2 is not clocked"]
+    #[inline(always)]
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Disabled)
+    }
+    #[doc = "HCLK is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn hclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Hclk)
+    }
+    #[doc = "EXPORTCLK is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn hfexpclk(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Hfexpclk)
+    }
+    #[doc = "ULFRCO is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn ulfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Ulfrco)
+    }
+    #[doc = "LFRCO is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn lfrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Lfrco)
+    }
+    #[doc = "LFXO is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn lfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Lfxo)
+    }
+    #[doc = "HFRCODPLL is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn hfrcodpll(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Hfrcodpll)
+    }
+    #[doc = "HFXO is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn hfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Hfxo)
+    }
+    #[doc = "FSRCO is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn fsrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Fsrco)
+    }
+    #[doc = "HFRCOEM23 is clocking CLKOUT2"]
+    #[inline(always)]
+    pub fn hfrcoem23(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkoutsel2::Hfrcoem23)
     }
 }
 #[doc = "Field `PRESC` reader - EXPORTCLK Prescaler"]
-pub type PRESC_R = crate::FieldReader<u8, u8>;
+pub type PrescR = crate::FieldReader;
 #[doc = "Field `PRESC` writer - EXPORTCLK Prescaler"]
-pub type PRESC_W<'a, const O: u8> = crate::FieldWriter<'a, u32, EXPORTCLKCTRL_SPEC, u8, u8, 5, O>;
+pub type PrescW<'a, REG> = crate::FieldWriter<'a, REG, 5>;
 impl R {
     #[doc = "Bits 0:3 - Clock Output Select 0"]
     #[inline(always)]
-    pub fn clkoutsel0(&self) -> CLKOUTSEL0_R {
-        CLKOUTSEL0_R::new((self.bits & 0x0f) as u8)
+    pub fn clkoutsel0(&self) -> Clkoutsel0R {
+        Clkoutsel0R::new((self.bits & 0x0f) as u8)
     }
     #[doc = "Bits 8:11 - Clock Output Select 1"]
     #[inline(always)]
-    pub fn clkoutsel1(&self) -> CLKOUTSEL1_R {
-        CLKOUTSEL1_R::new(((self.bits >> 8) & 0x0f) as u8)
+    pub fn clkoutsel1(&self) -> Clkoutsel1R {
+        Clkoutsel1R::new(((self.bits >> 8) & 0x0f) as u8)
     }
     #[doc = "Bits 16:19 - Clock Output Select 2"]
     #[inline(always)]
-    pub fn clkoutsel2(&self) -> CLKOUTSEL2_R {
-        CLKOUTSEL2_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn clkoutsel2(&self) -> Clkoutsel2R {
+        Clkoutsel2R::new(((self.bits >> 16) & 0x0f) as u8)
     }
     #[doc = "Bits 24:28 - EXPORTCLK Prescaler"]
     #[inline(always)]
-    pub fn presc(&self) -> PRESC_R {
-        PRESC_R::new(((self.bits >> 24) & 0x1f) as u8)
+    pub fn presc(&self) -> PrescR {
+        PrescR::new(((self.bits >> 24) & 0x1f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:3 - Clock Output Select 0"]
     #[inline(always)]
-    #[must_use]
-    pub fn clkoutsel0(&mut self) -> CLKOUTSEL0_W<0> {
-        CLKOUTSEL0_W::new(self)
+    pub fn clkoutsel0(&mut self) -> Clkoutsel0W<ExportclkctrlSpec> {
+        Clkoutsel0W::new(self, 0)
     }
     #[doc = "Bits 8:11 - Clock Output Select 1"]
     #[inline(always)]
-    #[must_use]
-    pub fn clkoutsel1(&mut self) -> CLKOUTSEL1_W<8> {
-        CLKOUTSEL1_W::new(self)
+    pub fn clkoutsel1(&mut self) -> Clkoutsel1W<ExportclkctrlSpec> {
+        Clkoutsel1W::new(self, 8)
     }
     #[doc = "Bits 16:19 - Clock Output Select 2"]
     #[inline(always)]
-    #[must_use]
-    pub fn clkoutsel2(&mut self) -> CLKOUTSEL2_W<16> {
-        CLKOUTSEL2_W::new(self)
+    pub fn clkoutsel2(&mut self) -> Clkoutsel2W<ExportclkctrlSpec> {
+        Clkoutsel2W::new(self, 16)
     }
     #[doc = "Bits 24:28 - EXPORTCLK Prescaler"]
     #[inline(always)]
-    #[must_use]
-    pub fn presc(&mut self) -> PRESC_W<24> {
-        PRESC_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn presc(&mut self) -> PrescW<ExportclkctrlSpec> {
+        PrescW::new(self, 24)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [exportclkctrl](index.html) module"]
-pub struct EXPORTCLKCTRL_SPEC;
-impl crate::RegisterSpec for EXPORTCLKCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`exportclkctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`exportclkctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ExportclkctrlSpec;
+impl crate::RegisterSpec for ExportclkctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [exportclkctrl::R](R) reader structure"]
-impl crate::Readable for EXPORTCLKCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [exportclkctrl::W](W) writer structure"]
-impl crate::Writable for EXPORTCLKCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`exportclkctrl::R`](R) reader structure"]
+impl crate::Readable for ExportclkctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`exportclkctrl::W`](W) writer structure"]
+impl crate::Writable for ExportclkctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EXPORTCLKCTRL to value 0"]
-impl crate::Resettable for EXPORTCLKCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for ExportclkctrlSpec {}

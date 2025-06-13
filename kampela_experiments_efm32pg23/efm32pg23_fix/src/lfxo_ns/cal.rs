@@ -1,95 +1,51 @@
 #[doc = "Register `CAL` reader"]
-pub struct R(crate::R<CAL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CAL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CAL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CAL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CalSpec>;
 #[doc = "Register `CAL` writer"]
-pub struct W(crate::W<CAL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CAL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CAL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CAL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<CalSpec>;
 #[doc = "Field `CAPTUNE` reader - Internal Capacitance Tuning"]
-pub type CAPTUNE_R = crate::FieldReader<u8, u8>;
+pub type CaptuneR = crate::FieldReader;
 #[doc = "Field `CAPTUNE` writer - Internal Capacitance Tuning"]
-pub type CAPTUNE_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CAL_SPEC, u8, u8, 7, O>;
+pub type CaptuneW<'a, REG> = crate::FieldWriter<'a, REG, 7>;
 #[doc = "Field `GAIN` reader - LFXO Startup Gain"]
-pub type GAIN_R = crate::FieldReader<u8, u8>;
+pub type GainR = crate::FieldReader;
 #[doc = "Field `GAIN` writer - LFXO Startup Gain"]
-pub type GAIN_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CAL_SPEC, u8, u8, 2, O>;
+pub type GainW<'a, REG> = crate::FieldWriter<'a, REG, 2>;
 impl R {
     #[doc = "Bits 0:6 - Internal Capacitance Tuning"]
     #[inline(always)]
-    pub fn captune(&self) -> CAPTUNE_R {
-        CAPTUNE_R::new((self.bits & 0x7f) as u8)
+    pub fn captune(&self) -> CaptuneR {
+        CaptuneR::new((self.bits & 0x7f) as u8)
     }
     #[doc = "Bits 8:9 - LFXO Startup Gain"]
     #[inline(always)]
-    pub fn gain(&self) -> GAIN_R {
-        GAIN_R::new(((self.bits >> 8) & 3) as u8)
+    pub fn gain(&self) -> GainR {
+        GainR::new(((self.bits >> 8) & 3) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:6 - Internal Capacitance Tuning"]
     #[inline(always)]
-    #[must_use]
-    pub fn captune(&mut self) -> CAPTUNE_W<0> {
-        CAPTUNE_W::new(self)
+    pub fn captune(&mut self) -> CaptuneW<CalSpec> {
+        CaptuneW::new(self, 0)
     }
     #[doc = "Bits 8:9 - LFXO Startup Gain"]
     #[inline(always)]
-    #[must_use]
-    pub fn gain(&mut self) -> GAIN_W<8> {
-        GAIN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn gain(&mut self) -> GainW<CalSpec> {
+        GainW::new(self, 8)
     }
 }
-#[doc = "Do not write to this register unless CALBSY in SYNCBUSY register is low.\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [cal](index.html) module"]
-pub struct CAL_SPEC;
-impl crate::RegisterSpec for CAL_SPEC {
+#[doc = "Do not write to this register unless CALBSY in SYNCBUSY register is low.\n\nYou can [`read`](crate::Reg::read) this register and get [`cal::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cal::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CalSpec;
+impl crate::RegisterSpec for CalSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [cal::R](R) reader structure"]
-impl crate::Readable for CAL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [cal::W](W) writer structure"]
-impl crate::Writable for CAL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`cal::R`](R) reader structure"]
+impl crate::Readable for CalSpec {}
+#[doc = "`write(|w| ..)` method takes [`cal::W`](W) writer structure"]
+impl crate::Writable for CalSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CAL to value 0x0200"]
-impl crate::Resettable for CAL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0200;
+impl crate::Resettable for CalSpec {
+    const RESET_VALUE: u32 = 0x0200;
 }
