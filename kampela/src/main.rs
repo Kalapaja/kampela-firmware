@@ -15,8 +15,8 @@ use embedded_alloc::Heap;
 
 use kampela_system::{
     debug_display::burning_tank, devices::{
-        flash::flash_copy_to_psram, power::voltage, touch::{clear_touch_if, enable_touch_int}
-    }, parallel::{AsyncOperation, Threads}, peripherals::ldma_ch_timer::purge_ldma_nfc_buffers, CORE_PERIPHERALS, PERIPHERALS
+        flash::{init_flash_copy_to_psram, wait_flash_copy_to_psram}, power::{voltage, wait_for_energy}, touch::{clear_touch_if, enable_touch_int}
+    }, parallel::{AsyncOperation, Threads}, peripherals::{adc::adc_cmp_ien, ldma_ch_timer::purge_ldma_nfc_buffers}, CORE_PERIPHERALS, PERIPHERALS
 };
 use efm32pg23_fix::{Interrupt, Peripherals, NVIC, SYST};
 
@@ -31,6 +31,7 @@ mod touch;
 static HEAP: Heap = Heap::empty();
 
 use core::mem::MaybeUninit;
+
 const HEAP_SIZE: usize = 0x6500;
 static mut HEAP_MEM: [MaybeUninit<u8>; HEAP_SIZE] = [MaybeUninit::uninit(); HEAP_SIZE];
 
@@ -83,17 +84,24 @@ fn main() -> ! {
         NVIC::mask(Interrupt::GPIO_EVEN);
         NVIC::unpend(Interrupt::TIMER2);
         NVIC::mask(Interrupt::TIMER2);
+        NVIC::unpend(Interrupt::IADC);
+        NVIC::mask(Interrupt::IADC);
         unsafe {
             core_periph.NVIC.set_priority(Interrupt::LDMA, 3);
             core_periph.NVIC.set_priority(Interrupt::GPIO_EVEN, 5);
             core_periph.NVIC.set_priority(Interrupt::TIMER2, 4);
+            core_periph.NVIC.set_priority(Interrupt::SW0, 6);
+            core_periph.NVIC.set_priority(Interrupt::IADC, 7);
             NVIC::unmask(Interrupt::LDMA);
             NVIC::unmask(Interrupt::GPIO_EVEN);
             NVIC::unmask(Interrupt::TIMER2);
+            NVIC::unmask(Interrupt::SW0);
+            NVIC::unmask(Interrupt::IADC);
         }
     });
 
-    flash_copy_to_psram();
+    wait_for_energy();
+    //flash_copy_to_psram();
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 
     // Development: erase seed when Pilkki can't
@@ -122,7 +130,7 @@ fn main() -> ! {
         core_periph.SYST.clear_current();
         core_periph.SYST.enable_counter();
     });
-    
+
     let mut main_state = MainState::new(());//&nfc_buffer);
     loop {
         main_state.advance(());
@@ -130,14 +138,14 @@ fn main() -> ! {
 }
 
 enum MainStatus {
-    Init,
+    Init(Option<()>),
     NFCRead(NfcReceiver),
-    Display(Option<UI>)
+    Display(UI)
 }
 
 impl Default for MainStatus {
     fn default() -> Self {
-        MainStatus::Init
+        MainStatus::Init(None)
     }
 }
 
@@ -152,94 +160,93 @@ impl AsyncOperation for MainState {
     /// Start of UI.
     fn new(_: Self::Init) -> Self {
         clear_touch_if();
-
+        enable_touch_int();
         return Self {
-            threads: Threads::new(MainStatus::Init),
+            threads: Threads::new(MainStatus::Init(None)),
         }
     }
 
     /// Call in event loop to progress through Kampela states
     fn advance(&mut self, _: ()) {
         match self.threads.turn() {
-            MainStatus::Init => {
-                self.threads.switch(MainStatus::NFCRead(NfcReceiver::new()));
-                //cortex_m::asm::wfi();
-                self.threads.wind(MainStatus::Display(None));
+            MainStatus::Init(state) => {
+                match state {
+                    None => {
+                        *state = Some(());
+                        init_flash_copy_to_psram();
+                        self.threads.wind(MainStatus::NFCRead(NfcReceiver::new()));
+                    },
+                    Some(_) => {
+                        if wait_flash_copy_to_psram() { return }
+                        self.threads.switch(MainStatus::Display(UI::new(())));
+                    }
+                }
+
             },
             MainStatus::NFCRead(receiver) => {
-                if let Some(s) = receiver.advance() {
-                    match s {
-                        Err(e) => {
-                            match e {
-                                NfcError::InvalidAddress => {
+                match receiver.advance() {
+                    Err(e) => {
+                        match e {
+                            NfcError::InvalidAddress => {
+                                self.threads.try_change_any(|status| {
+                                    if let MainStatus::Display(ui) = status {
+                                        ui.handle_message("Invalid sender address".to_owned());
+                                    }
+                                });
+                            }
+                        }
+                        self.threads.sync();
+                    }
+                    Ok(s) => {
+                        match s {
+                            NfcState::Operational(i) => {
+                                if i > 0 {
                                     self.threads.try_change_any(|status| {
-                                        if let MainStatus::Display(Some(ui)) = status {
-                                            ui.handle_message("Invalid sender address".to_owned());
-                                        } else { return }
+                                        if let MainStatus::Display(ui) = status {
+                                            ui.handle_message("Receiving NFC packets...".to_owned());
+                                        }
                                     });
                                 }
-                            }
-                            self.threads.sync();
-                        }
-                        Ok(s) => {
-                            match s {
-                                NfcState::Operational(i) => {
-                                    if i == 1 {
+                            },
+                            NfcState::Done(r) => {
+                                match r {
+                                    NfcResult::Empty => {
+                                    },
+                                    NfcResult::DisplayAddress => {
                                         self.threads.try_change_any(|status| {
-                                            if let MainStatus::Display(Some(ui)) = status {
-                                                ui.handle_message("Receiving NFC packets...".to_owned());
-                                            } else { return }
+                                            if let MainStatus::Display(ui) = status {
+                                                ui.handle_address([0;76]);
+                                            }
                                         });
+                                    },
+                                    NfcResult::Transaction(transaction) => {
+                                        self.threads.try_change_any(|status| {
+                                            if let MainStatus::Display(ui) = status {
+                                                ui.handle_transaction(transaction.clone());
+                                            }
+                                        });
+                                    },
+                                    NfcResult::EthSignRequest(eth_sign_request) => {
+                                        let mut success = false;
+                                        self.threads.try_change_any(|status| {
+                                            if let MainStatus::Display(ui) = status {
+                                                if ui.update_is_pending() { return }
+                                                ui.handle_eth_sign_request(eth_sign_request.clone());
+                                                success = true;
+                                            }
+                                        });
+                                        if !success { return }
                                     }
-                                },
-                                NfcState::Done(r) => {
-                                    match r {
-                                        NfcResult::Empty => {
-                                            purge_ldma_nfc_buffers();
-                                            *receiver = NfcReceiver::new();
-                                        },
-                                        NfcResult::DisplayAddress => {
-                                            self.threads.try_change_any(|status| {
-                                                if let MainStatus::Display(Some(ui)) = status {
-                                                    ui.handle_address([0;76]);
-                                                } else { return }
-                                            });
-                                            self.threads.sync();
-                                        },
-                                        NfcResult::Transaction(transaction) => {
-                                            self.threads.try_change_any(|status| {
-                                                if let MainStatus::Display(Some(ui)) = status {
-                                                    ui.handle_transaction(transaction.clone());
-                                                } else { return }
-                                            });
-                                            self.threads.sync();
-                                        },
-                                        NfcResult::EthSignRequest(eth_sign_request) => {
-                                            self.threads.try_change_any(|status| {
-                                                if let MainStatus::Display(Some(ui)) = status {
-                                                    ui.handle_eth_sign_request(eth_sign_request.clone());
-                                                } else { return }
-                                            });
-                                            self.threads.sync();
-                                        }
-                                    }
-                                    enable_touch_int();
                                 }
+                                self.threads.sync();
                             }
                         }
                     }
                 }
             },
-            MainStatus::Display(state) => {
-                match state {
-                    None => {
-                        *state = Some(UI::new(()));
-                    },
-                    Some(ui) => {
-                        if ui.advance(()) == Some(false) {
-                            self.threads.hold();
-                        }
-                    }
+            MainStatus::Display(ui) => {
+                if ui.advance(()) == Some(false) {
+                    self.threads.hold();
                 }
             },
         }

@@ -16,6 +16,39 @@ pub fn read_adc() -> i32 {
     }) as i32
 }
 
+pub fn adc_cmp_ien() {
+    in_free(|peripherals| {
+        peripherals
+            .iadc0_s
+            .ien()
+            .write(|w_reg| w_reg.scancmp().set_bit());
+    });
+}
+
+pub fn adc_icmp(lt_value: u16, gt_value: u16) {
+    in_free(|peripherals| {
+        disable_adc(peripherals);
+        let gt_value = gt_value / 211 * (10000 >> 4);
+        let lt_value = lt_value / 211 * (10000 >> 4);
+        peripherals
+            .iadc0_s
+            .cmpthr()
+            .write(|w_reg| unsafe {
+                w_reg.adgt().bits(gt_value)
+                .adlt().bits(lt_value)
+            });
+        enable_adc(peripherals);
+        start_scan(peripherals);
+    })
+}
+
+pub fn start_scan(peripherals: &mut Peripherals) {
+    peripherals
+        .iadc0_s
+        .cmd()
+        .write(|w_reg| w_reg.scanstart().set_bit().timeren().set_bit());
+}
+
 /// Initialize ADC
 ///
 /// assumes that CMU clock is enabled and does not check it
@@ -51,11 +84,6 @@ pub fn init_adc(peripherals: &mut Peripherals) {
         .timer()
         .write(|w_reg| unsafe { w_reg.timer().bits(950) });
 
-    peripherals
-        .iadc0_s
-        .cmpthr()
-        .reset();
-
     cfg0_set(peripherals);
     
     cfg1_set(peripherals);
@@ -81,10 +109,7 @@ pub fn init_adc(peripherals: &mut Peripherals) {
         .ctrl()
         .write(|w_reg| w_reg.em2dbgen().set_bit());
 
-    peripherals
-        .iadc0_s
-        .cmd()
-        .write(|w_reg| w_reg.scanstart().set_bit().timeren().set_bit());
+    start_scan(peripherals);
 }
 
 /// Calibration data for ADC defived from factory values read from memory
@@ -258,7 +283,7 @@ fn init_adc_scan_reader(peripherals: &mut Peripherals) {
                 .portneg().gnd()
                 .portpos().porta()
                 .cfg().config0()
-                .cmp().clear_bit();
+                .cmp().set_bit();
             unsafe {
                 w_reg.pinpos().bits(0)
             }

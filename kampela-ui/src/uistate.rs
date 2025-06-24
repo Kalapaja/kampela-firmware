@@ -17,6 +17,9 @@ mod stdwrap {
     pub use std::vec::Vec;
 }
 
+use core::str::FromStr;
+
+use bitcoin::{bip32::{ChildNumber, DerivationPath, Xpriv}, secp256k1::SignOnly, Address, Network, PublicKey};
 use minicbor::data::Tag;
 use mnemonic_external::WordSet;
 use stdwrap::*;
@@ -34,10 +37,9 @@ use embedded_graphics::{
     Drawable,
 };
 
-use substrate_crypto_light::ecdsa::PairWithChainCode;
 use ur::ur;
 
-use crate::{dialog::{Dialog, DialogUnitScreenArgs}, display_def::*, pin::pin::Pincode, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
+use crate::{dialog::{Dialog, DialogUnitScreenArgs}, display_def::*, pin::pin::Pincode, platform::ErrorTransaction, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
 
 use crate::backup::Backup;
 
@@ -64,8 +66,6 @@ pub enum UpdateRequest {
 
 pub trait UpdateRequestMutate {
     fn propagate(&mut self, new_request: Self);
-
-    fn try_add(&mut self, new_request: Self);
 }
 
 impl UpdateRequestMutate for Option<UpdateRequest> {
@@ -73,12 +73,6 @@ impl UpdateRequestMutate for Option<UpdateRequest> {
         if let Some(r) = new_request {
             self.replace(r);
         }
-    }
-    fn try_add(&mut self, new_request: Self) {
-        if self.is_some() {
-            return
-        }
-        self.propagate(new_request);
     }
 }
 
@@ -119,12 +113,14 @@ pub enum Screen<P: Platform> {
     OnboardingBackup(Backup<P>),
     ShowMessage(String, Option<Box<dyn FnOnce() -> EventResult>>),
     ShowDialog(Dialog),
+    CheckEthTransaction,
     ShowTransaction(Transaction),
     QRSignature,
     QRAddress,
     Locked,
 }
 
+#[derive(Debug)]
 pub enum ScreenError {
     NoUnitForCurrentScreen
 }
@@ -135,7 +131,7 @@ impl<P: Platform> Screen<P> {
             Screen::OnboardingRestore(s) => Some(UnitScreen::OnboardingRestore(Some(s.get_buffer()))),
             Screen::OnboardingBackup(b) => Some(UnitScreen::OnboardingBackup(Some(b.get_entropy().unwrap()))),
             Screen::ShowMessage(s, r) => Some(UnitScreen::ShowMessage(s.to_owned(), r)),
-            Screen::ShowDialog(d) => d.get_unit_screen_args().map(|args| UnitScreen::ShowDialog(args)),
+            Screen::ShowDialog(d) => d.get_unit(),
             Screen::ShowTransaction(t) => Some(UnitScreen::ShowTransaction(t.get_page())),
             Screen::QRSignature => Some(UnitScreen::QRSignature),
             Screen::QRAddress => Some(UnitScreen::QRAddress),
@@ -157,7 +153,7 @@ impl<P: Platform> Default for Screen<P> {
 impl <P: Platform> UIState<P> {
     pub fn new(mut platform: P, h: &mut <P as Platform>::HAL) -> Self
         where <P as Platform>::AsWordList: Sized {
-        let (initial_screen, unlocked) = if platform.read_entropy() {(
+        let (initial_screen, unlocked) = if platform.read_seed() {(
             UnitScreen::ShowMessage(
                 "Generating Address".to_owned(),
                 Some(Box::new(|| EventResult{
@@ -194,13 +190,13 @@ impl <P: Platform> UIState<P> {
                         Some(e) => e,
                         None => P::generate_seed_entropy(h).to_vec(),
                     };
-                    self.screen.replace_getting_unit(Box::new(|unit| Screen::OnboardingBackup(Backup::new(entropy, unit))));
+                    self.screen.replace_getting_unit(Box::new(|unit| Screen::OnboardingBackup(Backup::new(entropy, unit)))).unwrap();
                 },
                 UnitScreen::ShowMessage(m, route) => {
                     self.screen = Screen::ShowMessage(m, route);
                 },
                 UnitScreen::ShowDialog(args) => {
-                    self.screen = Screen::ShowDialog(Dialog::new(args));
+                    self.screen = Screen::ShowDialog(Dialog::new(args, None));
                 },
                 UnitScreen::OnboardingRestoreOrGenerate => {
                     self.screen = Screen::ShowDialog(Dialog::new((
@@ -211,7 +207,7 @@ impl <P: Platform> UIState<P> {
                             Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
                         ),
                         false,
-                    )))
+                    ), Some(UnitScreen::OnboardingRestoreOrGenerate)))
                 },
                 UnitScreen::OnboardingRestore(p) => {
                     self.screen = Screen::OnboardingRestore(SeedEntry::new(p));
@@ -258,7 +254,7 @@ impl <P: Platform> UIState<P> {
             Screen::OnboardingBackup(ref mut a) => {
                 let (res, entropy) = a.handle_event_screen(event, ());
                 if let Some(e) = entropy {
-                    self.platform.store_entropy(&e);
+                    self.platform.store_seed(&e);
                 }
                 out = res.request;
                 new_screen = res.state;
@@ -268,6 +264,20 @@ impl <P: Platform> UIState<P> {
                 out = res.request;
                 new_screen = res.state;
             },
+            Screen::CheckEthTransaction => {
+                match self.platform.check_eth_transaction() {
+                    Err(ErrorTransaction::AddressUnmatch) => {
+                        new_screen = Some(UnitScreen::ShowMessage("Address does not match".to_owned(), None));
+                    },
+                    Err(ErrorTransaction::SourceFingerprintUnmatch) => {
+                        new_screen = Some(UnitScreen::ShowMessage("Source fingerprint does not match".to_owned(), None));
+                    },
+                    Ok(_) => {
+                        new_screen = Some(UnitScreen::ShowTransaction(TransactionPage::Eth));
+                    }
+                }
+                out = Some(UpdateRequest::UltraFast);
+            }
             Screen::ShowTransaction(ref mut a) => {
                 let (res, _) = a.handle_event_screen(event, ());
                 out = res.request;
@@ -304,9 +314,8 @@ impl <P: Platform> UIState<P> {
         where <P as Platform>::AsWordList: Sized {
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
-        let screen = Some(UnitScreen::ShowTransaction(TransactionPage::Eth));
-        self.switch_screen(screen, h);
-        Some(UpdateRequest::UltraFast)
+        self.screen = Screen::CheckEthTransaction;
+        Some(UpdateRequest::Invocate)
             // },
             // _ => {},
         // }
@@ -383,6 +392,7 @@ impl <P: Platform> UIState<P> {
                 out = res.request;
                 new_screen = res.state;
             }
+            Screen::CheckEthTransaction => {}
             Screen::ShowTransaction(ref mut a) => {
                 let (res, _) = a.draw_screen(
                     display,
@@ -404,13 +414,15 @@ impl <P: Platform> UIState<P> {
                 new_screen = res.state;
             },
             Screen::QRSignature => {
-                let code = ur::encode(&self.platform.eth_signature(), "eth-signature");
-                qr::draw(&code.as_bytes(), display)?
+                let (request_id, signature) = self.platform.eth_signature();
+                let cbor = eth_signature(signature, request_id.try_into().unwrap()).unwrap();
+                let code = ur::encode(&cbor, "eth-signature");
+                qr::draw(&code.to_uppercase().as_bytes(), display)?
             },
             Screen::QRAddress => {
-                let data = hdkey(&self.platform.pair().unwrap()).unwrap();
+                let data = hdkey(&self.platform.xpriv().unwrap(), &P::secp(h)).unwrap();
                 let code = ur::encode(&data, "crypto-hdkey");
-                qr::draw(&code.as_bytes(), display)?
+                qr::draw(&code.to_uppercase().as_bytes(), display)?
             },
         }
         self.switch_screen(new_screen, h);
@@ -418,36 +430,57 @@ impl <P: Platform> UIState<P> {
     }
 }
 
-fn hdkey(pair_with_chain_code: &PairWithChainCode) -> Result<Vec<u8>, minicbor::encode::Error<core::convert::Infallible>> {
-    let mut e = minicbor::Encoder::new(Vec::new());
-    let public = &pair_with_chain_code.public().unwrap().0;
-    let fingerprint = pair_with_chain_code.fingerprint().unwrap();
+fn hdkey(xpriv: &Xpriv, secp: &bitcoin::key::Secp256k1<SignOnly>) -> Result<Vec<u8>, minicbor::encode::Error<core::convert::Infallible>> {
+    let source_fingerprint = u32::from_be_bytes(xpriv.fingerprint(secp).to_bytes());
+    let path = DerivationPath::from_str("m/44'/60'/0'").unwrap();
+    let child_xpriv= xpriv.derive_priv(secp, &path).unwrap();
+    let depth = child_xpriv.depth;
+    let public = child_xpriv.to_keypair(secp).public_key().serialize();
+    let chain_code = child_xpriv.chain_code.as_bytes();
     
+    let mut e = minicbor::Encoder::new(Vec::new());
     e.tag(Tag::new(303))?.map(4)?
         // 3 key-data
-        .u8(3)?.bytes(public)?
+        .u8(3)?.bytes(&public)?
         // 4 chain-code
-        .u8(4)?.bytes(&pair_with_chain_code.chain_code())?
+        .u8(4)?.bytes(chain_code)?
         // 5 coin-info
         .u8(5)?.tag(Tag::new(305))?.map(1)?
             // type
             .u8(1)?.u8(0x3c)?
         // origin
-        .u8(6)?.tag(Tag::new(304))?.map(2)?
+        .u8(6)?.tag(Tag::new(304))?.map(3)?
             // components
-            .u8(1)?.array(8)?
-                .u8(44)?
-                .bool(true)?
-                .u8(60)?
-                .bool(true)?
-                .u8(0)?
-                .bool(true)?
-                .u8(0)?
-                .bool(false)?
+            .u8(1)?.array(path.len() as u64 * 2)?;
+
+    for child in path.into_iter() {
+        match child {
+            ChildNumber::Hardened { index } => {
+                e.u32(*index)?.bool(true)?;
+            },
+            ChildNumber::Normal { index } => {
+                e.u32(*index)?.bool(false)?;
+            }
+        };
+    };
+    e
             // source-fingerprint
-            .u8(2)?.u32(fingerprint)?;
-        // parent-fingerprint
-        //.u8(8)?.u32(fingerprint)?; // unnecessary
- 
+            .u8(2)?.u32(source_fingerprint)?
+            .u8(3)?.u8(depth)?;
+
+    Ok(e.into_writer())
+}
+
+
+fn eth_signature(signature: [u8; 65], request_id: [u8; 16]) -> Result<Vec<u8>, minicbor::encode::Error<core::convert::Infallible>> {
+    let mut e = minicbor::Encoder::new(Vec::new());
+    e.map(3)?
+        // 1 request-id
+        .u8(1)?.tag(Tag::new(37))?.bytes(&request_id)?
+        // 2 signature
+        .u8(2)?.bytes(&signature)?
+        // 3 origin
+        .u8(3)?.str("Kampela")?;
+
     Ok(e.into_writer())
 }

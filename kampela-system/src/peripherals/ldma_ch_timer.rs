@@ -2,8 +2,9 @@ use core::{cell::Cell, ptr::addr_of};
 
 use alloc::boxed::Box;
 use cortex_m::interrupt::{free, CriticalSection, Mutex};
+use efm32pg23_fix::{Interrupt, NVIC};
 
-use crate::{in_free, peripherals::ldma::*};
+use crate::{in_free, peripherals::ldma::*, CORE_PERIPHERALS};
 
 const XFERCNT_2047: u32 = (2048 - 1) << 4; // one less than desired 2048
 const DONEIEN_TRUE: u32 = 1 << 20;
@@ -31,8 +32,7 @@ pub fn ldma_nfc_interrupt() {
     });
     free(|cs| {
         ldma_nfc_switch_buffer(cs);
-    })
-
+    });
 }
 
 fn ldma_nfc_switch_buffer(cs: &CriticalSection) {
@@ -44,6 +44,8 @@ fn ldma_nfc_switch_buffer(cs: &CriticalSection) {
         } else {
             unreachable!("LDMA Timer0 channel buffer should always set in place while receiving")
         }
+        //trigger software interrupt for nfc collection
+        NVIC::pend(Interrupt::SW0);
     };
 }
 
@@ -66,9 +68,13 @@ pub fn ldma_nfc_set_next(new_next: NfcReceive) {
     })
 }
 
+pub fn init_ldma_nfc_buffers() {
+    LDMAchTimer0::set_static_cell(Some(ReceivableTIMER::NfcReceive(NfcReceive::new())));
+    ldma_nfc_set_next(NfcReceive::new());
+}
+
 pub fn purge_ldma_nfc_buffers() {
     free(|cs| {
-        while !LDMAchTimer0::done() {}
         LDMA_TIMER0_RECEIVABLE.borrow(cs).take();
         LDMA_TIMER0_NEXT.borrow(cs).take();
         LDMA_TIMER0_DONE.borrow(cs).take();

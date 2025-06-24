@@ -124,9 +124,9 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 12000;
-const FULL_REFRESH_POWER: i32 = 12000;
-const PART_REFRESH_POWER: i32 = 8000;
+const FAST_REFRESH_POWER: i32 = 6000;
+const FULL_REFRESH_POWER: i32 = 8000;
+const PART_REFRESH_POWER: i32 = 4000;
 
 const SEQUENCIAL_SELECTIVE_LIMIT: usize = 5; // more sequencial selective refreshes cause to leave traces, less cause artefacts
 /// Virtual display data storage
@@ -229,8 +229,6 @@ impl UpdateMode {
 
 pub trait UpdateModeMutate {
     fn propagate(&mut self, new_request: Self);
-
-    fn try_add(&mut self, new_request: Self);
 }
 
 impl UpdateModeMutate for Option<UpdateMode> {
@@ -238,12 +236,6 @@ impl UpdateModeMutate for Option<UpdateMode> {
         if let Some(r) = new_request {
             self.replace(r);
         }
-    }
-    fn try_add(&mut self, new_request: Self) {
-        if self.is_some() {
-            return
-        }
-        self.propagate(new_request);
     }
 }
 
@@ -303,6 +295,9 @@ impl FrameBuffer {
     pub fn propagate(&mut self, new_update_request: Option<UpdateMode>) {
         self.pending_update.propagate(new_update_request);
     }
+    pub fn update_is_pending(&mut self) -> bool {
+        self.pending_update.is_some()
+    }
     // trying to display latest possible request
     pub fn has_request(&mut self) -> bool {
         if let Some(u) = self.pending_update.take() {
@@ -353,6 +348,15 @@ impl FrameBuffer {
             self.state.change(DisplaySendState::Init(None));
         }
         t
+    }
+
+    pub fn send_is_tap_response(&self) -> bool {
+        match &self.update_state {
+            UpdateState::Send(m) => {
+                return m.tap_response
+            },
+            _ => false
+        }
     }
 
     pub fn end_send(&mut self) {
@@ -419,6 +423,10 @@ impl FrameBuffer {
             },
             _ => {}
         }
+    }
+
+    pub fn is_idle(&self) -> bool {
+        matches!(self.update_state, UpdateState::Idle)
     }
     
 }

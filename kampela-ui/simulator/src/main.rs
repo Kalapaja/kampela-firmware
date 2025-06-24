@@ -10,8 +10,8 @@ use embedded_graphics_simulator::{
 use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
-use substrate_crypto_light::ecdsa::Public;
-use mnemonic_external::regular::InternalWordList;
+use substrate_crypto_light::sr25519::Public;
+use mnemonic_external::{regular::InternalWordList, wordlist, AsWordList, Bits11, WordListElement, WordSet};
 
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
@@ -27,7 +27,7 @@ const MAX_TOUCH_QUEUE: usize = 2;
 use kampela_ui::{
     data_state::{AppStateInit, DataInit, NFCState, StorageState},
     display_def::*,
-    platform::{PinCode, Platform},
+    platform::{ErrorTransaction, PinCode, Platform},
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate},
 };
 
@@ -36,6 +36,12 @@ pub struct NfcTransactionData {
     pub call: String,
     pub extension: String,
     pub signature: [u8; 130],
+}
+
+#[derive(Debug)]
+pub struct NfcEthSignRequestData {
+    pub request_id: [u8; 16],
+    pub sign_data: [u8; 65],
 }
 
 #[derive(Parser, Debug)]
@@ -86,26 +92,39 @@ struct DesktopSimulator {
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     transaction: Option<NfcTransactionData>,
+    eth_sign_request_data: Option<NfcEthSignRequestData>,
     stored_entropy: Option<Vec<u8>>,
 }
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit) -> Self {
         let pin = [0; 4];
-        let transaction = match init_state.nfc {
-            NFCState::Empty => None,
-            NFCState::Transaction => Some(NfcTransactionData{
+        let (transaction, eth_sign_request_data) = match init_state.nfc {
+            NFCState::Empty => (None, None),
+            NFCState::Transaction => (Some(NfcTransactionData{
                 call: String::from("Hello, this is a transaction!"),
                 extension: String::from("Hello, this is a transaction!"),
                 signature: [0u8; 130],
-            }),
+            }), None),
+            NFCState::EthTransaction => (None, Some(NfcEthSignRequestData{
+                request_id: [0u8; 16],
+                sign_data: [0u8; 65]
+            }))
         };
+        let mnemonic = [];
+        let wordlist = Self::get_wordlist();
+        let stored_entropy = WordSet{
+            bits11_set: mnemonic.iter().map(|w| wordlist.bits11_for_word(*w).unwrap()).collect::<Vec<Bits11>>()
+        }
+            .to_entropy()
+            .ok();
         Self {
             pin,
             entropy: None,
             address: None,
-            transaction: transaction,
-            stored_entropy: None,
+            transaction,
+            eth_sign_request_data,
+            stored_entropy,
         }
     }
 }
@@ -114,6 +133,7 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
     type NfcTransaction = NfcTransactionData;
+    type NfcEthSignRequest = NfcEthSignRequestData;
     type AsWordList = InternalWordList;
 
     fn get_wordlist() -> Self::AsWordList {
@@ -137,13 +157,14 @@ impl Platform for DesktopSimulator {
         println!("entropy stored (not really, this is emulator)");
     }
 
-    fn read_entropy(&mut self) {
+    fn read_entropy(&mut self) -> bool {
         self.entropy = self.stored_entropy.clone();
         println!("entropy read from emulated storage: {:?}", &self.entropy);
+        self.entropy.is_some()
     }
 
     fn public(&self) -> Option<Public> {
-        self.pair().map(|pair| pair.public().unwrap())
+        self.pair().map(|pair| pair.public())
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
@@ -156,6 +177,10 @@ impl Platform for DesktopSimulator {
 
     fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
         self.transaction = Some(transaction);
+    }
+
+    fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest) {
+        self.eth_sign_request_data = Some(sign_request);
     }
 
     fn call(&mut self) -> Option<String> {
@@ -172,10 +197,33 @@ impl Platform for DesktopSimulator {
         }
     }
 
+    fn ethereum(&mut self) -> Option<String> {
+        match self.eth_sign_request_data {
+            Some(ref a) => {
+                let mut out = hex::encode(a.sign_data);
+                out.push_str("\n");
+                out.push_str(&hex::encode(a.request_id));
+                Some(out)
+            },
+            None => None,
+        }
+    }
+
+    fn check_address_and_fingerprint_transaction(&self) -> Result<(), ErrorTransaction> {
+        Ok(())
+    }
+
     fn signature(&mut self) -> [u8; 130] {
         match self.transaction {
             Some(ref a) => a.signature,
             None =>  panic!("qr not ready!"),
+        }
+    }
+
+    fn eth_signature(&mut self) -> ([u8; 16], [u8; 65]) {
+        match self.eth_sign_request_data {
+            Some(ref a) => (a.request_id, a.sign_data),
+            None => panic!("qr not ready!"),
         }
     }
 

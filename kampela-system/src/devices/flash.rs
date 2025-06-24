@@ -17,21 +17,31 @@ pub enum FlashErr {
     WriteNotMatch
 }
 
-pub fn flash_copy_to_psram() {
+pub fn init_flash_copy_to_psram() {
     in_free(|peripherals| {
         flash_wakeup(peripherals);
         flash_wait_ready(peripherals);
         psram_reset(peripherals);
     });
     LDMAchUSART0Rx::set_static_cell(Some(ReceivableUSART::FlashPSRamCopy(FlashPSRamCopy::new())));
-    while !LDMAchUSART0Rx::done() {}
-    LDMAchUSART0Rx::take_static_cell();
-    in_free(|peripherals| {
-        flash_sleep(peripherals);
-    });
+}
+
+pub fn wait_flash_copy_to_psram() -> bool {
+    if LDMAchUSART0Rx::done() {
+        LDMAchUSART0Rx::take_static_cell();
+        in_free(|peripherals| {
+            flash_sleep(peripherals);
+        });
+        false
+    } else {
+        true
+    }
 }
 
 pub fn store_data<const N: usize>(addr: u32, payload: &[u8; N]) -> Result<(), FlashErr> {
+    in_free(|peripherals| {
+        peripherals.usart0_s.cmd().write(|w_reg| w_reg.clearrx().set_bit());
+    });
     let mut data = [0u8; N];
     let mut read_data_chunk = [0u8; PAGE_SIZE];
     let initial_addr = addr / PAGE_SIZE as u32 * PAGE_SIZE as u32;
@@ -113,13 +123,9 @@ pub fn read_encoded_entropy() -> Option<Protected> {
     }
     match data[0] {
         0 => None,
-        16 | 20 | 24 | 28 | 32 => {
-            Some(Protected{0: data})
-        },
         255 => None,
         _ => {
-            erase_data(0, 1);
-            panic!("Seed storage corrupted! Wiping seed...");
+            Some(Protected{0: data})
         },
     }
 }

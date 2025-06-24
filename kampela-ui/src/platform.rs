@@ -2,18 +2,27 @@
 
 #[cfg(not(feature="std"))]
 use alloc::{string::String, vec::Vec};
+use bitcoin::{bip32::Xpriv, key::Secp256k1, secp256k1::SignOnly, NetworkKind};
+use sha2::Sha512;
+use hmac::Hmac;
+use pbkdf2::pbkdf2;
 #[cfg(feature="std")]
 use std::{string::String, vec::Vec};
 
 use rand::{CryptoRng, Rng};
 
-use substrate_crypto_light::ecdsa::{ChainCode, PairWithChainCode, Public};
+use substrate_crypto_light::{common::{entropy_to_big_seed, BIG_SEED_LEN, HASH_256_LEN}, sr25519::{Pair, Public}};
 use substrate_parser::{TransactionUnmarkedParsed, ShortSpecs};
 
-use mnemonic_external::AsWordList;
+use mnemonic_external::{AsWordList, WordSet};
 
 pub type PinCode = [u8; 4];
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
+
+pub enum ErrorTransaction {
+    AddressUnmatch,
+    SourceFingerprintUnmatch,
+}
 
 /// Implement this on platform to make crate work
 pub trait Platform {
@@ -45,17 +54,17 @@ pub trait Platform {
     /// Device-specific "global" storage and management of pincode state RW
     fn pin_mut(&mut self) -> &mut PinCode;
 
-    /// Put entropy in flash
-    fn store_entropy(&mut self, e: &[u8]);
+    /// Put seed in flash
+    fn store_seed(&mut self, e: &[u8]);
 
-    /// Read entropy from flash
-    fn read_entropy(&mut self) -> bool;
+    /// Read seed from flash
+    fn read_seed(&mut self) -> bool;
 
     /// Getter for public address
     fn public(&self) -> Option<Public>;
     
     /// Getter for seed
-    fn entropy(&self) -> Option<Vec<u8>>;
+    fn seed(&self) -> Option<Vec<u8>>;
 
     fn set_address(&mut self, addr: [u8; 76]);
 
@@ -71,11 +80,13 @@ pub trait Platform {
 
     fn signature(&mut self) -> [u8; 130];
 
-    fn eth_signature(&mut self) -> Vec<u8>;
+    fn eth_signature(&mut self) -> ([u8;16], [u8; 65]);
 
     fn address(&mut self) -> &[u8; 76];
 
     //----derivatives----
+
+    fn check_eth_transaction(&self) -> Result<(), ErrorTransaction>;
 
     fn generate_seed_entropy(h: &mut Self::HAL) -> [u8; ENTROPY_LEN] {
         let mut entropy: [u8; ENTROPY_LEN]= [0; ENTROPY_LEN];
@@ -83,11 +94,38 @@ pub trait Platform {
         entropy
     }
 
-    fn pair(&self) -> Option<PairWithChainCode> {
-        let e = self.entropy()?;
+    fn pair(&self) -> Option<Pair> {
+        let e = self.seed()?;  // not entropy, shall get pair from seed
         if e.is_empty() { None } else {
-            PairWithChainCode::from_entropy_and_pwd(&e, "").ok()
+            Pair::from_entropy_and_pwd(&e, "").ok()
         }
+    }
+
+    fn xpriv(&self) -> Option<Xpriv> {
+        Xpriv::new_master(NetworkKind::Test, &self.seed()?).ok()
+    }
+
+    fn secp(h: &mut Self::HAL) -> Secp256k1<SignOnly> {
+        let mut secp = Secp256k1::<SignOnly>::gen_new();
+        let mut seed = [0u8; 32];
+        Self::rng(h).fill(&mut seed);
+        secp.seeded_randomize(&seed);
+        secp
+    }
+
+    fn from_entropy_to_eth_seed(entropy: &[u8]) -> [u8; 64] {
+        let wordlist = Self::get_wordlist();
+        let a = WordSet::from_entropy(entropy).unwrap();
+        let mnemonic = a.to_phrase(&wordlist).unwrap();
+
+        let password = "";
+        let mut salt = String::with_capacity(8 + password.len());
+        salt.push_str("mnemonic");
+        salt.push_str(password);
+    
+        let mut seed = [0u8; BIG_SEED_LEN];
+        pbkdf2::<Hmac<Sha512>>(mnemonic.as_bytes(), salt.as_bytes(), 2048, &mut seed).unwrap();
+        seed
     }
 
 }

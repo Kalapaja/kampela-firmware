@@ -1,6 +1,7 @@
 //! Operations with AES GCM keys by security element.
 
 use alloc::vec::Vec;
+use substrate_crypto_light::common::BIG_SEED_LEN;
 use core::ptr::addr_of;
 
 use efm32pg23_fix::Peripherals;
@@ -25,7 +26,7 @@ pub const AAD_LEN: usize = 4;
 
 pub const IV_LEN: usize = 12;
 
-pub const SECRET_MAX_LEN: usize = 33;
+pub const SECRET_MAX_LEN: usize = BIG_SEED_LEN;
 
 pub const KEYSPEC: u32 = 0b00001001000000000000000000100000;
 
@@ -40,7 +41,7 @@ pub struct ProtectedPair {
     pub public: Public,
 }
 
-pub fn encode_entropy(e: &[u8]) -> Protected {
+pub fn encode_seed(e: &[u8]) -> Protected {
     let mut protected = [0u8; ENCODED_LEN];
 
     let len = e.len();
@@ -71,7 +72,7 @@ pub fn encode_entropy(e: &[u8]) -> Protected {
     Protected{ 0: protected }
 }
 
-pub fn decode_entropy(protected: &Protected) -> Vec<u8> {
+pub fn decode_seed(protected: &Protected) -> Vec<u8> {
     let recovered_out = Out {
         data: protected.0[1..1 + SECRET_MAX_LEN].try_into().expect("static length"),
         len: protected.0[0] as usize,

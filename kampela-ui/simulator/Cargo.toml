@@ -7,8 +7,9 @@ edition = "2021"
 clap = { version = "4.2.1", features = ["derive"] }
 embedded-graphics-core = "0.3.3"
 embedded-graphics-simulator = { version = "0.3.0" }
+hex = {version = "0.4.3", default-features = false, features = ["alloc"] }
 mnemonic-external = { version = "0.1.0", default-features = false, features = ["sufficient-memory"] }
-substrate-crypto-light = { path = "../../../substrate-crypto-light", default-features = false, features = ["ecdsa"] }
+substrate-crypto-light = { version = "0.2.0", default-features = false, features = ["sr25519"] }
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

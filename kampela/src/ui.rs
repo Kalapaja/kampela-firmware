@@ -1,4 +1,6 @@
 //! Everything high-level related to interfacing with user
+use core::str::FromStr;
+
 use alloc::{borrow::ToOwned, string::String};
 use kampela_system::{
     devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
@@ -30,6 +32,9 @@ pub struct UI {
 }
 
 impl UI {
+    pub fn update_is_pending(&self) -> bool {
+        self.update_request.is_some()
+    }
     pub fn handle_message(&mut self, message: String) {
         self.update_request.propagate(self.state.handle_message(message, &mut ()));
     }
@@ -52,15 +57,19 @@ impl UI {
         self.update_request.propagate(self.state.handle_address(addr));
     }
 
-    fn update_request_to_display_mode(&mut self, is_tapped: bool) -> Option<UpdateMode> {
-        match self.update_request.take() {
+    fn update_request_to_display_mode(&mut self, is_tapped: bool) {
+        if self.frame_buffer.update_is_pending() {
+            return
+        }
+        let m = match self.update_request.take() {
             Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Bounds::new_fullscreen(), is_tapped)),
             Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Bounds::new_fullscreen(), is_tapped)),
             Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Bounds::new_fullscreen(), is_tapped)),
             Some(UpdateRequest::Part(r)) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::from_rectangle(r), is_tapped)),
             Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::new_fullscreen(), is_tapped)),
             _ => None
-        }
+        };
+        self.frame_buffer.propagate(m);
     }
 }
 
@@ -80,7 +89,7 @@ impl AsyncOperation for UI {
             update_request: Some(UpdateRequest::Fast),
             frame_buffer,
             ui_threads: Threads::<UIStatus, 2>::from([
-                UIStatus::UIUpdate(false),
+                UIStatus::UIUpdate(true), // first update should also has higher priority
                 UIStatus::BufferUpdate
             ])
         }
@@ -100,13 +109,15 @@ impl AsyncOperation for UI {
 
                 if matches!(self.update_request, Some(UpdateRequest::Invocate)) {
                     let u = self.state.handle_event(Event::Invocation, &mut ());
-                    if u.is_none() { *tapped = false; }
+                    if u.is_some() { *tapped = false; }
                     self.update_request.propagate(u);
                 };
 
                 let t = *tapped;
-                let m = self.update_request_to_display_mode(t);
-                self.frame_buffer.propagate(m);
+                self.update_request_to_display_mode(t);
+                if !self.frame_buffer.update_is_pending() && self.frame_buffer.frame_buffer.is_idle() {
+                    cortex_m::asm::wfi();
+                }
                 if t {
                     self.ui_threads.sync(); // no need to poll
                 }
@@ -137,6 +148,9 @@ impl FrameBufferOperation {
     fn propagate(&mut self, new_update_request: Option<UpdateMode>) {
         self.frame_buffer.propagate(new_update_request);
     }
+    fn update_is_pending(&mut self) -> bool {
+        self.frame_buffer.update_is_pending()
+    }
 }
 pub enum BufferState {
     UIRender(UIRender),
@@ -165,11 +179,17 @@ impl AsyncOperation for FrameBufferOperation {
         match self.state.turn() {
             BufferState::UIRender(ui_render) => {
                 let r = ui_render.advance((ui_state, &mut self.frame_buffer, &mut self.update_request));
-                if r == Some(true) && matches!(self.update_request, Some(UpdateRequest::Invocate)) {
-                    new_update_request.try_add(self.update_request.take()); // no need to wait for invocate request
-                }
-                if r == Some(true) && self.frame_buffer.can_send() {
-                    self.state.change(BufferState::DisplaySend);
+                if r == Some(true) {
+                    let a = matches!(self.update_request, Some(UpdateRequest::Invocate));
+                    if a && new_update_request.is_none() {
+                        new_update_request.propagate(self.update_request.take()); // no need to wait for invocate request
+                    }
+                    if self.frame_buffer.can_send() {
+                        self.state.change(BufferState::DisplaySend);
+                    }
+                    if self.frame_buffer.send_is_tap_response() { // do not interrupt tap response
+                        return Some(false)
+                    }
                 }
                 r
             },
@@ -179,7 +199,9 @@ impl AsyncOperation for FrameBufferOperation {
                     self.frame_buffer.end_send();
                     // lower priority for render update request
                     // propagate update request once per update
-                    new_update_request.try_add(self.update_request.take());
+                    if new_update_request.is_none() {
+                        new_update_request.propagate(self.update_request.take());
+                    }
                     self.state.change(BufferState::UIRender(UIRender::new(())));
                     return Some(false)
                 }

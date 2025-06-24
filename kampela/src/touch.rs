@@ -2,6 +2,8 @@ use core::cell::RefCell;
 
 use alloc::collections::vec_deque::VecDeque;
 use cortex_m::interrupt::{free, Mutex};
+use kampela_system::in_free;
+use kampela_system::peripherals::i2c::init_i2c;
 use kampela_system::peripherals::timers::Timer2;
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
 use lazy_static::lazy_static;
@@ -38,13 +40,17 @@ fn TIMER2() {
     free(|cs| {
         let mut touch = TOUCH_READER.borrow(cs).borrow_mut();
         loop {
-            match touch.advance(()).unwrap() {
-                None => { Timer2::load(1); break },
-                Some(None) => continue,
-                Some(Some(touch_data)) => {
+            match touch.advance(()) {
+                Ok(None) => { Timer2::load(1); break },
+                Ok(Some(None)) => continue,
+                Ok(Some(Some(touch_data))) => {
                     let mut touches = TOUCHES.borrow(cs).borrow_mut();
                     touches.try_push_touch_data(touch_data);
                     break
+                }
+                Err(_) => {
+                    // reinit i2c
+                    in_free(|peripherals| init_i2c(peripherals));
                 }
             }
         }

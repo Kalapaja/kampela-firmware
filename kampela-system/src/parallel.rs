@@ -173,16 +173,18 @@ impl<StateEnum, const CAPACITY: usize> Threads<StateEnum, CAPACITY> where
         }
         if let Some(i) = index_to_terminate {
             self.sync_any(i);
+            return true
         }
-        true
+        false
     }
 
-    /// Uses closure on every running thread, make sure the thread is safe to change from outside, match thread first
-    pub fn try_change_any<F: FnMut(&mut StateEnum)>(&mut self, mut closure: F) -> bool {
+    /// Uses closure on every running thread,
+    /// make sure the thread is safe to change from outside,
+    /// match thread first
+    pub fn try_change_any<F: FnMut(&mut StateEnum)>(&mut self, mut closure: F) {
         for thread in self.threads_pool.iter_mut() {
             closure(thread)
         }
-        true
     }
 
     /// Returns true until all matched treads are running

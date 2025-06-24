@@ -19,7 +19,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{uistate::{Event, EventResult}, widget::view::View};
+use crate::{uistate::{Event, EventResult, UnitScreen}, widget::view::View};
 use crate::widget::{view::{Widget, ViewScreen}, nav_bar::nav_bar::{NavBar, NavCommand, NAV_BAR_WIDGET}};
 
 use crate::display_def::*;
@@ -50,29 +50,25 @@ pub struct Dialog {
     routes: Option<(Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>)>,
     message: &'static str,
     negative: bool,
+    unit: Option<UnitScreen>,
 }
 
 impl Dialog {
     pub fn new(
-        args: DialogUnitScreenArgs
+        args: DialogUnitScreenArgs,
+        unit: Option<UnitScreen>,
     ) -> Self {
         Dialog{
             navbar: NavBar::new(args.1),
             routes: Some(args.2),
             message: args.0,
             negative: args.3,
+            unit,
         }
     }
 
-    pub fn get_unit_screen_args(self) -> Option<DialogUnitScreenArgs> {
-        self.routes.map(|r| {
-            (
-                self.message,
-                self.navbar.get_labels(),
-                r,
-                self.negative,
-            )
-        })
+    pub fn get_unit(self) -> Option<UnitScreen> {
+        self.unit
     }
 }
 

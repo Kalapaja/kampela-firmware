@@ -271,6 +271,7 @@ impl DisplayRamCopy {
     pub fn unlink(&mut self) {
         in_free(|peripherals| {
             while peripherals.usart0_s.status().read().txc().bit_is_clear() {}
+            peripherals.usart0_s.cmd().write(|w_reg| w_reg.clearrx().set_bit());
         })
     }
 }
