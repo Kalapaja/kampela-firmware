@@ -1,7 +1,5 @@
 //! Everything high-level related to interfacing with user
-use core::str::FromStr;
-
-use alloc::{borrow::ToOwned, string::String};
+use alloc::{borrow::ToOwned, string::String, vec::Vec};
 use kampela_system::{
     devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
@@ -62,11 +60,19 @@ impl UI {
             return
         }
         let m = match self.update_request.take() {
-            Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Bounds::new_fullscreen(), is_tapped)),
-            Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Bounds::new_fullscreen(), is_tapped)),
-            Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Bounds::new_fullscreen(), is_tapped)),
-            Some(UpdateRequest::Part(r)) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::from_rectangle(r), is_tapped)),
-            Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Bounds::new_fullscreen(), is_tapped)),
+            Some(UpdateRequest::Slow) => Some(UpdateMode::new(DisplayMode::Full, Vec::new(), is_tapped)),
+            Some(UpdateRequest::Fast) => Some(UpdateMode::new(DisplayMode::Fast, Vec::new(), is_tapped)),
+            Some(UpdateRequest::UltraFast) => Some(UpdateMode::new(DisplayMode::UltraFast, Vec::new(), is_tapped)),
+            Some(UpdateRequest::Part(r)) => Some(
+                UpdateMode::new(
+                    DisplayMode::UltraFastSelective,
+                    r.iter()
+                        .map(|rect| Bounds::from_rectangle(*rect))
+                        .collect(),
+                    is_tapped
+                )
+            ),
+            Some(UpdateRequest::UltraFastSelective) => Some(UpdateMode::new(DisplayMode::UltraFastSelective, Vec::new(), is_tapped)),
             _ => None
         };
         self.frame_buffer.propagate(m);

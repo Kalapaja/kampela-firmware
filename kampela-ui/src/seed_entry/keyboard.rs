@@ -114,7 +114,7 @@ impl Keyboard {
 }
 
 impl View for Keyboard {
-    type DrawInput<'a> = (bool, bool);
+    type DrawInput<'a> = bool;
     type DrawOutput = Option<Rectangle>;
     type EventInput<'a> = ();
     type TapOutput = Option<(Vec<char>, Rectangle)>;
@@ -127,14 +127,14 @@ impl View for Keyboard {
         KEYBOARD_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'_>) -> Result<Self::DrawOutput,D::Error>
         where 
             D: DrawTarget<Color = BinaryColor>,
             Self: 'a,
         {
         let mut was_tapped = None;
         for key in self.keys.iter_mut() {
-            if key.draw(target, (t, n))? {
+            if key.draw(target, n)? {
                 was_tapped = Some(key.bounding_box_absolut());
             }
         }

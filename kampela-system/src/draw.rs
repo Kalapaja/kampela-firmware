@@ -1,4 +1,5 @@
 
+use alloc::vec::Vec;
 use bitvec::prelude::{BitArr, Msb0, bitarr};
 use efm32pg23_fix::Peripherals;
 use embedded_graphics::{
@@ -20,12 +21,12 @@ use crate::{
 
 use crate::debug_display::epaper_draw_stuff_differently;
 
-pub type Bounds = Option<(u8, u8, u16, u16)>;
+pub type Bounds = (u8, u8, u16, u16);
 
 pub trait BoundsTrait {
-    fn new_fullscreen() -> Self;
+    fn fullscreen() -> Self;
+
     fn from_rectangle(refreshable_area: Rectangle) -> Self;
-    fn is_fullscreen(&self) -> bool;
     fn x_start_bytes(&self) -> u8;
     fn x_end_bytes(&self) -> u8;
     fn y_start_address(&self) -> u16;
@@ -39,8 +40,8 @@ pub trait BoundsTrait {
 }
 
 impl BoundsTrait for Bounds {
-    fn new_fullscreen() -> Self {
-        None
+    fn fullscreen() -> Self {
+        (0, SCREEN_SIZE_WIDTH_ADDRESS as u8 - 1, SCREEN_SIZE_X as u16 - 1, 0)
     }
 // x and y of framebuffer and display RAM address are inversed
     fn from_rectangle(refreshable_area: Rectangle) -> Self {
@@ -78,24 +79,20 @@ impl BoundsTrait for Bounds {
             ((SCREEN_SIZE_X - 1) as i32 - bottom_right.x) as u16
         };
 
-        Some((x_start_address, x_end_address, y_start_address, y_end_address))
-    }
-
-    fn is_fullscreen(&self) -> bool {
-        self.is_none()
+        (x_start_address, x_end_address, y_start_address, y_end_address)
     }
 
     fn x_start_bytes(&self) -> u8 {
-        self.map(|b| b.0).unwrap_or(0)
+        self.0
     }
     fn x_end_bytes(&self) -> u8 {
-        self.map(|b| b.1).unwrap_or(SCREEN_SIZE_WIDTH_ADDRESS as u8 - 1)
+        self.1
     }
     fn y_start_address(&self) -> u16 {
-        self.map(|b| b.2).unwrap_or(SCREEN_SIZE_X as u16 - 1)
+        self.2
     }
     fn y_end_address(&self) -> u16 {
-        self.map(|b| b.3).unwrap_or(0)
+        self.3
     }
     fn y_start(&self) -> usize {
         (SCREEN_SIZE_X - 1) as usize - self.y_start_address() as usize
@@ -195,6 +192,7 @@ impl core::ops::DerefMut for PixelBuffer {
         &mut self.0
     }
 }
+
 pub enum DisplayMode {
     Full,
     Fast,
@@ -204,20 +202,23 @@ pub enum DisplayMode {
 
 pub struct UpdateMode {
     display_mode: DisplayMode,
-    bounds: Bounds,
+    bounds: Vec<Bounds>,
     tap_response: bool
 }
 
 impl UpdateMode {
-    pub fn new(display_mode: DisplayMode, bounds: Bounds, tap_response: bool) -> Self {
+    pub fn new(display_mode: DisplayMode, bounds: Vec<Bounds>, tap_response: bool) -> Self {
         Self {
             display_mode,
             bounds,
             tap_response
         }
     }
-    pub fn get_bounds(&self) -> Bounds {
-        self.bounds
+    pub fn get_bounds(&self, index: usize) -> Option<Bounds> {
+        self.bounds.get(index).cloned()
+    }
+    pub fn bounds_len(&self) -> usize {
+        self.bounds.len()
     }
     pub fn get_display_mode(&self) -> &DisplayMode {
         &self.display_mode
@@ -274,7 +275,7 @@ impl SelectiveCounterTrait for SelectiveCounter {
 /// A virtual display that could be written to EPD simultaneously
 pub struct FrameBuffer {
     data: Option<FrameBufferLDMA>,
-    state: Threads<DisplaySendState, 1>,
+    display_send_state: Option<DisplaySendState>,
     update_state: UpdateState,
     pending_update: Option<UpdateMode>,
     selective_counter: SelectiveCounter
@@ -285,7 +286,7 @@ impl FrameBuffer {
     pub fn new_white() -> Self {
         Self {
             data: Some(FrameBufferLDMA::new()),
-            state: Threads::new(DisplaySendState::Init(None)),
+            display_send_state: None,
             update_state: UpdateState::Idle,
             pending_update: None,
             selective_counter: 0
@@ -343,11 +344,15 @@ impl FrameBuffer {
     }
 
     pub fn can_send(&mut self) -> bool {
-        let t = matches!(self.update_state, UpdateState::Send(_));
-        if t {
-            self.state.change(DisplaySendState::Init(None));
+        match &self.update_state {
+            UpdateState::Send(m) => {
+                self.display_send_state = Some(DisplaySendState::new(m));
+                true
+            },
+            _ => {
+                false
+            }
         }
-        t
     }
 
     pub fn send_is_tap_response(&self) -> bool {
@@ -450,15 +455,104 @@ impl DrawTarget for FrameBuffer {
     }
 }
 
-enum DisplaySendState {
+struct DisplaySendState {
+    pub state: Threads<DisplaySendStateEnum, 1>,
+    send_area_index: usize,
+}
+
+impl DisplaySendState {
+    fn new(update_mode: &UpdateMode) -> Self {
+        DisplaySendState {
+            state: Threads::new(DisplaySendStateEnum::Init(None)),
+            send_area_index: update_mode.bounds.len(),
+        }
+    }
+
+    fn advance<'a>(&mut self, data: &mut Option<FrameBufferLDMA>, m: &UpdateMode) -> Option<bool> {
+        match self.state.turn() {
+            DisplaySendStateEnum::Init(state) => {
+                match state {
+                    None => {
+                        *state = Some(EPDInit::new(()));
+                    },
+                    Some(a) => {
+                        match a.advance(()) {
+                            Some(true) => {
+                                self.state.change(DisplaySendStateEnum::PrepareSend(None));
+                            },
+                            r => return r
+                        };
+                    }
+                }
+                Some(false)
+            },
+            DisplaySendStateEnum::PrepareSend(state) => {
+                match state {
+                    None => {
+                        let bounds =  m.get_bounds(m.bounds.len() - self.send_area_index);
+                        *state = Some(PrepareSend::new(bounds))
+                    },
+                    Some(a) => {
+                        match a.advance(()) {
+                            Some(true) => {
+                                self.state.change(DisplaySendStateEnum::DisplaySend(None));
+                            },
+                            r => return r
+                        };
+                    }
+                }
+                Some(false)
+            },
+            DisplaySendStateEnum::DisplaySend(state) => {
+                match state {
+                    None => {
+                        let mut frame_buffer = data.take().expect("FrameBuffer shouldn't be in static cell");
+                        let bounds = if let Some(bounds) = m.get_bounds(m.bounds.len() - self.send_area_index) {
+                            bounds
+                        } else {
+                            Bounds::fullscreen()
+                        };
+                        frame_buffer.set_bounds(bounds);
+                        LDMAchUSART0::set_static_cell(Some(TransmittableUSART::Display(frame_buffer)));
+                        *state = Some(());
+                    },
+                    Some(_) => {
+                        if !LDMAchUSART0::done() {
+                            return None
+                        }
+                        match LDMAchUSART0::take_static_cell() {
+                            Some(TransmittableUSART::Display(a)) => {
+                                *data = Some(a)
+                            },
+                            _ => {unreachable!("FrameBuffer should be in static cell")}
+                        }
+                        if self.send_area_index <= 1 {
+                            self.state.change(DisplaySendStateEnum::End);
+                            return Some(true)
+                        } else {
+                            self.send_area_index -= 1;
+                            self.state.change(DisplaySendStateEnum::PrepareSend(None));
+                        }
+                    }
+                }
+                Some(false)
+            },
+            DisplaySendStateEnum::End => {
+                return Some(true)
+            }
+        }
+    }
+}
+
+enum DisplaySendStateEnum {
     Init(Option<EPDInit>),
     PrepareSend(Option<PrepareSend>),
     DisplaySend(Option<()>),
     End
 }
 
-impl Default for DisplaySendState {
-    fn default() -> Self { DisplaySendState::End }
+impl Default for DisplaySendStateEnum {
+    fn default() -> Self { DisplaySendStateEnum::End }
 }
 
 impl AsyncOperation for FrameBuffer {
@@ -471,74 +565,11 @@ impl AsyncOperation for FrameBuffer {
     }
 
     fn advance<'a>(&mut self, _: Self::Input<'a>) -> Self::Output {
-        match self.state.turn() {
-            DisplaySendState::Init(state) => {
-                match state {
-                    None => {
-                        *state = Some(EPDInit::new(()));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.state.change(DisplaySendState::PrepareSend(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
+        match &self.update_state {
+            UpdateState::Send(m) => {
+                self.display_send_state.as_mut().expect("send possibility checked").advance(&mut self.data, m)
             },
-            DisplaySendState::PrepareSend(state) => {
-                match state {
-                    None => {
-                        if let UpdateState::Send(m) = &self.update_state {
-                            *state = Some(PrepareSend::new(m.get_bounds()))
-                        } else {
-                            unreachable!("trying send to display, while not in send state")
-                        };
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.state.change(DisplaySendState::DisplaySend(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            DisplaySendState::DisplaySend(state) => {
-                match state {
-                    None => {
-                        if let UpdateState::Send(m) = &self.update_state {
-                            let mut frame_buffer = self.data.take().expect("FrameBuffer shouldn't be in static cell");
-                            frame_buffer.set_bounds(m.get_bounds());
-                            LDMAchUSART0::set_static_cell(Some(TransmittableUSART::Display(frame_buffer)));
-                            *state = Some(());
-                        } else {
-                            unreachable!("trying send to display, while not in send state")
-                        };
-                    },
-                    Some(_) => {
-                        if !LDMAchUSART0::done() {
-                            return None
-                        }
-                        match LDMAchUSART0::take_static_cell() {
-                            Some(TransmittableUSART::Display(a)) => {
-                                self.data = Some(a)
-                            },
-                            _ => {unreachable!("FrameBuffer should be in static cell")}
-                        }
-                        self.state.change(DisplaySendState::End);
-                        return Some(true)
-                    }
-                }
-                Some(false)
-            },
-            DisplaySendState::End => {
-                return Some(true)
-            }
+            _ => { unreachable!("send possibility checked") }
         }
     }
 }

@@ -1,12 +1,12 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, boxed::Box};
+use alloc::{vec::Vec, vec, boxed::Box};
 #[cfg(feature="std")]
-use std::{vec::Vec, boxed::Box};
+use std::{vec::Vec, vec, boxed::Box};
 
 use embedded_graphics::{
     pixelcolor::BinaryColor,
     prelude::{DrawTarget, Drawable},
-    primitives::{Primitive, PrimitiveStyle}
+    primitives::{Primitive, PrimitiveStyle, Rectangle}
 };
 
 use mnemonic_external::{AsWordList, Bits11, WordListElement, WordSet};
@@ -27,8 +27,8 @@ use crate::seed_entry::{
 
 enum KeyboardState {
     Initial,
-    Tapped,
-    DrawTapped,
+    Tapped(Rectangle),
+    DrawTapped(Rectangle),
 }
 
 pub struct SeedEntry<P> where
@@ -82,11 +82,11 @@ impl<P: Platform> SeedEntry<P> {
     fn switch_tapped(&mut self) -> bool {
         match self.tapped {
             KeyboardState::Initial => false,
-            KeyboardState::Tapped => {
-                self.tapped = KeyboardState::DrawTapped;
+            KeyboardState::Tapped(r) => {
+                self.tapped = KeyboardState::DrawTapped(r);
                 true
             },
-            KeyboardState::DrawTapped => {
+            KeyboardState::DrawTapped(_) => {
                 self.tapped = KeyboardState::Initial;
                 false
             },
@@ -120,21 +120,21 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
             target.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
         }
 
-        self.remove.draw(target, (t, false))?;
-        self.keyboard.draw(target, (t, false))?;
+        self.keyboard.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
+        self.remove.draw(target, false)?;
+        self.keyboard.draw(target, false)?;
+        self.phrase.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
+        self.entry.draw(target, false)?;
 
-        if matches!(self.tapped, KeyboardState::Initial) {
-            if self.entry.is_empty() {
-                self.phrase.draw(target, false)?;
-                self.navbar_phrase.draw(target, false)?;
-            } else {
-                self.entry.draw(target, false)?;
-                self.proposal.draw(target, false)?;
-                self.navbar_entry.draw(target, false)?;
-            }
+        if self.entry.is_empty() {
+            self.phrase.draw(target, false)?;
+            self.navbar_phrase.draw(target, false)?;
+        } else {
+            self.proposal.draw(target, false)?;
+            self.navbar_entry.draw(target, false)?;
         }
 
-        if matches!(self.tapped, KeyboardState::DrawTapped) {
+        if matches!(self.tapped, KeyboardState::DrawTapped(_)) {
             request = Some(UpdateRequest::Invocate);
         }
         
@@ -147,7 +147,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
     {
         let mut state = None;
         let mut request = None;
-
+        let mut tapped_area = None;
         if let Some(Some((c, r))) = self.keyboard.handle_event(event, ()) {
             if !self.phrase.is_maxed() {
                 if !self.entry.is_maxed() {
@@ -159,25 +159,37 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
             } else {
                 self.phrase.set_invalid();
             }
-            self.tapped = KeyboardState::Tapped;
-            request = Some(UpdateRequest::Part(r));
+            tapped_area = Some(r);
         };
 
         if self.entry.is_empty() && matches!(self.tapped, KeyboardState::Initial) {
             if self.remove.handle_event(event, ()).unwrap_or(None).is_some() {
                 self.phrase.remove_word();
                 self.update_navbar_phrase();
-                self.tapped = KeyboardState::Tapped;
-                request = Some(UpdateRequest::Part(self.remove.bounding_box_absolut()));
+                tapped_area = Some(self.remove.bounding_box_absolut());
             }
         }
         if !self.entry.is_empty() {
             if self.remove.handle_event(event, ()).unwrap_or(None).is_some() {
                 self.proposal.remove_letter();
                 self.entry.remove_letter();
-                self.tapped = KeyboardState::Tapped;
-                request = Some(UpdateRequest::Part(self.remove.bounding_box_absolut()));
+                tapped_area = Some(self.remove.bounding_box_absolut());
             }
+        }
+        if let Some(r) = tapped_area {
+            let mut vec_r = vec![r];
+            match self.tapped {
+                KeyboardState::DrawTapped(prev) => {
+                    vec_r.push(prev);
+                    vec_r.push(self.entry.bounding_box_absolut())
+                },
+                KeyboardState::Initial => {
+                    vec_r.push(self.phrase.bounding_box_absolut())
+                },
+                _ => ()
+            }
+            self.tapped = KeyboardState::Tapped(r);
+            request = Some(UpdateRequest::Part(vec_r));
         }
         match self.proposal.handle_event(event, ()) {
             Some(Some(Some(guess))) => {

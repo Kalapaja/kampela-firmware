@@ -61,7 +61,7 @@ pub enum UpdateRequest {
     Fast,
     UltraFast,
     UltraFastSelective,
-    Part(Rectangle),
+    Part(Vec<Rectangle>),
 }
 
 pub trait UpdateRequestMutate {

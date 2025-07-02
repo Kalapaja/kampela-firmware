@@ -6,6 +6,7 @@ use cortex_m::interrupt::{free, CriticalSection, Mutex};
 use efm32pg23_fix::Peripherals;
 use kampela_ui::display_def::*;
 
+use crate::devices::display_transmission::epaper_write_command;
 use crate::draw::Bounds;
 use crate::draw::BoundsTrait;
 use crate::draw::PixelBuffer;
@@ -237,6 +238,7 @@ impl FrameBufferLDMA {
 
     fn link(&mut self) -> ChLinkData {
         in_free(|peripherals| {
+            epaper_write_command(peripherals, &[0x24]);
             display_select_data(&mut peripherals.gpio_s);
             peripherals.usart0_s.cmd().write(|w_reg| w_reg.rxdis().set_bit());
         });

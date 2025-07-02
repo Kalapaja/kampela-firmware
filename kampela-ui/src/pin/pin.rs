@@ -1,7 +1,7 @@
 #[cfg(not(feature="std"))]
-use alloc::vec::Vec;
+use alloc::{vec::Vec, vec};
 #[cfg(feature="std")]
-use std::vec::Vec;
+use std::{vec::Vec, vec};
 
 use embedded_graphics::{
     pixelcolor::BinaryColor, prelude::{Drawable, DrawTarget}, primitives::{Primitive, PrimitiveStyle}
@@ -140,7 +140,7 @@ impl<P> ViewScreen for Pincode<P> where
         }
         if let Some((b, r)) = self.pinpad.handle_event(event, ()) {
             self.tapped = PinpadState::Tapped;
-            request = Some(UpdateRequest::Part(r));
+            request = Some(UpdateRequest::Part(vec![r]));
             self.push_entered(self.pinpad.buttons[b].num());
             self.check_pin(pin);
         }

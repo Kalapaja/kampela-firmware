@@ -11,7 +11,7 @@ use rand::{rngs::ThreadRng, thread_rng};
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
 use substrate_crypto_light::sr25519::Public;
-use mnemonic_external::{regular::InternalWordList, wordlist, AsWordList, Bits11, WordListElement, WordSet};
+use mnemonic_external::{regular::InternalWordList, AsWordList, Bits11, WordSet};
 
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
@@ -89,11 +89,11 @@ impl HALHandle {
 #[derive(Debug)]
 struct DesktopSimulator {
     pin: PinCode,
-    entropy: Option<Vec<u8>>,
+    seed: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     transaction: Option<NfcTransactionData>,
     eth_sign_request_data: Option<NfcEthSignRequestData>,
-    stored_entropy: Option<Vec<u8>>,
+    stored_seed: Option<Vec<u8>>,
 }
 
 impl DesktopSimulator {
@@ -113,18 +113,18 @@ impl DesktopSimulator {
         };
         let mnemonic = [];
         let wordlist = Self::get_wordlist();
-        let stored_entropy = WordSet{
+        let stored_seed = WordSet{
             bits11_set: mnemonic.iter().map(|w| wordlist.bits11_for_word(*w).unwrap()).collect::<Vec<Bits11>>()
         }
             .to_entropy()
             .ok();
         Self {
             pin,
-            entropy: None,
+            seed: None,
             address: None,
             transaction,
             eth_sign_request_data,
-            stored_entropy,
+            stored_seed,
         }
     }
 }
@@ -152,23 +152,23 @@ impl Platform for DesktopSimulator {
         &mut self.pin
     }
 
-    fn store_entropy(&mut self, e: &[u8]) {
-        self.entropy = Some(e.to_vec());
-        println!("entropy stored (not really, this is emulator)");
+    fn store_seed(&mut self, e: &[u8]) {
+        self.stored_seed = Some(e.to_vec());
+        println!("seed stored (not really, this is emulator)");
     }
 
-    fn read_entropy(&mut self) -> bool {
-        self.entropy = self.stored_entropy.clone();
-        println!("entropy read from emulated storage: {:?}", &self.entropy);
-        self.entropy.is_some()
+    fn read_seed(&mut self) -> bool {
+        self.seed = self.stored_seed.clone();
+        println!("entropy read from emulated storage: {:?}", &self.seed);
+        self.seed.is_some()
     }
 
     fn public(&self) -> Option<Public> {
         self.pair().map(|pair| pair.public())
     }
 
-    fn entropy(&self) -> Option<Vec<u8>> {
-        self.entropy.clone()
+    fn seed(&self) -> Option<Vec<u8>> {
+        self.seed.clone()
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -209,7 +209,7 @@ impl Platform for DesktopSimulator {
         }
     }
 
-    fn check_address_and_fingerprint_transaction(&self) -> Result<(), ErrorTransaction> {
+    fn check_eth_transaction(&self) -> Result<(), ErrorTransaction> {
         Ok(())
     }
 
@@ -319,14 +319,14 @@ fn main() {
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
                 UpdateRequest::UltraFastSelective => {
-                    draw_selective(&mut previous, &display, None);
+                    draw_selective(&mut previous, &display, &Vec::new());
                     display = previous;
                     window.update(&display);
                     println!("ultrafast selective update");
                     sleep(ULTRAFAST_UPDATE_TIME);
                 },
                 UpdateRequest::Part(ref a) => {
-                    draw_selective(&mut previous, &display, Some(a));
+                    draw_selective(&mut previous, &display, a);
                     display = previous;
                     window.update(&display);
                     println!("part update with white of area {:?}", a);
@@ -367,9 +367,19 @@ fn invert_display(display: &mut SimulatorDisplay<BinaryColor>) {
     };
 }
 
-fn draw_selective(display: &mut SimulatorDisplay<BinaryColor>, new_display: &SimulatorDisplay<BinaryColor>, area: Option<&Rectangle>) {
+fn draw_selective(display: &mut SimulatorDisplay<BinaryColor>, new_display: &SimulatorDisplay<BinaryColor>, areas: &Vec<Rectangle>) {
+    if areas.is_empty() {
+        draw_area(display, new_display, SCREEN_AREA);
+        return
+    }
+    for area in areas.iter() {
+        let mut area = area.to_owned();
+        draw_area(display, new_display, area)
+    }
+}
+
+fn draw_area(display: &mut SimulatorDisplay<BinaryColor>, new_display: &SimulatorDisplay<BinaryColor>, mut area: Rectangle) {
     // simulate partial write window
-    let mut area = area.unwrap_or(&SCREEN_AREA).clone();
     area.top_left.y = if area.top_left.y < 0 {
         0
     } else if area.top_left.y > (SCREEN_SIZE_Y - 1) as i32 {

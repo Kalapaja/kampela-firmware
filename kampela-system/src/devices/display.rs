@@ -1,5 +1,5 @@
 //! display control functions
-use crate::draw::{Bounds, DisplayMode, UpdateMode};
+use crate::draw::{Bounds, BoundsTrait, DisplayMode, UpdateMode};
 use crate::peripherals::ldma::LdmaCh;
 use crate::peripherals::ldma_ch_usart::{LDMAchUSART0, DisplayRamCopy, StaticArrayLDMA, TransmittableUSART};
 use crate::peripherals::ldma_ch_usart_rx::{LDMAchUSART0Rx, ReceivableUSART};
@@ -109,11 +109,13 @@ const ULTRAFAST_SELECTIVE_LUT: [u8; LUT_LEN] = [
 /// Iterate through this to perform drawing and send display to proper sleep mode
 pub struct Request {
     threads: Threads<RequestState, 1>,
-    update_mode: UpdateMode
+    update_mode: UpdateMode,
+    send_area_index: usize,
 }
 
 enum RequestState {
     Update(Option<Update>),
+    PrepareSend(Option<PrepareSend>),
     PostUpdate(Option<()>),
     DeepSleepEnter(Option<EPDDeepSleepEnter>),
     End,
@@ -130,9 +132,11 @@ impl AsyncOperation for Request {
     type Output = Option<Option<bool>>;
 
     fn new(update_mode: Self::Init) -> Self {
+        let send_area_index = update_mode.bounds_len();
         Self {
             threads: Threads::new(RequestState::Update(None)),
-            update_mode
+            update_mode,
+            send_area_index
         }
     }
 
@@ -149,7 +153,7 @@ impl AsyncOperation for Request {
                                 if display_is_busy() {
                                     return Some(Some(false))
                                 }
-                                self.threads.change(RequestState::PostUpdate(None));
+                                self.threads.change(RequestState::PrepareSend(None));
                             },
                             Some(false) => {
                                 return Some(None)
@@ -160,13 +164,35 @@ impl AsyncOperation for Request {
                 }
                 Some(None)
             },
+            RequestState::PrepareSend(state) => {
+                match state {
+                    None => {
+                        let bounds =  self.update_mode.get_bounds(self.update_mode.bounds_len() - self.send_area_index);
+                        *state = Some(PrepareSend::new(bounds))
+                    },
+                    Some(a) => {
+                        match a.advance(()) {
+                            Some(true) => {
+                                self.threads.change(RequestState::PostUpdate(None));
+                            },
+                            _ => ()
+                        };
+                    }
+                }
+                Some(None)
+            },
             RequestState::PostUpdate(state) => {
                 match state {
                     None => {
+                        let bounds = if let Some(bounds) = self.update_mode.get_bounds(self.update_mode.bounds_len() - self.send_area_index) {
+                            bounds
+                        } else {
+                            Bounds::fullscreen()
+                        };
                         LDMAchUSART0Rx::set_static_cell( 
                             Some(
                                 ReceivableUSART::DisplayRamCopy(
-                                    DisplayRamCopy::new(self.update_mode.get_bounds())
+                                    DisplayRamCopy::new(bounds)
                                 )
                             )
                         );
@@ -177,7 +203,12 @@ impl AsyncOperation for Request {
                             return Some(Some(false))
                         }
                         LDMAchUSART0Rx::take_static_cell();
-                        self.threads.change(RequestState::DeepSleepEnter(None));
+                        if self.send_area_index <= 1 {
+                            self.threads.change(RequestState::DeepSleepEnter(None));
+                        } else {
+                            self.send_area_index -= 1;
+                            self.threads.change(RequestState::PrepareSend(None));
+                        }
                     }
                 }
                 Some(None)
@@ -389,7 +420,7 @@ impl AsyncOperation for EPDDeepSleepEnter {
 
 pub struct PrepareSend {
     threads: Threads<PrepareDrawState, 1>,
-    bounds: Bounds,
+    bounds: Option<Bounds>,
 }
 
 enum PrepareDrawState {
@@ -404,11 +435,6 @@ enum PrepareDrawState {
     RamXAddressCounter(Option<(EPDData<1>, [u8; 1])>),
     SetRamYAddressCounter(Option<EPDCommand<0x4F>>),
     RamYAddressCounter(Option<(EPDData<2>, [u8; 2])>),
-    //BorderWavefrom,
-    BorderWaveformControl(Option<EPDCommand<0x3C>>),
-    VBDasVCOM(Option<EPDData<1>>),
-
-    WriteRamBlack(Option<EPDCommand<0x24>>),
 
     End,
     Error,
@@ -419,7 +445,7 @@ impl Default for PrepareDrawState {
 }
 
 impl AsyncOperation for PrepareSend {
-    type Init = Bounds;
+    type Init = Option<Bounds>;
     type Input<'a> = ();
     type Output = Option<bool>;
 
@@ -594,54 +620,6 @@ impl AsyncOperation for PrepareSend {
                     },
                     Some((a, y)) => {
                         match a.advance(y) {
-                            Some(true) => {
-                                self.threads.change(PrepareDrawState::BorderWaveformControl(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            PrepareDrawState::BorderWaveformControl(state) => {
-                match state {
-                    None => {
-                        self.threads.change(PrepareDrawState::BorderWaveformControl(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
-                            Some(true) => {
-                                self.threads.change(PrepareDrawState::VBDasVCOM(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            PrepareDrawState::VBDasVCOM(state) => {
-                match state {
-                    None => {
-                        self.threads.change(PrepareDrawState::VBDasVCOM(Some(EPDData::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(&[0x01]) {
-                            Some(true) => {
-                                self.threads.change(PrepareDrawState::WriteRamBlack(None));
-                            },
-                            r => return r
-                        };
-                    }
-                }
-                Some(false)
-            },
-            PrepareDrawState::WriteRamBlack(state) => {
-                match state {
-                    None => {
-                        self.threads.change(PrepareDrawState::WriteRamBlack(Some(EPDCommand::new(()))));
-                    },
-                    Some(a) => {
-                        match a.advance(()) {
                             Some(true) => {
                                 self.threads.change(PrepareDrawState::End);
                                 return Some(true)

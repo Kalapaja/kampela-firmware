@@ -144,7 +144,7 @@ impl ViewScreen for Transaction {
                                 (
                                     Box::new(|| EventResult {
                                         request: Some(UpdateRequest::UltraFast),
-                                        state: Some(UnitScreen::ShowTransaction(TransactionPage::Extension))
+                                        state: Some(UnitScreen::ShowTransaction(TransactionPage::Eth))
                                     }),
                                     Box::new(|| EventResult {
                                         request: Some(UpdateRequest::UltraFast),
