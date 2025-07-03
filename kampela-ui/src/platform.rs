@@ -83,7 +83,11 @@ pub trait Platform {
 
     fn signature(&mut self) -> (&[u8; 130], &mut Self::Display);
 
-    fn address(&mut self) -> Option<(&Vec<u8>, &mut Self::Display)>;
+    fn derivation(&self) -> &[u8];
+
+    fn display_derivation(&mut self) -> (&[u8], &mut Self::Display);
+
+    fn store_derivation(&mut self);
 
     //----derivatives----
 
@@ -118,11 +122,8 @@ pub trait Platform {
     }
 
     fn draw_address(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {
-        if let Some((s, d)) = self.address() {
-            address::draw(s, d)
-        } else {
-            Ok(())
-        }
+        let (s, d) = self.display_derivation();
+        address::draw(s, d)
     }
 
     fn draw_transaction(&mut self) -> Result<(), <Self::Display as DrawTarget>::Error> {

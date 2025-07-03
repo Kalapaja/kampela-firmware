@@ -121,7 +121,7 @@ pub enum Screen {
     OnboardingRestore(SeedEntryState),
     OnboardingBackup,
     PinRepeat,
-    ShowAddress,
+    ShowDerivation,
     ShowTransaction,
     ShowExtension,
     QRSignature,
@@ -218,9 +218,10 @@ impl <P: Platform> UIState<P> {
                 out = res.request;
                 new_screen = res.state;
             },
-            Screen::ShowAddress => match point.x {
+            Screen::ShowDerivation => match point.x {
                 150..=300 => {
                     new_screen = Some(Screen::QRAddress);
+                    self.platform.store_derivation();
                     out.set_slow();
                 }
                 _ => {},
@@ -285,7 +286,7 @@ impl <P: Platform> UIState<P> {
     pub fn handle_address(&mut self, addr: Vec<u8>) -> UpdateRequest {
         let mut out = UpdateRequest::new();
         self.platform.set_address(addr);
-        self.screen = Screen::ShowAddress;
+        self.screen = Screen::ShowDerivation;
         out.set_slow();
         out
     }
@@ -327,7 +328,7 @@ impl <P: Platform> UIState<P> {
             Screen::PinRepeat => {
                 self.platform.draw_pincode()?;
             },
-            Screen::ShowAddress => {
+            Screen::ShowDerivation => {
                 self.platform.draw_address()?
             },
             Screen::ShowTransaction => {

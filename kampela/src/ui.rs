@@ -113,7 +113,7 @@ pub struct Hardware {
     call: Option<String>,
     extensions: Option<String>,
     signature: Option<[u8; 130]>,
-    address: Option<Vec<u8>>,
+    derivation: Vec<u8>,
 }
 
 impl Hardware {
@@ -129,7 +129,7 @@ impl Hardware {
             call: None,
             extensions: None,
             signature: None,
-            address: None,
+            derivation: Vec::new(),
         }
     }
 }
@@ -254,7 +254,7 @@ impl <'a> Platform for Hardware {
     }
 
     fn set_address(&mut self, addr: Vec<u8>) {
-        self.address = Some(addr);
+        self.derivation = addr;
     }
 
     fn set_transaction(&mut self, call: String, extensions: String, signature: [u8; 130]) {
@@ -286,11 +286,53 @@ impl <'a> Platform for Hardware {
         }
     }
 
-    fn address(&mut self) -> Option<(&Vec<u8>, &mut <Self as Platform>::Display)> {
-        match &self.address {
-            Some(a) => Some((a, &mut self.display)),
-            None => None,
-        }
+    fn display_derivation(&mut self) -> (&[u8], &mut <Self as Platform>::Display) {
+        (&self.derivation, &mut self.display)
+    }
+
+    fn derivation(&self) -> &[u8] {
+        &self.derivation
+    }
+
+    fn store_derivation(&mut self) {
+        let len = self.derivation.len();
+        //let mut entropy_storage = [0u8; 33];
+        //entropy_storage[0] = len.try_into().expect("entropy is at most 32 bytes");
+        //entropy_storage[1..1+len].copy_from_slice(&self.entropy);
+        // TODO encode
+        in_free(|peripherals| {
+            se_aes_gcm::create_key(peripherals).unwrap();
+            let protected = se_aes_gcm::aes_gcm_encrypt(
+                peripherals,
+                [0; se_aes_gcm::AAD_LEN],
+                [0; se_aes_gcm::IV_LEN],
+                self.derivation.clone(),
+            ).unwrap();
+
+            let mut storage_payload = [0u8; 1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
+            storage_payload[0] = protected.len as u8;
+            storage_payload[1..1+se_aes_gcm::SECRET_MAX_LEN].copy_from_slice(&protected.data);
+            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN..1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN].copy_from_slice(&protected.tag);
+            storage_payload[1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN..].copy_from_slice( unsafe { &se_aes_gcm::KEY_BUFFER });
+
+            flash_wakeup(peripherals);
+
+            flash_unlock(peripherals);
+            flash_erase_page(peripherals, 0);
+            flash_wait_ready(peripherals);
+
+            flash_unlock(peripherals);
+            flash_write_page(peripherals, 0, &storage_payload);
+            flash_wait_ready(peripherals);
+
+            let mut ent = [0u8; 2+1+se_aes_gcm::SECRET_MAX_LEN+se_aes_gcm::TAG_LEN+se_aes_gcm::KEY_BUFFER_LEN];
+            flash_read(peripherals, 0, &mut ent);
+
+            // Incorrect behavior of flash after wakeup. It reads two bytes of zeroes before the actual data stored in flash.
+            if ent[2..] != storage_payload {
+                panic!("Failed to save seedphrase: {:?} ||| {:?}", &ent[2..35], &self.entropy[..33]);
+            }
+        });
     }
 
 }

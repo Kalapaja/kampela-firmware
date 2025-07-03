@@ -89,7 +89,7 @@ struct DesktopSimulator {
     pin: Pincode,
     display: SimulatorDisplay<BinaryColor>,
     entropy: Vec<u8>,
-    address: Option<Vec<u8>>,
+    derivation: Vec<u8>,
     transaction: String,
     extensions: String,
     signature: Option<[u8; 130]>,
@@ -116,7 +116,7 @@ impl DesktopSimulator {
             pin: pin,
             display: display,
             entropy: Vec::new(),
-            address: None,
+            derivation: Vec::new(),
             transaction: transaction,
             extensions: extensions,
             signature: signature,
@@ -176,7 +176,7 @@ impl Platform for DesktopSimulator {
     }
 
     fn set_address(&mut self, addr: Vec<u8>) {
-        self.address = Some(addr);
+        self.derivation = addr;
     }
 
     fn set_transaction(&mut self, transaction: String, extensions: String, signature: [u8; 130]) {
@@ -209,12 +209,16 @@ impl Platform for DesktopSimulator {
         }
     }
 
-    fn address(&mut self) -> Option<(&Vec<u8>, &mut Self::Display)> {
-        if let Some(ref a) = self.address {
-            Some((a, &mut self.display))
-        } else {
-            panic!("address qr not ready!");
-        }
+    fn display_derivation(&mut self) -> (&[u8], &mut Self::Display) {
+        (&self.derivation, &mut self.display)
+    }
+
+    fn derivation(&self) -> &[u8] {
+        &self.derivation
+    }
+
+    fn store_derivation(&mut self) {
+        println!("address stored (not really, this is emulator)");
     }
 }
 

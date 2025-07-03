@@ -1,9 +1,8 @@
 #[cfg(not(feature="std"))]
-use alloc::{format, vec, string::String, str, vec::Vec};
+use alloc::{format, vec, string::String, str, vec::Vec, borrow::ToOwned};
 
-use core::panic::RefUnwindSafe;
 #[cfg(feature="std")]
-use std::{format, vec, string::String, str, vec::Vec};
+use std::{format, vec, string::String, str, vec::Vec, borrow::ToOwned};
 
 use embedded_graphics::{
     mono_font::{
@@ -20,7 +19,7 @@ use embedded_graphics_core::{
 };
 use embedded_text::{
     alignment::{HorizontalAlignment, VerticalAlignment},
-    style::{HeightMode, TextBoxStyleBuilder},
+    style::{TextBoxStyleBuilder},
     TextBox,
 };
 
@@ -227,7 +226,7 @@ fn create_representation(text: &str) -> [[String; 2]; 2] {
 	rep.map(|t| t.map(|r| r.into_iter().collect()))
 }
 
-pub fn draw<D>(content: &Vec<u8>, display: &mut D) -> Result<(), D::Error>
+pub fn draw<D>(content: &[u8], display: &mut D) -> Result<(), D::Error>
 where
     D: DrawTarget<Color = BinaryColor>,
 {
@@ -285,7 +284,7 @@ where
     
 	let mut hex = content.iter().map(|c| format!("{:02X}\u{a0}", c)).collect::<String>();
 	hex.pop(); //remove tailing nbsp
-  let text = String::from_utf8(content.clone()).expect("not UTF-8");
+  let text = String::from_utf8(content.to_owned()).expect("not UTF-8");
 	
 	let breaks = find_line_breaks(&text);
 	let sub = create_substituion(&text);
@@ -304,6 +303,13 @@ where
 	TextBox::with_textbox_style(&rep[1][0], rep_bounds_offsetted_y, hex_character_style, textbox_style).draw(display)?;
 	TextBox::with_textbox_style(&rep[1][1], rep_bounds_offsetted_xy, hex_character_style, textbox_style).draw(display)?;
 	TextBox::with_textbox_style(&hex, hex_bounds, hex_character_style, textbox_style).draw(display)?;
+	
+	let set_derivation = Rectangle::new(
+        Point::new(SCREEN_SIZE_X as i32 / 2, SCREEN_SIZE_Y as i32 - 50),
+        Size::new(SCREEN_SIZE_X / 2,50),
+    );
+	TextBox::with_textbox_style("set derivation", set_derivation, text_character_style, textbox_style)
+	.draw(display)?;
 	Ok(())
 }
 
