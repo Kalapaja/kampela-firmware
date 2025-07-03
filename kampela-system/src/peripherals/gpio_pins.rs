@@ -57,7 +57,7 @@ macro_rules! gpio_pin {
             pub fn $func_clear(gpio: &mut GPIO_S) {
                 gpio
                     .$port
-                    .modify(|r, w| w.dout().variant(r.dout().bits() ^ (1 << $pin)));
+                    .modify(|r, w| w.dout().variant(r.dout().bits() & !(1 << $pin)));
             }
         )*
     }
@@ -299,6 +299,7 @@ fn set_gpio_pins(gpio: &mut GPIO_S) {
     display_chip_select_set(gpio);
     spi_data_command_clear(gpio);
     display_res_clear(gpio);
+    touch_res_clear(gpio);
     sda_set(gpio);
     scl_set(gpio);
     flash_chip_select_set(gpio);
@@ -310,6 +311,14 @@ fn set_gpio_pins(gpio: &mut GPIO_S) {
     psram_mosi_clear(gpio);
     psram_sck_clear(gpio);
     nfc_pin_clear(gpio);
+}
+
+pub fn is_touch_int(gpio: &mut GPIO_S) -> bool {
+    gpio
+        .portb_din
+        .read()
+        .din()
+        .bits() & 1 << TOUCH_INT_PIN == 0
 }
 
 /// Set up external interrupt pins (used to get touch events from touch pad)

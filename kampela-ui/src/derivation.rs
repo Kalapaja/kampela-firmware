@@ -6,16 +6,14 @@ use std::{format, vec, string::String, str, vec::Vec, borrow::ToOwned};
 
 use embedded_graphics::{
     mono_font::{
-        iso_8859_1::FONT_10X20, ascii::FONT_4X6,
-        MonoTextStyle, MonoFont, mapping::StrGlyphMapping,
-    },
-    primitives::Rectangle,
-    Drawable, text::LineHeight,
+        ascii::FONT_4X6, iso_8859_1::FONT_10X20, mapping::StrGlyphMapping, MonoFont, MonoTextStyle
+    }, primitives::{PrimitiveStyle, Rectangle}, text::LineHeight, Drawable
 };
-use embedded_graphics_core::{
+use embedded_graphics::{
     draw_target::DrawTarget,
     geometry::{Point, Size},
     pixelcolor::BinaryColor,
+	prelude::Primitive,
 };
 use embedded_text::{
     alignment::{HorizontalAlignment, VerticalAlignment},
@@ -23,7 +21,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::display_def::*;
+use crate::{display_def::*, uistate::{EventResult, UnitScreen, UpdateRequest}, widget::{nav_bar::nav_bar::{NavBar, NavCommand}, view::{View, ViewScreen}}};
 
 #[path = "./non_printable_list.rs"]
 mod non_printable_list;
@@ -226,90 +224,132 @@ fn create_representation(text: &str) -> [[String; 2]; 2] {
 	rep.map(|t| t.map(|r| r.into_iter().collect()))
 }
 
-pub fn draw<D>(content: &[u8], display: &mut D) -> Result<(), D::Error>
-where
-    D: DrawTarget<Color = BinaryColor>,
-{
-	let text_character_style = MonoTextStyle::new(&TEXT_FONT, BinaryColor::On);
-	let hex_character_style = MonoTextStyle::new(&HEX_FONT, BinaryColor::On);
-	let textbox_style = TextBoxStyleBuilder::new()
-		.alignment(HorizontalAlignment::Center)
-		.vertical_alignment(VerticalAlignment::Middle)
-		.line_height(LineHeight::Pixels(HEX_FONT.character_size.height + TEXT_FONT.character_size.height))
-		.paragraph_spacing(5)
-		.build();
-	let text_bounds = Rectangle::new(
-		Point::zero(),
-		Size::new(SCREEN_SIZE_X,
-		SCREEN_SIZE_Y)
-	);
-	let text_bounds_offsetted = Rectangle::new(
-		Point::new((TEXT_FONT.character_size.width / 2) as i32, 0),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-	let rep_bounds = Rectangle::new(
-		Point::new(
-			0,
-			0,
-		),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-	let rep_bounds_offsetted_x = Rectangle::new(
-		Point::new(
-			(HEX_FONT.character_size.width / 2) as i32,
-			0,
-		),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-	let rep_bounds_offsetted_y = Rectangle::new(
-		Point::new(
-			0,
-			HEX_FONT.character_size.height as i32,
-		),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-	let rep_bounds_offsetted_xy = Rectangle::new(
-		Point::new(
-			(HEX_FONT.character_size.width / 2) as i32,
-			HEX_FONT.character_size.height as i32,
-		),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-	let hex_bounds = Rectangle::new(
-		Point::new(0, (TEXT_FONT.character_size.height / 2 +
-		                             HEX_FONT.character_size.height / 2 +
-		                             TEXT_FONT.character_spacing) as i32),
-		Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
-	);
-    
-	let mut hex = content.iter().map(|c| format!("{:02X}\u{a0}", c)).collect::<String>();
-	hex.pop(); //remove tailing nbsp
-  let text = String::from_utf8(content.to_owned()).expect("not UTF-8");
-	
-	let breaks = find_line_breaks(&text);
-	let sub = create_substituion(&text);
-	let sub = sub.map(|s| break_text(&s, &breaks));
-	let rep = create_representation(&text);
-	let rep = rep.map(|t| t.map(|r| break_rep(&r, &breaks)));
-	let text = replace_non_ascii(&text);
-	let text = break_text(&text, &breaks);
-	let hex = break_hex(&hex, &breaks);
-    
-	TextBox::with_textbox_style(&text, text_bounds, text_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&sub[0], text_bounds, text_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&sub[1], text_bounds_offsetted, text_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&rep[0][0], rep_bounds, hex_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&rep[0][1], rep_bounds_offsetted_x, hex_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&rep[1][0], rep_bounds_offsetted_y, hex_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&rep[1][1], rep_bounds_offsetted_xy, hex_character_style, textbox_style).draw(display)?;
-	TextBox::with_textbox_style(&hex, hex_bounds, hex_character_style, textbox_style).draw(display)?;
-	
-	let set_derivation = Rectangle::new(
-        Point::new(SCREEN_SIZE_X as i32 / 2, SCREEN_SIZE_Y as i32 - 50),
-        Size::new(SCREEN_SIZE_X / 2,50),
-    );
-	TextBox::with_textbox_style("set derivation", set_derivation, text_character_style, textbox_style)
-	.draw(display)?;
-	Ok(())
+pub struct Derivation {
+    navbar: NavBar,
 }
+
+impl Derivation {
+    pub fn new() -> Self {
+        let navbar = NavBar::new(("", "use path"));
+        Derivation {
+            navbar,
+        }
+    }
+}
+
+impl ViewScreen for Derivation {
+    type DrawInput<'a> = &'a str;
+    type DrawOutput = ();
+    type TapInput<'a> = ();
+    type TapOutput = bool;
+
+    fn draw_screen<'a, D>(&mut self, target: &mut D, content: Self::DrawInput<'a>) -> Result<(EventResult, ()), D::Error>
+    where
+        D: DrawTarget<Color = BinaryColor>,
+        Self: 'a,
+    {
+		let filled = PrimitiveStyle::with_fill(BinaryColor::Off);
+        let area = target.bounding_box();
+        area.into_styled(filled).draw(target)?;
+
+		let text_character_style = MonoTextStyle::new(&TEXT_FONT, BinaryColor::On);
+		let hex_character_style = MonoTextStyle::new(&HEX_FONT, BinaryColor::On);
+		let textbox_style = TextBoxStyleBuilder::new()
+			.alignment(HorizontalAlignment::Center)
+			.vertical_alignment(VerticalAlignment::Middle)
+			.line_height(LineHeight::Pixels(HEX_FONT.character_size.height + TEXT_FONT.character_size.height))
+			.paragraph_spacing(5)
+			.build();
+		let text_bounds = Rectangle::new(
+			Point::zero(),
+			Size::new(SCREEN_SIZE_X,
+			SCREEN_SIZE_Y)
+		);
+		let text_bounds_offsetted = Rectangle::new(
+			Point::new((TEXT_FONT.character_size.width / 2) as i32, 0),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		let rep_bounds = Rectangle::new(
+			Point::new(
+				0,
+				0,
+			),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		let rep_bounds_offsetted_x = Rectangle::new(
+			Point::new(
+				(HEX_FONT.character_size.width / 2) as i32,
+				0,
+			),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		let rep_bounds_offsetted_y = Rectangle::new(
+			Point::new(
+				0,
+				HEX_FONT.character_size.height as i32,
+			),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		let rep_bounds_offsetted_xy = Rectangle::new(
+			Point::new(
+				(HEX_FONT.character_size.width / 2) as i32,
+				HEX_FONT.character_size.height as i32,
+			),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		let hex_bounds = Rectangle::new(
+			Point::new(0, (TEXT_FONT.character_size.height / 2 +
+										 HEX_FONT.character_size.height / 2 +
+										 TEXT_FONT.character_spacing) as i32),
+			Size::new(SCREEN_SIZE_X, SCREEN_SIZE_Y)
+		);
+		
+		let mut hex = content.as_bytes().iter().map(|c| format!("{:02X}\u{a0}", c)).collect::<String>();
+		hex.pop(); //remove tailing nbsp
+	  	let text = content.to_owned();
+		
+		let breaks = find_line_breaks(&text);
+		let sub = create_substituion(&text);
+		let sub = sub.map(|s| break_text(&s, &breaks));
+		let rep = create_representation(&text);
+		let rep = rep.map(|t| t.map(|r| break_rep(&r, &breaks)));
+		let text = replace_non_ascii(&text);
+		let text = break_text(&text, &breaks);
+		let hex = break_hex(&hex, &breaks);
+		
+		TextBox::with_textbox_style(&text, text_bounds, text_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&sub[0], text_bounds, text_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&sub[1], text_bounds_offsetted, text_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&rep[0][0], rep_bounds, hex_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&rep[0][1], rep_bounds_offsetted_x, hex_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&rep[1][0], rep_bounds_offsetted_y, hex_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&rep[1][1], rep_bounds_offsetted_xy, hex_character_style, textbox_style).draw(target)?;
+		TextBox::with_textbox_style(&hex, hex_bounds, hex_character_style, textbox_style).draw(target)?;
+		
+		self.navbar.draw(target, false);
+		Ok((EventResult{state: None, request: None}, ()))
+    }
+
+    fn handle_tap_screen<'a>(&mut self, point: Point, _: Self::TapInput<'a>) -> (EventResult, Self::TapOutput)
+    where
+        Self: 'a
+    {
+        let mut state = None;
+        let mut request = None;
+		let mut store = false;
+
+        if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
+			match c {
+				NavCommand::Left => {},
+				NavCommand::Right => {
+					request = Some(UpdateRequest::UltraFast);
+					state = Some(UnitScreen::QRAddress);
+					store = true;
+				}
+			}
+        }
+        (EventResult{state, request}, store)
+    }
+}
+
 

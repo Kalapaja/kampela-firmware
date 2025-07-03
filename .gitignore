@@ -4,6 +4,5 @@
 # firmware build
 # rustfmt
 **/*.rs.bk
-
-/.vscode/*
-**/Cargo.lock
+**/*.code-workspace
+.vscode

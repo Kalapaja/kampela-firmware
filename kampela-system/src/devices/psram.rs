@@ -1,8 +1,117 @@
 //! external RAM
 
-use alloc::{format, vec::Vec};
+use alloc::{format, vec::Vec, string::String};
+use primitive_types::H256;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::eusart::*;
+use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
+use crate::in_free;
+
+pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
+    let call_data = read_from_psram(call_psram_access);
+
+    let (
+        checked_metadata_metal,
+        specs,
+        spec_name,
+    ) = read_checked_metadata_metal(metadata_psram_access);
+
+    let mut decoded_call_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        let mut decoding_postition = 0;
+        let decoded_call = decode_as_call_unmarked(
+            &call_data.as_ref(),
+            &mut decoding_postition,
+            &mut external_psram,
+            &checked_metadata_metal,
+        ).unwrap();
+
+        decoded_call_option = Some(decoded_call);
+    });
+    (
+        decoded_call_option.unwrap(),
+        specs,
+        spec_name,
+    )
+}
+
+pub fn psram_decode_extension(
+    extension_psram_access: &PsramAccess,
+    metadata_psram_access: &PsramAccess,
+    genesis_hash_bytes_psram_access: &PsramAccess,
+) -> (Vec<ExtendedData>, ShortSpecs, String) {
+    let extension_data = read_from_psram(extension_psram_access);
+    
+    let (
+        checked_metadata_metal,
+        specs,
+        spec_name
+    ) = read_checked_metadata_metal(metadata_psram_access);
+
+    let genesis_hash = H256(
+        read_from_psram(genesis_hash_bytes_psram_access)
+            .try_into()
+            .expect("static size")
+    );
+
+    let mut decoded_extension_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        let mut decoding_postition = 0;
+        let decoded_extension = decode_extensions_unmarked(
+            &extension_data.as_ref(),
+            &mut decoding_postition,
+            &mut external_psram,
+            &checked_metadata_metal,
+            Some(genesis_hash),
+        ).unwrap();
+
+        decoded_extension_option = Some(decoded_extension);
+    });
+    (
+        decoded_extension_option.unwrap(),
+        specs,
+        spec_name,
+    )
+}
+
+fn read_checked_metadata_metal(metadata_psram_access: &PsramAccess) -> (CheckedMetadataMetal, ShortSpecs, String) {
+    let mut checked_metadata_metal_option = None;
+    in_free(|peripherals| {
+        let mut external_psram = ExternalPsram{peripherals};
+        checked_metadata_metal_option = Some(
+            CheckedMetadataMetal::from(
+                metadata_psram_access,
+                &mut external_psram
+            ).unwrap()
+        );
+    });
+
+    let checked_metadata_metal = checked_metadata_metal_option.unwrap();
+    let specs = checked_metadata_metal.to_specs();
+    let spec_name = checked_metadata_metal.spec_name_version.spec_name.to_owned();
+    (
+        checked_metadata_metal,
+        specs,
+        spec_name
+    )
+}
+
+pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
+    let mut bytes_option = None;
+    in_free(|peripherals| {
+        bytes_option = Some(
+            psram_read_at_address(
+                peripherals,
+                psram_access.start_address,
+                psram_access.total_len
+            ).unwrap()
+        );
+    });
+    
+    bytes_option.unwrap()
+}
 
 pub fn psram_reset(peripherals: &mut Peripherals) {
     deselect_psram(&mut peripherals.GPIO_S);
@@ -11,7 +120,7 @@ pub fn psram_reset(peripherals: &mut Peripherals) {
     deselect_psram(&mut peripherals.GPIO_S);
     select_psram(&mut peripherals.GPIO_S);
     psram_write_read_byte(peripherals, PSRAM_RESET);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.GPIO_S);
 }
 
 pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
@@ -207,13 +316,13 @@ pub struct PsramAccess {
     pub start_address: AddressPsram,
     pub total_len: usize,
 }
-use core::fmt::{Debug, Display, Formatter, Result as FmtResult};
-use alloc::{borrow::ToOwned, string::String};
+use core::{any::TypeId, fmt::{Debug, Display, Formatter, Result as FmtResult}};
+use alloc::borrow::ToOwned;
 
-use frame_metadata::v14::ExtrinsicMetadata;
+use external_memory_tools::{AddressableBuffer, BufferError, ExternalMemory};
 use parity_scale_codec::{Decode, DecodeAll, Encode};
-use substrate_parser::{AddressableBuffer, AsMetadata, ExternalMemory, ResolveType, ShortSpecs, compacts::find_compact, error::{MetaVersionError, ParserError}, traits::SpecNameVersion};
-use scale_info::{form::PortableForm, Type};
+use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
+use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
 
 pub struct ExternalPsram<'a> {
     pub peripherals: &'a mut Peripherals,
@@ -249,18 +358,18 @@ impl <'a> AddressableBuffer<ExternalPsram<'a>> for PsramAccess {
     fn total_len(&self) -> usize {
         self.total_len
     }
-    fn read_slice(&self, ext_memory: &mut ExternalPsram<'a>, position: usize, len: usize) -> Result<Self::ReadBuffer, ParserError<ExternalPsram<'a>>> {
-        if self.total_len() < position {return Err(ParserError::OutOfRange { position, total_length: self.total_len() })}
-        if self.total_len() < (position + len) {return Err(ParserError::DataTooShort { position: self.total_len(), minimal_length: position + len - self.total_len() })}
-        let address = self.start_address.try_shift(position).map_err(ParserError::External)?;
-        psram_read_at_address(ext_memory.peripherals, address, len).map_err(ParserError::External)
+    fn read_slice(&self, ext_memory: &mut ExternalPsram<'a>, position: usize, len: usize) -> Result<Self::ReadBuffer, BufferError<ExternalPsram<'a>>> {
+        if self.total_len() < position {return Err(BufferError::OutOfRange { position, total_length: self.total_len() })}
+        if self.total_len() < (position + len) {return Err(BufferError::DataTooShort { position: self.total_len(), minimal_length: position + len - self.total_len() })}
+        let address = self.start_address.try_shift(position).map_err(BufferError::External)?;
+        psram_read_at_address(ext_memory.peripherals, address, len).map_err(BufferError::External)
     }
-    fn limit_length(&self, new_len: usize) -> Self {
-        if new_len > self.total_len {panic!()}
-        PsramAccess {
+    fn limit_length(&self, new_len: usize) -> Result<Self, BufferError<ExternalPsram<'a>>> {
+        if new_len > self.total_len {Err(BufferError::DataTooShort { position: 0, minimal_length: new_len })}
+        else {Ok(PsramAccess {
             start_address: self.start_address,
             total_len: new_len,
-        }
+        })}
     }
 }
 
@@ -278,23 +387,24 @@ pub struct EntryPsram {
 }
 
 impl <'a> ResolveType<ExternalPsram<'a>> for MetalRegistry {
-    fn resolve_ty(&self, id: u32, ext_memory: &mut ExternalPsram<'a>) -> Result<Type<PortableForm>, ParserError<ExternalPsram<'a>>> {
+    fn resolve_ty(&self, id: u32, ext_memory: &mut ExternalPsram<'a>) -> Result<Type<PortableForm>, RegistryError<ExternalPsram<'a>>> {
         for entry_psram in self.registry.iter() {
             if entry_psram.id == id {
-                let address = self.start_address.try_shift(entry_psram.position).map_err(ParserError::External)?;
-                let encoded_type_data = psram_read_at_address(ext_memory.peripherals, address, entry_psram.entry_len).map_err(ParserError::External)?;
-                let ty = Type::<PortableForm>::decode_all(&mut &encoded_type_data[..]).map_err(|_| ParserError::External(MemoryError::TypeInfoDamaged{id}))?;
+                let address = self.start_address.try_shift(entry_psram.position).map_err(RegistryError::External)?;
+                let encoded_type_data = psram_read_at_address(ext_memory.peripherals, address, entry_psram.entry_len).map_err(RegistryError::External)?;
+                let ty = Type::<PortableForm>::decode_all(&mut &encoded_type_data[..]).map_err(|_| RegistryError::External(MemoryError::TypeInfoDamaged{id}))?;
                 return Ok(ty)
             }
         }
-        Err(ParserError::V14TypeNotResolved { id })
+        Err(RegistryError::Internal(RegistryInternalError::TypeNotResolved { id }))
     }
 }
 
 #[derive(Debug)]
 pub struct CheckedMetadataMetal {
     pub types: MetalRegistry,
-    pub extrinsic: ExtrinsicMetadata<PortableForm>,
+    pub call_ty: UntrackedSymbol<TypeId>,
+    pub signed_extensions: Vec<SignedExtensionMetadata>,
     pub spec_name_version: SpecNameVersion,
     pub base58prefix: u16,
     pub decimals: u8,
@@ -303,7 +413,8 @@ pub struct CheckedMetadataMetal {
 
 #[derive(Debug, Decode, Encode)]
 pub struct CheckedMeadataMetalTail {
-    pub extrinsic: ExtrinsicMetadata<PortableForm>,
+    pub call_ty: UntrackedSymbol<TypeId>,
+    pub signed_extensions: Vec<SignedExtensionMetadata>,
     pub spec_name_version: SpecNameVersion,
     pub base58prefix: u16,
     pub decimals: u8,
@@ -312,14 +423,28 @@ pub struct CheckedMeadataMetalTail {
 
 impl <'a> AsMetadata<ExternalPsram<'a>> for CheckedMetadataMetal {
     type TypeRegistry = MetalRegistry;
+    type MetaStructureError = NoEntries;
     fn types(&self) -> Self::TypeRegistry {
         self.types.to_owned()
     }
-    fn spec_name_version(&self) -> Result<SpecNameVersion, MetaVersionError> {
+    fn spec_name_version(&self) -> Result<SpecNameVersion, Self::MetaStructureError> {
         Ok(self.spec_name_version.to_owned())
     }
-    fn extrinsic(&self) -> ExtrinsicMetadata<PortableForm> {
-        self.extrinsic.to_owned()
+    fn call_ty(&self) -> Result<UntrackedSymbol<TypeId>, Self::MetaStructureError> {
+        Ok(self.call_ty.to_owned())
+    }
+    fn signed_extensions(&self) -> Result<Vec<SignedExtensionMetadata>, Self::MetaStructureError> {
+        Ok(self.signed_extensions.to_owned())
+    }
+}
+
+/// Empty error enum, for cases with fault-free memory access.
+#[derive(Debug, Eq, PartialEq)]
+pub enum NoEntries {}
+
+impl Display for NoEntries {
+    fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+        write!(f, "")
     }
 }
 
@@ -382,7 +507,8 @@ impl <'a> CheckedMetadataMetal {
 
         Ok(CheckedMetadataMetal{
             types,
-            extrinsic: tail.extrinsic,
+            call_ty: tail.call_ty,
+            signed_extensions: tail.signed_extensions,
             spec_name_version: tail.spec_name_version,
             base58prefix: tail.base58prefix,
             decimals: tail.decimals,
@@ -426,4 +552,3 @@ impl <'a> lt_codes::decoder_metal::ExternalMemory<AddressPsram> for ExternalPsra
          psram_read_at_address(self.peripherals, *address, len).unwrap() //TODO
     }
 }
-

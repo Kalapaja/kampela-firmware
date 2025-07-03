@@ -1,22 +1,52 @@
-# Requirements
-We assume that you have linux.
+# Compatibility
 
-Set of packages as well as commands could vary depending on your distribution.
-Following is valid for ArchLinux.
+This version of Kampela firmware is compatible with Siltti v0.10
 
-Install rustup and ARM toolchain:
+# Project maturity
+
+This is an early proof of concept prototype, use for development and at your own risk only.
+
+# Security note
+
+Note that deprecated metadata shortening algorithm by Alzymologist Oy is implemented here, as opposed to one deployed in Polkadot ecosystem, thus no on-chain verification is actually happening. Migration is generally considered a trivial task by the community, we welcome PRs with corresponding patch (to all related repositories).
+
+# Prerequisites
+
+## Archlinux
+
+### Install rustup and ARM toolchain:
 ```sh
 [sudo] pacman -S rustup arm-none-eabi-gcc arm-none-eabi-binutils
 rustup update
 rustup default stable
 ```
 
-Also you will need a program for flashing.
+## MacOs (tested on M1)
 
-For Pilkki flasher look [here](https://github.com/Alzymologist/pilkki).
+### Install rustup
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup update
+rustup default stable
+```
 
-For Segger you need to install [simplicity-commander](https://www.silabs.com/developers/mcu-programming-options).
-In case of ArchLinux there is [AUR package](https://aur.archlinux.org/packages/simplicity-commander).
+### Install ARM toolchain
+
+#### brew
+```sh
+brew install --cask gcc-arm-embedded
+```
+
+#### manual installation
+download and install suitable darwin GNU-ARM package from [ARM GNU website](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+
+## Windows
+
+### Install rustup
+download and install rustup from [Rust-lang website](https://www.rust-lang.org/tools/install)
+
+### Install ARM toolchain
+download and install suitable darwin GNU-ARM package from [ARM GNU website](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 
 # Preparations
 
@@ -34,15 +64,38 @@ cargo build --release
 
 ## Flashing
 
-In case of Pilkki:
+### Pilkki
+
+For Pilkki flasher look [here](https://github.com/Alzymologist/pilkki).
+
+#### Linux/MacOs
 ```sh
 ./binarize.sh --pilkki
 ```
+#### Windows
+```bat
+./binarize.bat
+```
+pass COM port as argument if needed
+### Segger
 
-And in case of Segger
+For Segger you need to install [simplicity-commander](https://www.silabs.com/developers/mcu-programming-options).
+In case of ArchLinux there is [AUR package](https://aur.archlinux.org/packages/simplicity-commander).
+
 ```sh
 ./binarize.sh --segger
 ```
 
+## Flashing WordList
 
+Required for word prediction function
+Flashing to EFlash only possible with **Pilkki** with **Software** and **Firmware** supporting this feature
 
+#### Linux/MacOs
+```sh
+./write_eflash.sh
+```
+#### Windows
+```bat
+./write_eflash.bat
+```

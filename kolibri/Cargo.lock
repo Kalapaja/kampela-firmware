@@ -171,7 +171,7 @@ checksum = "750082c65094fbcc4baf9ba31583ce9a8bb7f52cadfb96f6164b1bc7f922f32b"
 dependencies = [
  "az",
  "byteorder",
- "embedded-graphics-core 0.3.3",
+ "embedded-graphics-core",
  "float-cmp",
  "micromath",
 ]
@@ -181,16 +181,6 @@ name = "embedded-graphics-core"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b8b1239db5f3eeb7e33e35bd10bd014e7b2537b17e071f726a09351431337cfa"
-dependencies = [
- "az",
- "byteorder",
-]
-
-[[package]]
-name = "embedded-graphics-core"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba9ecd261f991856250d2207f6d8376946cd9f412a2165d3b75bc87a0bc7a044"
 dependencies = [
  "az",
  "byteorder",
@@ -296,7 +286,7 @@ dependencies = [
 name = "kampela-display-common"
 version = "0.1.0"
 dependencies = [
- "embedded-graphics-core 0.4.0",
+ "embedded-graphics-core",
 ]
 
 [[package]]
@@ -304,7 +294,7 @@ name = "kolibri"
 version = "0.1.0"
 dependencies = [
  "embedded-graphics",
- "embedded-graphics-core 0.3.3",
+ "embedded-graphics-core",
  "embedded-graphics-simulator",
  "embedded-text",
  "kampela-display-common",
@@ -366,9 +356,9 @@ dependencies = [
 
 [[package]]
 name = "nalgebra"
-version = "0.32.3"
+version = "0.32.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "307ed9b18cc2423f29e83f84fd23a8e73628727990181f18641a8b5dc2ab1caa"
+checksum = "4541eb06dce09c0241ebbaab7102f0a01a0c8994afed2e5d0d66775016e25ac2"
 dependencies = [
  "approx",
  "num-complex",
@@ -391,9 +381,9 @@ dependencies = [
 
 [[package]]
 name = "num-complex"
-version = "0.4.4"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ba157ca0885411de85d6ca030ba7e2a83a28636056c7c699b07c8b6f7383214"
+checksum = "23c6602fda94a57c990fe0df199a035d83576b496aa29f4e634a8ac6004e68a6"
 dependencies = [
  "num-traits",
 ]

@@ -1,8 +1,7 @@
 //! NFC packet collector and decoder
 
 use nfca_parser::frame::Frame;
-//use alloc::vec::Vec;
-use alloc::{borrow::ToOwned, format, string::String, vec::Vec};
+use alloc::vec::Vec;
 
 use kampela_system::{
     PERIPHERALS, in_free, BUF_THIRD, CH_TIM0,
@@ -11,24 +10,14 @@ use cortex_m::interrupt::free;
 use crate::BUFFER_STATUS;
 use efm32pg23_fix::{NVIC,Interrupt};
 
-use kampela_ui::platform::NfcTransaction;
-use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, CheckedMetadataMetal, psram_read_at_address};
+use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
-// use substrate_parser::compacts::find_compact;
-use substrate_parser::{MarkedData, compacts::find_compact, parse_transaction_unmarked, TransactionUnmarkedParsed, ShortSpecs};
-use schnorrkel::{
-    context::attach_rng,
-    keys::Keypair,
-    signing_context,
-};
+use substrate_parser::compacts::find_compact;
 
 use core::ops::DerefMut;
 
-use primitive_types::H256;
-use parity_scale_codec::Decode;
-
 pub const FREQ: u16 = 22;
-const NFC_MIN_VOLTAGE: i32 = 4000;
+const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
 
 #[derive(Clone, Debug)]
 pub enum BufferStatus {
@@ -281,15 +270,30 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 */
 }
 
+pub struct NfcTransactionPsramAccess {
+    pub call_psram_access: PsramAccess,
+    pub extension_psram_access: PsramAccess,
+    pub metadata_psram_access: PsramAccess,
+    pub genesis_hash_bytes_psram_access: PsramAccess,
+}
+
+pub enum NfcError {
+    InvalidAddress,
+}
+
 pub enum NfcResult {
-    Transaction(NfcTransaction),
+    Transaction(NfcTransactionPsramAccess),
     DisplayAddress(Vec<u8>),
-    KampelaStop,
+    Empty,
 }
 
 enum NfcState {
-    Operational,
+    Operational(usize),
     Done,
+}
+pub enum NfcStateOutput {
+    Operational(usize),
+    Done(NfcResult),
 }
 
 
@@ -301,14 +305,12 @@ pub struct NfcReceiver <'a> {
 }
 
 impl <'a> NfcReceiver<'a> {
-
-
     pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: Option<[u8; 32]>) -> Self {
         match public_memory {
             Some(a) => Self {
                 buffer: nfc_buffer,
                 collector: NfcCollector::new(),
-                state: NfcState::Operational,
+                state: NfcState::Operational(0),
                 public_memory: a,
             },
             None => 
@@ -321,36 +323,23 @@ impl <'a> NfcReceiver<'a> {
         }
     }
 
-    pub fn is_empty(&self) -> bool {
-        if let NfcCollector::Empty = self.collector {
-            return true;
-        }
-        false
-    }
-
-
-    fn process_address(&mut self, payload: TransferDataReceived) -> NfcResult {
+    fn process_address(&mut self, payload: TransferDataReceived) -> Result<NfcResult, NfcError> {
         let mut address_data_option = None;
         in_free(|peripherals| {
-            let mut external_psram = ExternalPsram{peripherals};
-            let address = payload.encoded_data.start_address.try_shift(1usize).unwrap(); //skipped first byte
+            let address = payload.encoded_data.start_address.try_shift(2usize).unwrap(); //skipped first byte
             address_data_option = Some(psram_read_at_address(peripherals, address, 66usize).unwrap()); //64bytes + start and stop bytes
         });
-        let mut address_data: Vec<u8> = address_data_option.unwrap().try_into().expect("static size");
+        let address_data: Vec<u8> = address_data_option.unwrap().try_into().expect("static size");
         
         let stop = address_data.iter().position(|a| a == &0u8).unwrap();
-        let byte_string = address_data.drain(1..stop as usize).collect();
+        let byte_string = address_data[..stop].to_vec();
 
-        NfcResult::DisplayAddress(byte_string)
+        Ok(NfcResult::DisplayAddress(byte_string))
     }
 
-    fn process_transaction(&mut self, payload: TransferDataReceived) -> NfcResult {
-        let mut genesis_hash_bytes_option = None;
-        in_free(|peripherals| {
-            let address = payload.encoded_data.start_address.try_shift(1usize).unwrap(); //skipped first byte
-            genesis_hash_bytes_option = Some(psram_read_at_address(peripherals, address, 32usize).unwrap());
-        });
-        let genesis_hash = H256(genesis_hash_bytes_option.unwrap().try_into().expect("static size"));
+    fn process_transaction(&mut self, payload: TransferDataReceived) -> Result<NfcResult, NfcError> {
+        let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
+        let genesis_hash_bytes_psram_access = PsramAccess{start_address: address, total_len: 32usize};
 
         let mut metadata_psram_access_option = None;
         let mut position = 1usize + 32usize;
@@ -363,102 +352,121 @@ impl <'a> NfcReceiver<'a> {
         });
         let metadata_psram_access = metadata_psram_access_option.unwrap();
 
-        let mut checked_metadata_metal_option = None;
+        let mut data_to_sign_psram_access = None;
         in_free(|peripherals| {
             let mut external_psram = ExternalPsram{peripherals};
-            checked_metadata_metal_option = Some(CheckedMetadataMetal::from(&metadata_psram_access, &mut external_psram).unwrap());
-        });
-        let checked_metadata_metal = checked_metadata_metal_option.unwrap();
-
-        let mut signable_transaction_option = None;
-        in_free(|peripherals| {
-            let mut external_psram = ExternalPsram{peripherals};
-            let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap(); // fix this madness maybe later
+            let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(
+                &payload.encoded_data,
+                &mut external_psram,
+                position
+            ).unwrap(); // fix this madness maybe later
             position = compact_transaction_1.start_next_unit;
-            let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
+            
+            let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(
+                &payload.encoded_data,
+                &mut external_psram,
+                position
+            ).unwrap();
             position = compact_transaction_2.start_next_unit;
 
-            let start_address = payload.encoded_data.start_address.try_shift(compact_transaction_2.start_next_unit).unwrap();
-
-            let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-            let start_address_to_sign = payload.encoded_data.start_address.try_shift(compact_call.start_next_unit).unwrap();
-            let total_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit + position;
-
-            let data_to_sign = psram_read_at_address(peripherals, start_address_to_sign, total_len_to_sign).unwrap();
-
-            signable_transaction_option = Some(data_to_sign);
-            position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
-        });
-        let data_to_sign = signable_transaction_option.unwrap();
-
-
-        in_free(|peripherals| {
-            let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
-            let public_key = psram_read_at_address(peripherals, start_address, 33usize).unwrap();
-            // TODO: check address differently
-            assert!(public_key.starts_with(&[1u8]) & (public_key[1..] == self.public_memory), "Invalid address");
-        });
-
-        let mut got_transaction_no_data = None;
-        in_free(|peripherals| {
-
-            let mut external_psram = ExternalPsram{peripherals};
-
-            let decoded_transaction = parse_transaction_unmarked(
-                &data_to_sign.as_ref(),
+            let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&
+                payload.encoded_data,
                 &mut external_psram,
-                &checked_metadata_metal,
-                genesis_hash
+                position
             ).unwrap();
 
-            got_transaction_no_data = Some((decoded_transaction, checked_metadata_metal.to_specs(), checked_metadata_metal.spec_name_version.spec_name.to_owned()));
+            let call_address_to_sign = payload.encoded_data.start_address
+                .try_shift(compact_call.start_next_unit)
+                .unwrap();
+
+            let extension_address_to_sign = payload.encoded_data.start_address
+                .try_shift(compact_call.start_next_unit + compact_call.compact as usize)
+                .unwrap();
+            let extension_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit - compact_call.compact as usize + position;
+
+            let call_to_sign_psram_access = PsramAccess{start_address: call_address_to_sign, total_len: compact_call.compact as usize};
+            let extension_to_sign_psram_access = PsramAccess{start_address: extension_address_to_sign, total_len: extension_len_to_sign};
+            data_to_sign_psram_access = Some((call_to_sign_psram_access, extension_to_sign_psram_access));
+
+            position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
         });
-        let (decoded_transaction, specs, spec_name) = got_transaction_no_data.unwrap();
+        let (call_to_sign_psram_access, extension_to_sign_psram_access) = data_to_sign_psram_access.unwrap();
 
-        NfcResult::Transaction(NfcTransaction{
-            decoded_transaction,
-            data_to_sign,
-            specs,
-            spec_name,
-        })
-    }
-
-    fn process(&mut self) -> Option<NfcResult> {
-        turn_nfc_collector_correctly(&mut self.collector, self.buffer);
-
-        if let NfcCollector::Done(ref a) = self.collector {
-            NVIC::mask(Interrupt::LDMA);
-            let payload = process_nfc_payload(a).unwrap();
-
-            let mut first_byte: Option<u8> = None;
-            in_free(|peripherals| {
-                first_byte = Some(psram_read_at_address(peripherals, payload.encoded_data.start_address, 1usize).unwrap()[0]);
-            });
-
-            match first_byte {
-                Some(0) => return Some(NfcResult::KampelaStop),
-                Some(2) => return Some(self.process_address(payload)),
-                Some(3) => return Some(self.process_transaction(payload)),
-                _ => {
-                    self.collector = NfcCollector::new();
+        let mut public_key: Option<Vec<u8>> = None;
+        in_free(|peripherals| {
+            let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
+            let k = psram_read_at_address(peripherals, start_address, 32usize).unwrap();
+            public_key = Some(k);
+        });
+        // TODO: check address differently
+        match public_key {
+            None => {
+                return Err(NfcError::InvalidAddress)
+            },
+            Some(k) => {
+                if k != self.public_memory {
+                    return Err(NfcError::InvalidAddress)
                 }
             }
         }
-        None
 
+        return Ok(NfcResult::Transaction(NfcTransactionPsramAccess{
+            call_psram_access: call_to_sign_psram_access,
+            extension_psram_access: extension_to_sign_psram_access,
+            metadata_psram_access,
+            genesis_hash_bytes_psram_access,
+        }));
     }
 
-    pub fn advance(&mut self, voltage: i32) -> Option<NfcResult> {
-        if (voltage < NFC_MIN_VOLTAGE) { return None; }
-        match self.state {
-            NfcState::Operational => {
-                let res = self.process();
-                if res.is_some() {
-                    self.state = NfcState::Done;
+    fn process(&mut self) -> Option<Result<NfcResult, NfcError>> {
+        turn_nfc_collector_correctly(&mut self.collector, self.buffer);
+
+        match self.collector {
+            NfcCollector::Done(ref a) => {
+                NVIC::mask(Interrupt::LDMA);
+                let payload = process_nfc_payload(a).unwrap();
+
+                let mut first_byte: Option<u8> = None;
+                in_free(|peripherals| {
+                    first_byte = Some(psram_read_at_address(peripherals, payload.encoded_data.start_address, 1usize).unwrap()[0]);
+                });
+
+                match first_byte {
+                    Some(2) => return Some(self.process_address(payload)),
+                    Some(3) => return Some(self.process_transaction(payload)),
+                    _ => {
+                        panic!("result empty");
+                        return Some(Ok(NfcResult::Empty))
+                    }
                 }
-                res
             },
-            NfcState::Done => { None }
+            NfcCollector::Empty => Some(Ok(NfcResult::Empty)),
+            NfcCollector::InProgress(_) => None,
+        }
+    }
+
+    pub fn advance(&mut self, voltage: i32) -> Option<Result<NfcStateOutput, NfcError>> {
+        if voltage < NFC_MIN_VOLTAGE { return None }
+        match self.state {
+            NfcState::Operational(i) => {
+                let res = self.process();
+                match res {
+                    Some(r) => {
+                        match r {
+                            Err(e) => { Some(Err(e)) },
+                            Ok(r) => {
+                                self.state = NfcState::Done;
+                                Some(Ok(NfcStateOutput::Done(r)))
+                            },
+                        }
+                    },
+                    None => {
+                        self.state = NfcState::Operational(i + 1);
+                        Some(Ok(NfcStateOutput::Operational(i + 1)))
+                    },
+                }
+            },
+            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty))) }
         }
     }
 }
