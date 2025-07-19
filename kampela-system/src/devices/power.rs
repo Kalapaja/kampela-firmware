@@ -4,7 +4,7 @@ use core::cell::RefCell;
 use cortex_m::interrupt::Mutex;
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, SCB};
 
-use crate::{free, if_in_free, in_free, peripherals::adc::{adc_cmp_ien, adc_icmp, read_adc}, CORE_PERIPHERALS};
+use crate::{free, if_in_free, peripherals::adc::{adc_cmp_ien, adc_icmp, read_adc}, CORE_PERIPHERALS};
 
 const THRESHOLD_VOLTAGE: u16 = 4000;
 const INIT_VOLTAGE_THRESHOLD: u16 = 8000;

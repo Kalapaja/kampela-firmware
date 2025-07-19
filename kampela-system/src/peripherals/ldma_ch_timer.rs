@@ -4,10 +4,9 @@ use alloc::boxed::Box;
 use cortex_m::interrupt::{free, CriticalSection, Mutex};
 use efm32pg23_fix::{Interrupt, NVIC};
 
-use crate::{in_free, peripherals::ldma::*, CORE_PERIPHERALS};
+use crate::{in_free, peripherals::ldma::*};
 
 const XFERCNT_2047: u32 = (2048 - 1) << 4; // one less than desired 2048
-const DONEIEN_TRUE: u32 = 1 << 20;
 const SRCINC_NONE: u32 = 3 << 24;
 const LINK_DESCRIPTORS: u32 = SIZE_HALFWORD | SRCINC_NONE | XFERCNT_2047;
 

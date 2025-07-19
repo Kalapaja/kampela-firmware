@@ -1,7 +1,7 @@
 //! all low level usart operations
 
-use efm32pg23_fix::{interrupt, GpioS, Peripherals};
-use crate::{in_free, peripherals::{self, gpio_pins::*}};
+use efm32pg23_fix::{GpioS, Peripherals};
+use crate::peripherals::gpio_pins::*;
 
 pub const BAUDRATE_USART: u32 = 2_500_000;
 

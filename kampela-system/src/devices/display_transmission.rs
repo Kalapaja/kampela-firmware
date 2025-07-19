@@ -6,9 +6,6 @@ use crate::peripherals::gpio_pins::{display_res_clear, display_res_set};
 use crate::{if_in_free, in_free};
 use crate::parallel::{AsyncOperation, Threads};
 
-use kampela_display_common::display_def::*;
-const X_ADDRESS_WIDTH: usize = (SCREEN_SIZE_Y / 8) as usize;
-
 /// BUSY is on port B, pin [`SPI_BUSY_PIN`].
 pub fn display_is_busy() -> bool {
     if_in_free(|peripherals| spi_is_busy(&mut peripherals.gpio_s))

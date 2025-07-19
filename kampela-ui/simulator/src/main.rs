@@ -7,7 +7,9 @@ use embedded_graphics_core::{
 use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
+use eth_sign_request_parser::eip712::TypedDataWithSaltStringMaybeStringified;
 use rand::{rngs::ThreadRng, thread_rng};
+use uuid::Uuid;
 use std::{collections::VecDeque, thread::sleep, time::Duration};
 use clap::Parser;
 use substrate_crypto_light::sr25519::Public;
@@ -25,23 +27,14 @@ const UPDATE_DELAY_TIME: Duration = Duration::new(0, 100000000);
 const MAX_TOUCH_QUEUE: usize = 2;
 
 use kampela_ui::{
-    data_state::{AppStateInit, DataInit, NFCState, StorageState},
-    display_def::*,
-    platform::{ErrorTransaction, PinCode, Platform},
-    uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate},
+    data_state::{AppStateInit, DataInit, NFCState, StorageState}, display_def::*, ethereum_decode::{EthSignRequest, SignDataType}, messages::{ErrorTransaction, EthSignRequestDecodeError}, platform::{PinCode, Platform}, uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
 };
 
-#[derive(Debug)]
-pub struct NfcTransactionData {
+#[derive(Debug, Clone)]
+pub struct SubstrateTransactionData {
     pub call: String,
     pub extension: String,
     pub signature: [u8; 130],
-}
-
-#[derive(Debug)]
-pub struct NfcEthSignRequestData {
-    pub request_id: [u8; 16],
-    pub sign_data: [u8; 65],
 }
 
 #[derive(Parser, Debug)]
@@ -50,8 +43,8 @@ struct Args {
     #[arg(short = 'I')]
     key_was_created: bool,
 
-    #[arg(short = 'T')]
-    transaction_received: bool,
+    #[arg(short = 'T', default_value = "0")]
+    transaction_received: usize,
 }
 
 impl DataInit<Args> for AppStateInit {
@@ -60,10 +53,11 @@ impl DataInit<Args> for AppStateInit {
             key_created: params.key_was_created,
         };
 
-        let nfc = if params.transaction_received {
-            NFCState::Transaction
-        } else {
-            NFCState::Empty
+        let nfc = match params.transaction_received {
+            1 => NFCState::Transaction,
+            2 => NFCState::EthEip712Transaction,
+            3 => NFCState::EthTypedTransaction,
+            _ => NFCState::Empty
         };
 
         AppStateInit {
@@ -86,44 +80,74 @@ impl HALHandle {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone)]
+enum Transaction {
+    Substrate(SubstrateTransactionData),
+    Ethereum(EthSignRequest)
+}
+
 struct DesktopSimulator {
     pin: PinCode,
     seed: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
-    transaction: Option<NfcTransactionData>,
-    eth_sign_request_data: Option<NfcEthSignRequestData>,
+    transaction: Option<Transaction>,
     stored_seed: Option<Vec<u8>>,
 }
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit) -> Self {
         let pin = [0; 4];
-        let (transaction, eth_sign_request_data) = match init_state.nfc {
-            NFCState::Empty => (None, None),
-            NFCState::Transaction => (Some(NfcTransactionData{
+        let transaction = match init_state.nfc {
+            NFCState::Empty => None,
+            NFCState::Transaction => Some(Transaction::Substrate(SubstrateTransactionData{
                 call: String::from("Hello, this is a transaction!"),
                 extension: String::from("Hello, this is a transaction!"),
                 signature: [0u8; 130],
-            }), None),
-            NFCState::EthTransaction => (None, Some(NfcEthSignRequestData{
-                request_id: [0u8; 16],
-                sign_data: [0u8; 65]
+            })),
+            NFCState::EthEip712Transaction => {
+                let payload = hex::decode("7b227479706573223a7b22454950373132446f6d61696e223a5b7b226e616d65223a226e616d65222c2274797065223a22737472696e67227d2c7b226e616d65223a2276657273696f6e222c2274797065223a22737472696e67227d2c7b226e616d65223a22636861696e4964222c2274797065223a2275696e74323536227d2c7b226e616d65223a22766572696679696e67436f6e7472616374222c2274797065223a2261646472657373227d5d2c225472616e7366657252657175657374223a5b7b226e616d65223a22746f222c2274797065223a2261646472657373227d2c7b226e616d65223a22616d6f756e74222c2274797065223a2275696e74323536227d5d7d2c227072696d61727954797065223a225472616e7366657252657175657374222c22646f6d61696e223a7b226e616d65223a224b61726d612052657175657374222c2276657273696f6e223a2231222c22636861696e4964223a223078616133366137222c22766572696679696e67436f6e7472616374223a22307843634343636363634343434363434343434343634363436363436343434363436363636363636343227d2c226d657373616765223a7b22746f223a22307843634343636363634343434363434343434343634363436363436343434363436363636363636343222c22616d6f756e74223a313233347d7d").unwrap();
+                let json: TypedDataWithSaltStringMaybeStringified = serde_json::from_slice(&payload).unwrap();
+                let sign_data = serde_brief::to_vec(&json.0).unwrap();
+                Some(Transaction::Ethereum(EthSignRequest{
+                    request_id: Some(Uuid::from_slice(&hex::decode("7f820ab5d08049a497dc4d0cf754184b").unwrap()).unwrap()),
+                    sign_data,
+                    data_type: SignDataType::EthTypedData,
+                    chain_id: 111551111,
+                    derivation_path: "44'/60'/0'/0/0".to_string(),
+                    source_fingerprint: [0x73, 0xc5, 0xda, 0x0a],
+                    address: Some(alloy_primitives::Address::from_slice(&hex::decode("9858EffD232B4033E47d90003D41EC34EcaEda94").unwrap())),
+                    origin: None
+                }))
+            },
+            NFCState::EthTypedTransaction => Some(Transaction::Ethereum(EthSignRequest{
+                request_id: Some(Uuid::from_slice(&hex::decode("e5cb0877e2c64bb89ced485721d0a24b").unwrap()).unwrap()),
+                sign_data: hex::decode("02e383aa36a781d18080828e59949858effd232b4033e47d90003d41ec34ecaeda948080c0").unwrap(),
+                data_type: SignDataType::EthTypedTransaction,
+                chain_id: 111551111,
+                derivation_path: "44'/60'/0'/0/0".to_string(),
+                source_fingerprint: [0x73, 0xc5, 0xda, 0x0a],
+                address: Some(alloy_primitives::Address::from_slice(&hex::decode("9858EffD232B4033E47d90003D41EC34EcaEda94").unwrap())),
+                origin: None
             }))
         };
-        let mnemonic = [];
+        let mnemonic = ["abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "abandon", "about"];
+        
         let wordlist = Self::get_wordlist();
-        let stored_seed = WordSet{
-            bits11_set: mnemonic.iter().map(|w| wordlist.bits11_for_word(*w).unwrap()).collect::<Vec<Bits11>>()
-        }
-            .to_entropy()
-            .ok();
+        let stored_seed = if init_state.storage.key_created {
+            WordSet{
+                bits11_set: mnemonic.iter().map(|w| wordlist.bits11_for_word(*w).unwrap()).collect::<Vec<Bits11>>()
+            }
+                .to_entropy()
+                .ok()
+        } else {
+            None
+        };
+
         Self {
             pin,
             seed: None,
             address: None,
             transaction,
-            eth_sign_request_data,
             stored_seed,
         }
     }
@@ -132,8 +156,8 @@ impl DesktopSimulator {
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
-    type NfcTransaction = NfcTransactionData;
-    type NfcEthSignRequest = NfcEthSignRequestData;
+    type NfcTransaction = SubstrateTransactionData;
+    type NfcEthSignRequest = EthSignRequest;
     type AsWordList = InternalWordList;
 
     fn get_wordlist() -> Self::AsWordList {
@@ -176,54 +200,44 @@ impl Platform for DesktopSimulator {
     }
 
     fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
-        self.transaction = Some(transaction);
+        self.transaction = Some(Transaction::Substrate(transaction));
     }
 
     fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest) {
-        self.eth_sign_request_data = Some(sign_request);
+        self.transaction = Some(Transaction::Ethereum(sign_request));
     }
 
     fn call(&mut self) -> Option<String> {
         match self.transaction {
-            Some(ref a) => Some(a.call.to_owned()),
-            None => None,
+            Some(Transaction::Substrate(ref a)) => Some(a.call.to_owned()),
+            _ => None,
         }
     }
 
     fn extensions(&mut self) -> Option<String> {
         match self.transaction {
-            Some(ref a) => Some(a.extension.to_owned()),
-            None => None,
+            Some(Transaction::Substrate(ref a)) => Some(a.extension.to_owned()),
+            _ => None,
         }
     }
 
-    fn ethereum(&mut self) -> Option<String> {
-        match self.eth_sign_request_data {
-            Some(ref a) => {
-                let mut out = hex::encode(a.sign_data);
-                out.push_str("\n");
-                out.push_str(&hex::encode(a.request_id));
-                Some(out)
+    fn eth_sign_request(&self) -> Result<EthSignRequest, EthSignRequestDecodeError> {
+        match self.transaction {
+            Some(Transaction::Ethereum(ref a)) => {
+                Ok(a.clone())
             },
-            None => None,
+            _ => Err(EthSignRequestDecodeError::NoEthSignRequestDataStored),
         }
     }
 
-    fn check_eth_transaction(&self) -> Result<(), ErrorTransaction> {
+    fn check_eth_transaction<'a>(&self, _: &'a mut Self::HAL) -> Result<(), ErrorTransaction> {
         Ok(())
     }
 
     fn signature(&mut self) -> [u8; 130] {
         match self.transaction {
-            Some(ref a) => a.signature,
-            None =>  panic!("qr not ready!"),
-        }
-    }
-
-    fn eth_signature(&mut self) -> ([u8; 16], [u8; 65]) {
-        match self.eth_sign_request_data {
-            Some(ref a) => (a.request_id, a.sign_data),
-            None => panic!("qr not ready!"),
+            Some(Transaction::Substrate(ref a)) => a.signature,
+            _ =>  panic!("qr not ready!"),
         }
     }
 
@@ -250,6 +264,7 @@ fn main() {
     let mut h = HALHandle::new();
     let desktop = DesktopSimulator::new(&init_data_state);
     let mut display = SimulatorDisplay::new(SCREEN_SIZE);
+    let mut transaction = desktop.transaction.clone();
     let mut state = UIState::new(desktop, &mut h);
 
     // Draw
@@ -258,7 +273,11 @@ fn main() {
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
     
-    let mut update = Some(UpdateRequest::Slow);
+    let mut update = Some(UpdateRequest::Fast);
+    
+    if transaction.is_some() {
+        update = state.handle_message("Receiving Nfc package".to_string(), &mut h);
+    }
 
     let mut touches = VecDeque::new();
 
@@ -281,6 +300,18 @@ fn main() {
                 Ok(a) => update.propagate(a),
                 Err(e) => println!("{:?}", e),
             };
+
+            match transaction {
+                Some(Transaction::Substrate(_)) => {
+                    update = state.handle_transaction(&mut h);
+                    transaction = None;
+                },
+                Some(Transaction::Ethereum(_)) => {
+                    update = state.handle_eth_sign_request();
+                    transaction = None;
+                },
+                None => ()
+            }
 
             match u {
                 UpdateRequest::Invocate => {
@@ -373,8 +404,7 @@ fn draw_selective(display: &mut SimulatorDisplay<BinaryColor>, new_display: &Sim
         return
     }
     for area in areas.iter() {
-        let mut area = area.to_owned();
-        draw_area(display, new_display, area)
+        draw_area(display, new_display, *area)
     }
 }
 

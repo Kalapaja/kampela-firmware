@@ -7,7 +7,7 @@ use crate::{display_def::*, uistate::Event, widget::view::{DrawView, View, Widge
 
 use crate::widget::nav_bar::nav_button::NavButton;
 
-const NAV_BAR_SIZE: Size = Size{
+pub const NAV_BAR_SIZE: Size = Size{
     width: SCREEN_SIZE_X,
     height: 32,
 };

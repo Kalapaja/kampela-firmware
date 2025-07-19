@@ -5,6 +5,8 @@ name = "kampela-system"
 version = "0.1.0"
 
 [dependencies]
+alloy-primitives = { version = "1.2.1", default-features = false }
+bitcoin = {version ="0.32.6", default-features = false, features = ["secp-lowmemory", "secp-recovery"] }
 bitvec = {version = "1.0.1", default-features = false, features = ["alloc"]}
 cortex-m = { version = "0.7.7", features = ["critical-section-single-core"]}
 efm32pg23_fix = {path = "../kampela_experiments_efm32pg23/efm32pg23_fix", features = ["critical-section", "rt"]}
@@ -16,13 +18,14 @@ kampela-ui = { path = "../kampela-ui" , default-features = false }
 lazy_static = { version = "1.4.0", default_features = false, features = ["spin_no_std"]}
 lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features = false}
 mnemonic-external = { version = "0.1.0", default-features = false }
-parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
+#parity-scale-codec = {version = "3.6.4", default-features = false, features = ["derive", "bit-vec"]}
 primitive-types = {version = "0.13.1", default-features = false}
 qrcodegen-no-heap = { version = "1.8.1" }
 rand_core = {version = "0.6.4", default-features = false}
 scale-info = {version = "2.9.0", default-features = false}
-substrate-crypto-light = { path = "../../substrate-crypto-light", default-features = false, features = ["ecdsa"] }
-substrate_parser = { version = "0.7.1", default-features = false }
+#substrate-crypto-light = { path = "../../substrate-crypto-light", default-features = false }
+#substrate_parser = { path = "../../substrate-parser", default-features = false, features = ["sr25519"] }
+uuid = { version = "0.8.2", default-features = false }
 
 [profile.release]
 codegen-units = 1

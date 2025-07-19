@@ -15,7 +15,8 @@ pub struct AppStateInit {
 pub enum NFCState {
     Empty,
     Transaction,
-    EthTransaction,
+    EthEip712Transaction,
+    EthTypedTransaction,
 }
 
 /// State of Kampela on boot

@@ -163,7 +163,6 @@ impl ChObjEnum for ReceivableUSART {
 
 const CHUNK_SIZE: u32 = 0x200; // no more than 0x800
 const USART_SYNCTRIG_TX: u8 = USART_TX_MATCHVAL;
-const USART_SYNCCLEAR_TX: u8 = USART_MATCHEN_TX & !USART_TX_MATCHVAL;
 
 enum RamCopyState {
     Receive,

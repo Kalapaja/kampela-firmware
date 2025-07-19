@@ -6,7 +6,7 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{borrow::ToOwned, boxed::Box, format};
+use alloc::{borrow::ToOwned, format};
 use core::{alloc::Layout, panic::PanicInfo};
 use cortex_m::interrupt::free;
 use cortex_m_rt::{entry, exception, ExceptionFrame};
@@ -14,9 +14,12 @@ use cortex_m_rt::{entry, exception, ExceptionFrame};
 use embedded_alloc::Heap;
 
 use kampela_system::{
-    debug_display::burning_tank, devices::{
-        flash::{init_flash_copy_to_psram, wait_flash_copy_to_psram}, power::{voltage, wait_for_energy}, touch::{clear_touch_if, enable_touch_int}
-    }, parallel::{AsyncOperation, Threads}, peripherals::{adc::adc_cmp_ien, ldma_ch_timer::purge_ldma_nfc_buffers}, CORE_PERIPHERALS, PERIPHERALS
+    debug_display::burning_tank,
+    devices::{
+        flash::{init_flash_copy_to_psram, wait_flash_copy_to_psram},
+        power::wait_for_energy,
+        touch::{clear_touch_if, enable_touch_int}
+    }, parallel::{AsyncOperation, Threads}, CORE_PERIPHERALS, PERIPHERALS
 };
 use efm32pg23_fix::{Interrupt, Peripherals, NVIC, SYST};
 
@@ -218,14 +221,14 @@ impl AsyncOperation for MainState {
                                                 ui.handle_address([0;76]);
                                             }
                                         });
-                                    },
+                                    },/*
                                     NfcResult::Transaction(transaction) => {
                                         self.threads.try_change_any(|status| {
                                             if let MainStatus::Display(ui) = status {
                                                 ui.handle_transaction(transaction.clone());
                                             }
                                         });
-                                    },
+                                    },*/
                                     NfcResult::EthSignRequest(eth_sign_request) => {
                                         let mut success = false;
                                         self.threads.try_change_any(|status| {

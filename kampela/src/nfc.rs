@@ -1,25 +1,23 @@
 //! NFC packet collector and decoder
 
-use core::{cell::RefCell, ops::Deref};
+use core::cell::RefCell;
 
 use alloc::borrow::ToOwned;
 use cortex_m::interrupt::{Mutex, free};
 use nfca_parser::frame::Frame;
 
 use kampela_system::{
-    devices::power::voltage, if_in_free, in_free, peripherals::{ldma::LdmaCh, ldma_ch_timer::{init_ldma_nfc_buffers, ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers, LDMAchTimer0, NfcReceive, ReceivableTIMER}}
+    devices::psram::NfcEthSignRequestPsramAccess, if_in_free, in_free, peripherals::ldma_ch_timer::{init_ldma_nfc_buffers, ldma_nfc_set_next, ldma_nfc_take_done, purge_ldma_nfc_buffers}
 };
 
-use substrate_crypto_light::ecdsa::PUBLIC_LEN;
-use efm32pg23_fix::{Interrupt, interrupt, NVIC};
+use efm32pg23_fix::interrupt;
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
+//use substrate_crypto_light::sr25519::PUBLIC_LEN;
 use substrate_parser::compacts::find_compact;
 
 pub const FREQ: u16 = 22;
-pub const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
-
 static NFC_COLLECTOR: Mutex<RefCell<NfcCollector>> = Mutex::new(RefCell::new(NfcCollector::Empty));
 static NFC_RECEIVED: Mutex<RefCell<usize>> = Mutex::new(RefCell::new(0));
 
@@ -222,18 +220,6 @@ pub struct NfcTransactionPsramAccess {
     pub genesis_hash_bytes_psram_access: PsramAccess,
 }
 
-#[derive(Clone)]
-pub struct NfcEthSignRequestPsramAccess {
-    pub request_id: PsramAccess,
-    pub sign_data: PsramAccess,
-    pub data_type: PsramAccess,
-    pub chain_id: PsramAccess,
-    pub derivation_path: PsramAccess,
-    pub source_fingerprint: PsramAccess,
-    pub address: PsramAccess,
-    pub origin: PsramAccess,
-}
-
 //TODO: implement more error cases, i.e. old specs
 pub enum NfcError {
     InvalidAddress,
@@ -241,7 +227,7 @@ pub enum NfcError {
 
 #[derive(Clone)]
 pub enum NfcResult {
-    Transaction(NfcTransactionPsramAccess),
+    //Transaction(NfcTransactionPsramAccess),
     EthSignRequest(NfcEthSignRequestPsramAccess),
     DisplayAddress,
     Empty,
@@ -275,7 +261,7 @@ impl NfcReceiver {
             });
 
             match first_byte {
-                Some(2) => return Some(Ok(NfcResult::DisplayAddress)),
+                Some(2) => return Some(Ok(NfcResult::DisplayAddress)),/*
                 Some(3) => {
                     let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
                     let genesis_hash_bytes_psram_access = PsramAccess{start_address: address, total_len: 32usize};
@@ -329,7 +315,7 @@ impl NfcReceiver {
                         position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
 
                         let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
-                        let sender_public_key_psram_access = PsramAccess{start_address, total_len: PUBLIC_LEN};
+                        let sender_public_key_psram_accessPUBLIC_LEN = PsramAccess{start_address, total_len: };
                         data_to_sign_psram_access = Some((sender_public_key_psram_access, call_to_sign_psram_access, extension_to_sign_psram_access));
                     });
                     let (sender_public_key_psram_access, call_to_sign_psram_access, extension_to_sign_psram_access) = data_to_sign_psram_access.unwrap();
@@ -341,7 +327,7 @@ impl NfcReceiver {
                         metadata_psram_access,
                         genesis_hash_bytes_psram_access,
                     })));
-                },
+                },*/
                 Some(4) => {
                     let request_id_address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
                     let request_id = PsramAccess{start_address: request_id_address, total_len: 16};

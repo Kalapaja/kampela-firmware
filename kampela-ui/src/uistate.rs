@@ -19,7 +19,7 @@ mod stdwrap {
 
 use core::str::FromStr;
 
-use bitcoin::{bip32::{ChildNumber, DerivationPath, Xpriv}, secp256k1::SignOnly, Address, Network, PublicKey};
+use bitcoin::{bip32::{ChildNumber, DerivationPath, Xpriv}, secp256k1::SignOnly};
 use minicbor::data::Tag;
 use mnemonic_external::WordSet;
 use stdwrap::*;
@@ -39,7 +39,7 @@ use embedded_graphics::{
 
 use ur::ur;
 
-use crate::{dialog::{Dialog, DialogUnitScreenArgs}, display_def::*, pin::pin::Pincode, platform::ErrorTransaction, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
+use crate::{dialog::{Dialog, DialogUnitScreenArgs}, display_def::*, ethereum_decode::decode_ethereum_signing_payload, pin::pin::Pincode, qr, transaction::{Transaction, TransactionPage}, widget::view::ViewScreen};
 
 use crate::backup::Backup;
 
@@ -102,6 +102,82 @@ pub enum UnitScreen {
     Locked,
 }
 
+impl UnitScreen {
+    fn switch_screen<P: Platform>(self, state: &mut UIState<P>, h: &mut <P as Platform>::HAL)
+        where <P as Platform>::AsWordList: Sized {
+        match self {
+            UnitScreen::QRAddress => {
+                state.screen = Screen::QRAddress;
+            },
+            UnitScreen::Locked => {
+                state.screen = Screen::Locked;
+            },
+            UnitScreen::OnboardingBackup(e) => {
+                let entropy = match e {
+                    Some(e) => e,
+                    None => P::generate_seed_entropy(h).to_vec(),
+                };
+                state.screen.replace_getting_unit(Box::new(|unit| Screen::OnboardingBackup(Backup::new(entropy, unit)))).unwrap();
+            },
+            UnitScreen::ShowMessage(m, route) => {
+                state.screen = Screen::ShowMessage(m.to_owned(), route);
+            },
+            UnitScreen::ShowDialog(args) => {
+                state.screen = Screen::ShowDialog(Dialog::new(args, None));
+            },
+            UnitScreen::OnboardingRestoreOrGenerate => {
+                state.screen = Screen::ShowDialog(Dialog::new((
+                    "restore or generate?",
+                    ("restore", "generate"),
+                    (
+                        Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingRestore(None))}),
+                        Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
+                    ),
+                    false,
+                ), Some(UnitScreen::OnboardingRestoreOrGenerate)))
+            },
+            UnitScreen::OnboardingRestore(p) => {
+                state.screen = Screen::OnboardingRestore(SeedEntry::new(p));
+            },
+            UnitScreen::QRSignature => {
+                if state.unlocked {
+                    if matches!(state.screen, Screen::ShowMessage(_, _)) {
+                        state.screen = Screen::QRSignature;
+                    } else {
+                        state.screen = Screen::ShowMessage("Signing...".to_owned(), Some(Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::QRSignature)})));
+                    }
+                } else {
+                    state.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::QRSignature);
+                }
+            },
+            UnitScreen::ShowTransaction(p) => {
+                let content_getter = Box::new(|s: &TransactionPage, p: &mut P| {
+                    match s {/*
+                        TransactionPage::Call => {
+                            p.call().expect("transaction should be stored to display")
+                        },
+                        TransactionPage::Extension => {
+                            p.extensions().expect("transaction should be stored to display")
+                        },*/
+                        TransactionPage::Eth => {
+                            format!("{}", p.eth_sign_request().expect("ethereum sign request parse checked"))
+                        },
+                        TransactionPage::EthPayload => {
+                            let eth_sign_request = p.eth_sign_request().expect("ethereum sign request parse checked");
+                            match decode_ethereum_signing_payload(eth_sign_request) {
+                                Ok(s) => s,
+                                // TODO: Error message
+                                Err(e) => {return format!("Error: {:?}", e)}
+                            }
+                        }
+                    }
+                });
+                state.screen = Screen::ShowTransaction(Transaction::new(p, content_getter, &mut state.platform));
+            },
+        }
+    }
+}
+
 impl Default for UnitScreen {
     fn default() -> Self {UnitScreen::QRAddress}
 }
@@ -114,7 +190,7 @@ pub enum Screen<P: Platform> {
     ShowMessage(String, Option<Box<dyn FnOnce() -> EventResult>>),
     ShowDialog(Dialog),
     CheckEthTransaction,
-    ShowTransaction(Transaction),
+    ShowTransaction(Transaction<P>),
     QRSignature,
     QRAddress,
     Locked,
@@ -166,68 +242,15 @@ impl <P: Platform> UIState<P> {
             UnitScreen::OnboardingRestoreOrGenerate,
             true
         )};
+
         let mut state = UIState {
             screen: Screen::default(),
             platform,
             unlocked,
         };
-        state.switch_screen(Some(initial_screen), h);
-        state
-    }
 
-    fn switch_screen(&mut self, s: Option<UnitScreen>, h: &mut <P as Platform>::HAL )
-        where <P as Platform>::AsWordList: Sized {
-        if let Some(s) = s {
-            match s {
-                UnitScreen::QRAddress => {
-                    self.screen = Screen::QRAddress;
-                },
-                UnitScreen::Locked => {
-                    self.screen = Screen::Locked;
-                },
-                UnitScreen::OnboardingBackup(e) => {
-                    let entropy = match e {
-                        Some(e) => e,
-                        None => P::generate_seed_entropy(h).to_vec(),
-                    };
-                    self.screen.replace_getting_unit(Box::new(|unit| Screen::OnboardingBackup(Backup::new(entropy, unit)))).unwrap();
-                },
-                UnitScreen::ShowMessage(m, route) => {
-                    self.screen = Screen::ShowMessage(m, route);
-                },
-                UnitScreen::ShowDialog(args) => {
-                    self.screen = Screen::ShowDialog(Dialog::new(args, None));
-                },
-                UnitScreen::OnboardingRestoreOrGenerate => {
-                    self.screen = Screen::ShowDialog(Dialog::new((
-                        "restore or generate?",
-                        ("restore", "generate"),
-                        (
-                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingRestore(None))}),
-                            Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::OnboardingBackup(None))}),
-                        ),
-                        false,
-                    ), Some(UnitScreen::OnboardingRestoreOrGenerate)))
-                },
-                UnitScreen::OnboardingRestore(p) => {
-                    self.screen = Screen::OnboardingRestore(SeedEntry::new(p));
-                },
-                UnitScreen::QRSignature => {
-                    if self.unlocked {
-                        if matches!(self.screen, Screen::ShowMessage(_, _)) {
-                            self.screen = Screen::QRSignature;
-                        } else {
-                            self.screen = Screen::ShowMessage("Signing...".to_owned(), Some(Box::new(|| EventResult{request: Some(UpdateRequest::Fast), state: Some(UnitScreen::QRSignature)})));
-                        }
-                    } else {
-                        self.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::QRSignature);
-                    }
-                },
-                UnitScreen::ShowTransaction(p) => {
-                    self.screen = Screen::ShowTransaction(Transaction::new(p));
-                },
-            }
-        }
+        initial_screen.switch_screen(&mut state, h);
+        state
     }
 
     /// Read user touch event
@@ -265,12 +288,9 @@ impl <P: Platform> UIState<P> {
                 new_screen = res.state;
             },
             Screen::CheckEthTransaction => {
-                match self.platform.check_eth_transaction() {
-                    Err(ErrorTransaction::AddressUnmatch) => {
-                        new_screen = Some(UnitScreen::ShowMessage("Address does not match".to_owned(), None));
-                    },
-                    Err(ErrorTransaction::SourceFingerprintUnmatch) => {
-                        new_screen = Some(UnitScreen::ShowMessage("Source fingerprint does not match".to_owned(), None));
+                match self.platform.check_eth_transaction(h) {
+                    Err(e) => {
+                        new_screen = Some(UnitScreen::ShowMessage(format!("{}", e), None));
                     },
                     Ok(_) => {
                         new_screen = Some(UnitScreen::ShowTransaction(TransactionPage::Eth));
@@ -279,21 +299,23 @@ impl <P: Platform> UIState<P> {
                 out = Some(UpdateRequest::UltraFast);
             }
             Screen::ShowTransaction(ref mut a) => {
-                let (res, _) = a.handle_event_screen(event, ());
+                let (res, _) = a.handle_event_screen(event, &mut self.platform);
                 out = res.request;
                 new_screen = res.state;
             },
             _ => (),
         }
-        self.switch_screen(new_screen, h);
+        if let Some(new_screen) = new_screen {
+            new_screen.switch_screen(self, h);
+        };
         out
     }
     pub fn handle_message(&mut self, message: String, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest>
         where <P as Platform>::AsWordList: Sized {
-        let screen = Some(UnitScreen::ShowMessage(message, None));
-        self.switch_screen(screen, h);
+        let screen = UnitScreen::ShowMessage(message, None);
+        screen.switch_screen(self, h);
         Some(UpdateRequest::Fast)
-    }
+    }/*
     /// Handle NFC message reception.
     /// TODO this correctly
     /// currently it is a quick demo for expo
@@ -301,16 +323,16 @@ impl <P: Platform> UIState<P> {
         where <P as Platform>::AsWordList: Sized {
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
-        let screen = Some(UnitScreen::ShowTransaction(TransactionPage::Call));
-        self.switch_screen(screen, h);
+        let screen = UnitScreen::ShowTransaction(TransactionPage::Call);
+        screen.switch_screen(self, h);
         Some(UpdateRequest::UltraFast)
             // },
             // _ => {},
         // }
         // out
     }
-
-    pub fn handle_eth_sign_request(&mut self, h: &mut <P as Platform>::HAL) -> Option<UpdateRequest>
+*/
+    pub fn handle_eth_sign_request(&mut self) -> Option<UpdateRequest>
         where <P as Platform>::AsWordList: Sized {
         // match self.screen {
             // Screen::OnboardingRestoreOrGenerate => {
@@ -394,27 +416,12 @@ impl <P: Platform> UIState<P> {
             }
             Screen::CheckEthTransaction => {}
             Screen::ShowTransaction(ref mut a) => {
-                let (res, _) = a.draw_screen(
-                    display,
-                    Box::new(|s| {
-                        match s {
-                            TransactionPage::Call => {
-                                self.platform.call().expect("transaction should be stored to display")
-                            },
-                            TransactionPage::Extension => {
-                                self.platform.extensions().expect("transaction should be stored to display")
-                            },
-                            TransactionPage::Eth => {
-                                self.platform.ethereum().expect("ethereum sign request should be stored to display")
-                            }
-                        }
-                    })
-                )?;
+                let (res, _) = a.draw_screen(display, ())?;
                 out = res.request;
                 new_screen = res.state;
             },
             Screen::QRSignature => {
-                let (request_id, signature) = self.platform.eth_signature();
+                let (request_id, signature) = self.platform.eth_signature(h);
                 let cbor = eth_signature(signature, request_id.try_into().unwrap()).unwrap();
                 let code = ur::encode(&cbor, "eth-signature");
                 qr::draw(&code.to_uppercase().as_bytes(), display)?
@@ -425,7 +432,9 @@ impl <P: Platform> UIState<P> {
                 qr::draw(&code.to_uppercase().as_bytes(), display)?
             },
         }
-        self.switch_screen(new_screen, h);
+        if let Some(new_screen) = new_screen {
+            new_screen.switch_screen(self, h);
+        };
         Ok(out)
     }
 }
@@ -439,17 +448,17 @@ fn hdkey(xpriv: &Xpriv, secp: &bitcoin::key::Secp256k1<SignOnly>) -> Result<Vec<
     let chain_code = child_xpriv.chain_code.as_bytes();
     
     let mut e = minicbor::Encoder::new(Vec::new());
-    e.tag(Tag::new(303))?.map(4)?
+    e.tag(Tag::Unassigned(303))?.map(4)?
         // 3 key-data
         .u8(3)?.bytes(&public)?
         // 4 chain-code
         .u8(4)?.bytes(chain_code)?
         // 5 coin-info
-        .u8(5)?.tag(Tag::new(305))?.map(1)?
+        .u8(5)?.tag(Tag::Unassigned(305))?.map(1)?
             // type
             .u8(1)?.u8(0x3c)?
         // origin
-        .u8(6)?.tag(Tag::new(304))?.map(3)?
+        .u8(6)?.tag(Tag::Unassigned(304))?.map(3)?
             // components
             .u8(1)?.array(path.len() as u64 * 2)?;
 
@@ -476,7 +485,7 @@ fn eth_signature(signature: [u8; 65], request_id: [u8; 16]) -> Result<Vec<u8>, m
     let mut e = minicbor::Encoder::new(Vec::new());
     e.map(3)?
         // 1 request-id
-        .u8(1)?.tag(Tag::new(37))?.bytes(&request_id)?
+        .u8(1)?.tag(Tag::Unassigned(37))?.bytes(&request_id)?
         // 2 signature
         .u8(2)?.bytes(&signature)?
         // 3 origin

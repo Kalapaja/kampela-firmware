@@ -1,13 +1,69 @@
 //! external RAM
 
 use alloc::{format, vec::Vec, string::String};
+use alloy_primitives::{Address, ChainId};
+use kampela_ui::{ethereum_decode::{EthSignRequest, SignDataType}, messages::EthSignRequestDecodeError};
 use primitive_types::H256;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::eusart::*;
-use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
+//use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
 use crate::in_free;
 
-pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
+#[derive(Clone)]
+pub struct NfcEthSignRequestPsramAccess {
+    pub request_id: PsramAccess,
+    pub sign_data: PsramAccess,
+    pub data_type: PsramAccess,
+    pub chain_id: PsramAccess,
+    pub derivation_path: PsramAccess,
+    pub source_fingerprint: PsramAccess,
+    pub address: PsramAccess,
+    pub origin: PsramAccess,
+}
+
+pub fn psram_decode_eth_sign_request(eth_sign_request_psram_access: &NfcEthSignRequestPsramAccess) -> Result<EthSignRequest, EthSignRequestDecodeError> {    
+    let request_id= read_from_psram(&eth_sign_request_psram_access.request_id);
+    let request_id = if request_id.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(uuid::Builder::from_slice(&request_id).map_err(|e| EthSignRequestDecodeError::UuidError(e))?.build())
+    };
+    let sign_data = read_from_psram(&eth_sign_request_psram_access.sign_data);
+    let data_type: u8 = read_from_psram(&eth_sign_request_psram_access.data_type)[0];
+    let data_type = match data_type {
+        1 => SignDataType::EthTransactionData,
+        2 => SignDataType::EthTypedData,
+        3 => SignDataType::EthRawBytes,
+        4 => SignDataType::EthTypedTransaction,
+        _ => return Err(EthSignRequestDecodeError::UnknownSignDataType)
+    };
+    let chain_id: [u8; 8] = read_from_psram(&eth_sign_request_psram_access.chain_id).try_into().unwrap();
+    let chain_id = ChainId::from_le_bytes(chain_id);
+    let derivation_path = read_from_psram(&eth_sign_request_psram_access.derivation_path);
+    let derivation_path = String::from_utf8(derivation_path).or(Err(EthSignRequestDecodeError::InvalidDerivationPathString))?;
+
+    let mut source_fingerprint = read_from_psram(&eth_sign_request_psram_access.source_fingerprint);
+    source_fingerprint.reverse();
+    let source_fingerprint = source_fingerprint.try_into().expect("source fingerprint psram access checked");
+
+    let address = read_from_psram(&eth_sign_request_psram_access.address);
+    let address = if address.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(Address::from_slice(&address))
+    };
+
+    let origin = read_from_psram(&eth_sign_request_psram_access.origin);
+    let origin = if origin.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(String::from_utf8(origin).unwrap())
+    };
+
+    Ok(EthSignRequest { request_id, sign_data, data_type, chain_id, derivation_path, source_fingerprint, address, origin })
+}
+
+/*pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
     let call_data = read_from_psram(call_psram_access);
 
     let (
@@ -97,7 +153,7 @@ fn read_checked_metadata_metal(metadata_psram_access: &PsramAccess) -> (CheckedM
         spec_name
     )
 }
-
+*/
 pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
     let mut bytes_option = None;
     in_free(|peripherals| {
@@ -340,8 +396,8 @@ use core::{any::TypeId, fmt::{Debug, Display, Formatter, Result as FmtResult}};
 use alloc::borrow::ToOwned;
 
 use external_memory_tools::{AddressableBuffer, BufferError, ExternalMemory};
-use parity_scale_codec::{Decode, DecodeAll, Encode};
-use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
+//use parity_scale_codec::{Decode, DecodeAll, Encode};
+//use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
 use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
 
 pub struct ExternalPsram<'a> {
@@ -392,7 +448,7 @@ impl <'a> AddressableBuffer<ExternalPsram<'a>> for PsramAccess {
         })}
     }
 }
-
+/*
 #[derive(Clone, Debug)]
 pub struct MetalRegistry {
     pub start_address: AddressPsram,
@@ -544,7 +600,7 @@ impl <'a> CheckedMetadataMetal {
         }
     }
 }
-
+*/
 #[derive(Clone, Debug)]
 pub enum ReceivedMetadataError {
     Format,

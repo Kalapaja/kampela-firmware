@@ -1,9 +1,9 @@
 //! Everything high-level related to interfacing with user
 use alloc::{borrow::ToOwned, string::String, vec::Vec};
 use kampela_system::{
-    devices::{display::Request, psram::read_from_psram}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
+    devices::{display::Request, psram::{read_from_psram, NfcEthSignRequestPsramAccess}}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{hardware::Hardware, nfc::{NfcEthSignRequestPsramAccess, NfcTransactionPsramAccess}, touch::take_touch_point};
+use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::take_touch_point};
 use kampela_ui::{
     platform::Platform,
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}
@@ -36,7 +36,7 @@ impl UI {
     pub fn handle_message(&mut self, message: String) {
         self.update_request.propagate(self.state.handle_message(message, &mut ()));
     }
-
+/*
     pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
         let k = read_from_psram(&transaction.sender_public_key_psram_access);
         if self.state.platform.public().map(|p| p.0 != *k).unwrap_or(true) {
@@ -45,10 +45,10 @@ impl UI {
         self.state.platform.set_transaction(transaction);
         self.update_request.propagate(self.state.handle_transaction(&mut ()));
     }
-
+*/
     pub fn handle_eth_sign_request(&mut self, eth_sign_request: NfcEthSignRequestPsramAccess) {
         self.state.platform.set_eth_sign_request(eth_sign_request);
-        self.update_request.propagate(self.state.handle_eth_sign_request(&mut ()));
+        self.update_request.propagate(self.state.handle_eth_sign_request());
     }
 
     pub fn handle_address(&mut self, addr: [u8; 76]) {
