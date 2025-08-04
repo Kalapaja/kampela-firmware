@@ -20,6 +20,7 @@ pub mod psram_mnemonic;
 pub mod debug_display;
 pub mod parallel;
 
+use efm32pg23_fix::{Interrupt, NVIC};
 use efm32pg23_fix::{CorePeripherals, Peripherals};
 
 use init::init_peripherals;
@@ -32,7 +33,33 @@ use cortex_m::interrupt::Mutex;
 use lazy_static::lazy_static;
 
 lazy_static!{
-    pub static ref CORE_PERIPHERALS: Mutex<RefCell<CorePeripherals>> = Mutex::new(RefCell::new(CorePeripherals::take().unwrap()));
+    pub static ref CORE_PERIPHERALS: Mutex<RefCell<CorePeripherals>> = Mutex::new(RefCell::new({
+        let mut core_periph = CorePeripherals::take().unwrap();
+        // Errata CUR_E302 fix
+        // enable FPU to reduce power consumption in EM1
+        unsafe {
+            core_periph.SCB.cpacr.modify(|w_reg| w_reg | (3 << 20) | (3 << 22));
+        }
+
+        NVIC::unpend(Interrupt::LDMA);
+        NVIC::mask(Interrupt::LDMA);
+        NVIC::unpend(Interrupt::GPIO_EVEN);
+        NVIC::mask(Interrupt::GPIO_EVEN);
+        NVIC::unpend(Interrupt::TIMER2);
+        NVIC::mask(Interrupt::TIMER2);
+        NVIC::unpend(Interrupt::IADC);
+        NVIC::mask(Interrupt::IADC);
+        unsafe {
+            core_periph.NVIC.set_priority(Interrupt::LDMA, 3);
+            core_periph.NVIC.set_priority(Interrupt::GPIO_EVEN, 5);
+            core_periph.NVIC.set_priority(Interrupt::TIMER2, 4);
+            core_periph.NVIC.set_priority(Interrupt::SW0, 6);
+            core_periph.NVIC.set_priority(Interrupt::IADC, 7);
+            NVIC::unmask(Interrupt::SW0);
+            NVIC::unmask(Interrupt::IADC);
+        }
+        core_periph
+    }));
     pub static ref PERIPHERALS: Mutex<RefCell<Peripherals>> = Mutex::new(RefCell::new({
         let mut peripherals = Peripherals::take().unwrap();
         init_peripherals(&mut peripherals);

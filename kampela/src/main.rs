@@ -17,11 +17,11 @@ use kampela_system::{
     debug_display::burning_tank,
     devices::{
         flash::{init_flash_copy_to_psram, wait_flash_copy_to_psram},
-        power::wait_for_energy,
+        power::wait_for_energy_init,
         touch::{clear_touch_if, enable_touch_int}
     }, parallel::{AsyncOperation, Threads}, CORE_PERIPHERALS, PERIPHERALS
 };
-use efm32pg23_fix::{Interrupt, Peripherals, NVIC, SYST};
+use efm32pg23_fix::{Peripherals, SYST};
 
 mod ui;
 use ui::UI;
@@ -74,36 +74,10 @@ fn main() -> ! {
     
     free(|cs| {
         PERIPHERALS.borrow(cs); //will init peripheral
-        let mut core_periph = CORE_PERIPHERALS.borrow(cs).borrow_mut();
-        // Errata CUR_E302 fix
-        // enable FPU to reduce power consumption in EM1
-        unsafe {
-            core_periph.SCB.cpacr.modify(|w_reg| w_reg | (3 << 20) | (3 << 22));
-        }
-
-        NVIC::unpend(Interrupt::LDMA);
-        NVIC::mask(Interrupt::LDMA);
-        NVIC::unpend(Interrupt::GPIO_EVEN);
-        NVIC::mask(Interrupt::GPIO_EVEN);
-        NVIC::unpend(Interrupt::TIMER2);
-        NVIC::mask(Interrupt::TIMER2);
-        NVIC::unpend(Interrupt::IADC);
-        NVIC::mask(Interrupt::IADC);
-        unsafe {
-            core_periph.NVIC.set_priority(Interrupt::LDMA, 3);
-            core_periph.NVIC.set_priority(Interrupt::GPIO_EVEN, 5);
-            core_periph.NVIC.set_priority(Interrupt::TIMER2, 4);
-            core_periph.NVIC.set_priority(Interrupt::SW0, 6);
-            core_periph.NVIC.set_priority(Interrupt::IADC, 7);
-            NVIC::unmask(Interrupt::LDMA);
-            NVIC::unmask(Interrupt::GPIO_EVEN);
-            NVIC::unmask(Interrupt::TIMER2);
-            NVIC::unmask(Interrupt::SW0);
-            NVIC::unmask(Interrupt::IADC);
-        }
+        CORE_PERIPHERALS.borrow(cs);
     });
 
-    wait_for_energy();
+    wait_for_energy_init();
     //flash_copy_to_psram();
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
 

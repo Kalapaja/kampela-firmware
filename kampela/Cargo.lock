@@ -1082,10 +1082,8 @@ dependencies = [
  "lazy_static",
  "lt-codes",
  "mnemonic-external",
- "primitive-types",
  "qrcodegen-no-heap",
  "rand_core 0.6.4",
- "scale-info",
  "uuid",
 ]
 

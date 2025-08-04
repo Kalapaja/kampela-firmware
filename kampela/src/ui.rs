@@ -1,9 +1,9 @@
 //! Everything high-level related to interfacing with user
-use alloc::{borrow::ToOwned, string::String, vec::Vec};
+use alloc::{string::String, vec::Vec};
 use kampela_system::{
-    devices::{display::Request, psram::{read_from_psram, NfcEthSignRequestPsramAccess}}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
+    devices::{display::Request, psram:: NfcEthSignRequestPsramAccess}, draw::{Bounds, BoundsTrait, DisplayMode, FrameBuffer, UpdateMode}, parallel::{AsyncOperation, Threads}
 };
-use crate::{hardware::Hardware, nfc::NfcTransactionPsramAccess, touch::take_touch_point};
+use crate::{hardware::Hardware, touch::take_touch_point};
 use kampela_ui::{
     platform::Platform,
     uistate::{Event, UIState, UpdateRequest, UpdateRequestMutate}

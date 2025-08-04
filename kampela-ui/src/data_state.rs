@@ -14,7 +14,6 @@ pub struct AppStateInit {
 #[derive(Debug, PartialEq)]
 pub enum NFCState {
     Empty,
-    Transaction,
     EthEip712Transaction,
     EthTypedTransaction,
 }

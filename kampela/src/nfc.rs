@@ -211,15 +211,6 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 */
 }
 
-#[derive(Clone)]
-pub struct NfcTransactionPsramAccess {
-    pub sender_public_key_psram_access: PsramAccess,
-    pub call_psram_access: PsramAccess,
-    pub extension_psram_access: PsramAccess,
-    pub metadata_psram_access: PsramAccess,
-    pub genesis_hash_bytes_psram_access: PsramAccess,
-}
-
 //TODO: implement more error cases, i.e. old specs
 pub enum NfcError {
     InvalidAddress,

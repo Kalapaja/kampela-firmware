@@ -417,13 +417,14 @@ fn max_lines_to_scroll(
 ) -> usize {
     let mut total_height = 0;
     let mut line_count = 0;
+    let mut total_lines = Vec::new();
     for (i, paragraph) in input.lines().rev().enumerate() {
         let chunk_lines = count_lines(paragraph, max_chars_in_line, tab_size);
         // If it's not the first paragraph, add paragraph spacing
         if i > 0 {
             total_height += paragraph_spacing;
         }
-
+        total_lines.push(chunk_lines);
         for _ in 0..chunk_lines {
             total_height += line_height;
             if total_height < screen_height {

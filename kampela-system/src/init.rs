@@ -13,7 +13,7 @@ use crate::peripherals::{
     usart::init_usart,
 };
 use crate::devices::psram::psram_reset;
-use crate::devices::touch::init_touch;
+//use crate::devices::touch::init_touch;
 use crate::devices::flash::{flash_init,flash_sleep};
 
 /// All peripheral initializations
@@ -52,7 +52,7 @@ pub fn init_peripherals(peripherals: &mut Peripherals) {
     // set up i2c line to communicate with touch pad
     init_i2c(peripherals);
 
-    init_touch(peripherals);
+    //init_touch(peripherals);
 
     // TODO: lock GPIO
 }

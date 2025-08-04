@@ -3,7 +3,6 @@
 use alloc::{format, vec::Vec, string::String};
 use alloy_primitives::{Address, ChainId};
 use kampela_ui::{ethereum_decode::{EthSignRequest, SignDataType}, messages::EthSignRequestDecodeError};
-use primitive_types::H256;
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::eusart::*;
 //use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
@@ -392,13 +391,13 @@ pub struct PsramAccess {
     pub start_address: AddressPsram,
     pub total_len: usize,
 }
-use core::{any::TypeId, fmt::{Debug, Display, Formatter, Result as FmtResult}};
-use alloc::borrow::ToOwned;
+use core::{fmt::{Debug, Display, Formatter, Result as FmtResult}};
+//use alloc::borrow::ToOwned;
 
 use external_memory_tools::{AddressableBuffer, BufferError, ExternalMemory};
 //use parity_scale_codec::{Decode, DecodeAll, Encode};
 //use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
-use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
+//use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
 
 pub struct ExternalPsram<'a> {
     pub peripherals: &'a mut Peripherals,

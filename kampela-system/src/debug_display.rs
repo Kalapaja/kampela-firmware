@@ -80,7 +80,7 @@ pub fn epaper_update(peripherals: &mut Peripherals) {
     delay(100000);
     while display_is_busy_cs(peripherals) {}
     epaper_write_command(peripherals, &[0x22]); // from manual, Y: "Display Update Control"
-epaper_write_data(peripherals, &[0xF7]); // ?
+    epaper_write_data(peripherals, &[0xF7]); // ?
     epaper_write_command(peripherals, &[0x20]); // from manual, Y: "Activate Display Update Sequence"
     while display_is_busy_cs(peripherals) {}
 }

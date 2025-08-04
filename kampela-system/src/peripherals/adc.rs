@@ -25,7 +25,7 @@ pub fn adc_cmp_ien() {
     });
 }
 
-pub fn adc_icmp(lt_value: u16, gt_value: u16) {
+pub fn adc_icmp(gt_value: u16, lt_value: u16) {
     in_free(|peripherals| {
         disable_adc(peripherals);
         let gt_value = gt_value / 211 * (10000 >> 4);

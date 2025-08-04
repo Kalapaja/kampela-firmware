@@ -2,9 +2,9 @@
 use core::{iter::Peekable, str::Chars};
 
 #[cfg(not(feature="std"))]
-use alloc::string::{String, ToString};
+use alloc::{string::{String, ToString}, vec::Vec};
 #[cfg(feature="std")]
-use std::string::{String, ToString};
+use std::{string::{String, ToString}, vec::Vec};
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token<'a> {
     NewLine,
@@ -117,7 +117,6 @@ impl<'a> Iterator for Parser<'a> {
 
 pub struct Breaks<'a> {
     parser: Parser<'a>,
-    new_line: bool,
     segment: String,
     tab_size: u16
 }
@@ -125,7 +124,6 @@ impl<'a> Breaks<'a> {
     fn new(text: &'a str, tab_size: u16) -> Self {
         Breaks {
             parser: Parser::new(text),
-            new_line: true,
             segment: "".to_string(),
             tab_size
         }
@@ -139,15 +137,12 @@ impl<'a> Iterator for Breaks<'a> {
             match token {
                 // Hard line breaks on newline
                 Token::NewLine | Token::Eof => {
-                    self.new_line = true;
                     return Some((offset, true, core::mem::take(&mut self.segment)));
                 }
                 // Soft break opportunity after whitespace or Break token
                 Token::Whitespace(_, s) => {
                     self.segment.push_str(s);
-                    if !self.new_line {
-                        return Some((offset, false, core::mem::take(&mut self.segment)));
-                    }
+                    return Some((offset, false, core::mem::take(&mut self.segment)));
                 }
                 Token::Break(s, _) => {
                     self.segment.push_str(s);
@@ -235,27 +230,20 @@ impl<'a> Iterator for LineBreaks<'a> {
 }
 
 pub fn count_lines(text: &str, max_chars_in_line: usize, tab_size: u16) -> usize {
-    let mut line_break_count = 0;
-    let mut line_breaks_iter = LineBreaks::new(text, max_chars_in_line, tab_size);
-    while let Some((_, _)) = line_breaks_iter.next() {
-        line_break_count += 1;
-    }
-    line_break_count
+    let line_breaks_iter = LineBreaks::new(text, max_chars_in_line, tab_size);
+    line_breaks_iter.count()
 }
 
 pub fn scroll_str<'a>(text: &'a str, max_chars_in_line: usize, tab_size: u16, scroll_lines: usize) -> &'a str {
     let mut line_break_count = 0;
-    let mut start = 0;
-    let mut line_breaks_iter = LineBreaks::new(text, max_chars_in_line, tab_size);
     let mut last_pos = 0;
-    while let Some((pos, _)) = line_breaks_iter.next() {
+    let line_breaks_iter = LineBreaks::new(text, max_chars_in_line, tab_size);
+    for (pos, _) in line_breaks_iter {
         if line_break_count >= scroll_lines {
-            start = last_pos;
             break;
         }
         last_pos = pos + 1;
         line_break_count += 1;
     }
-
-    &text[start..]
+    &text[last_pos..]
 }

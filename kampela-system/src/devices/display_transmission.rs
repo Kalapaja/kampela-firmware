@@ -22,7 +22,7 @@ pub fn display_is_busy_cs(peripherals: &mut Peripherals) -> bool {
 /// extend component life
 pub fn epaper_deep_sleep(peripherals: &mut Peripherals) {
     epaper_write_command(peripherals, &[0x10]); // from manual, enter deep sleep
-    epaper_write_data(peripherals, &[0x03]); // Deep sleep mode 2, cannot retain RAM data
+    epaper_write_data(peripherals, &[0x01]); // Deep sleep mode 2, cannot retain RAM data
     deselect_display(&mut peripherals.gpio_s);
 }
 

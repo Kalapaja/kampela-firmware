@@ -38,9 +38,6 @@ pub trait Platform {
     type Rng<'a>: Rng + Sized + CryptoRng;
 
     /// Transaction data or addresses for transaction data in psram
-    type NfcTransaction;
-
-    /// Transaction data or addresses for transaction data in psram
     type NfcEthSignRequest;
 
     /// List-set of mnemonic words 
@@ -67,11 +64,9 @@ pub trait Platform {
     //fn public(&self) -> Option<Public>;
     
     /// Getter for seed
-    fn seed(&self) -> Option<Vec<u8>>;
+    fn seed(&self) -> Option<[u8; 64]>;
 
     fn set_address(&mut self, addr: [u8; 76]);
-
-    fn set_transaction(&mut self, transaction: Self::NfcTransaction);
 
     fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest);
 

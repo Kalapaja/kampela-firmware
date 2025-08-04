@@ -114,6 +114,7 @@ pub struct Request {
 }
 
 enum RequestState {
+    Init(Option<EPDInit>),
     Update(Option<Update>),
     PrepareSend(Option<PrepareSend>),
     PostUpdate(Option<()>),
@@ -134,7 +135,7 @@ impl AsyncOperation for Request {
     fn new(update_mode: Self::Init) -> Self {
         let send_area_index = update_mode.bounds_len();
         Self {
-            threads: Threads::new(RequestState::Update(None)),
+            threads: Threads::new(RequestState::Init(None)),
             update_mode,
             send_area_index
         }
@@ -142,6 +143,25 @@ impl AsyncOperation for Request {
 
     fn advance(&mut self, _: Self::Input<'_>) -> Self::Output {
         match self.threads.turn() {
+            RequestState::Init(state) => {
+                match state {
+                    None => {
+                        *state = Some(EPDInit::new(()));
+                    },
+                    Some(a) => {
+                        match a.advance(()) {
+                            Some(true) => {
+                                self.threads.change(RequestState::Update(None));
+                            },
+                            Some(false) => {
+                                return Some(None)
+                            },
+                            None => return None
+                        };
+                    }
+                }
+                Some(None)
+            },
             RequestState::Update(state) => {
                 match state {
                     None => {

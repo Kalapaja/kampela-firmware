@@ -1,5 +1,3 @@
-
-use alloc::{string::String, vec::Vec};
 use kampela_ui::{
     ethereum_decode::EthSignRequest,
     platform::{PinCode, Platform},
@@ -9,20 +7,17 @@ use kampela_ui::{
 use kampela_system::{
     devices::{
         flash::{read_encoded_entropy, store_encoded_entopy},
-        psram::{/*psram_decode_call,*/ psram_decode_eth_sign_request, /*psram_decode_extension, */read_from_psram, NfcEthSignRequestPsramAccess, PsramAccess},
+        psram::{psram_decode_eth_sign_request, NfcEthSignRequestPsramAccess},
         se_aes_gcm::{decode_seed, encode_seed, Protected},
         se_rng
     },
     psram_mnemonic::PsramWordList,
 };
 
-use crate::nfc::NfcTransactionPsramAccess;
-
 pub struct Hardware {
     pin: PinCode,
     protected: Option<Protected>,
     address: Option<[u8; 76]>,
-    transaction_psram_access: Option<NfcTransactionPsramAccess>,
     eth_sign_request_psram_access: Option<NfcEthSignRequestPsramAccess>,
 }
 
@@ -35,7 +30,6 @@ impl Hardware {
             pin,
             protected,
             address: None,
-            transaction_psram_access: None,
             eth_sign_request_psram_access: None,
         }
     }
@@ -46,7 +40,6 @@ impl Platform for Hardware {
     type Rng<'c> = se_rng::SeRng;
     type AsWordList = PsramWordList;
 
-    type NfcTransaction = NfcTransactionPsramAccess;
     type NfcEthSignRequest = NfcEthSignRequestPsramAccess;
 
     fn get_wordlist() -> Self::AsWordList {
@@ -85,16 +78,12 @@ impl Platform for Hardware {
         self.pair().map(|p| p.public())
     }
 */
-    fn seed(&self) -> Option<Vec<u8>> {
-        self.protected.as_ref().map(|p| decode_seed(p))
+    fn seed(&self) -> Option<[u8; 64]> {
+        self.protected.as_ref().map(|p| decode_seed(p)).map_or(None, |s| s.try_into().ok())
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
         self.address = Some(addr);
-    }
-
-    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
-        self.transaction_psram_access = Some(transaction);
     }
 
     fn set_eth_sign_request(&mut self, sign_request: Self::NfcEthSignRequest) {

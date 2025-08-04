@@ -15,8 +15,7 @@ use kampela_display_common::display_def::*;
 use qrcodegen_no_heap::{QrCode, QrCodeEcc, Version};
 
 use crate::{
-    devices::{display::{EPDInit, PrepareSend}, power::voltage},
-    parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_usart::{FrameBufferLDMA, LDMAchUSART0, TransmittableUSART}}
+    devices::{display::{EPDInit, PrepareSend}, display_transmission::{epaper_deep_sleep, epaper_hw_init_cs}, power::{voltage, wait_for_energy}}, in_free, parallel::{AsyncOperation, Threads}, peripherals::{ldma::LdmaCh, ldma_ch_usart::{FrameBufferLDMA, LDMAchUSART0, TransmittableUSART}}
 };
 
 use crate::debug_display::epaper_draw_stuff_differently;
@@ -121,9 +120,9 @@ pub enum DisplayError {}
 /// for wired debug, set both well below 5000
 ///
 //TODO tune these values for prod; something like 12k and 8k
-const FAST_REFRESH_POWER: i32 = 6000;
-const FULL_REFRESH_POWER: i32 = 8000;
-const PART_REFRESH_POWER: i32 = 4000;
+const FAST_REFRESH_POWER: i32 = 8000;
+const FULL_REFRESH_POWER: i32 = 12000;
+const PART_REFRESH_POWER: i32 = 6000;
 
 const SEQUENCIAL_SELECTIVE_LIMIT: usize = 5; // more sequencial selective refreshes cause to leave traces, less cause artefacts
 /// Virtual display data storage
@@ -379,18 +378,36 @@ impl FrameBuffer {
                 match m.get_display_mode() {
                     DisplayMode::Full => {
                         if voltage() < FULL_REFRESH_POWER {
-                            return None
+                            in_free(|peripherals| {
+                                epaper_deep_sleep(peripherals);
+                            });
+                            wait_for_energy(FULL_REFRESH_POWER as u16);
+                            in_free(|peripherals| {
+                                epaper_hw_init_cs(peripherals);
+                            });
                         }
                     },
                     DisplayMode::Fast => {
                         if voltage() < FAST_REFRESH_POWER {
-                            return None
+                            in_free(|peripherals| {
+                                epaper_deep_sleep(peripherals);
+                            });
+                            wait_for_energy(FAST_REFRESH_POWER as u16);
+                            in_free(|peripherals| {
+                                epaper_hw_init_cs(peripherals);
+                            });
                         }
                     },
                     DisplayMode::UltraFast |
                     DisplayMode::UltraFastSelective => {
                         if voltage() < PART_REFRESH_POWER {
-                            return None
+                            in_free(|peripherals| {
+                                epaper_deep_sleep(peripherals);
+                            });
+                            wait_for_energy(PART_REFRESH_POWER as u16);
+                            in_free(|peripherals| {
+                                epaper_hw_init_cs(peripherals);
+                            });
                         }
                     }
                 };
