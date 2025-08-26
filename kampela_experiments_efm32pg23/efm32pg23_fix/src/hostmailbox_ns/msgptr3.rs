@@ -1,80 +1,35 @@
 #[doc = "Register `MSGPTR3` reader"]
-pub struct R(crate::R<MSGPTR3_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<MSGPTR3_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<MSGPTR3_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<MSGPTR3_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Msgptr3Spec>;
 #[doc = "Register `MSGPTR3` writer"]
-pub struct W(crate::W<MSGPTR3_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<MSGPTR3_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<MSGPTR3_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<MSGPTR3_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Msgptr3Spec>;
 #[doc = "Field `PTR` reader - Pointer"]
-pub type PTR_R = crate::FieldReader<u32, u32>;
+pub type PtrR = crate::FieldReader<u32>;
 #[doc = "Field `PTR` writer - Pointer"]
-pub type PTR_W<'a, const O: u8> = crate::FieldWriter<'a, u32, MSGPTR3_SPEC, u32, u32, 32, O>;
+pub type PtrW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
     #[doc = "Bits 0:31 - Pointer"]
     #[inline(always)]
-    pub fn ptr(&self) -> PTR_R {
-        PTR_R::new(self.bits)
+    pub fn ptr(&self) -> PtrR {
+        PtrR::new(self.bits)
     }
 }
 impl W {
     #[doc = "Bits 0:31 - Pointer"]
     #[inline(always)]
-    #[must_use]
-    pub fn ptr(&mut self) -> PTR_W<0> {
-        PTR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn ptr(&mut self) -> PtrW<Msgptr3Spec> {
+        PtrW::new(self, 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [msgptr3](index.html) module"]
-pub struct MSGPTR3_SPEC;
-impl crate::RegisterSpec for MSGPTR3_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`msgptr3::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`msgptr3::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Msgptr3Spec;
+impl crate::RegisterSpec for Msgptr3Spec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [msgptr3::R](R) reader structure"]
-impl crate::Readable for MSGPTR3_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [msgptr3::W](W) writer structure"]
-impl crate::Writable for MSGPTR3_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`msgptr3::R`](R) reader structure"]
+impl crate::Readable for Msgptr3Spec {}
+#[doc = "`write(|w| ..)` method takes [`msgptr3::W`](W) writer structure"]
+impl crate::Writable for Msgptr3Spec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets MSGPTR3 to value 0"]
-impl crate::Resettable for MSGPTR3_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Msgptr3Spec {}

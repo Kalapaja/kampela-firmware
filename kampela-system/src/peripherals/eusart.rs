@@ -1,17 +1,17 @@
 //! EUSART interface
 
-use efm32pg23_fix::{GPIO_S, Peripherals};
+use efm32pg23_fix::{GpioS, Peripherals};
 use crate::peripherals::gpio_pins::*;
 
 pub const BAUDRATE_EUSART: u32 = 10_000_000;
 
 /// Enable psram channel
-pub fn select_psram(gpio: &mut GPIO_S) {
+pub fn select_psram(gpio: &mut GpioS) {
     psram_chip_select_clear(gpio);
 }
 
 /// Disable psram channel
-pub fn deselect_psram(gpio: &mut GPIO_S) {
+pub fn deselect_psram(gpio: &mut GpioS) {
     psram_chip_select_set(gpio);
 }
 
@@ -21,35 +21,35 @@ pub fn deselect_psram(gpio: &mut GPIO_S) {
 pub fn init_eusart(peripherals: &mut Peripherals) {
     // PSRAM MOSI
     peripherals
-        .GPIO_S
-        .eusart2_txroute
-        .write(|w_reg| {
+        .gpio_s
+        .eusart2_txroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(PSRAM_MOSI_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(PSRAM_MOSI_PIN)
     });
     // PSRAM MISO
     peripherals
-        .GPIO_S
-        .eusart2_rxroute
-        .write(|w_reg| {
+        .gpio_s
+        .eusart2_rxroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(PSRAM_MISO_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(PSRAM_MISO_PIN)
     });
     // PSRAM SCK
     peripherals
-        .GPIO_S
-        .eusart2_sclkroute
-        .write(|w_reg| {
+        .gpio_s
+        .eusart2_sclkroute()
+        .write(|w_reg| unsafe {
             w_reg
-                .port().variant(2)
-                .pin().variant(PSRAM_SCK_PIN)
+                .port().bits(PORT_C)
+                .pin().bits(PSRAM_SCK_PIN)
     });
     // route enable
     peripherals
-        .GPIO_S
-        .eusart2_routeen
+        .gpio_s
+        .eusart2_routeen()
         .write(|w_reg| {
             w_reg
                 .txpen().set_bit()
@@ -59,13 +59,13 @@ pub fn init_eusart(peripherals: &mut Peripherals) {
 
     // EUSART2 init
     if peripherals
-        .EUSART2_S
-        .en
+        .eusart2_s
+        .en()
         .read()
         .bits()
         .ne(&0)
     {
-        while peripherals.EUSART2_S.syncbusy.read().bits().ne(&0) {}
+        while peripherals.eusart2_s.syncbusy().read().bits().ne(&0) {}
     }
     
     // reset EUSART
@@ -76,9 +76,9 @@ pub fn init_eusart(peripherals: &mut Peripherals) {
     
     // configure
     peripherals
-        .EUSART2_S
-        .cfg2
-        .write(|w_reg|
+        .eusart2_s
+        .cfg2()
+        .write(|w_reg| {
             w_reg
                 .master().master()
                 .clkpol().idlelow()
@@ -87,20 +87,22 @@ pub fn init_eusart(peripherals: &mut Peripherals) {
                 .autotx().clear_bit()
                 .autocs().set_bit()
                 .clkprsen().clear_bit()
-                .forceload().set_bit()
-                .sdiv().variant(clkdiv)
-        );
+                .forceload().set_bit();
+            unsafe {
+                w_reg.sdiv().bits(clkdiv)
+            }
+        });
     peripherals
-        .EUSART2_S
-        .cfg1
+        .eusart2_s
+        .cfg1()
         .write(|w_reg|
             w_reg
-                .txfiw().oneframe()
+                .txfiw().sixteenframes()
                 .rxfiw().oneframe()
         );
     peripherals
-        .EUSART2_S
-        .cfg0
+        .eusart2_s
+        .cfg0()
         .write(|w_reg|
             w_reg
                 .sync().sync()
@@ -110,78 +112,79 @@ pub fn init_eusart(peripherals: &mut Peripherals) {
                 .msbf().enable()
         );
     peripherals
-        .EUSART2_S
-        .timingcfg
-        .write(|w_reg|
+        .eusart2_s
+        .timingcfg()
+        .write(|w_reg| {
             w_reg
                 .cssetup().zero()
                 .cshold().zero()
-                .ics().zero()
-                .setupwindow().variant(4)
-        );
+                .ics().zero();
+            unsafe {
+                w_reg.setupwindow().bits(4)
+            }
+            });
     peripherals
-        .EUSART2_S
-        .framecfg
+        .eusart2_s
+        .framecfg()
         .write(|w_reg|
             w_reg
                 .databits().eight()
         );
     peripherals
-        .EUSART2_S
-        .dtxdatcfg
-        .write(|w_reg|
-            w_reg
-                .dtxdat().variant(0)
-        );
+        .eusart2_s
+        .dtxdatcfg()
+        .write(|w_reg| unsafe {
+            w_reg.dtxdat().bits(0)
+        });
 
     eusart_enable(peripherals);
 
-    while peripherals.EUSART2_S.status.read().rxidle().bit_is_clear()
-        | peripherals.EUSART2_S.status.read().txidle().bit_is_clear()  {}
+    while peripherals.eusart2_s.status().read().rxidle().bit_is_clear()
+        | peripherals.eusart2_s.status().read().txidle().bit_is_clear()  {}
 
     // remember to reset connected ram device here later, right after setup
 }
 
 fn eusart_disable(peripherals: &mut Peripherals) {
     if peripherals
-        .EUSART2_S
-        .en
+        .eusart2_s
+        .en()
         .read()
         .en()
         .bit_is_set() 
     {
-        if peripherals.EUSART2_S.cfg0.read().sync().bit_is_clear() | peripherals.EUSART2_S.cfg2.read().master().bit_is_set() {
+        if peripherals.eusart2_s.cfg0().read().sync().bit_is_clear() | peripherals.eusart2_s.cfg2().read().master().bit_is_set() {
             // disable TX and RX
-            peripherals.EUSART2_S.cmd.write(|w_reg| w_reg.rxdis().set_bit().txdis().set_bit());
+            peripherals.eusart2_s.cmd().write(|w_reg| w_reg.rxdis().set_bit().txdis().set_bit());
 
             // wait for TXDIS and RXDIS to pass
-            while peripherals.EUSART2_S.syncbusy.read().rxdis().bit_is_set() | peripherals.EUSART2_S.syncbusy.read().txdis().bit_is_set() {}
+            while peripherals.eusart2_s.syncbusy().read().rxdis().bit_is_set() | peripherals.eusart2_s.syncbusy().read().txdis().bit_is_set() {}
 
             // wait for TX and RX enable status to go low
-            while peripherals.EUSART2_S.status.read().rxens().bit_is_set() | peripherals.EUSART2_S.status.read().txens().bit_is_set() {}
+            while peripherals.eusart2_s.status().read().rxens().bit_is_set() | peripherals.eusart2_s.status().read().txens().bit_is_set() {}
         }
         
         peripherals
-            .EUSART2_S
-            .en
+            .eusart2_s
+            .en()
             .write(|w_reg| w_reg.en().clear_bit());
         
         // wait for disabling to clear
-        while peripherals.EUSART2_S.en.read().disabling().bit_is_set() {}
+        while peripherals.eusart2_s.en().read().disabling().bit_is_set() {}
     }
 }
 
 fn eusart_enable(peripherals: &mut Peripherals) {
     peripherals
-        .EUSART2_S
-        .en
+        .eusart2_s
+        .en()
         .write(|w_reg| w_reg.en().set_bit());
 
-    while peripherals.EUSART2_S.syncbusy.read().bits().ne(&0) {}
+    while peripherals.eusart2_s.syncbusy().read().bits().ne(&0) {}
 
     peripherals
-        .EUSART2_S
-        .cmd
+        .eusart2_s
+        .cmd()
         .write(|w_reg| {
             w_reg
                 .rxen().set_bit()
@@ -192,17 +195,17 @@ fn eusart_enable(peripherals: &mut Peripherals) {
 //                .rxblocken().clear_bit() // added
     });
 
-    while peripherals.EUSART2_S.syncbusy.read().rxen().bit_is_set()
-        | peripherals.EUSART2_S.syncbusy.read().rxdis().bit_is_set()
-        | peripherals.EUSART2_S.syncbusy.read().txen().bit_is_set()
-        | peripherals.EUSART2_S.syncbusy.read().txdis().bit_is_set()
-//        | peripherals.EUSART2_S.syncbusy.read().rxblockdis().bit_is_set() // added
-//        | peripherals.EUSART2_S.syncbusy.read().rxblocken().bit_is_set() // added
+    while peripherals.eusart2_s.syncbusy().read().rxen().bit_is_set()
+        | peripherals.eusart2_s.syncbusy().read().rxdis().bit_is_set()
+        | peripherals.eusart2_s.syncbusy().read().txen().bit_is_set()
+        | peripherals.eusart2_s.syncbusy().read().txdis().bit_is_set()
+//        | peripherals.eusart2_s.syncbusy.read().rxblockdis().bit_is_set() // added
+//        | peripherals.eusart2_s.syncbusy.read().rxblocken().bit_is_set() // added
     {}
 
-    while peripherals.EUSART2_S.status.read().rxens().bit_is_clear()
-        | peripherals.EUSART2_S.status.read().txens().bit_is_clear()
-//        | peripherals.EUSART2_S.status.read().rxblock().bit_is_set() // added
+    while peripherals.eusart2_s.status().read().rxens().bit_is_clear()
+        | peripherals.eusart2_s.status().read().txens().bit_is_clear()
+//        | peripherals.eusart2_s.status.read().rxblock().bit_is_set() // added
     {}
 }
 
@@ -210,23 +213,23 @@ fn eusart_reset(peripherals: &mut Peripherals) {
     eusart_disable(peripherals);
 
     for _i in 0..4 {
-        peripherals.EUSART2_S.cfg2.write(|w_reg| w_reg.clkpha().set_bit());
-        peripherals.EUSART2_S.cfg2.write(|w_reg| w_reg.clkpha().clear_bit());
+        peripherals.eusart2_s.cfg2().write(|w_reg| w_reg.clkpha().set_bit());
+        peripherals.eusart2_s.cfg2().write(|w_reg| w_reg.clkpha().clear_bit());
     }
 
-    peripherals.EUSART2_S.cfg2.reset();
-    peripherals.EUSART2_S.cfg1.reset();
-    peripherals.EUSART2_S.cfg0.reset();
-    peripherals.EUSART2_S.framecfg.reset();
-    peripherals.EUSART2_S.dtxdatcfg.reset();
-    peripherals.EUSART2_S.timingcfg.reset();
-    peripherals.EUSART2_S.irhfcfg.reset();
-    peripherals.EUSART2_S.startframecfg.reset();
-    peripherals.EUSART2_S.sigframecfg.reset();
-    peripherals.EUSART2_S.trigctrl.reset();
-    peripherals.EUSART2_S.ien.reset();
-    peripherals.EUSART2_S.if_.reset();
-    peripherals.EUSART2_S.clkdiv.reset();
+    peripherals.eusart2_s.cfg2().reset();
+    peripherals.eusart2_s.cfg1().reset();
+    peripherals.eusart2_s.cfg0().reset();
+    peripherals.eusart2_s.framecfg().reset();
+    peripherals.eusart2_s.dtxdatcfg().reset();
+    peripherals.eusart2_s.timingcfg().reset();
+    peripherals.eusart2_s.irhfcfg().reset();
+    peripherals.eusart2_s.startframecfg().reset();
+    peripherals.eusart2_s.sigframecfg().reset();
+    peripherals.eusart2_s.trigctrl().reset();
+    peripherals.eusart2_s.ien().reset();
+    peripherals.eusart2_s.if_().reset();
+    peripherals.eusart2_s.clkdiv().reset();
 }
 
 

@@ -1,6 +1,6 @@
 use embedded_graphics::{
 	pixelcolor::BinaryColor,
-	prelude::{DrawTarget, Point, Dimensions},
+	prelude::{DrawTarget, Dimensions},
 	Drawable,
 	mono_font::{
         ascii::FONT_10X20,
@@ -16,7 +16,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::widget::view::{View, Widget, DrawView};
+use crate::{uistate::Event, widget::view::{DrawView, View, Widget}};
 
 pub const BUTTON_FONT: MonoFont = FONT_10X20;
 
@@ -32,12 +32,18 @@ impl NavButton {
 			widget,
 		}
 	}
+    pub fn replace_label(&mut self, label: &'static str) -> &'static str {
+        core::mem::replace(&mut self.label, label)
+    }
+    pub fn get_label(&self) -> &'static str {
+        self.label
+    }
 }
 
 impl View for NavButton {
     type DrawInput<'a> = bool;
     type DrawOutput = ();
-    type TapInput<'a> = ();
+    type EventInput<'a> = ();
     type TapOutput = bool;
     fn bounding_box(&self) -> Rectangle {
         self.widget.bounding_box()
@@ -77,8 +83,12 @@ impl View for NavButton {
 
         Ok(())
 	}
-    fn handle_tap_view<'a>(&mut self, _point: Point, _: ()) -> bool
-    where Self: 'a {
-        true
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> bool
+        where Self: 'a
+    {
+        match event {
+            Event::Tap(_) => true,
+            _ => false,
+        }
     }
 }

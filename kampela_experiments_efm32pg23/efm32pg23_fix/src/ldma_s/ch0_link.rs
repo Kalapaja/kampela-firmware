@@ -1,136 +1,90 @@
 #[doc = "Register `CH0_LINK` reader"]
-pub struct R(crate::R<CH0_LINK_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CH0_LINK_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CH0_LINK_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CH0_LINK_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Ch0LinkSpec>;
 #[doc = "Register `CH0_LINK` writer"]
-pub struct W(crate::W<CH0_LINK_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CH0_LINK_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CH0_LINK_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CH0_LINK_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `LINKMODE` reader - Link Structure Addressing Mode"]
-pub type LINKMODE_R = crate::BitReader<LINKMODE_A>;
+pub type W = crate::W<Ch0LinkSpec>;
 #[doc = "Link Structure Addressing Mode\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LINKMODE_A {
+pub enum Linkmode {
     #[doc = "0: The LINKADDR field of LDMA_CHx_LINK contains the absolute address of the linked descriptor."]
-    ABSOLUTE = 0,
+    Absolute = 0,
     #[doc = "1: The LINKADDR field of LDMA_CHx_LINK contains the relative offset of the linked descriptor."]
-    RELATIVE = 1,
+    Relative = 1,
 }
-impl From<LINKMODE_A> for bool {
+impl From<Linkmode> for bool {
     #[inline(always)]
-    fn from(variant: LINKMODE_A) -> Self {
+    fn from(variant: Linkmode) -> Self {
         variant as u8 != 0
     }
 }
-impl LINKMODE_R {
+#[doc = "Field `LINKMODE` reader - Link Structure Addressing Mode"]
+pub type LinkmodeR = crate::BitReader<Linkmode>;
+impl LinkmodeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LINKMODE_A {
+    pub const fn variant(&self) -> Linkmode {
         match self.bits {
-            false => LINKMODE_A::ABSOLUTE,
-            true => LINKMODE_A::RELATIVE,
+            false => Linkmode::Absolute,
+            true => Linkmode::Relative,
         }
     }
-    #[doc = "Checks if the value of the field is `ABSOLUTE`"]
+    #[doc = "The LINKADDR field of LDMA_CHx_LINK contains the absolute address of the linked descriptor."]
     #[inline(always)]
     pub fn is_absolute(&self) -> bool {
-        *self == LINKMODE_A::ABSOLUTE
+        *self == Linkmode::Absolute
     }
-    #[doc = "Checks if the value of the field is `RELATIVE`"]
+    #[doc = "The LINKADDR field of LDMA_CHx_LINK contains the relative offset of the linked descriptor."]
     #[inline(always)]
     pub fn is_relative(&self) -> bool {
-        *self == LINKMODE_A::RELATIVE
+        *self == Linkmode::Relative
     }
 }
 #[doc = "Field `LINK` reader - Link Next Structure"]
-pub type LINK_R = crate::BitReader<bool>;
+pub type LinkR = crate::BitReader;
 #[doc = "Field `LINK` writer - Link Next Structure"]
-pub type LINK_W<'a, const O: u8> = crate::BitWriter<'a, u32, CH0_LINK_SPEC, bool, O>;
+pub type LinkW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LINKADDR` reader - Link Structure Address"]
-pub type LINKADDR_R = crate::FieldReader<u32, u32>;
+pub type LinkaddrR = crate::FieldReader<u32>;
 #[doc = "Field `LINKADDR` writer - Link Structure Address"]
-pub type LINKADDR_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CH0_LINK_SPEC, u32, u32, 30, O>;
+pub type LinkaddrW<'a, REG> = crate::FieldWriter<'a, REG, 30, u32>;
 impl R {
     #[doc = "Bit 0 - Link Structure Addressing Mode"]
     #[inline(always)]
-    pub fn linkmode(&self) -> LINKMODE_R {
-        LINKMODE_R::new((self.bits & 1) != 0)
+    pub fn linkmode(&self) -> LinkmodeR {
+        LinkmodeR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Link Next Structure"]
     #[inline(always)]
-    pub fn link(&self) -> LINK_R {
-        LINK_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn link(&self) -> LinkR {
+        LinkR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bits 2:31 - Link Structure Address"]
     #[inline(always)]
-    pub fn linkaddr(&self) -> LINKADDR_R {
-        LINKADDR_R::new((self.bits >> 2) & 0x3fff_ffff)
+    pub fn linkaddr(&self) -> LinkaddrR {
+        LinkaddrR::new((self.bits >> 2) & 0x3fff_ffff)
     }
 }
 impl W {
     #[doc = "Bit 1 - Link Next Structure"]
     #[inline(always)]
-    #[must_use]
-    pub fn link(&mut self) -> LINK_W<1> {
-        LINK_W::new(self)
+    pub fn link(&mut self) -> LinkW<Ch0LinkSpec> {
+        LinkW::new(self, 1)
     }
     #[doc = "Bits 2:31 - Link Structure Address"]
     #[inline(always)]
-    #[must_use]
-    pub fn linkaddr(&mut self) -> LINKADDR_W<2> {
-        LINKADDR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn linkaddr(&mut self) -> LinkaddrW<Ch0LinkSpec> {
+        LinkaddrW::new(self, 2)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ch0_link](index.html) module"]
-pub struct CH0_LINK_SPEC;
-impl crate::RegisterSpec for CH0_LINK_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ch0_link::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ch0_link::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Ch0LinkSpec;
+impl crate::RegisterSpec for Ch0LinkSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ch0_link::R](R) reader structure"]
-impl crate::Readable for CH0_LINK_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ch0_link::W](W) writer structure"]
-impl crate::Writable for CH0_LINK_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ch0_link::R`](R) reader structure"]
+impl crate::Readable for Ch0LinkSpec {}
+#[doc = "`write(|w| ..)` method takes [`ch0_link::W`](W) writer structure"]
+impl crate::Writable for Ch0LinkSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CH0_LINK to value 0"]
-impl crate::Resettable for CH0_LINK_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Ch0LinkSpec {}

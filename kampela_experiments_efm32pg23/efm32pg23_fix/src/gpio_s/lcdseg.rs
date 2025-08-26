@@ -1,80 +1,35 @@
 #[doc = "Register `LCDSEG` reader"]
-pub struct R(crate::R<LCDSEG_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<LCDSEG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<LCDSEG_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<LCDSEG_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<LcdsegSpec>;
 #[doc = "Register `LCDSEG` writer"]
-pub struct W(crate::W<LCDSEG_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<LCDSEG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<LCDSEG_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<LCDSEG_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<LcdsegSpec>;
 #[doc = "Field `LCDSEGALLOC` reader - LCD Segment Allocation"]
-pub type LCDSEGALLOC_R = crate::FieldReader<u32, u32>;
+pub type LcdsegallocR = crate::FieldReader<u32>;
 #[doc = "Field `LCDSEGALLOC` writer - LCD Segment Allocation"]
-pub type LCDSEGALLOC_W<'a, const O: u8> = crate::FieldWriter<'a, u32, LCDSEG_SPEC, u32, u32, 20, O>;
+pub type LcdsegallocW<'a, REG> = crate::FieldWriter<'a, REG, 20, u32>;
 impl R {
     #[doc = "Bits 0:19 - LCD Segment Allocation"]
     #[inline(always)]
-    pub fn lcdsegalloc(&self) -> LCDSEGALLOC_R {
-        LCDSEGALLOC_R::new(self.bits & 0x000f_ffff)
+    pub fn lcdsegalloc(&self) -> LcdsegallocR {
+        LcdsegallocR::new(self.bits & 0x000f_ffff)
     }
 }
 impl W {
     #[doc = "Bits 0:19 - LCD Segment Allocation"]
     #[inline(always)]
-    #[must_use]
-    pub fn lcdsegalloc(&mut self) -> LCDSEGALLOC_W<0> {
-        LCDSEGALLOC_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn lcdsegalloc(&mut self) -> LcdsegallocW<LcdsegSpec> {
+        LcdsegallocW::new(self, 0)
     }
 }
-#[doc = "LCD Segment Enable\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [lcdseg](index.html) module"]
-pub struct LCDSEG_SPEC;
-impl crate::RegisterSpec for LCDSEG_SPEC {
+#[doc = "LCD Segment Enable\n\nYou can [`read`](crate::Reg::read) this register and get [`lcdseg::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lcdseg::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct LcdsegSpec;
+impl crate::RegisterSpec for LcdsegSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [lcdseg::R](R) reader structure"]
-impl crate::Readable for LCDSEG_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [lcdseg::W](W) writer structure"]
-impl crate::Writable for LCDSEG_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`lcdseg::R`](R) reader structure"]
+impl crate::Readable for LcdsegSpec {}
+#[doc = "`write(|w| ..)` method takes [`lcdseg::W`](W) writer structure"]
+impl crate::Writable for LcdsegSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets LCDSEG to value 0"]
-impl crate::Resettable for LCDSEG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for LcdsegSpec {}

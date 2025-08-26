@@ -1,240 +1,456 @@
-#[doc = r"Register block"]
 #[repr(C)]
+#[doc = "Register block"]
 pub struct RegisterBlock {
-    #[doc = "0x00 - No Description"]
-    pub ipversion: IPVERSION,
-    #[doc = "0x04 - No Description"]
-    pub cfg: CFG,
-    #[doc = "0x08 - No Description"]
-    pub ctrl: CTRL,
-    #[doc = "0x0c - No Description"]
-    pub cmd: CMD,
-    #[doc = "0x10 - No Description"]
-    pub status: STATUS,
-    #[doc = "0x14 - No Description"]
-    pub if_: IF,
-    #[doc = "0x18 - No Description"]
-    pub ien: IEN,
-    #[doc = "0x1c - No Description"]
-    pub top: TOP,
-    #[doc = "0x20 - No Description"]
-    pub topb: TOPB,
-    #[doc = "0x24 - No Description"]
-    pub cnt: CNT,
+    ipversion: Ipversion,
+    cfg: Cfg,
+    ctrl: Ctrl,
+    cmd: Cmd,
+    status: Status,
+    if_: If,
+    ien: Ien,
+    top: Top,
+    topb: Topb,
+    cnt: Cnt,
     _reserved10: [u8; 0x04],
-    #[doc = "0x2c - No Description"]
-    pub lock: LOCK,
-    #[doc = "0x30 - No Description"]
-    pub en: EN,
+    lock: Lock,
+    en: En,
     _reserved12: [u8; 0x2c],
-    #[doc = "0x60 - No Description"]
-    pub cc0_cfg: CC0_CFG,
-    #[doc = "0x64 - No Description"]
-    pub cc0_ctrl: CC0_CTRL,
-    #[doc = "0x68 - No Description"]
-    pub cc0_oc: CC0_OC,
+    cc0_cfg: Cc0Cfg,
+    cc0_ctrl: Cc0Ctrl,
+    cc0_oc: Cc0Oc,
     _reserved15: [u8; 0x04],
-    #[doc = "0x70 - No Description"]
-    pub cc0_ocb: CC0_OCB,
-    #[doc = "0x74 - No Description"]
-    pub cc0_icf: CC0_ICF,
-    #[doc = "0x78 - No Description"]
-    pub cc0_icof: CC0_ICOF,
+    cc0_ocb: Cc0Ocb,
+    cc0_icf: Cc0Icf,
+    cc0_icof: Cc0Icof,
     _reserved18: [u8; 0x04],
-    #[doc = "0x80 - No Description"]
-    pub cc1_cfg: CC1_CFG,
-    #[doc = "0x84 - No Description"]
-    pub cc1_ctrl: CC1_CTRL,
-    #[doc = "0x88 - No Description"]
-    pub cc1_oc: CC1_OC,
+    cc1_cfg: Cc1Cfg,
+    cc1_ctrl: Cc1Ctrl,
+    cc1_oc: Cc1Oc,
     _reserved21: [u8; 0x04],
-    #[doc = "0x90 - No Description"]
-    pub cc1_ocb: CC1_OCB,
-    #[doc = "0x94 - No Description"]
-    pub cc1_icf: CC1_ICF,
-    #[doc = "0x98 - No Description"]
-    pub cc1_icof: CC1_ICOF,
+    cc1_ocb: Cc1Ocb,
+    cc1_icf: Cc1Icf,
+    cc1_icof: Cc1Icof,
     _reserved24: [u8; 0x04],
-    #[doc = "0xa0 - No Description"]
-    pub cc2_cfg: CC2_CFG,
-    #[doc = "0xa4 - No Description"]
-    pub cc2_ctrl: CC2_CTRL,
-    #[doc = "0xa8 - No Description"]
-    pub cc2_oc: CC2_OC,
+    cc2_cfg: Cc2Cfg,
+    cc2_ctrl: Cc2Ctrl,
+    cc2_oc: Cc2Oc,
     _reserved27: [u8; 0x04],
-    #[doc = "0xb0 - No Description"]
-    pub cc2_ocb: CC2_OCB,
-    #[doc = "0xb4 - No Description"]
-    pub cc2_icf: CC2_ICF,
-    #[doc = "0xb8 - No Description"]
-    pub cc2_icof: CC2_ICOF,
+    cc2_ocb: Cc2Ocb,
+    cc2_icf: Cc2Icf,
+    cc2_icof: Cc2Icof,
     _reserved30: [u8; 0x24],
-    #[doc = "0xe0 - No Description"]
-    pub dtcfg: DTCFG,
-    #[doc = "0xe4 - No Description"]
-    pub dttimecfg: DTTIMECFG,
-    #[doc = "0xe8 - No Description"]
-    pub dtfcfg: DTFCFG,
-    #[doc = "0xec - No Description"]
-    pub dtctrl: DTCTRL,
-    #[doc = "0xf0 - No Description"]
-    pub dtogen: DTOGEN,
-    #[doc = "0xf4 - No Description"]
-    pub dtfault: DTFAULT,
-    #[doc = "0xf8 - No Description"]
-    pub dtfaultc: DTFAULTC,
-    #[doc = "0xfc - No Description"]
-    pub dtlock: DTLOCK,
+    dtcfg: Dtcfg,
+    dttimecfg: Dttimecfg,
+    dtfcfg: Dtfcfg,
+    dtctrl: Dtctrl,
+    dtogen: Dtogen,
+    dtfault: Dtfault,
+    dtfaultc: Dtfaultc,
+    dtlock: Dtlock,
+    _reserved38: [u8; 0x0f14],
+    if_set: IfSet,
+    _reserved39: [u8; 0x0ffc],
+    if_clr: IfClr,
 }
-#[doc = "IPVERSION (r) register accessor: an alias for `Reg<IPVERSION_SPEC>`"]
-pub type IPVERSION = crate::Reg<ipversion::IPVERSION_SPEC>;
+impl RegisterBlock {
+    #[doc = "0x00 - No Description"]
+    #[inline(always)]
+    pub const fn ipversion(&self) -> &Ipversion {
+        &self.ipversion
+    }
+    #[doc = "0x04 - No Description"]
+    #[inline(always)]
+    pub const fn cfg(&self) -> &Cfg {
+        &self.cfg
+    }
+    #[doc = "0x08 - No Description"]
+    #[inline(always)]
+    pub const fn ctrl(&self) -> &Ctrl {
+        &self.ctrl
+    }
+    #[doc = "0x0c - No Description"]
+    #[inline(always)]
+    pub const fn cmd(&self) -> &Cmd {
+        &self.cmd
+    }
+    #[doc = "0x10 - No Description"]
+    #[inline(always)]
+    pub const fn status(&self) -> &Status {
+        &self.status
+    }
+    #[doc = "0x14 - No Description"]
+    #[inline(always)]
+    pub const fn if_(&self) -> &If {
+        &self.if_
+    }
+    #[doc = "0x18 - No Description"]
+    #[inline(always)]
+    pub const fn ien(&self) -> &Ien {
+        &self.ien
+    }
+    #[doc = "0x1c - No Description"]
+    #[inline(always)]
+    pub const fn top(&self) -> &Top {
+        &self.top
+    }
+    #[doc = "0x20 - No Description"]
+    #[inline(always)]
+    pub const fn topb(&self) -> &Topb {
+        &self.topb
+    }
+    #[doc = "0x24 - No Description"]
+    #[inline(always)]
+    pub const fn cnt(&self) -> &Cnt {
+        &self.cnt
+    }
+    #[doc = "0x2c - No Description"]
+    #[inline(always)]
+    pub const fn lock(&self) -> &Lock {
+        &self.lock
+    }
+    #[doc = "0x30 - No Description"]
+    #[inline(always)]
+    pub const fn en(&self) -> &En {
+        &self.en
+    }
+    #[doc = "0x60 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_cfg(&self) -> &Cc0Cfg {
+        &self.cc0_cfg
+    }
+    #[doc = "0x64 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_ctrl(&self) -> &Cc0Ctrl {
+        &self.cc0_ctrl
+    }
+    #[doc = "0x68 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_oc(&self) -> &Cc0Oc {
+        &self.cc0_oc
+    }
+    #[doc = "0x70 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_ocb(&self) -> &Cc0Ocb {
+        &self.cc0_ocb
+    }
+    #[doc = "0x74 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_icf(&self) -> &Cc0Icf {
+        &self.cc0_icf
+    }
+    #[doc = "0x78 - No Description"]
+    #[inline(always)]
+    pub const fn cc0_icof(&self) -> &Cc0Icof {
+        &self.cc0_icof
+    }
+    #[doc = "0x80 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_cfg(&self) -> &Cc1Cfg {
+        &self.cc1_cfg
+    }
+    #[doc = "0x84 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_ctrl(&self) -> &Cc1Ctrl {
+        &self.cc1_ctrl
+    }
+    #[doc = "0x88 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_oc(&self) -> &Cc1Oc {
+        &self.cc1_oc
+    }
+    #[doc = "0x90 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_ocb(&self) -> &Cc1Ocb {
+        &self.cc1_ocb
+    }
+    #[doc = "0x94 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_icf(&self) -> &Cc1Icf {
+        &self.cc1_icf
+    }
+    #[doc = "0x98 - No Description"]
+    #[inline(always)]
+    pub const fn cc1_icof(&self) -> &Cc1Icof {
+        &self.cc1_icof
+    }
+    #[doc = "0xa0 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_cfg(&self) -> &Cc2Cfg {
+        &self.cc2_cfg
+    }
+    #[doc = "0xa4 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_ctrl(&self) -> &Cc2Ctrl {
+        &self.cc2_ctrl
+    }
+    #[doc = "0xa8 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_oc(&self) -> &Cc2Oc {
+        &self.cc2_oc
+    }
+    #[doc = "0xb0 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_ocb(&self) -> &Cc2Ocb {
+        &self.cc2_ocb
+    }
+    #[doc = "0xb4 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_icf(&self) -> &Cc2Icf {
+        &self.cc2_icf
+    }
+    #[doc = "0xb8 - No Description"]
+    #[inline(always)]
+    pub const fn cc2_icof(&self) -> &Cc2Icof {
+        &self.cc2_icof
+    }
+    #[doc = "0xe0 - No Description"]
+    #[inline(always)]
+    pub const fn dtcfg(&self) -> &Dtcfg {
+        &self.dtcfg
+    }
+    #[doc = "0xe4 - No Description"]
+    #[inline(always)]
+    pub const fn dttimecfg(&self) -> &Dttimecfg {
+        &self.dttimecfg
+    }
+    #[doc = "0xe8 - No Description"]
+    #[inline(always)]
+    pub const fn dtfcfg(&self) -> &Dtfcfg {
+        &self.dtfcfg
+    }
+    #[doc = "0xec - No Description"]
+    #[inline(always)]
+    pub const fn dtctrl(&self) -> &Dtctrl {
+        &self.dtctrl
+    }
+    #[doc = "0xf0 - No Description"]
+    #[inline(always)]
+    pub const fn dtogen(&self) -> &Dtogen {
+        &self.dtogen
+    }
+    #[doc = "0xf4 - No Description"]
+    #[inline(always)]
+    pub const fn dtfault(&self) -> &Dtfault {
+        &self.dtfault
+    }
+    #[doc = "0xf8 - No Description"]
+    #[inline(always)]
+    pub const fn dtfaultc(&self) -> &Dtfaultc {
+        &self.dtfaultc
+    }
+    #[doc = "0xfc - No Description"]
+    #[inline(always)]
+    pub const fn dtlock(&self) -> &Dtlock {
+        &self.dtlock
+    }
+    #[doc = "0x1014 - No Description"]
+    #[inline(always)]
+    pub const fn if_set(&self) -> &IfSet {
+        &self.if_set
+    }
+    #[doc = "0x2014 - No Description"]
+    #[inline(always)]
+    pub const fn if_clr(&self) -> &IfClr {
+        &self.if_clr
+    }
+}
+#[doc = "IPVERSION (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
+#[doc(alias = "IPVERSION")]
+pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "No Description"]
 pub mod ipversion;
-#[doc = "CFG (rw) register accessor: an alias for `Reg<CFG_SPEC>`"]
-pub type CFG = crate::Reg<cfg::CFG_SPEC>;
+#[doc = "CFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cfg`] module"]
+#[doc(alias = "CFG")]
+pub type Cfg = crate::Reg<cfg::CfgSpec>;
 #[doc = "No Description"]
 pub mod cfg;
-#[doc = "CTRL (rw) register accessor: an alias for `Reg<CTRL_SPEC>`"]
-pub type CTRL = crate::Reg<ctrl::CTRL_SPEC>;
+#[doc = "CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`] module"]
+#[doc(alias = "CTRL")]
+pub type Ctrl = crate::Reg<ctrl::CtrlSpec>;
 #[doc = "No Description"]
 pub mod ctrl;
-#[doc = "CMD (w) register accessor: an alias for `Reg<CMD_SPEC>`"]
-pub type CMD = crate::Reg<cmd::CMD_SPEC>;
+#[doc = "CMD (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmd::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cmd`] module"]
+#[doc(alias = "CMD")]
+pub type Cmd = crate::Reg<cmd::CmdSpec>;
 #[doc = "No Description"]
 pub mod cmd;
-#[doc = "STATUS (r) register accessor: an alias for `Reg<STATUS_SPEC>`"]
-pub type STATUS = crate::Reg<status::STATUS_SPEC>;
+#[doc = "STATUS (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`] module"]
+#[doc(alias = "STATUS")]
+pub type Status = crate::Reg<status::StatusSpec>;
 #[doc = "No Description"]
 pub mod status;
-#[doc = "IF (rw) register accessor: an alias for `Reg<IF_SPEC>`"]
-pub type IF = crate::Reg<if_::IF_SPEC>;
+#[doc = "IF (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`if_::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_`] module"]
+#[doc(alias = "IF")]
+pub type If = crate::Reg<if_::IfSpec>;
 #[doc = "No Description"]
 pub mod if_;
-#[doc = "IEN (rw) register accessor: an alias for `Reg<IEN_SPEC>`"]
-pub type IEN = crate::Reg<ien::IEN_SPEC>;
+#[doc = "IF_SET (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`if_set::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_set::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_set`] module"]
+#[doc(alias = "IF_SET")]
+pub type IfSet = crate::Reg<if_set::IfSetSpec>;
+#[doc = "No Description"]
+pub mod if_set;
+#[doc = "IF_CLR (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`if_clr::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_clr::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_clr`] module"]
+#[doc(alias = "IF_CLR")]
+pub type IfClr = crate::Reg<if_clr::IfClrSpec>;
+#[doc = "No Description"]
+pub mod if_clr;
+#[doc = "IEN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`] module"]
+#[doc(alias = "IEN")]
+pub type Ien = crate::Reg<ien::IenSpec>;
 #[doc = "No Description"]
 pub mod ien;
-#[doc = "TOP (rw) register accessor: an alias for `Reg<TOP_SPEC>`"]
-pub type TOP = crate::Reg<top::TOP_SPEC>;
+#[doc = "TOP (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`top::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`top::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@top`] module"]
+#[doc(alias = "TOP")]
+pub type Top = crate::Reg<top::TopSpec>;
 #[doc = "No Description"]
 pub mod top;
-#[doc = "TOPB (rw) register accessor: an alias for `Reg<TOPB_SPEC>`"]
-pub type TOPB = crate::Reg<topb::TOPB_SPEC>;
+#[doc = "TOPB (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`topb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`topb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@topb`] module"]
+#[doc(alias = "TOPB")]
+pub type Topb = crate::Reg<topb::TopbSpec>;
 #[doc = "No Description"]
 pub mod topb;
-#[doc = "CNT (rw) register accessor: an alias for `Reg<CNT_SPEC>`"]
-pub type CNT = crate::Reg<cnt::CNT_SPEC>;
+#[doc = "CNT (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cnt::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cnt::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cnt`] module"]
+#[doc(alias = "CNT")]
+pub type Cnt = crate::Reg<cnt::CntSpec>;
 #[doc = "No Description"]
 pub mod cnt;
-#[doc = "LOCK (w) register accessor: an alias for `Reg<LOCK_SPEC>`"]
-pub type LOCK = crate::Reg<lock::LOCK_SPEC>;
+#[doc = "LOCK (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lock::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@lock`] module"]
+#[doc(alias = "LOCK")]
+pub type Lock = crate::Reg<lock::LockSpec>;
 #[doc = "No Description"]
 pub mod lock;
-#[doc = "EN (rw) register accessor: an alias for `Reg<EN_SPEC>`"]
-pub type EN = crate::Reg<en::EN_SPEC>;
+#[doc = "EN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`en::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`en::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@en`] module"]
+#[doc(alias = "EN")]
+pub type En = crate::Reg<en::EnSpec>;
 #[doc = "No Description"]
 pub mod en;
-#[doc = "CC0_CFG (rw) register accessor: an alias for `Reg<CC0_CFG_SPEC>`"]
-pub type CC0_CFG = crate::Reg<cc0_cfg::CC0_CFG_SPEC>;
+#[doc = "CC0_CFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_cfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc0_cfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_cfg`] module"]
+#[doc(alias = "CC0_CFG")]
+pub type Cc0Cfg = crate::Reg<cc0_cfg::Cc0CfgSpec>;
 #[doc = "No Description"]
 pub mod cc0_cfg;
-#[doc = "CC0_CTRL (rw) register accessor: an alias for `Reg<CC0_CTRL_SPEC>`"]
-pub type CC0_CTRL = crate::Reg<cc0_ctrl::CC0_CTRL_SPEC>;
+#[doc = "CC0_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc0_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_ctrl`] module"]
+#[doc(alias = "CC0_CTRL")]
+pub type Cc0Ctrl = crate::Reg<cc0_ctrl::Cc0CtrlSpec>;
 #[doc = "No Description"]
 pub mod cc0_ctrl;
-#[doc = "CC0_OC (rw) register accessor: an alias for `Reg<CC0_OC_SPEC>`"]
-pub type CC0_OC = crate::Reg<cc0_oc::CC0_OC_SPEC>;
+#[doc = "CC0_OC (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_oc::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc0_oc::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_oc`] module"]
+#[doc(alias = "CC0_OC")]
+pub type Cc0Oc = crate::Reg<cc0_oc::Cc0OcSpec>;
 #[doc = "No Description"]
 pub mod cc0_oc;
-#[doc = "CC0_OCB (rw) register accessor: an alias for `Reg<CC0_OCB_SPEC>`"]
-pub type CC0_OCB = crate::Reg<cc0_ocb::CC0_OCB_SPEC>;
+#[doc = "CC0_OCB (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_ocb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc0_ocb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_ocb`] module"]
+#[doc(alias = "CC0_OCB")]
+pub type Cc0Ocb = crate::Reg<cc0_ocb::Cc0OcbSpec>;
 #[doc = "No Description"]
 pub mod cc0_ocb;
-#[doc = "CC0_ICF (r) register accessor: an alias for `Reg<CC0_ICF_SPEC>`"]
-pub type CC0_ICF = crate::Reg<cc0_icf::CC0_ICF_SPEC>;
+#[doc = "CC0_ICF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_icf::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_icf`] module"]
+#[doc(alias = "CC0_ICF")]
+pub type Cc0Icf = crate::Reg<cc0_icf::Cc0IcfSpec>;
 #[doc = "No Description"]
 pub mod cc0_icf;
-#[doc = "CC0_ICOF (r) register accessor: an alias for `Reg<CC0_ICOF_SPEC>`"]
-pub type CC0_ICOF = crate::Reg<cc0_icof::CC0_ICOF_SPEC>;
+#[doc = "CC0_ICOF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_icof::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc0_icof`] module"]
+#[doc(alias = "CC0_ICOF")]
+pub type Cc0Icof = crate::Reg<cc0_icof::Cc0IcofSpec>;
 #[doc = "No Description"]
 pub mod cc0_icof;
-#[doc = "CC1_CFG (rw) register accessor: an alias for `Reg<CC1_CFG_SPEC>`"]
-pub type CC1_CFG = crate::Reg<cc1_cfg::CC1_CFG_SPEC>;
+#[doc = "CC1_CFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_cfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc1_cfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_cfg`] module"]
+#[doc(alias = "CC1_CFG")]
+pub type Cc1Cfg = crate::Reg<cc1_cfg::Cc1CfgSpec>;
 #[doc = "No Description"]
 pub mod cc1_cfg;
-#[doc = "CC1_CTRL (rw) register accessor: an alias for `Reg<CC1_CTRL_SPEC>`"]
-pub type CC1_CTRL = crate::Reg<cc1_ctrl::CC1_CTRL_SPEC>;
+#[doc = "CC1_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc1_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_ctrl`] module"]
+#[doc(alias = "CC1_CTRL")]
+pub type Cc1Ctrl = crate::Reg<cc1_ctrl::Cc1CtrlSpec>;
 #[doc = "No Description"]
 pub mod cc1_ctrl;
-#[doc = "CC1_OC (rw) register accessor: an alias for `Reg<CC1_OC_SPEC>`"]
-pub type CC1_OC = crate::Reg<cc1_oc::CC1_OC_SPEC>;
+#[doc = "CC1_OC (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_oc::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc1_oc::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_oc`] module"]
+#[doc(alias = "CC1_OC")]
+pub type Cc1Oc = crate::Reg<cc1_oc::Cc1OcSpec>;
 #[doc = "No Description"]
 pub mod cc1_oc;
-#[doc = "CC1_OCB (rw) register accessor: an alias for `Reg<CC1_OCB_SPEC>`"]
-pub type CC1_OCB = crate::Reg<cc1_ocb::CC1_OCB_SPEC>;
+#[doc = "CC1_OCB (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_ocb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc1_ocb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_ocb`] module"]
+#[doc(alias = "CC1_OCB")]
+pub type Cc1Ocb = crate::Reg<cc1_ocb::Cc1OcbSpec>;
 #[doc = "No Description"]
 pub mod cc1_ocb;
-#[doc = "CC1_ICF (r) register accessor: an alias for `Reg<CC1_ICF_SPEC>`"]
-pub type CC1_ICF = crate::Reg<cc1_icf::CC1_ICF_SPEC>;
+#[doc = "CC1_ICF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_icf::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_icf`] module"]
+#[doc(alias = "CC1_ICF")]
+pub type Cc1Icf = crate::Reg<cc1_icf::Cc1IcfSpec>;
 #[doc = "No Description"]
 pub mod cc1_icf;
-#[doc = "CC1_ICOF (r) register accessor: an alias for `Reg<CC1_ICOF_SPEC>`"]
-pub type CC1_ICOF = crate::Reg<cc1_icof::CC1_ICOF_SPEC>;
+#[doc = "CC1_ICOF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc1_icof::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc1_icof`] module"]
+#[doc(alias = "CC1_ICOF")]
+pub type Cc1Icof = crate::Reg<cc1_icof::Cc1IcofSpec>;
 #[doc = "No Description"]
 pub mod cc1_icof;
-#[doc = "CC2_CFG (rw) register accessor: an alias for `Reg<CC2_CFG_SPEC>`"]
-pub type CC2_CFG = crate::Reg<cc2_cfg::CC2_CFG_SPEC>;
+#[doc = "CC2_CFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_cfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc2_cfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_cfg`] module"]
+#[doc(alias = "CC2_CFG")]
+pub type Cc2Cfg = crate::Reg<cc2_cfg::Cc2CfgSpec>;
 #[doc = "No Description"]
 pub mod cc2_cfg;
-#[doc = "CC2_CTRL (rw) register accessor: an alias for `Reg<CC2_CTRL_SPEC>`"]
-pub type CC2_CTRL = crate::Reg<cc2_ctrl::CC2_CTRL_SPEC>;
+#[doc = "CC2_CTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc2_ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_ctrl`] module"]
+#[doc(alias = "CC2_CTRL")]
+pub type Cc2Ctrl = crate::Reg<cc2_ctrl::Cc2CtrlSpec>;
 #[doc = "No Description"]
 pub mod cc2_ctrl;
-#[doc = "CC2_OC (rw) register accessor: an alias for `Reg<CC2_OC_SPEC>`"]
-pub type CC2_OC = crate::Reg<cc2_oc::CC2_OC_SPEC>;
+#[doc = "CC2_OC (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_oc::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc2_oc::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_oc`] module"]
+#[doc(alias = "CC2_OC")]
+pub type Cc2Oc = crate::Reg<cc2_oc::Cc2OcSpec>;
 #[doc = "No Description"]
 pub mod cc2_oc;
-#[doc = "CC2_OCB (rw) register accessor: an alias for `Reg<CC2_OCB_SPEC>`"]
-pub type CC2_OCB = crate::Reg<cc2_ocb::CC2_OCB_SPEC>;
+#[doc = "CC2_OCB (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_ocb::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cc2_ocb::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_ocb`] module"]
+#[doc(alias = "CC2_OCB")]
+pub type Cc2Ocb = crate::Reg<cc2_ocb::Cc2OcbSpec>;
 #[doc = "No Description"]
 pub mod cc2_ocb;
-#[doc = "CC2_ICF (r) register accessor: an alias for `Reg<CC2_ICF_SPEC>`"]
-pub type CC2_ICF = crate::Reg<cc2_icf::CC2_ICF_SPEC>;
+#[doc = "CC2_ICF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_icf::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_icf`] module"]
+#[doc(alias = "CC2_ICF")]
+pub type Cc2Icf = crate::Reg<cc2_icf::Cc2IcfSpec>;
 #[doc = "No Description"]
 pub mod cc2_icf;
-#[doc = "CC2_ICOF (r) register accessor: an alias for `Reg<CC2_ICOF_SPEC>`"]
-pub type CC2_ICOF = crate::Reg<cc2_icof::CC2_ICOF_SPEC>;
+#[doc = "CC2_ICOF (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc2_icof::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@cc2_icof`] module"]
+#[doc(alias = "CC2_ICOF")]
+pub type Cc2Icof = crate::Reg<cc2_icof::Cc2IcofSpec>;
 #[doc = "No Description"]
 pub mod cc2_icof;
-#[doc = "DTCFG (rw) register accessor: an alias for `Reg<DTCFG_SPEC>`"]
-pub type DTCFG = crate::Reg<dtcfg::DTCFG_SPEC>;
+#[doc = "DTCFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dtcfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtcfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtcfg`] module"]
+#[doc(alias = "DTCFG")]
+pub type Dtcfg = crate::Reg<dtcfg::DtcfgSpec>;
 #[doc = "No Description"]
 pub mod dtcfg;
-#[doc = "DTTIMECFG (rw) register accessor: an alias for `Reg<DTTIMECFG_SPEC>`"]
-pub type DTTIMECFG = crate::Reg<dttimecfg::DTTIMECFG_SPEC>;
+#[doc = "DTTIMECFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dttimecfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dttimecfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dttimecfg`] module"]
+#[doc(alias = "DTTIMECFG")]
+pub type Dttimecfg = crate::Reg<dttimecfg::DttimecfgSpec>;
 #[doc = "No Description"]
 pub mod dttimecfg;
-#[doc = "DTFCFG (rw) register accessor: an alias for `Reg<DTFCFG_SPEC>`"]
-pub type DTFCFG = crate::Reg<dtfcfg::DTFCFG_SPEC>;
+#[doc = "DTFCFG (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dtfcfg::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtfcfg::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtfcfg`] module"]
+#[doc(alias = "DTFCFG")]
+pub type Dtfcfg = crate::Reg<dtfcfg::DtfcfgSpec>;
 #[doc = "No Description"]
 pub mod dtfcfg;
-#[doc = "DTCTRL (rw) register accessor: an alias for `Reg<DTCTRL_SPEC>`"]
-pub type DTCTRL = crate::Reg<dtctrl::DTCTRL_SPEC>;
+#[doc = "DTCTRL (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dtctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtctrl`] module"]
+#[doc(alias = "DTCTRL")]
+pub type Dtctrl = crate::Reg<dtctrl::DtctrlSpec>;
 #[doc = "No Description"]
 pub mod dtctrl;
-#[doc = "DTOGEN (rw) register accessor: an alias for `Reg<DTOGEN_SPEC>`"]
-pub type DTOGEN = crate::Reg<dtogen::DTOGEN_SPEC>;
+#[doc = "DTOGEN (rw) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dtogen::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtogen::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtogen`] module"]
+#[doc(alias = "DTOGEN")]
+pub type Dtogen = crate::Reg<dtogen::DtogenSpec>;
 #[doc = "No Description"]
 pub mod dtogen;
-#[doc = "DTFAULT (r) register accessor: an alias for `Reg<DTFAULT_SPEC>`"]
-pub type DTFAULT = crate::Reg<dtfault::DTFAULT_SPEC>;
+#[doc = "DTFAULT (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dtfault::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtfault`] module"]
+#[doc(alias = "DTFAULT")]
+pub type Dtfault = crate::Reg<dtfault::DtfaultSpec>;
 #[doc = "No Description"]
 pub mod dtfault;
-#[doc = "DTFAULTC (w) register accessor: an alias for `Reg<DTFAULTC_SPEC>`"]
-pub type DTFAULTC = crate::Reg<dtfaultc::DTFAULTC_SPEC>;
+#[doc = "DTFAULTC (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtfaultc::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtfaultc`] module"]
+#[doc(alias = "DTFAULTC")]
+pub type Dtfaultc = crate::Reg<dtfaultc::DtfaultcSpec>;
 #[doc = "No Description"]
 pub mod dtfaultc;
-#[doc = "DTLOCK (w) register accessor: an alias for `Reg<DTLOCK_SPEC>`"]
-pub type DTLOCK = crate::Reg<dtlock::DTLOCK_SPEC>;
+#[doc = "DTLOCK (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dtlock::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@dtlock`] module"]
+#[doc(alias = "DTLOCK")]
+pub type Dtlock = crate::Reg<dtlock::DtlockSpec>;
 #[doc = "No Description"]
 pub mod dtlock;

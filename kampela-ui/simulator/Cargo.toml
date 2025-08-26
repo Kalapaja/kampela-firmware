@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+alloy-primitives = { version = "1.2.1", default-features = false }
 clap = { version = "4.2.1", features = ["derive"] }
 embedded-graphics-core = "0.3.3"
 embedded-graphics-simulator = { version = "0.3.0" }
-mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", features = ["sufficient-memory"]}
-substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", features = ["sr25519"]}
+hex = {version = "0.4.3", default-features = false, features = ["alloc"] }
+mnemonic-external = { version = "0.1.0", default-features = false, features = ["sufficient-memory"] }
+uuid = { version = "0.8.2", default-features = false }
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

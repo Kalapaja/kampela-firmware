@@ -1,126 +1,84 @@
 #[doc = "Register `CFG` reader"]
-pub struct R(crate::R<CFG_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CFG_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CFG_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CfgSpec>;
 #[doc = "Register `CFG` writer"]
-pub struct W(crate::W<CFG_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CFG_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CFG_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `DEBUGRUN` reader - Debug Mode Run Enable"]
-pub type DEBUGRUN_R = crate::BitReader<DEBUGRUN_A>;
+pub type W = crate::W<CfgSpec>;
 #[doc = "Debug Mode Run Enable\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum DEBUGRUN_A {
+pub enum Debugrun {
     #[doc = "0: SYSRTC is frozen in debug mode"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: SYSRTC is running in debug mode"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<DEBUGRUN_A> for bool {
+impl From<Debugrun> for bool {
     #[inline(always)]
-    fn from(variant: DEBUGRUN_A) -> Self {
+    fn from(variant: Debugrun) -> Self {
         variant as u8 != 0
     }
 }
-impl DEBUGRUN_R {
+#[doc = "Field `DEBUGRUN` reader - Debug Mode Run Enable"]
+pub type DebugrunR = crate::BitReader<Debugrun>;
+impl DebugrunR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> DEBUGRUN_A {
+    pub const fn variant(&self) -> Debugrun {
         match self.bits {
-            false => DEBUGRUN_A::DISABLE,
-            true => DEBUGRUN_A::ENABLE,
+            false => Debugrun::Disable,
+            true => Debugrun::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == DEBUGRUN_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == DEBUGRUN_A::ENABLE
-    }
-}
-#[doc = "Field `DEBUGRUN` writer - Debug Mode Run Enable"]
-pub type DEBUGRUN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, DEBUGRUN_A, O>;
-impl<'a, const O: u8> DEBUGRUN_W<'a, O> {
     #[doc = "SYSRTC is frozen in debug mode"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(DEBUGRUN_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Debugrun::Disable
     }
     #[doc = "SYSRTC is running in debug mode"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(DEBUGRUN_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Debugrun::Enable
+    }
+}
+#[doc = "Field `DEBUGRUN` writer - Debug Mode Run Enable"]
+pub type DebugrunW<'a, REG> = crate::BitWriter<'a, REG, Debugrun>;
+impl<'a, REG> DebugrunW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "SYSRTC is frozen in debug mode"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Debugrun::Disable)
+    }
+    #[doc = "SYSRTC is running in debug mode"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Debugrun::Enable)
     }
 }
 impl R {
     #[doc = "Bit 0 - Debug Mode Run Enable"]
     #[inline(always)]
-    pub fn debugrun(&self) -> DEBUGRUN_R {
-        DEBUGRUN_R::new((self.bits & 1) != 0)
+    pub fn debugrun(&self) -> DebugrunR {
+        DebugrunR::new((self.bits & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Debug Mode Run Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<0> {
-        DEBUGRUN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn debugrun(&mut self) -> DebugrunW<CfgSpec> {
+        DebugrunW::new(self, 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct CFG_SPEC;
-impl crate::RegisterSpec for CFG_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CfgSpec;
+impl crate::RegisterSpec for CfgSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [cfg::R](R) reader structure"]
-impl crate::Readable for CFG_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [cfg::W](W) writer structure"]
-impl crate::Writable for CFG_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`cfg::R`](R) reader structure"]
+impl crate::Readable for CfgSpec {}
+#[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
+impl crate::Writable for CfgSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CfgSpec {}

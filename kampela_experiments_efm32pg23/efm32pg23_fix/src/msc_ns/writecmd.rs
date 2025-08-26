@@ -1,92 +1,57 @@
 #[doc = "Register `WRITECMD` writer"]
-pub struct W(crate::W<WRITECMD_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<WRITECMD_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<WRITECMD_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<WRITECMD_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<WritecmdSpec>;
 #[doc = "Field `ERASEPAGE` writer - Erase Page"]
-pub type ERASEPAGE_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type ErasepageW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `WRITEEND` writer - End Write Mode"]
-pub type WRITEEND_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type WriteendW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ERASERANGE` writer - Erase range of pages"]
-pub type ERASERANGE_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type EraserangeW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ERASEABORT` writer - Abort erase sequence"]
-pub type ERASEABORT_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type EraseabortW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ERASEMAIN0` writer - Mass erase region 0"]
-pub type ERASEMAIN0_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type Erasemain0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CLEARWDATA` writer - Clear WDATA state"]
-pub type CLEARWDATA_W<'a, const O: u8> = crate::BitWriter<'a, u32, WRITECMD_SPEC, bool, O>;
+pub type ClearwdataW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 1 - Erase Page"]
     #[inline(always)]
-    #[must_use]
-    pub fn erasepage(&mut self) -> ERASEPAGE_W<1> {
-        ERASEPAGE_W::new(self)
+    pub fn erasepage(&mut self) -> ErasepageW<WritecmdSpec> {
+        ErasepageW::new(self, 1)
     }
     #[doc = "Bit 2 - End Write Mode"]
     #[inline(always)]
-    #[must_use]
-    pub fn writeend(&mut self) -> WRITEEND_W<2> {
-        WRITEEND_W::new(self)
+    pub fn writeend(&mut self) -> WriteendW<WritecmdSpec> {
+        WriteendW::new(self, 2)
     }
     #[doc = "Bit 4 - Erase range of pages"]
     #[inline(always)]
-    #[must_use]
-    pub fn eraserange(&mut self) -> ERASERANGE_W<4> {
-        ERASERANGE_W::new(self)
+    pub fn eraserange(&mut self) -> EraserangeW<WritecmdSpec> {
+        EraserangeW::new(self, 4)
     }
     #[doc = "Bit 5 - Abort erase sequence"]
     #[inline(always)]
-    #[must_use]
-    pub fn eraseabort(&mut self) -> ERASEABORT_W<5> {
-        ERASEABORT_W::new(self)
+    pub fn eraseabort(&mut self) -> EraseabortW<WritecmdSpec> {
+        EraseabortW::new(self, 5)
     }
     #[doc = "Bit 8 - Mass erase region 0"]
     #[inline(always)]
-    #[must_use]
-    pub fn erasemain0(&mut self) -> ERASEMAIN0_W<8> {
-        ERASEMAIN0_W::new(self)
+    pub fn erasemain0(&mut self) -> Erasemain0W<WritecmdSpec> {
+        Erasemain0W::new(self, 8)
     }
     #[doc = "Bit 12 - Clear WDATA state"]
     #[inline(always)]
-    #[must_use]
-    pub fn clearwdata(&mut self) -> CLEARWDATA_W<12> {
-        CLEARWDATA_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn clearwdata(&mut self) -> ClearwdataW<WritecmdSpec> {
+        ClearwdataW::new(self, 12)
     }
 }
-#[doc = "No Description\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [writecmd](index.html) module"]
-pub struct WRITECMD_SPEC;
-impl crate::RegisterSpec for WRITECMD_SPEC {
+#[doc = "No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`writecmd::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct WritecmdSpec;
+impl crate::RegisterSpec for WritecmdSpec {
     type Ux = u32;
 }
-#[doc = "`write(|w| ..)` method takes [writecmd::W](W) writer structure"]
-impl crate::Writable for WRITECMD_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`write(|w| ..)` method takes [`writecmd::W`](W) writer structure"]
+impl crate::Writable for WritecmdSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets WRITECMD to value 0"]
-impl crate::Resettable for WRITECMD_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for WritecmdSpec {}

@@ -28,7 +28,7 @@ use embedded_text::{
 
 use mnemonic_external::{Bits11, WordListElement, WordSet};
 
-use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{display_def::*, platform::Platform, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use super::keyboard::KEYBOARD_AREA;
 
@@ -100,7 +100,7 @@ impl<P: Platform> Phrase<P> {
 impl<P: Platform> View for Phrase<P> {
     type DrawInput<'a> = bool where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = () where P: 'a;
+    type EventInput<'a> = () where P: 'a;
     type TapOutput = ();
 
     fn bounding_box(&self) -> Rectangle {
@@ -155,7 +155,7 @@ impl<P: Platform> View for Phrase<P> {
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, _: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, _: Event, _: ()) -> Self::TapOutput
     where Self: 'a {
     }
 }

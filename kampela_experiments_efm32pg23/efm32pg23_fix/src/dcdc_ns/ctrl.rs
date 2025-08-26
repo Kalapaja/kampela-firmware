@@ -1,141 +1,100 @@
 #[doc = "Register `CTRL` reader"]
-pub struct R(crate::R<CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CtrlSpec>;
 #[doc = "Register `CTRL` writer"]
-pub struct W(crate::W<CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `MODE` reader - DCDC/Bypass Mode Control"]
-pub type MODE_R = crate::BitReader<MODE_A>;
+pub type W = crate::W<CtrlSpec>;
 #[doc = "DCDC/Bypass Mode Control\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum MODE_A {
+pub enum Mode {
     #[doc = "0: DCDC is OFF, bypass switch is enabled"]
-    BYPASS = 0,
+    Bypass = 0,
     #[doc = "1: Request DCDC regulation, bypass switch disabled"]
-    DCDCREGULATION = 1,
+    Dcdcregulation = 1,
 }
-impl From<MODE_A> for bool {
+impl From<Mode> for bool {
     #[inline(always)]
-    fn from(variant: MODE_A) -> Self {
+    fn from(variant: Mode) -> Self {
         variant as u8 != 0
     }
 }
-impl MODE_R {
+#[doc = "Field `MODE` reader - DCDC/Bypass Mode Control"]
+pub type ModeR = crate::BitReader<Mode>;
+impl ModeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MODE_A {
+    pub const fn variant(&self) -> Mode {
         match self.bits {
-            false => MODE_A::BYPASS,
-            true => MODE_A::DCDCREGULATION,
+            false => Mode::Bypass,
+            true => Mode::Dcdcregulation,
         }
     }
-    #[doc = "Checks if the value of the field is `BYPASS`"]
-    #[inline(always)]
-    pub fn is_bypass(&self) -> bool {
-        *self == MODE_A::BYPASS
-    }
-    #[doc = "Checks if the value of the field is `DCDCREGULATION`"]
-    #[inline(always)]
-    pub fn is_dcdcregulation(&self) -> bool {
-        *self == MODE_A::DCDCREGULATION
-    }
-}
-#[doc = "Field `MODE` writer - DCDC/Bypass Mode Control"]
-pub type MODE_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, MODE_A, O>;
-impl<'a, const O: u8> MODE_W<'a, O> {
     #[doc = "DCDC is OFF, bypass switch is enabled"]
     #[inline(always)]
-    pub fn bypass(self) -> &'a mut W {
-        self.variant(MODE_A::BYPASS)
+    pub fn is_bypass(&self) -> bool {
+        *self == Mode::Bypass
     }
     #[doc = "Request DCDC regulation, bypass switch disabled"]
     #[inline(always)]
-    pub fn dcdcregulation(self) -> &'a mut W {
-        self.variant(MODE_A::DCDCREGULATION)
+    pub fn is_dcdcregulation(&self) -> bool {
+        *self == Mode::Dcdcregulation
+    }
+}
+#[doc = "Field `MODE` writer - DCDC/Bypass Mode Control"]
+pub type ModeW<'a, REG> = crate::BitWriter<'a, REG, Mode>;
+impl<'a, REG> ModeW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "DCDC is OFF, bypass switch is enabled"]
+    #[inline(always)]
+    pub fn bypass(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Bypass)
+    }
+    #[doc = "Request DCDC regulation, bypass switch disabled"]
+    #[inline(always)]
+    pub fn dcdcregulation(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Dcdcregulation)
     }
 }
 #[doc = "Field `IPKTMAXCTRL` reader - Ton_max timeout control"]
-pub type IPKTMAXCTRL_R = crate::FieldReader<u8, u8>;
+pub type IpktmaxctrlR = crate::FieldReader;
 #[doc = "Field `IPKTMAXCTRL` writer - Ton_max timeout control"]
-pub type IPKTMAXCTRL_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CTRL_SPEC, u8, u8, 5, O>;
+pub type IpktmaxctrlW<'a, REG> = crate::FieldWriter<'a, REG, 5>;
 impl R {
     #[doc = "Bit 0 - DCDC/Bypass Mode Control"]
     #[inline(always)]
-    pub fn mode(&self) -> MODE_R {
-        MODE_R::new((self.bits & 1) != 0)
+    pub fn mode(&self) -> ModeR {
+        ModeR::new((self.bits & 1) != 0)
     }
     #[doc = "Bits 4:8 - Ton_max timeout control"]
     #[inline(always)]
-    pub fn ipktmaxctrl(&self) -> IPKTMAXCTRL_R {
-        IPKTMAXCTRL_R::new(((self.bits >> 4) & 0x1f) as u8)
+    pub fn ipktmaxctrl(&self) -> IpktmaxctrlR {
+        IpktmaxctrlR::new(((self.bits >> 4) & 0x1f) as u8)
     }
 }
 impl W {
     #[doc = "Bit 0 - DCDC/Bypass Mode Control"]
     #[inline(always)]
-    #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
-        MODE_W::new(self)
+    pub fn mode(&mut self) -> ModeW<CtrlSpec> {
+        ModeW::new(self, 0)
     }
     #[doc = "Bits 4:8 - Ton_max timeout control"]
     #[inline(always)]
-    #[must_use]
-    pub fn ipktmaxctrl(&mut self) -> IPKTMAXCTRL_W<4> {
-        IPKTMAXCTRL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn ipktmaxctrl(&mut self) -> IpktmaxctrlW<CtrlSpec> {
+        IpktmaxctrlW::new(self, 4)
     }
 }
-#[doc = "Control\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ctrl](index.html) module"]
-pub struct CTRL_SPEC;
-impl crate::RegisterSpec for CTRL_SPEC {
+#[doc = "Control\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CtrlSpec;
+impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ctrl::R](R) reader structure"]
-impl crate::Readable for CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ctrl::W](W) writer structure"]
-impl crate::Writable for CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ctrl::R`](R) reader structure"]
+impl crate::Readable for CtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
+impl crate::Writable for CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0100"]
-impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0100;
+impl crate::Resettable for CtrlSpec {
+    const RESET_VALUE: u32 = 0x0100;
 }

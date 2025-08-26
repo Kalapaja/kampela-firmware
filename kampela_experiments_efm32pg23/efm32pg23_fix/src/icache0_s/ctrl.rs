@@ -1,110 +1,63 @@
 #[doc = "Register `CTRL` reader"]
-pub struct R(crate::R<CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CtrlSpec>;
 #[doc = "Register `CTRL` writer"]
-pub struct W(crate::W<CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<CtrlSpec>;
 #[doc = "Field `CACHEDIS` reader - Cache Disable"]
-pub type CACHEDIS_R = crate::BitReader<bool>;
+pub type CachedisR = crate::BitReader;
 #[doc = "Field `CACHEDIS` writer - Cache Disable"]
-pub type CACHEDIS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type CachedisW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `USEMPU` reader - Use MPU"]
-pub type USEMPU_R = crate::BitReader<bool>;
+pub type UsempuR = crate::BitReader;
 #[doc = "Field `USEMPU` writer - Use MPU"]
-pub type USEMPU_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type UsempuW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUTOFLUSHDIS` reader - Automatic Flushing Disable"]
-pub type AUTOFLUSHDIS_R = crate::BitReader<bool>;
+pub type AutoflushdisR = crate::BitReader;
 #[doc = "Field `AUTOFLUSHDIS` writer - Automatic Flushing Disable"]
-pub type AUTOFLUSHDIS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type AutoflushdisW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Cache Disable"]
     #[inline(always)]
-    pub fn cachedis(&self) -> CACHEDIS_R {
-        CACHEDIS_R::new((self.bits & 1) != 0)
+    pub fn cachedis(&self) -> CachedisR {
+        CachedisR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Use MPU"]
     #[inline(always)]
-    pub fn usempu(&self) -> USEMPU_R {
-        USEMPU_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn usempu(&self) -> UsempuR {
+        UsempuR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Automatic Flushing Disable"]
     #[inline(always)]
-    pub fn autoflushdis(&self) -> AUTOFLUSHDIS_R {
-        AUTOFLUSHDIS_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn autoflushdis(&self) -> AutoflushdisR {
+        AutoflushdisR::new(((self.bits >> 2) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Cache Disable"]
     #[inline(always)]
-    #[must_use]
-    pub fn cachedis(&mut self) -> CACHEDIS_W<0> {
-        CACHEDIS_W::new(self)
+    pub fn cachedis(&mut self) -> CachedisW<CtrlSpec> {
+        CachedisW::new(self, 0)
     }
     #[doc = "Bit 1 - Use MPU"]
     #[inline(always)]
-    #[must_use]
-    pub fn usempu(&mut self) -> USEMPU_W<1> {
-        USEMPU_W::new(self)
+    pub fn usempu(&mut self) -> UsempuW<CtrlSpec> {
+        UsempuW::new(self, 1)
     }
     #[doc = "Bit 2 - Automatic Flushing Disable"]
     #[inline(always)]
-    #[must_use]
-    pub fn autoflushdis(&mut self) -> AUTOFLUSHDIS_W<2> {
-        AUTOFLUSHDIS_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn autoflushdis(&mut self) -> AutoflushdisW<CtrlSpec> {
+        AutoflushdisW::new(self, 2)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ctrl](index.html) module"]
-pub struct CTRL_SPEC;
-impl crate::RegisterSpec for CTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CtrlSpec;
+impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ctrl::R](R) reader structure"]
-impl crate::Readable for CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ctrl::W](W) writer structure"]
-impl crate::Writable for CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ctrl::R`](R) reader structure"]
+impl crate::Readable for CtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
+impl crate::Writable for CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CtrlSpec {}

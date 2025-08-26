@@ -1,245 +1,189 @@
 #[doc = "Register `IEN` reader"]
-pub struct R(crate::R<IEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<IEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<IEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub struct W(crate::W<IEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<IEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<IEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `RDY` reader - Digital Clock Ready Interrupt"]
-pub type RDY_R = crate::BitReader<bool>;
+pub type RdyR = crate::BitReader;
 #[doc = "Field `RDY` writer - Digital Clock Ready Interrupt"]
-pub type RDY_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type RdyW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `COREBIASOPTRDY` reader - Core Bias Optimization Ready Interrupt"]
-pub type COREBIASOPTRDY_R = crate::BitReader<bool>;
+pub type CorebiasoptrdyR = crate::BitReader;
 #[doc = "Field `COREBIASOPTRDY` writer - Core Bias Optimization Ready Interrupt"]
-pub type COREBIASOPTRDY_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type CorebiasoptrdyW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PRSRDY` reader - PRS Ready Interrupt"]
-pub type PRSRDY_R = crate::BitReader<bool>;
+pub type PrsrdyR = crate::BitReader;
 #[doc = "Field `PRSRDY` writer - PRS Ready Interrupt"]
-pub type PRSRDY_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type PrsrdyW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUFOUTRDY` reader - BUFOUT Ready Interrupt"]
-pub type BUFOUTRDY_R = crate::BitReader<bool>;
+pub type BufoutrdyR = crate::BitReader;
 #[doc = "Field `BUFOUTRDY` writer - BUFOUT Ready Interrupt"]
-pub type BUFOUTRDY_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BufoutrdyW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUFOUTFROZEN` reader - BUFOUT FROZEN Interrupt"]
-pub type BUFOUTFROZEN_R = crate::BitReader<bool>;
+pub type BufoutfrozenR = crate::BitReader;
 #[doc = "Field `BUFOUTFROZEN` writer - BUFOUT FROZEN Interrupt"]
-pub type BUFOUTFROZEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BufoutfrozenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PRSERR` reader - PRS Requset Error Interrupt"]
-pub type PRSERR_R = crate::BitReader<bool>;
+pub type PrserrR = crate::BitReader;
 #[doc = "Field `PRSERR` writer - PRS Requset Error Interrupt"]
-pub type PRSERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type PrserrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUFOUTERR` reader - BUFOUT Request Error Interrupt"]
-pub type BUFOUTERR_R = crate::BitReader<bool>;
+pub type BufouterrR = crate::BitReader;
 #[doc = "Field `BUFOUTERR` writer - BUFOUT Request Error Interrupt"]
-pub type BUFOUTERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BufouterrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUFOUTFREEZEERR` reader - BUFOUT Freeze Error Interrupt"]
-pub type BUFOUTFREEZEERR_R = crate::BitReader<bool>;
+pub type BufoutfreezeerrR = crate::BitReader;
 #[doc = "Field `BUFOUTFREEZEERR` writer - BUFOUT Freeze Error Interrupt"]
-pub type BUFOUTFREEZEERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BufoutfreezeerrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BUFOUTDNSERR` reader - BUFOUT Did Not Start Error Interrupt"]
-pub type BUFOUTDNSERR_R = crate::BitReader<bool>;
+pub type BufoutdnserrR = crate::BitReader;
 #[doc = "Field `BUFOUTDNSERR` writer - BUFOUT Did Not Start Error Interrupt"]
-pub type BUFOUTDNSERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type BufoutdnserrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DNSERR` reader - Did Not Start Error Interrupt"]
-pub type DNSERR_R = crate::BitReader<bool>;
+pub type DnserrR = crate::BitReader;
 #[doc = "Field `DNSERR` writer - Did Not Start Error Interrupt"]
-pub type DNSERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type DnserrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LFTIMEOUTERR` reader - Low Frequency Timeout Error Interrupt"]
-pub type LFTIMEOUTERR_R = crate::BitReader<bool>;
+pub type LftimeouterrR = crate::BitReader;
 #[doc = "Field `LFTIMEOUTERR` writer - Low Frequency Timeout Error Interrupt"]
-pub type LFTIMEOUTERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type LftimeouterrW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `COREBIASOPTERR` reader - Core Bias Optimization Error Interrupt"]
-pub type COREBIASOPTERR_R = crate::BitReader<bool>;
+pub type CorebiasopterrR = crate::BitReader;
 #[doc = "Field `COREBIASOPTERR` writer - Core Bias Optimization Error Interrupt"]
-pub type COREBIASOPTERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type CorebiasopterrW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Digital Clock Ready Interrupt"]
     #[inline(always)]
-    pub fn rdy(&self) -> RDY_R {
-        RDY_R::new((self.bits & 1) != 0)
+    pub fn rdy(&self) -> RdyR {
+        RdyR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Core Bias Optimization Ready Interrupt"]
     #[inline(always)]
-    pub fn corebiasoptrdy(&self) -> COREBIASOPTRDY_R {
-        COREBIASOPTRDY_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn corebiasoptrdy(&self) -> CorebiasoptrdyR {
+        CorebiasoptrdyR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - PRS Ready Interrupt"]
     #[inline(always)]
-    pub fn prsrdy(&self) -> PRSRDY_R {
-        PRSRDY_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn prsrdy(&self) -> PrsrdyR {
+        PrsrdyR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - BUFOUT Ready Interrupt"]
     #[inline(always)]
-    pub fn bufoutrdy(&self) -> BUFOUTRDY_R {
-        BUFOUTRDY_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn bufoutrdy(&self) -> BufoutrdyR {
+        BufoutrdyR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 15 - BUFOUT FROZEN Interrupt"]
     #[inline(always)]
-    pub fn bufoutfrozen(&self) -> BUFOUTFROZEN_R {
-        BUFOUTFROZEN_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn bufoutfrozen(&self) -> BufoutfrozenR {
+        BufoutfrozenR::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bit 20 - PRS Requset Error Interrupt"]
     #[inline(always)]
-    pub fn prserr(&self) -> PRSERR_R {
-        PRSERR_R::new(((self.bits >> 20) & 1) != 0)
+    pub fn prserr(&self) -> PrserrR {
+        PrserrR::new(((self.bits >> 20) & 1) != 0)
     }
     #[doc = "Bit 21 - BUFOUT Request Error Interrupt"]
     #[inline(always)]
-    pub fn bufouterr(&self) -> BUFOUTERR_R {
-        BUFOUTERR_R::new(((self.bits >> 21) & 1) != 0)
+    pub fn bufouterr(&self) -> BufouterrR {
+        BufouterrR::new(((self.bits >> 21) & 1) != 0)
     }
     #[doc = "Bit 27 - BUFOUT Freeze Error Interrupt"]
     #[inline(always)]
-    pub fn bufoutfreezeerr(&self) -> BUFOUTFREEZEERR_R {
-        BUFOUTFREEZEERR_R::new(((self.bits >> 27) & 1) != 0)
+    pub fn bufoutfreezeerr(&self) -> BufoutfreezeerrR {
+        BufoutfreezeerrR::new(((self.bits >> 27) & 1) != 0)
     }
     #[doc = "Bit 28 - BUFOUT Did Not Start Error Interrupt"]
     #[inline(always)]
-    pub fn bufoutdnserr(&self) -> BUFOUTDNSERR_R {
-        BUFOUTDNSERR_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn bufoutdnserr(&self) -> BufoutdnserrR {
+        BufoutdnserrR::new(((self.bits >> 28) & 1) != 0)
     }
     #[doc = "Bit 29 - Did Not Start Error Interrupt"]
     #[inline(always)]
-    pub fn dnserr(&self) -> DNSERR_R {
-        DNSERR_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn dnserr(&self) -> DnserrR {
+        DnserrR::new(((self.bits >> 29) & 1) != 0)
     }
     #[doc = "Bit 30 - Low Frequency Timeout Error Interrupt"]
     #[inline(always)]
-    pub fn lftimeouterr(&self) -> LFTIMEOUTERR_R {
-        LFTIMEOUTERR_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn lftimeouterr(&self) -> LftimeouterrR {
+        LftimeouterrR::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - Core Bias Optimization Error Interrupt"]
     #[inline(always)]
-    pub fn corebiasopterr(&self) -> COREBIASOPTERR_R {
-        COREBIASOPTERR_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn corebiasopterr(&self) -> CorebiasopterrR {
+        CorebiasopterrR::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Digital Clock Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn rdy(&mut self) -> RDY_W<0> {
-        RDY_W::new(self)
+    pub fn rdy(&mut self) -> RdyW<IenSpec> {
+        RdyW::new(self, 0)
     }
     #[doc = "Bit 1 - Core Bias Optimization Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn corebiasoptrdy(&mut self) -> COREBIASOPTRDY_W<1> {
-        COREBIASOPTRDY_W::new(self)
+    pub fn corebiasoptrdy(&mut self) -> CorebiasoptrdyW<IenSpec> {
+        CorebiasoptrdyW::new(self, 1)
     }
     #[doc = "Bit 2 - PRS Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn prsrdy(&mut self) -> PRSRDY_W<2> {
-        PRSRDY_W::new(self)
+    pub fn prsrdy(&mut self) -> PrsrdyW<IenSpec> {
+        PrsrdyW::new(self, 2)
     }
     #[doc = "Bit 3 - BUFOUT Ready Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufoutrdy(&mut self) -> BUFOUTRDY_W<3> {
-        BUFOUTRDY_W::new(self)
+    pub fn bufoutrdy(&mut self) -> BufoutrdyW<IenSpec> {
+        BufoutrdyW::new(self, 3)
     }
     #[doc = "Bit 15 - BUFOUT FROZEN Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufoutfrozen(&mut self) -> BUFOUTFROZEN_W<15> {
-        BUFOUTFROZEN_W::new(self)
+    pub fn bufoutfrozen(&mut self) -> BufoutfrozenW<IenSpec> {
+        BufoutfrozenW::new(self, 15)
     }
     #[doc = "Bit 20 - PRS Requset Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn prserr(&mut self) -> PRSERR_W<20> {
-        PRSERR_W::new(self)
+    pub fn prserr(&mut self) -> PrserrW<IenSpec> {
+        PrserrW::new(self, 20)
     }
     #[doc = "Bit 21 - BUFOUT Request Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufouterr(&mut self) -> BUFOUTERR_W<21> {
-        BUFOUTERR_W::new(self)
+    pub fn bufouterr(&mut self) -> BufouterrW<IenSpec> {
+        BufouterrW::new(self, 21)
     }
     #[doc = "Bit 27 - BUFOUT Freeze Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufoutfreezeerr(&mut self) -> BUFOUTFREEZEERR_W<27> {
-        BUFOUTFREEZEERR_W::new(self)
+    pub fn bufoutfreezeerr(&mut self) -> BufoutfreezeerrW<IenSpec> {
+        BufoutfreezeerrW::new(self, 27)
     }
     #[doc = "Bit 28 - BUFOUT Did Not Start Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufoutdnserr(&mut self) -> BUFOUTDNSERR_W<28> {
-        BUFOUTDNSERR_W::new(self)
+    pub fn bufoutdnserr(&mut self) -> BufoutdnserrW<IenSpec> {
+        BufoutdnserrW::new(self, 28)
     }
     #[doc = "Bit 29 - Did Not Start Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn dnserr(&mut self) -> DNSERR_W<29> {
-        DNSERR_W::new(self)
+    pub fn dnserr(&mut self) -> DnserrW<IenSpec> {
+        DnserrW::new(self, 29)
     }
     #[doc = "Bit 30 - Low Frequency Timeout Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn lftimeouterr(&mut self) -> LFTIMEOUTERR_W<30> {
-        LFTIMEOUTERR_W::new(self)
+    pub fn lftimeouterr(&mut self) -> LftimeouterrW<IenSpec> {
+        LftimeouterrW::new(self, 30)
     }
     #[doc = "Bit 31 - Core Bias Optimization Error Interrupt"]
     #[inline(always)]
-    #[must_use]
-    pub fn corebiasopterr(&mut self) -> COREBIASOPTERR_W<31> {
-        COREBIASOPTERR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn corebiasopterr(&mut self) -> CorebiasopterrW<IenSpec> {
+        CorebiasopterrW::new(self, 31)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ien](index.html) module"]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ien::R](R) reader structure"]
-impl crate::Readable for IEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ien::W](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ien::R`](R) reader structure"]
+impl crate::Readable for IenSpec {}
+#[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IenSpec {}

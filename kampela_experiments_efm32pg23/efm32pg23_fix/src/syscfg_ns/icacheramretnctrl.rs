@@ -1,127 +1,84 @@
 #[doc = "Register `ICACHERAMRETNCTRL` reader"]
-pub struct R(crate::R<ICACHERAMRETNCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<ICACHERAMRETNCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<ICACHERAMRETNCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<ICACHERAMRETNCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IcacheramretnctrlSpec>;
 #[doc = "Register `ICACHERAMRETNCTRL` writer"]
-pub struct W(crate::W<ICACHERAMRETNCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<ICACHERAMRETNCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<ICACHERAMRETNCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<ICACHERAMRETNCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `RAMRETNCTRL` reader - ICACHERAM Retention control"]
-pub type RAMRETNCTRL_R = crate::BitReader<RAMRETNCTRL_A>;
+pub type W = crate::W<IcacheramretnctrlSpec>;
 #[doc = "ICACHERAM Retention control\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum RAMRETNCTRL_A {
+pub enum Ramretnctrl {
     #[doc = "0: None of the Host ICACHE RAM blocks powered down"]
-    ALLON = 0,
+    Allon = 0,
     #[doc = "1: Power down all Host ICACHE RAM blocks"]
-    ALLOFF = 1,
+    Alloff = 1,
 }
-impl From<RAMRETNCTRL_A> for bool {
+impl From<Ramretnctrl> for bool {
     #[inline(always)]
-    fn from(variant: RAMRETNCTRL_A) -> Self {
+    fn from(variant: Ramretnctrl) -> Self {
         variant as u8 != 0
     }
 }
-impl RAMRETNCTRL_R {
+#[doc = "Field `RAMRETNCTRL` reader - ICACHERAM Retention control"]
+pub type RamretnctrlR = crate::BitReader<Ramretnctrl>;
+impl RamretnctrlR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RAMRETNCTRL_A {
+    pub const fn variant(&self) -> Ramretnctrl {
         match self.bits {
-            false => RAMRETNCTRL_A::ALLON,
-            true => RAMRETNCTRL_A::ALLOFF,
+            false => Ramretnctrl::Allon,
+            true => Ramretnctrl::Alloff,
         }
     }
-    #[doc = "Checks if the value of the field is `ALLON`"]
-    #[inline(always)]
-    pub fn is_allon(&self) -> bool {
-        *self == RAMRETNCTRL_A::ALLON
-    }
-    #[doc = "Checks if the value of the field is `ALLOFF`"]
-    #[inline(always)]
-    pub fn is_alloff(&self) -> bool {
-        *self == RAMRETNCTRL_A::ALLOFF
-    }
-}
-#[doc = "Field `RAMRETNCTRL` writer - ICACHERAM Retention control"]
-pub type RAMRETNCTRL_W<'a, const O: u8> =
-    crate::BitWriter<'a, u32, ICACHERAMRETNCTRL_SPEC, RAMRETNCTRL_A, O>;
-impl<'a, const O: u8> RAMRETNCTRL_W<'a, O> {
     #[doc = "None of the Host ICACHE RAM blocks powered down"]
     #[inline(always)]
-    pub fn allon(self) -> &'a mut W {
-        self.variant(RAMRETNCTRL_A::ALLON)
+    pub fn is_allon(&self) -> bool {
+        *self == Ramretnctrl::Allon
     }
     #[doc = "Power down all Host ICACHE RAM blocks"]
     #[inline(always)]
-    pub fn alloff(self) -> &'a mut W {
-        self.variant(RAMRETNCTRL_A::ALLOFF)
+    pub fn is_alloff(&self) -> bool {
+        *self == Ramretnctrl::Alloff
+    }
+}
+#[doc = "Field `RAMRETNCTRL` writer - ICACHERAM Retention control"]
+pub type RamretnctrlW<'a, REG> = crate::BitWriter<'a, REG, Ramretnctrl>;
+impl<'a, REG> RamretnctrlW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "None of the Host ICACHE RAM blocks powered down"]
+    #[inline(always)]
+    pub fn allon(self) -> &'a mut crate::W<REG> {
+        self.variant(Ramretnctrl::Allon)
+    }
+    #[doc = "Power down all Host ICACHE RAM blocks"]
+    #[inline(always)]
+    pub fn alloff(self) -> &'a mut crate::W<REG> {
+        self.variant(Ramretnctrl::Alloff)
     }
 }
 impl R {
     #[doc = "Bit 0 - ICACHERAM Retention control"]
     #[inline(always)]
-    pub fn ramretnctrl(&self) -> RAMRETNCTRL_R {
-        RAMRETNCTRL_R::new((self.bits & 1) != 0)
+    pub fn ramretnctrl(&self) -> RamretnctrlR {
+        RamretnctrlR::new((self.bits & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - ICACHERAM Retention control"]
     #[inline(always)]
-    #[must_use]
-    pub fn ramretnctrl(&mut self) -> RAMRETNCTRL_W<0> {
-        RAMRETNCTRL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn ramretnctrl(&mut self) -> RamretnctrlW<IcacheramretnctrlSpec> {
+        RamretnctrlW::new(self, 0)
     }
 }
-#[doc = "Configure Host ICACHERAM retention configuration.\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [icacheramretnctrl](index.html) module"]
-pub struct ICACHERAMRETNCTRL_SPEC;
-impl crate::RegisterSpec for ICACHERAMRETNCTRL_SPEC {
+#[doc = "Configure Host ICACHERAM retention configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`icacheramretnctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`icacheramretnctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IcacheramretnctrlSpec;
+impl crate::RegisterSpec for IcacheramretnctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [icacheramretnctrl::R](R) reader structure"]
-impl crate::Readable for ICACHERAMRETNCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [icacheramretnctrl::W](W) writer structure"]
-impl crate::Writable for ICACHERAMRETNCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`icacheramretnctrl::R`](R) reader structure"]
+impl crate::Readable for IcacheramretnctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`icacheramretnctrl::W`](W) writer structure"]
+impl crate::Writable for IcacheramretnctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets ICACHERAMRETNCTRL to value 0"]
-impl crate::Resettable for ICACHERAMRETNCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IcacheramretnctrlSpec {}

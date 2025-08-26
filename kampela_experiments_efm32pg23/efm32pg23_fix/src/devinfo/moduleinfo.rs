@@ -1,438 +1,427 @@
 #[doc = "Register `MODULEINFO` reader"]
-pub struct R(crate::R<MODULEINFO_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<MODULEINFO_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<MODULEINFO_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<MODULEINFO_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<ModuleinfoSpec>;
 #[doc = "Field `HWREV` reader - No Description"]
-pub type HWREV_R = crate::FieldReader<u8, u8>;
-#[doc = "Field `ANTENNA` reader - No Description"]
-pub type ANTENNA_R = crate::FieldReader<u8, ANTENNA_A>;
+pub type HwrevR = crate::FieldReader;
 #[doc = "No Description\n\nValue on reset: 7"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum ANTENNA_A {
+pub enum Antenna {
     #[doc = "0: BUILTIN"]
-    BUILTIN = 0,
+    Builtin = 0,
     #[doc = "1: CONNECTOR"]
-    CONNECTOR = 1,
+    Connector = 1,
     #[doc = "2: RFPAD"]
-    RFPAD = 2,
+    Rfpad = 2,
     #[doc = "3: INVERTEDF"]
-    INVERTEDF = 3,
+    Invertedf = 3,
 }
-impl From<ANTENNA_A> for u8 {
+impl From<Antenna> for u8 {
     #[inline(always)]
-    fn from(variant: ANTENNA_A) -> Self {
+    fn from(variant: Antenna) -> Self {
         variant as _
     }
 }
-impl ANTENNA_R {
+impl crate::FieldSpec for Antenna {
+    type Ux = u8;
+}
+impl crate::IsEnum for Antenna {}
+#[doc = "Field `ANTENNA` reader - No Description"]
+pub type AntennaR = crate::FieldReader<Antenna>;
+impl AntennaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<ANTENNA_A> {
+    pub const fn variant(&self) -> Option<Antenna> {
         match self.bits {
-            0 => Some(ANTENNA_A::BUILTIN),
-            1 => Some(ANTENNA_A::CONNECTOR),
-            2 => Some(ANTENNA_A::RFPAD),
-            3 => Some(ANTENNA_A::INVERTEDF),
+            0 => Some(Antenna::Builtin),
+            1 => Some(Antenna::Connector),
+            2 => Some(Antenna::Rfpad),
+            3 => Some(Antenna::Invertedf),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `BUILTIN`"]
+    #[doc = "BUILTIN"]
     #[inline(always)]
     pub fn is_builtin(&self) -> bool {
-        *self == ANTENNA_A::BUILTIN
+        *self == Antenna::Builtin
     }
-    #[doc = "Checks if the value of the field is `CONNECTOR`"]
+    #[doc = "CONNECTOR"]
     #[inline(always)]
     pub fn is_connector(&self) -> bool {
-        *self == ANTENNA_A::CONNECTOR
+        *self == Antenna::Connector
     }
-    #[doc = "Checks if the value of the field is `RFPAD`"]
+    #[doc = "RFPAD"]
     #[inline(always)]
     pub fn is_rfpad(&self) -> bool {
-        *self == ANTENNA_A::RFPAD
+        *self == Antenna::Rfpad
     }
-    #[doc = "Checks if the value of the field is `INVERTEDF`"]
+    #[doc = "INVERTEDF"]
     #[inline(always)]
     pub fn is_invertedf(&self) -> bool {
-        *self == ANTENNA_A::INVERTEDF
+        *self == Antenna::Invertedf
     }
 }
 #[doc = "Field `MODNUMBER` reader - No Description"]
-pub type MODNUMBER_R = crate::FieldReader<u8, u8>;
-#[doc = "Field `TYPE` reader - No Description"]
-pub type TYPE_R = crate::BitReader<TYPE_A>;
+pub type ModnumberR = crate::FieldReader;
 #[doc = "No Description\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TYPE_A {
+pub enum Type {
     #[doc = "0: PCB"]
-    PCB = 0,
+    Pcb = 0,
     #[doc = "1: SIP"]
-    SIP = 1,
+    Sip = 1,
 }
-impl From<TYPE_A> for bool {
+impl From<Type> for bool {
     #[inline(always)]
-    fn from(variant: TYPE_A) -> Self {
+    fn from(variant: Type) -> Self {
         variant as u8 != 0
     }
 }
-impl TYPE_R {
+#[doc = "Field `TYPE` reader - No Description"]
+pub type TypeR = crate::BitReader<Type>;
+impl TypeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TYPE_A {
+    pub const fn variant(&self) -> Type {
         match self.bits {
-            false => TYPE_A::PCB,
-            true => TYPE_A::SIP,
+            false => Type::Pcb,
+            true => Type::Sip,
         }
     }
-    #[doc = "Checks if the value of the field is `PCB`"]
+    #[doc = "PCB"]
     #[inline(always)]
     pub fn is_pcb(&self) -> bool {
-        *self == TYPE_A::PCB
+        *self == Type::Pcb
     }
-    #[doc = "Checks if the value of the field is `SIP`"]
+    #[doc = "SIP"]
     #[inline(always)]
     pub fn is_sip(&self) -> bool {
-        *self == TYPE_A::SIP
+        *self == Type::Sip
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Lfxo {
+    #[doc = "0: NONE"]
+    None = 0,
+    #[doc = "1: PRESENT"]
+    Present = 1,
+}
+impl From<Lfxo> for bool {
+    #[inline(always)]
+    fn from(variant: Lfxo) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `LFXO` reader - No Description"]
-pub type LFXO_R = crate::BitReader<LFXO_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LFXO_A {
-    #[doc = "0: NONE"]
-    NONE = 0,
-    #[doc = "1: PRESENT"]
-    PRESENT = 1,
-}
-impl From<LFXO_A> for bool {
-    #[inline(always)]
-    fn from(variant: LFXO_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl LFXO_R {
+pub type LfxoR = crate::BitReader<Lfxo>;
+impl LfxoR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LFXO_A {
+    pub const fn variant(&self) -> Lfxo {
         match self.bits {
-            false => LFXO_A::NONE,
-            true => LFXO_A::PRESENT,
+            false => Lfxo::None,
+            true => Lfxo::Present,
         }
     }
-    #[doc = "Checks if the value of the field is `NONE`"]
+    #[doc = "NONE"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == LFXO_A::NONE
+        *self == Lfxo::None
     }
-    #[doc = "Checks if the value of the field is `PRESENT`"]
+    #[doc = "PRESENT"]
     #[inline(always)]
     pub fn is_present(&self) -> bool {
-        *self == LFXO_A::PRESENT
+        *self == Lfxo::Present
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Express {
+    #[doc = "0: SUPPORTED"]
+    Supported = 0,
+    #[doc = "1: NONE"]
+    None = 1,
+}
+impl From<Express> for bool {
+    #[inline(always)]
+    fn from(variant: Express) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `EXPRESS` reader - No Description"]
-pub type EXPRESS_R = crate::BitReader<EXPRESS_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum EXPRESS_A {
-    #[doc = "0: SUPPORTED"]
-    SUPPORTED = 0,
-    #[doc = "1: NONE"]
-    NONE = 1,
-}
-impl From<EXPRESS_A> for bool {
-    #[inline(always)]
-    fn from(variant: EXPRESS_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl EXPRESS_R {
+pub type ExpressR = crate::BitReader<Express>;
+impl ExpressR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> EXPRESS_A {
+    pub const fn variant(&self) -> Express {
         match self.bits {
-            false => EXPRESS_A::SUPPORTED,
-            true => EXPRESS_A::NONE,
+            false => Express::Supported,
+            true => Express::None,
         }
     }
-    #[doc = "Checks if the value of the field is `SUPPORTED`"]
+    #[doc = "SUPPORTED"]
     #[inline(always)]
     pub fn is_supported(&self) -> bool {
-        *self == EXPRESS_A::SUPPORTED
+        *self == Express::Supported
     }
-    #[doc = "Checks if the value of the field is `NONE`"]
+    #[doc = "NONE"]
     #[inline(always)]
     pub fn is_none(&self) -> bool {
-        *self == EXPRESS_A::NONE
+        *self == Express::None
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Lfxocalval {
+    #[doc = "0: VALID"]
+    Valid = 0,
+    #[doc = "1: NOTVALID"]
+    Notvalid = 1,
+}
+impl From<Lfxocalval> for bool {
+    #[inline(always)]
+    fn from(variant: Lfxocalval) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `LFXOCALVAL` reader - No Description"]
-pub type LFXOCALVAL_R = crate::BitReader<LFXOCALVAL_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LFXOCALVAL_A {
-    #[doc = "0: VALID"]
-    VALID = 0,
-    #[doc = "1: NOTVALID"]
-    NOTVALID = 1,
-}
-impl From<LFXOCALVAL_A> for bool {
-    #[inline(always)]
-    fn from(variant: LFXOCALVAL_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl LFXOCALVAL_R {
+pub type LfxocalvalR = crate::BitReader<Lfxocalval>;
+impl LfxocalvalR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LFXOCALVAL_A {
+    pub const fn variant(&self) -> Lfxocalval {
         match self.bits {
-            false => LFXOCALVAL_A::VALID,
-            true => LFXOCALVAL_A::NOTVALID,
+            false => Lfxocalval::Valid,
+            true => Lfxocalval::Notvalid,
         }
     }
-    #[doc = "Checks if the value of the field is `VALID`"]
+    #[doc = "VALID"]
     #[inline(always)]
     pub fn is_valid(&self) -> bool {
-        *self == LFXOCALVAL_A::VALID
+        *self == Lfxocalval::Valid
     }
-    #[doc = "Checks if the value of the field is `NOTVALID`"]
+    #[doc = "NOTVALID"]
     #[inline(always)]
     pub fn is_notvalid(&self) -> bool {
-        *self == LFXOCALVAL_A::NOTVALID
+        *self == Lfxocalval::Notvalid
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Hfxocalval {
+    #[doc = "0: VALID"]
+    Valid = 0,
+    #[doc = "1: NOTVALID"]
+    Notvalid = 1,
+}
+impl From<Hfxocalval> for bool {
+    #[inline(always)]
+    fn from(variant: Hfxocalval) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `HFXOCALVAL` reader - No Description"]
-pub type HFXOCALVAL_R = crate::BitReader<HFXOCALVAL_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum HFXOCALVAL_A {
-    #[doc = "0: VALID"]
-    VALID = 0,
-    #[doc = "1: NOTVALID"]
-    NOTVALID = 1,
-}
-impl From<HFXOCALVAL_A> for bool {
-    #[inline(always)]
-    fn from(variant: HFXOCALVAL_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl HFXOCALVAL_R {
+pub type HfxocalvalR = crate::BitReader<Hfxocalval>;
+impl HfxocalvalR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> HFXOCALVAL_A {
+    pub const fn variant(&self) -> Hfxocalval {
         match self.bits {
-            false => HFXOCALVAL_A::VALID,
-            true => HFXOCALVAL_A::NOTVALID,
+            false => Hfxocalval::Valid,
+            true => Hfxocalval::Notvalid,
         }
     }
-    #[doc = "Checks if the value of the field is `VALID`"]
+    #[doc = "VALID"]
     #[inline(always)]
     pub fn is_valid(&self) -> bool {
-        *self == HFXOCALVAL_A::VALID
+        *self == Hfxocalval::Valid
     }
-    #[doc = "Checks if the value of the field is `NOTVALID`"]
+    #[doc = "NOTVALID"]
     #[inline(always)]
     pub fn is_notvalid(&self) -> bool {
-        *self == HFXOCALVAL_A::NOTVALID
+        *self == Hfxocalval::Notvalid
     }
 }
 #[doc = "Field `MODNUMBERMSB` reader - No Description"]
-pub type MODNUMBERMSB_R = crate::FieldReader<u16, u16>;
-#[doc = "Field `PADCDC` reader - No Description"]
-pub type PADCDC_R = crate::BitReader<PADCDC_A>;
+pub type ModnumbermsbR = crate::FieldReader<u16>;
 #[doc = "No Description\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PADCDC_A {
+pub enum Padcdc {
     #[doc = "0: VDCDC"]
-    VDCDC = 0,
+    Vdcdc = 0,
     #[doc = "1: OTHER"]
-    OTHER = 1,
+    Other = 1,
 }
-impl From<PADCDC_A> for bool {
+impl From<Padcdc> for bool {
     #[inline(always)]
-    fn from(variant: PADCDC_A) -> Self {
+    fn from(variant: Padcdc) -> Self {
         variant as u8 != 0
     }
 }
-impl PADCDC_R {
+#[doc = "Field `PADCDC` reader - No Description"]
+pub type PadcdcR = crate::BitReader<Padcdc>;
+impl PadcdcR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> PADCDC_A {
+    pub const fn variant(&self) -> Padcdc {
         match self.bits {
-            false => PADCDC_A::VDCDC,
-            true => PADCDC_A::OTHER,
+            false => Padcdc::Vdcdc,
+            true => Padcdc::Other,
         }
     }
-    #[doc = "Checks if the value of the field is `VDCDC`"]
+    #[doc = "VDCDC"]
     #[inline(always)]
     pub fn is_vdcdc(&self) -> bool {
-        *self == PADCDC_A::VDCDC
+        *self == Padcdc::Vdcdc
     }
-    #[doc = "Checks if the value of the field is `OTHER`"]
+    #[doc = "OTHER"]
     #[inline(always)]
     pub fn is_other(&self) -> bool {
-        *self == PADCDC_A::OTHER
+        *self == Padcdc::Other
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Phylimited {
+    #[doc = "0: LIMITED"]
+    Limited = 0,
+    #[doc = "1: UNLIMITED"]
+    Unlimited = 1,
+}
+impl From<Phylimited> for bool {
+    #[inline(always)]
+    fn from(variant: Phylimited) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `PHYLIMITED` reader - No Description"]
-pub type PHYLIMITED_R = crate::BitReader<PHYLIMITED_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PHYLIMITED_A {
-    #[doc = "0: LIMITED"]
-    LIMITED = 0,
-    #[doc = "1: UNLIMITED"]
-    UNLIMITED = 1,
-}
-impl From<PHYLIMITED_A> for bool {
-    #[inline(always)]
-    fn from(variant: PHYLIMITED_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl PHYLIMITED_R {
+pub type PhylimitedR = crate::BitReader<Phylimited>;
+impl PhylimitedR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> PHYLIMITED_A {
+    pub const fn variant(&self) -> Phylimited {
         match self.bits {
-            false => PHYLIMITED_A::LIMITED,
-            true => PHYLIMITED_A::UNLIMITED,
+            false => Phylimited::Limited,
+            true => Phylimited::Unlimited,
         }
     }
-    #[doc = "Checks if the value of the field is `LIMITED`"]
+    #[doc = "LIMITED"]
     #[inline(always)]
     pub fn is_limited(&self) -> bool {
-        *self == PHYLIMITED_A::LIMITED
+        *self == Phylimited::Limited
     }
-    #[doc = "Checks if the value of the field is `UNLIMITED`"]
+    #[doc = "UNLIMITED"]
     #[inline(always)]
     pub fn is_unlimited(&self) -> bool {
-        *self == PHYLIMITED_A::UNLIMITED
+        *self == Phylimited::Unlimited
+    }
+}
+#[doc = "No Description\n\nValue on reset: 1"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Extvalid {
+    #[doc = "0: EXTUSED"]
+    Extused = 0,
+    #[doc = "1: EXTUNUSED"]
+    Extunused = 1,
+}
+impl From<Extvalid> for bool {
+    #[inline(always)]
+    fn from(variant: Extvalid) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `EXTVALID` reader - No Description"]
-pub type EXTVALID_R = crate::BitReader<EXTVALID_A>;
-#[doc = "No Description\n\nValue on reset: 1"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum EXTVALID_A {
-    #[doc = "0: EXTUSED"]
-    EXTUSED = 0,
-    #[doc = "1: EXTUNUSED"]
-    EXTUNUSED = 1,
-}
-impl From<EXTVALID_A> for bool {
-    #[inline(always)]
-    fn from(variant: EXTVALID_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl EXTVALID_R {
+pub type ExtvalidR = crate::BitReader<Extvalid>;
+impl ExtvalidR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> EXTVALID_A {
+    pub const fn variant(&self) -> Extvalid {
         match self.bits {
-            false => EXTVALID_A::EXTUSED,
-            true => EXTVALID_A::EXTUNUSED,
+            false => Extvalid::Extused,
+            true => Extvalid::Extunused,
         }
     }
-    #[doc = "Checks if the value of the field is `EXTUSED`"]
+    #[doc = "EXTUSED"]
     #[inline(always)]
     pub fn is_extused(&self) -> bool {
-        *self == EXTVALID_A::EXTUSED
+        *self == Extvalid::Extused
     }
-    #[doc = "Checks if the value of the field is `EXTUNUSED`"]
+    #[doc = "EXTUNUSED"]
     #[inline(always)]
     pub fn is_extunused(&self) -> bool {
-        *self == EXTVALID_A::EXTUNUSED
+        *self == Extvalid::Extunused
     }
 }
 impl R {
     #[doc = "Bits 0:4 - No Description"]
     #[inline(always)]
-    pub fn hwrev(&self) -> HWREV_R {
-        HWREV_R::new((self.bits & 0x1f) as u8)
+    pub fn hwrev(&self) -> HwrevR {
+        HwrevR::new((self.bits & 0x1f) as u8)
     }
     #[doc = "Bits 5:7 - No Description"]
     #[inline(always)]
-    pub fn antenna(&self) -> ANTENNA_R {
-        ANTENNA_R::new(((self.bits >> 5) & 7) as u8)
+    pub fn antenna(&self) -> AntennaR {
+        AntennaR::new(((self.bits >> 5) & 7) as u8)
     }
     #[doc = "Bits 8:14 - No Description"]
     #[inline(always)]
-    pub fn modnumber(&self) -> MODNUMBER_R {
-        MODNUMBER_R::new(((self.bits >> 8) & 0x7f) as u8)
+    pub fn modnumber(&self) -> ModnumberR {
+        ModnumberR::new(((self.bits >> 8) & 0x7f) as u8)
     }
     #[doc = "Bit 15 - No Description"]
     #[inline(always)]
-    pub fn type_(&self) -> TYPE_R {
-        TYPE_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn type_(&self) -> TypeR {
+        TypeR::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bit 16 - No Description"]
     #[inline(always)]
-    pub fn lfxo(&self) -> LFXO_R {
-        LFXO_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn lfxo(&self) -> LfxoR {
+        LfxoR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - No Description"]
     #[inline(always)]
-    pub fn express(&self) -> EXPRESS_R {
-        EXPRESS_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn express(&self) -> ExpressR {
+        ExpressR::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - No Description"]
     #[inline(always)]
-    pub fn lfxocalval(&self) -> LFXOCALVAL_R {
-        LFXOCALVAL_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn lfxocalval(&self) -> LfxocalvalR {
+        LfxocalvalR::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 19 - No Description"]
     #[inline(always)]
-    pub fn hfxocalval(&self) -> HFXOCALVAL_R {
-        HFXOCALVAL_R::new(((self.bits >> 19) & 1) != 0)
+    pub fn hfxocalval(&self) -> HfxocalvalR {
+        HfxocalvalR::new(((self.bits >> 19) & 1) != 0)
     }
     #[doc = "Bits 20:28 - No Description"]
     #[inline(always)]
-    pub fn modnumbermsb(&self) -> MODNUMBERMSB_R {
-        MODNUMBERMSB_R::new(((self.bits >> 20) & 0x01ff) as u16)
+    pub fn modnumbermsb(&self) -> ModnumbermsbR {
+        ModnumbermsbR::new(((self.bits >> 20) & 0x01ff) as u16)
     }
     #[doc = "Bit 29 - No Description"]
     #[inline(always)]
-    pub fn padcdc(&self) -> PADCDC_R {
-        PADCDC_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn padcdc(&self) -> PadcdcR {
+        PadcdcR::new(((self.bits >> 29) & 1) != 0)
     }
     #[doc = "Bit 30 - No Description"]
     #[inline(always)]
-    pub fn phylimited(&self) -> PHYLIMITED_R {
-        PHYLIMITED_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn phylimited(&self) -> PhylimitedR {
+        PhylimitedR::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - No Description"]
     #[inline(always)]
-    pub fn extvalid(&self) -> EXTVALID_R {
-        EXTVALID_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn extvalid(&self) -> ExtvalidR {
+        ExtvalidR::new(((self.bits >> 31) & 1) != 0)
     }
 }
-#[doc = "Module Information\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [moduleinfo](index.html) module"]
-pub struct MODULEINFO_SPEC;
-impl crate::RegisterSpec for MODULEINFO_SPEC {
+#[doc = "Module Information\n\nYou can [`read`](crate::Reg::read) this register and get [`moduleinfo::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ModuleinfoSpec;
+impl crate::RegisterSpec for ModuleinfoSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [moduleinfo::R](R) reader structure"]
-impl crate::Readable for MODULEINFO_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`moduleinfo::R`](R) reader structure"]
+impl crate::Readable for ModuleinfoSpec {}
 #[doc = "`reset()` method sets MODULEINFO to value 0xffff_ffff"]
-impl crate::Resettable for MODULEINFO_SPEC {
-    const RESET_VALUE: Self::Ux = 0xffff_ffff;
+impl crate::Resettable for ModuleinfoSpec {
+    const RESET_VALUE: u32 = 0xffff_ffff;
 }

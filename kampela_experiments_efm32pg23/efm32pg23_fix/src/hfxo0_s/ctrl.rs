@@ -1,649 +1,611 @@
 #[doc = "Register `CTRL` reader"]
-pub struct R(crate::R<CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CtrlSpec>;
 #[doc = "Register `CTRL` writer"]
-pub struct W(crate::W<CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<CtrlSpec>;
 #[doc = "Field `BUFOUTFREEZE` reader - Freeze BUFOUT Controls"]
-pub type BUFOUTFREEZE_R = crate::BitReader<bool>;
+pub type BufoutfreezeR = crate::BitReader;
 #[doc = "Field `BUFOUTFREEZE` writer - Freeze BUFOUT Controls"]
-pub type BUFOUTFREEZE_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type BufoutfreezeW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `KEEPWARM` reader - Keep Warm"]
-pub type KEEPWARM_R = crate::BitReader<bool>;
+pub type KeepwarmR = crate::BitReader;
 #[doc = "Field `KEEPWARM` writer - Keep Warm"]
-pub type KEEPWARM_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type KeepwarmW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EM23ONDEMAND` reader - On-demand During EM23"]
-pub type EM23ONDEMAND_R = crate::BitReader<bool>;
+pub type Em23ondemandR = crate::BitReader;
 #[doc = "Field `EM23ONDEMAND` writer - On-demand During EM23"]
-pub type EM23ONDEMAND_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `FORCEXI2GNDANA` reader - Force XI Pin to Ground"]
-pub type FORCEXI2GNDANA_R = crate::BitReader<FORCEXI2GNDANA_A>;
+pub type Em23ondemandW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Force XI Pin to Ground\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum FORCEXI2GNDANA_A {
+pub enum Forcexi2gndana {
     #[doc = "0: Disabled (not pulled)"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Enabled (pulled)"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<FORCEXI2GNDANA_A> for bool {
+impl From<Forcexi2gndana> for bool {
     #[inline(always)]
-    fn from(variant: FORCEXI2GNDANA_A) -> Self {
+    fn from(variant: Forcexi2gndana) -> Self {
         variant as u8 != 0
     }
 }
-impl FORCEXI2GNDANA_R {
+#[doc = "Field `FORCEXI2GNDANA` reader - Force XI Pin to Ground"]
+pub type Forcexi2gndanaR = crate::BitReader<Forcexi2gndana>;
+impl Forcexi2gndanaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> FORCEXI2GNDANA_A {
+    pub const fn variant(&self) -> Forcexi2gndana {
         match self.bits {
-            false => FORCEXI2GNDANA_A::DISABLE,
-            true => FORCEXI2GNDANA_A::ENABLE,
+            false => Forcexi2gndana::Disable,
+            true => Forcexi2gndana::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
+    #[doc = "Disabled (not pulled)"]
     #[inline(always)]
     pub fn is_disable(&self) -> bool {
-        *self == FORCEXI2GNDANA_A::DISABLE
+        *self == Forcexi2gndana::Disable
     }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
+    #[doc = "Enabled (pulled)"]
     #[inline(always)]
     pub fn is_enable(&self) -> bool {
-        *self == FORCEXI2GNDANA_A::ENABLE
+        *self == Forcexi2gndana::Enable
     }
 }
 #[doc = "Field `FORCEXI2GNDANA` writer - Force XI Pin to Ground"]
-pub type FORCEXI2GNDANA_W<'a, const O: u8> =
-    crate::BitWriter<'a, u32, CTRL_SPEC, FORCEXI2GNDANA_A, O>;
-impl<'a, const O: u8> FORCEXI2GNDANA_W<'a, O> {
+pub type Forcexi2gndanaW<'a, REG> = crate::BitWriter<'a, REG, Forcexi2gndana>;
+impl<'a, REG> Forcexi2gndanaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
     #[doc = "Disabled (not pulled)"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(FORCEXI2GNDANA_A::DISABLE)
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Forcexi2gndana::Disable)
     }
     #[doc = "Enabled (pulled)"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(FORCEXI2GNDANA_A::ENABLE)
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Forcexi2gndana::Enable)
     }
 }
-#[doc = "Field `FORCEXO2GNDANA` reader - Force XO Pin to Ground"]
-pub type FORCEXO2GNDANA_R = crate::BitReader<FORCEXO2GNDANA_A>;
 #[doc = "Force XO Pin to Ground\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum FORCEXO2GNDANA_A {
+pub enum Forcexo2gndana {
     #[doc = "0: Disabled (not pulled)"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Enabled (pulled)"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<FORCEXO2GNDANA_A> for bool {
+impl From<Forcexo2gndana> for bool {
     #[inline(always)]
-    fn from(variant: FORCEXO2GNDANA_A) -> Self {
+    fn from(variant: Forcexo2gndana) -> Self {
         variant as u8 != 0
     }
 }
-impl FORCEXO2GNDANA_R {
+#[doc = "Field `FORCEXO2GNDANA` reader - Force XO Pin to Ground"]
+pub type Forcexo2gndanaR = crate::BitReader<Forcexo2gndana>;
+impl Forcexo2gndanaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> FORCEXO2GNDANA_A {
+    pub const fn variant(&self) -> Forcexo2gndana {
         match self.bits {
-            false => FORCEXO2GNDANA_A::DISABLE,
-            true => FORCEXO2GNDANA_A::ENABLE,
+            false => Forcexo2gndana::Disable,
+            true => Forcexo2gndana::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == FORCEXO2GNDANA_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == FORCEXO2GNDANA_A::ENABLE
-    }
-}
-#[doc = "Field `FORCEXO2GNDANA` writer - Force XO Pin to Ground"]
-pub type FORCEXO2GNDANA_W<'a, const O: u8> =
-    crate::BitWriter<'a, u32, CTRL_SPEC, FORCEXO2GNDANA_A, O>;
-impl<'a, const O: u8> FORCEXO2GNDANA_W<'a, O> {
     #[doc = "Disabled (not pulled)"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(FORCEXO2GNDANA_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Forcexo2gndana::Disable
     }
     #[doc = "Enabled (pulled)"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(FORCEXO2GNDANA_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Forcexo2gndana::Enable
+    }
+}
+#[doc = "Field `FORCEXO2GNDANA` writer - Force XO Pin to Ground"]
+pub type Forcexo2gndanaW<'a, REG> = crate::BitWriter<'a, REG, Forcexo2gndana>;
+impl<'a, REG> Forcexo2gndanaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Disabled (not pulled)"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Forcexo2gndana::Disable)
+    }
+    #[doc = "Enabled (pulled)"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Forcexo2gndana::Enable)
     }
 }
 #[doc = "Field `FORCECTUNEMAX` reader - Force Tuning Cap to Max Value"]
-pub type FORCECTUNEMAX_R = crate::BitReader<bool>;
+pub type ForcectunemaxR = crate::BitReader;
 #[doc = "Field `FORCECTUNEMAX` writer - Force Tuning Cap to Max Value"]
-pub type FORCECTUNEMAX_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `PRSSTATUSSEL0` reader - PRS Status 0 Output Select"]
-pub type PRSSTATUSSEL0_R = crate::FieldReader<u8, PRSSTATUSSEL0_A>;
+pub type ForcectunemaxW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "PRS Status 0 Output Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum PRSSTATUSSEL0_A {
+pub enum Prsstatussel0 {
     #[doc = "0: PRS mux outputs 0"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: PRS mux outputs enabled status"]
-    ENS = 1,
+    Ens = 1,
     #[doc = "2: PRS mux outputs core bias optimization ready status"]
-    COREBIASOPTRDY = 2,
+    Corebiasoptrdy = 2,
     #[doc = "3: PRS mux outputs ready status"]
-    RDY = 3,
+    Rdy = 3,
     #[doc = "4: PRS mux outputs PRS ready status"]
-    PRSRDY = 4,
+    Prsrdy = 4,
     #[doc = "5: PRS mux outputs BUFOUT ready status"]
-    BUFOUTRDY = 5,
+    Bufoutrdy = 5,
     #[doc = "8: PRS mux outputs oscillator requested by digital clock status"]
-    HWREQ = 8,
+    Hwreq = 8,
     #[doc = "9: PRS mux outputs oscillator requested by PRS request status"]
-    PRSHWREQ = 9,
+    Prshwreq = 9,
     #[doc = "10: PRS mux outputs oscillator requested by BUFOUT request status"]
-    BUFOUTHWREQ = 10,
+    Bufouthwreq = 10,
 }
-impl From<PRSSTATUSSEL0_A> for u8 {
+impl From<Prsstatussel0> for u8 {
     #[inline(always)]
-    fn from(variant: PRSSTATUSSEL0_A) -> Self {
+    fn from(variant: Prsstatussel0) -> Self {
         variant as _
     }
 }
-impl PRSSTATUSSEL0_R {
+impl crate::FieldSpec for Prsstatussel0 {
+    type Ux = u8;
+}
+impl crate::IsEnum for Prsstatussel0 {}
+#[doc = "Field `PRSSTATUSSEL0` reader - PRS Status 0 Output Select"]
+pub type Prsstatussel0R = crate::FieldReader<Prsstatussel0>;
+impl Prsstatussel0R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PRSSTATUSSEL0_A> {
+    pub const fn variant(&self) -> Option<Prsstatussel0> {
         match self.bits {
-            0 => Some(PRSSTATUSSEL0_A::DISABLED),
-            1 => Some(PRSSTATUSSEL0_A::ENS),
-            2 => Some(PRSSTATUSSEL0_A::COREBIASOPTRDY),
-            3 => Some(PRSSTATUSSEL0_A::RDY),
-            4 => Some(PRSSTATUSSEL0_A::PRSRDY),
-            5 => Some(PRSSTATUSSEL0_A::BUFOUTRDY),
-            8 => Some(PRSSTATUSSEL0_A::HWREQ),
-            9 => Some(PRSSTATUSSEL0_A::PRSHWREQ),
-            10 => Some(PRSSTATUSSEL0_A::BUFOUTHWREQ),
+            0 => Some(Prsstatussel0::Disabled),
+            1 => Some(Prsstatussel0::Ens),
+            2 => Some(Prsstatussel0::Corebiasoptrdy),
+            3 => Some(Prsstatussel0::Rdy),
+            4 => Some(Prsstatussel0::Prsrdy),
+            5 => Some(Prsstatussel0::Bufoutrdy),
+            8 => Some(Prsstatussel0::Hwreq),
+            9 => Some(Prsstatussel0::Prshwreq),
+            10 => Some(Prsstatussel0::Bufouthwreq),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
+    #[doc = "PRS mux outputs 0"]
     #[inline(always)]
     pub fn is_disabled(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::DISABLED
+        *self == Prsstatussel0::Disabled
     }
-    #[doc = "Checks if the value of the field is `ENS`"]
+    #[doc = "PRS mux outputs enabled status"]
     #[inline(always)]
     pub fn is_ens(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::ENS
+        *self == Prsstatussel0::Ens
     }
-    #[doc = "Checks if the value of the field is `COREBIASOPTRDY`"]
+    #[doc = "PRS mux outputs core bias optimization ready status"]
     #[inline(always)]
     pub fn is_corebiasoptrdy(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::COREBIASOPTRDY
+        *self == Prsstatussel0::Corebiasoptrdy
     }
-    #[doc = "Checks if the value of the field is `RDY`"]
+    #[doc = "PRS mux outputs ready status"]
     #[inline(always)]
     pub fn is_rdy(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::RDY
+        *self == Prsstatussel0::Rdy
     }
-    #[doc = "Checks if the value of the field is `PRSRDY`"]
+    #[doc = "PRS mux outputs PRS ready status"]
     #[inline(always)]
     pub fn is_prsrdy(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::PRSRDY
+        *self == Prsstatussel0::Prsrdy
     }
-    #[doc = "Checks if the value of the field is `BUFOUTRDY`"]
+    #[doc = "PRS mux outputs BUFOUT ready status"]
     #[inline(always)]
     pub fn is_bufoutrdy(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::BUFOUTRDY
+        *self == Prsstatussel0::Bufoutrdy
     }
-    #[doc = "Checks if the value of the field is `HWREQ`"]
+    #[doc = "PRS mux outputs oscillator requested by digital clock status"]
     #[inline(always)]
     pub fn is_hwreq(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::HWREQ
+        *self == Prsstatussel0::Hwreq
     }
-    #[doc = "Checks if the value of the field is `PRSHWREQ`"]
+    #[doc = "PRS mux outputs oscillator requested by PRS request status"]
     #[inline(always)]
     pub fn is_prshwreq(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::PRSHWREQ
+        *self == Prsstatussel0::Prshwreq
     }
-    #[doc = "Checks if the value of the field is `BUFOUTHWREQ`"]
+    #[doc = "PRS mux outputs oscillator requested by BUFOUT request status"]
     #[inline(always)]
     pub fn is_bufouthwreq(&self) -> bool {
-        *self == PRSSTATUSSEL0_A::BUFOUTHWREQ
+        *self == Prsstatussel0::Bufouthwreq
     }
 }
 #[doc = "Field `PRSSTATUSSEL0` writer - PRS Status 0 Output Select"]
-pub type PRSSTATUSSEL0_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, CTRL_SPEC, u8, PRSSTATUSSEL0_A, 4, O>;
-impl<'a, const O: u8> PRSSTATUSSEL0_W<'a, O> {
+pub type Prsstatussel0W<'a, REG> = crate::FieldWriter<'a, REG, 4, Prsstatussel0>;
+impl<'a, REG> Prsstatussel0W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
     #[doc = "PRS mux outputs 0"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::DISABLED)
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Disabled)
     }
     #[doc = "PRS mux outputs enabled status"]
     #[inline(always)]
-    pub fn ens(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::ENS)
+    pub fn ens(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Ens)
     }
     #[doc = "PRS mux outputs core bias optimization ready status"]
     #[inline(always)]
-    pub fn corebiasoptrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::COREBIASOPTRDY)
+    pub fn corebiasoptrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Corebiasoptrdy)
     }
     #[doc = "PRS mux outputs ready status"]
     #[inline(always)]
-    pub fn rdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::RDY)
+    pub fn rdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Rdy)
     }
     #[doc = "PRS mux outputs PRS ready status"]
     #[inline(always)]
-    pub fn prsrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::PRSRDY)
+    pub fn prsrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Prsrdy)
     }
     #[doc = "PRS mux outputs BUFOUT ready status"]
     #[inline(always)]
-    pub fn bufoutrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::BUFOUTRDY)
+    pub fn bufoutrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Bufoutrdy)
     }
     #[doc = "PRS mux outputs oscillator requested by digital clock status"]
     #[inline(always)]
-    pub fn hwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::HWREQ)
+    pub fn hwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Hwreq)
     }
     #[doc = "PRS mux outputs oscillator requested by PRS request status"]
     #[inline(always)]
-    pub fn prshwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::PRSHWREQ)
+    pub fn prshwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Prshwreq)
     }
     #[doc = "PRS mux outputs oscillator requested by BUFOUT request status"]
     #[inline(always)]
-    pub fn bufouthwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL0_A::BUFOUTHWREQ)
+    pub fn bufouthwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel0::Bufouthwreq)
     }
 }
-#[doc = "Field `PRSSTATUSSEL1` reader - PRS Status 1 Output Select"]
-pub type PRSSTATUSSEL1_R = crate::FieldReader<u8, PRSSTATUSSEL1_A>;
 #[doc = "PRS Status 1 Output Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum PRSSTATUSSEL1_A {
+pub enum Prsstatussel1 {
     #[doc = "0: PRS mux outputs 0"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: PRS mux outputs enabled status"]
-    ENS = 1,
+    Ens = 1,
     #[doc = "2: PRS mux outputs core bias optimization ready status"]
-    COREBIASOPTRDY = 2,
+    Corebiasoptrdy = 2,
     #[doc = "3: PRS mux outputs ready status"]
-    RDY = 3,
+    Rdy = 3,
     #[doc = "4: PRS mux outputs PRS ready status"]
-    PRSRDY = 4,
+    Prsrdy = 4,
     #[doc = "5: PRS mux outputs BUFOUT ready status"]
-    BUFOUTRDY = 5,
+    Bufoutrdy = 5,
     #[doc = "8: PRS mux outputs oscillator requested by digital clock status"]
-    HWREQ = 8,
+    Hwreq = 8,
     #[doc = "9: PRS mux outputs oscillator requested by PRS request status"]
-    PRSHWREQ = 9,
+    Prshwreq = 9,
     #[doc = "10: PRS mux outputs oscillator requested by BUFOUT request status"]
-    BUFOUTHWREQ = 10,
+    Bufouthwreq = 10,
 }
-impl From<PRSSTATUSSEL1_A> for u8 {
+impl From<Prsstatussel1> for u8 {
     #[inline(always)]
-    fn from(variant: PRSSTATUSSEL1_A) -> Self {
+    fn from(variant: Prsstatussel1) -> Self {
         variant as _
     }
 }
-impl PRSSTATUSSEL1_R {
+impl crate::FieldSpec for Prsstatussel1 {
+    type Ux = u8;
+}
+impl crate::IsEnum for Prsstatussel1 {}
+#[doc = "Field `PRSSTATUSSEL1` reader - PRS Status 1 Output Select"]
+pub type Prsstatussel1R = crate::FieldReader<Prsstatussel1>;
+impl Prsstatussel1R {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PRSSTATUSSEL1_A> {
+    pub const fn variant(&self) -> Option<Prsstatussel1> {
         match self.bits {
-            0 => Some(PRSSTATUSSEL1_A::DISABLED),
-            1 => Some(PRSSTATUSSEL1_A::ENS),
-            2 => Some(PRSSTATUSSEL1_A::COREBIASOPTRDY),
-            3 => Some(PRSSTATUSSEL1_A::RDY),
-            4 => Some(PRSSTATUSSEL1_A::PRSRDY),
-            5 => Some(PRSSTATUSSEL1_A::BUFOUTRDY),
-            8 => Some(PRSSTATUSSEL1_A::HWREQ),
-            9 => Some(PRSSTATUSSEL1_A::PRSHWREQ),
-            10 => Some(PRSSTATUSSEL1_A::BUFOUTHWREQ),
+            0 => Some(Prsstatussel1::Disabled),
+            1 => Some(Prsstatussel1::Ens),
+            2 => Some(Prsstatussel1::Corebiasoptrdy),
+            3 => Some(Prsstatussel1::Rdy),
+            4 => Some(Prsstatussel1::Prsrdy),
+            5 => Some(Prsstatussel1::Bufoutrdy),
+            8 => Some(Prsstatussel1::Hwreq),
+            9 => Some(Prsstatussel1::Prshwreq),
+            10 => Some(Prsstatussel1::Bufouthwreq),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
-    #[inline(always)]
-    pub fn is_disabled(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::DISABLED
-    }
-    #[doc = "Checks if the value of the field is `ENS`"]
-    #[inline(always)]
-    pub fn is_ens(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::ENS
-    }
-    #[doc = "Checks if the value of the field is `COREBIASOPTRDY`"]
-    #[inline(always)]
-    pub fn is_corebiasoptrdy(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::COREBIASOPTRDY
-    }
-    #[doc = "Checks if the value of the field is `RDY`"]
-    #[inline(always)]
-    pub fn is_rdy(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::RDY
-    }
-    #[doc = "Checks if the value of the field is `PRSRDY`"]
-    #[inline(always)]
-    pub fn is_prsrdy(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::PRSRDY
-    }
-    #[doc = "Checks if the value of the field is `BUFOUTRDY`"]
-    #[inline(always)]
-    pub fn is_bufoutrdy(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::BUFOUTRDY
-    }
-    #[doc = "Checks if the value of the field is `HWREQ`"]
-    #[inline(always)]
-    pub fn is_hwreq(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::HWREQ
-    }
-    #[doc = "Checks if the value of the field is `PRSHWREQ`"]
-    #[inline(always)]
-    pub fn is_prshwreq(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::PRSHWREQ
-    }
-    #[doc = "Checks if the value of the field is `BUFOUTHWREQ`"]
-    #[inline(always)]
-    pub fn is_bufouthwreq(&self) -> bool {
-        *self == PRSSTATUSSEL1_A::BUFOUTHWREQ
-    }
-}
-#[doc = "Field `PRSSTATUSSEL1` writer - PRS Status 1 Output Select"]
-pub type PRSSTATUSSEL1_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, CTRL_SPEC, u8, PRSSTATUSSEL1_A, 4, O>;
-impl<'a, const O: u8> PRSSTATUSSEL1_W<'a, O> {
     #[doc = "PRS mux outputs 0"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::DISABLED)
+    pub fn is_disabled(&self) -> bool {
+        *self == Prsstatussel1::Disabled
     }
     #[doc = "PRS mux outputs enabled status"]
     #[inline(always)]
-    pub fn ens(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::ENS)
+    pub fn is_ens(&self) -> bool {
+        *self == Prsstatussel1::Ens
     }
     #[doc = "PRS mux outputs core bias optimization ready status"]
     #[inline(always)]
-    pub fn corebiasoptrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::COREBIASOPTRDY)
+    pub fn is_corebiasoptrdy(&self) -> bool {
+        *self == Prsstatussel1::Corebiasoptrdy
     }
     #[doc = "PRS mux outputs ready status"]
     #[inline(always)]
-    pub fn rdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::RDY)
+    pub fn is_rdy(&self) -> bool {
+        *self == Prsstatussel1::Rdy
     }
     #[doc = "PRS mux outputs PRS ready status"]
     #[inline(always)]
-    pub fn prsrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::PRSRDY)
+    pub fn is_prsrdy(&self) -> bool {
+        *self == Prsstatussel1::Prsrdy
     }
     #[doc = "PRS mux outputs BUFOUT ready status"]
     #[inline(always)]
-    pub fn bufoutrdy(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::BUFOUTRDY)
+    pub fn is_bufoutrdy(&self) -> bool {
+        *self == Prsstatussel1::Bufoutrdy
     }
     #[doc = "PRS mux outputs oscillator requested by digital clock status"]
     #[inline(always)]
-    pub fn hwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::HWREQ)
+    pub fn is_hwreq(&self) -> bool {
+        *self == Prsstatussel1::Hwreq
     }
     #[doc = "PRS mux outputs oscillator requested by PRS request status"]
     #[inline(always)]
-    pub fn prshwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::PRSHWREQ)
+    pub fn is_prshwreq(&self) -> bool {
+        *self == Prsstatussel1::Prshwreq
     }
     #[doc = "PRS mux outputs oscillator requested by BUFOUT request status"]
     #[inline(always)]
-    pub fn bufouthwreq(self) -> &'a mut W {
-        self.variant(PRSSTATUSSEL1_A::BUFOUTHWREQ)
+    pub fn is_bufouthwreq(&self) -> bool {
+        *self == Prsstatussel1::Bufouthwreq
+    }
+}
+#[doc = "Field `PRSSTATUSSEL1` writer - PRS Status 1 Output Select"]
+pub type Prsstatussel1W<'a, REG> = crate::FieldWriter<'a, REG, 4, Prsstatussel1>;
+impl<'a, REG> Prsstatussel1W<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "PRS mux outputs 0"]
+    #[inline(always)]
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Disabled)
+    }
+    #[doc = "PRS mux outputs enabled status"]
+    #[inline(always)]
+    pub fn ens(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Ens)
+    }
+    #[doc = "PRS mux outputs core bias optimization ready status"]
+    #[inline(always)]
+    pub fn corebiasoptrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Corebiasoptrdy)
+    }
+    #[doc = "PRS mux outputs ready status"]
+    #[inline(always)]
+    pub fn rdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Rdy)
+    }
+    #[doc = "PRS mux outputs PRS ready status"]
+    #[inline(always)]
+    pub fn prsrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Prsrdy)
+    }
+    #[doc = "PRS mux outputs BUFOUT ready status"]
+    #[inline(always)]
+    pub fn bufoutrdy(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Bufoutrdy)
+    }
+    #[doc = "PRS mux outputs oscillator requested by digital clock status"]
+    #[inline(always)]
+    pub fn hwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Hwreq)
+    }
+    #[doc = "PRS mux outputs oscillator requested by PRS request status"]
+    #[inline(always)]
+    pub fn prshwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Prshwreq)
+    }
+    #[doc = "PRS mux outputs oscillator requested by BUFOUT request status"]
+    #[inline(always)]
+    pub fn bufouthwreq(self) -> &'a mut crate::W<REG> {
+        self.variant(Prsstatussel1::Bufouthwreq)
     }
 }
 #[doc = "Field `FORCEEN` reader - Force Digital Clock Request"]
-pub type FORCEEN_R = crate::BitReader<bool>;
+pub type ForceenR = crate::BitReader;
 #[doc = "Field `FORCEEN` writer - Force Digital Clock Request"]
-pub type FORCEEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type ForceenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FORCEENPRS` reader - Force PRS Oscillator Request"]
-pub type FORCEENPRS_R = crate::BitReader<bool>;
+pub type ForceenprsR = crate::BitReader;
 #[doc = "Field `FORCEENPRS` writer - Force PRS Oscillator Request"]
-pub type FORCEENPRS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type ForceenprsW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FORCEENBUFOUT` reader - Force BUFOUT Request"]
-pub type FORCEENBUFOUT_R = crate::BitReader<bool>;
+pub type ForceenbufoutR = crate::BitReader;
 #[doc = "Field `FORCEENBUFOUT` writer - Force BUFOUT Request"]
-pub type FORCEENBUFOUT_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type ForceenbufoutW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DISONDEMAND` reader - Disable On-demand For Digital Clock"]
-pub type DISONDEMAND_R = crate::BitReader<bool>;
+pub type DisondemandR = crate::BitReader;
 #[doc = "Field `DISONDEMAND` writer - Disable On-demand For Digital Clock"]
-pub type DISONDEMAND_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type DisondemandW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DISONDEMANDPRS` reader - Disable On-demand For PRS"]
-pub type DISONDEMANDPRS_R = crate::BitReader<bool>;
+pub type DisondemandprsR = crate::BitReader;
 #[doc = "Field `DISONDEMANDPRS` writer - Disable On-demand For PRS"]
-pub type DISONDEMANDPRS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type DisondemandprsW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DISONDEMANDBUFOUT` reader - Disable On-demand For BUFOUT"]
-pub type DISONDEMANDBUFOUT_R = crate::BitReader<bool>;
+pub type DisondemandbufoutR = crate::BitReader;
 #[doc = "Field `DISONDEMANDBUFOUT` writer - Disable On-demand For BUFOUT"]
-pub type DISONDEMANDBUFOUT_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type DisondemandbufoutW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Freeze BUFOUT Controls"]
     #[inline(always)]
-    pub fn bufoutfreeze(&self) -> BUFOUTFREEZE_R {
-        BUFOUTFREEZE_R::new((self.bits & 1) != 0)
+    pub fn bufoutfreeze(&self) -> BufoutfreezeR {
+        BufoutfreezeR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 2 - Keep Warm"]
     #[inline(always)]
-    pub fn keepwarm(&self) -> KEEPWARM_R {
-        KEEPWARM_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn keepwarm(&self) -> KeepwarmR {
+        KeepwarmR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - On-demand During EM23"]
     #[inline(always)]
-    pub fn em23ondemand(&self) -> EM23ONDEMAND_R {
-        EM23ONDEMAND_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn em23ondemand(&self) -> Em23ondemandR {
+        Em23ondemandR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - Force XI Pin to Ground"]
     #[inline(always)]
-    pub fn forcexi2gndana(&self) -> FORCEXI2GNDANA_R {
-        FORCEXI2GNDANA_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn forcexi2gndana(&self) -> Forcexi2gndanaR {
+        Forcexi2gndanaR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - Force XO Pin to Ground"]
     #[inline(always)]
-    pub fn forcexo2gndana(&self) -> FORCEXO2GNDANA_R {
-        FORCEXO2GNDANA_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn forcexo2gndana(&self) -> Forcexo2gndanaR {
+        Forcexo2gndanaR::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - Force Tuning Cap to Max Value"]
     #[inline(always)]
-    pub fn forcectunemax(&self) -> FORCECTUNEMAX_R {
-        FORCECTUNEMAX_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn forcectunemax(&self) -> ForcectunemaxR {
+        ForcectunemaxR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bits 8:11 - PRS Status 0 Output Select"]
     #[inline(always)]
-    pub fn prsstatussel0(&self) -> PRSSTATUSSEL0_R {
-        PRSSTATUSSEL0_R::new(((self.bits >> 8) & 0x0f) as u8)
+    pub fn prsstatussel0(&self) -> Prsstatussel0R {
+        Prsstatussel0R::new(((self.bits >> 8) & 0x0f) as u8)
     }
     #[doc = "Bits 12:15 - PRS Status 1 Output Select"]
     #[inline(always)]
-    pub fn prsstatussel1(&self) -> PRSSTATUSSEL1_R {
-        PRSSTATUSSEL1_R::new(((self.bits >> 12) & 0x0f) as u8)
+    pub fn prsstatussel1(&self) -> Prsstatussel1R {
+        Prsstatussel1R::new(((self.bits >> 12) & 0x0f) as u8)
     }
     #[doc = "Bit 16 - Force Digital Clock Request"]
     #[inline(always)]
-    pub fn forceen(&self) -> FORCEEN_R {
-        FORCEEN_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn forceen(&self) -> ForceenR {
+        ForceenR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - Force PRS Oscillator Request"]
     #[inline(always)]
-    pub fn forceenprs(&self) -> FORCEENPRS_R {
-        FORCEENPRS_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn forceenprs(&self) -> ForceenprsR {
+        ForceenprsR::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - Force BUFOUT Request"]
     #[inline(always)]
-    pub fn forceenbufout(&self) -> FORCEENBUFOUT_R {
-        FORCEENBUFOUT_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn forceenbufout(&self) -> ForceenbufoutR {
+        ForceenbufoutR::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 24 - Disable On-demand For Digital Clock"]
     #[inline(always)]
-    pub fn disondemand(&self) -> DISONDEMAND_R {
-        DISONDEMAND_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn disondemand(&self) -> DisondemandR {
+        DisondemandR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 25 - Disable On-demand For PRS"]
     #[inline(always)]
-    pub fn disondemandprs(&self) -> DISONDEMANDPRS_R {
-        DISONDEMANDPRS_R::new(((self.bits >> 25) & 1) != 0)
+    pub fn disondemandprs(&self) -> DisondemandprsR {
+        DisondemandprsR::new(((self.bits >> 25) & 1) != 0)
     }
     #[doc = "Bit 26 - Disable On-demand For BUFOUT"]
     #[inline(always)]
-    pub fn disondemandbufout(&self) -> DISONDEMANDBUFOUT_R {
-        DISONDEMANDBUFOUT_R::new(((self.bits >> 26) & 1) != 0)
+    pub fn disondemandbufout(&self) -> DisondemandbufoutR {
+        DisondemandbufoutR::new(((self.bits >> 26) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Freeze BUFOUT Controls"]
     #[inline(always)]
-    #[must_use]
-    pub fn bufoutfreeze(&mut self) -> BUFOUTFREEZE_W<0> {
-        BUFOUTFREEZE_W::new(self)
+    pub fn bufoutfreeze(&mut self) -> BufoutfreezeW<CtrlSpec> {
+        BufoutfreezeW::new(self, 0)
     }
     #[doc = "Bit 2 - Keep Warm"]
     #[inline(always)]
-    #[must_use]
-    pub fn keepwarm(&mut self) -> KEEPWARM_W<2> {
-        KEEPWARM_W::new(self)
+    pub fn keepwarm(&mut self) -> KeepwarmW<CtrlSpec> {
+        KeepwarmW::new(self, 2)
     }
     #[doc = "Bit 3 - On-demand During EM23"]
     #[inline(always)]
-    #[must_use]
-    pub fn em23ondemand(&mut self) -> EM23ONDEMAND_W<3> {
-        EM23ONDEMAND_W::new(self)
+    pub fn em23ondemand(&mut self) -> Em23ondemandW<CtrlSpec> {
+        Em23ondemandW::new(self, 3)
     }
     #[doc = "Bit 4 - Force XI Pin to Ground"]
     #[inline(always)]
-    #[must_use]
-    pub fn forcexi2gndana(&mut self) -> FORCEXI2GNDANA_W<4> {
-        FORCEXI2GNDANA_W::new(self)
+    pub fn forcexi2gndana(&mut self) -> Forcexi2gndanaW<CtrlSpec> {
+        Forcexi2gndanaW::new(self, 4)
     }
     #[doc = "Bit 5 - Force XO Pin to Ground"]
     #[inline(always)]
-    #[must_use]
-    pub fn forcexo2gndana(&mut self) -> FORCEXO2GNDANA_W<5> {
-        FORCEXO2GNDANA_W::new(self)
+    pub fn forcexo2gndana(&mut self) -> Forcexo2gndanaW<CtrlSpec> {
+        Forcexo2gndanaW::new(self, 5)
     }
     #[doc = "Bit 6 - Force Tuning Cap to Max Value"]
     #[inline(always)]
-    #[must_use]
-    pub fn forcectunemax(&mut self) -> FORCECTUNEMAX_W<6> {
-        FORCECTUNEMAX_W::new(self)
+    pub fn forcectunemax(&mut self) -> ForcectunemaxW<CtrlSpec> {
+        ForcectunemaxW::new(self, 6)
     }
     #[doc = "Bits 8:11 - PRS Status 0 Output Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn prsstatussel0(&mut self) -> PRSSTATUSSEL0_W<8> {
-        PRSSTATUSSEL0_W::new(self)
+    pub fn prsstatussel0(&mut self) -> Prsstatussel0W<CtrlSpec> {
+        Prsstatussel0W::new(self, 8)
     }
     #[doc = "Bits 12:15 - PRS Status 1 Output Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn prsstatussel1(&mut self) -> PRSSTATUSSEL1_W<12> {
-        PRSSTATUSSEL1_W::new(self)
+    pub fn prsstatussel1(&mut self) -> Prsstatussel1W<CtrlSpec> {
+        Prsstatussel1W::new(self, 12)
     }
     #[doc = "Bit 16 - Force Digital Clock Request"]
     #[inline(always)]
-    #[must_use]
-    pub fn forceen(&mut self) -> FORCEEN_W<16> {
-        FORCEEN_W::new(self)
+    pub fn forceen(&mut self) -> ForceenW<CtrlSpec> {
+        ForceenW::new(self, 16)
     }
     #[doc = "Bit 17 - Force PRS Oscillator Request"]
     #[inline(always)]
-    #[must_use]
-    pub fn forceenprs(&mut self) -> FORCEENPRS_W<17> {
-        FORCEENPRS_W::new(self)
+    pub fn forceenprs(&mut self) -> ForceenprsW<CtrlSpec> {
+        ForceenprsW::new(self, 17)
     }
     #[doc = "Bit 18 - Force BUFOUT Request"]
     #[inline(always)]
-    #[must_use]
-    pub fn forceenbufout(&mut self) -> FORCEENBUFOUT_W<18> {
-        FORCEENBUFOUT_W::new(self)
+    pub fn forceenbufout(&mut self) -> ForceenbufoutW<CtrlSpec> {
+        ForceenbufoutW::new(self, 18)
     }
     #[doc = "Bit 24 - Disable On-demand For Digital Clock"]
     #[inline(always)]
-    #[must_use]
-    pub fn disondemand(&mut self) -> DISONDEMAND_W<24> {
-        DISONDEMAND_W::new(self)
+    pub fn disondemand(&mut self) -> DisondemandW<CtrlSpec> {
+        DisondemandW::new(self, 24)
     }
     #[doc = "Bit 25 - Disable On-demand For PRS"]
     #[inline(always)]
-    #[must_use]
-    pub fn disondemandprs(&mut self) -> DISONDEMANDPRS_W<25> {
-        DISONDEMANDPRS_W::new(self)
+    pub fn disondemandprs(&mut self) -> DisondemandprsW<CtrlSpec> {
+        DisondemandprsW::new(self, 25)
     }
     #[doc = "Bit 26 - Disable On-demand For BUFOUT"]
     #[inline(always)]
-    #[must_use]
-    pub fn disondemandbufout(&mut self) -> DISONDEMANDBUFOUT_W<26> {
-        DISONDEMANDBUFOUT_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn disondemandbufout(&mut self) -> DisondemandbufoutW<CtrlSpec> {
+        DisondemandbufoutW::new(self, 26)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ctrl](index.html) module"]
-pub struct CTRL_SPEC;
-impl crate::RegisterSpec for CTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CtrlSpec;
+impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ctrl::R](R) reader structure"]
-impl crate::Readable for CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ctrl::W](W) writer structure"]
-impl crate::Writable for CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ctrl::R`](R) reader structure"]
+impl crate::Readable for CtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
+impl crate::Writable for CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CTRL to value 0x0700_0040"]
-impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0700_0040;
+impl crate::Resettable for CtrlSpec {
+    const RESET_VALUE: u32 = 0x0700_0040;
 }

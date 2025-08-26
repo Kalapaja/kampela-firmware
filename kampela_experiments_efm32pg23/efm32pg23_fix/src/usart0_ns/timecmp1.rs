@@ -1,332 +1,303 @@
 #[doc = "Register `TIMECMP1` reader"]
-pub struct R(crate::R<TIMECMP1_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<TIMECMP1_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<TIMECMP1_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<TIMECMP1_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Timecmp1Spec>;
 #[doc = "Register `TIMECMP1` writer"]
-pub struct W(crate::W<TIMECMP1_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<TIMECMP1_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<TIMECMP1_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<TIMECMP1_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Timecmp1Spec>;
 #[doc = "Field `TCMPVAL` reader - Timer comparator 1."]
-pub type TCMPVAL_R = crate::FieldReader<u8, u8>;
+pub type TcmpvalR = crate::FieldReader;
 #[doc = "Field `TCMPVAL` writer - Timer comparator 1."]
-pub type TCMPVAL_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TIMECMP1_SPEC, u8, u8, 8, O>;
-#[doc = "Field `TSTART` reader - Timer start source"]
-pub type TSTART_R = crate::FieldReader<u8, TSTART_A>;
+pub type TcmpvalW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 #[doc = "Timer start source\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TSTART_A {
+pub enum Tstart {
     #[doc = "0: Comparator 1 is disabled"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Comparator 1 and timer are started at TX end of frame"]
-    TXEOF = 1,
+    Txeof = 1,
     #[doc = "2: Comparator 1 and timer are started at TX Complete"]
-    TXC = 2,
+    Txc = 2,
     #[doc = "3: Comparator 1 and timer are started at RX going going Active (default: low)"]
-    RXACT = 3,
+    Rxact = 3,
     #[doc = "4: Comparator 1 and timer are started at RX end of frame"]
-    RXEOF = 4,
+    Rxeof = 4,
 }
-impl From<TSTART_A> for u8 {
+impl From<Tstart> for u8 {
     #[inline(always)]
-    fn from(variant: TSTART_A) -> Self {
+    fn from(variant: Tstart) -> Self {
         variant as _
     }
 }
-impl TSTART_R {
+impl crate::FieldSpec for Tstart {
+    type Ux = u8;
+}
+impl crate::IsEnum for Tstart {}
+#[doc = "Field `TSTART` reader - Timer start source"]
+pub type TstartR = crate::FieldReader<Tstart>;
+impl TstartR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSTART_A> {
+    pub const fn variant(&self) -> Option<Tstart> {
         match self.bits {
-            0 => Some(TSTART_A::DISABLE),
-            1 => Some(TSTART_A::TXEOF),
-            2 => Some(TSTART_A::TXC),
-            3 => Some(TSTART_A::RXACT),
-            4 => Some(TSTART_A::RXEOF),
+            0 => Some(Tstart::Disable),
+            1 => Some(Tstart::Txeof),
+            2 => Some(Tstart::Txc),
+            3 => Some(Tstart::Rxact),
+            4 => Some(Tstart::Rxeof),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == TSTART_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `TXEOF`"]
-    #[inline(always)]
-    pub fn is_txeof(&self) -> bool {
-        *self == TSTART_A::TXEOF
-    }
-    #[doc = "Checks if the value of the field is `TXC`"]
-    #[inline(always)]
-    pub fn is_txc(&self) -> bool {
-        *self == TSTART_A::TXC
-    }
-    #[doc = "Checks if the value of the field is `RXACT`"]
-    #[inline(always)]
-    pub fn is_rxact(&self) -> bool {
-        *self == TSTART_A::RXACT
-    }
-    #[doc = "Checks if the value of the field is `RXEOF`"]
-    #[inline(always)]
-    pub fn is_rxeof(&self) -> bool {
-        *self == TSTART_A::RXEOF
-    }
-}
-#[doc = "Field `TSTART` writer - Timer start source"]
-pub type TSTART_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TIMECMP1_SPEC, u8, TSTART_A, 3, O>;
-impl<'a, const O: u8> TSTART_W<'a, O> {
     #[doc = "Comparator 1 is disabled"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(TSTART_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Tstart::Disable
     }
     #[doc = "Comparator 1 and timer are started at TX end of frame"]
     #[inline(always)]
-    pub fn txeof(self) -> &'a mut W {
-        self.variant(TSTART_A::TXEOF)
+    pub fn is_txeof(&self) -> bool {
+        *self == Tstart::Txeof
     }
     #[doc = "Comparator 1 and timer are started at TX Complete"]
     #[inline(always)]
-    pub fn txc(self) -> &'a mut W {
-        self.variant(TSTART_A::TXC)
+    pub fn is_txc(&self) -> bool {
+        *self == Tstart::Txc
     }
     #[doc = "Comparator 1 and timer are started at RX going going Active (default: low)"]
     #[inline(always)]
-    pub fn rxact(self) -> &'a mut W {
-        self.variant(TSTART_A::RXACT)
+    pub fn is_rxact(&self) -> bool {
+        *self == Tstart::Rxact
     }
     #[doc = "Comparator 1 and timer are started at RX end of frame"]
     #[inline(always)]
-    pub fn rxeof(self) -> &'a mut W {
-        self.variant(TSTART_A::RXEOF)
+    pub fn is_rxeof(&self) -> bool {
+        *self == Tstart::Rxeof
     }
 }
-#[doc = "Field `TSTOP` reader - Source used to disable comparator 1"]
-pub type TSTOP_R = crate::FieldReader<u8, TSTOP_A>;
+#[doc = "Field `TSTART` writer - Timer start source"]
+pub type TstartW<'a, REG> = crate::FieldWriter<'a, REG, 3, Tstart>;
+impl<'a, REG> TstartW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Comparator 1 is disabled"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstart::Disable)
+    }
+    #[doc = "Comparator 1 and timer are started at TX end of frame"]
+    #[inline(always)]
+    pub fn txeof(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstart::Txeof)
+    }
+    #[doc = "Comparator 1 and timer are started at TX Complete"]
+    #[inline(always)]
+    pub fn txc(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstart::Txc)
+    }
+    #[doc = "Comparator 1 and timer are started at RX going going Active (default: low)"]
+    #[inline(always)]
+    pub fn rxact(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstart::Rxact)
+    }
+    #[doc = "Comparator 1 and timer are started at RX end of frame"]
+    #[inline(always)]
+    pub fn rxeof(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstart::Rxeof)
+    }
+}
 #[doc = "Source used to disable comparator 1\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TSTOP_A {
+pub enum Tstop {
     #[doc = "0: Comparator 1 is disabled when the counter equals TCMPVAL and triggers a TCMP1 event"]
-    TCMP1 = 0,
+    Tcmp1 = 0,
     #[doc = "1: Comparator 1 is disabled at TX start TX Engine"]
-    TXST = 1,
+    Txst = 1,
     #[doc = "2: Comparator 1 is disabled on RX going going Active (default: low)"]
-    RXACT = 2,
+    Rxact = 2,
     #[doc = "3: Comparator 1 is disabled on RX going Inactive"]
-    RXACTN = 3,
+    Rxactn = 3,
 }
-impl From<TSTOP_A> for u8 {
+impl From<Tstop> for u8 {
     #[inline(always)]
-    fn from(variant: TSTOP_A) -> Self {
+    fn from(variant: Tstop) -> Self {
         variant as _
     }
 }
-impl TSTOP_R {
+impl crate::FieldSpec for Tstop {
+    type Ux = u8;
+}
+impl crate::IsEnum for Tstop {}
+#[doc = "Field `TSTOP` reader - Source used to disable comparator 1"]
+pub type TstopR = crate::FieldReader<Tstop>;
+impl TstopR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TSTOP_A> {
+    pub const fn variant(&self) -> Option<Tstop> {
         match self.bits {
-            0 => Some(TSTOP_A::TCMP1),
-            1 => Some(TSTOP_A::TXST),
-            2 => Some(TSTOP_A::RXACT),
-            3 => Some(TSTOP_A::RXACTN),
+            0 => Some(Tstop::Tcmp1),
+            1 => Some(Tstop::Txst),
+            2 => Some(Tstop::Rxact),
+            3 => Some(Tstop::Rxactn),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `TCMP1`"]
-    #[inline(always)]
-    pub fn is_tcmp1(&self) -> bool {
-        *self == TSTOP_A::TCMP1
-    }
-    #[doc = "Checks if the value of the field is `TXST`"]
-    #[inline(always)]
-    pub fn is_txst(&self) -> bool {
-        *self == TSTOP_A::TXST
-    }
-    #[doc = "Checks if the value of the field is `RXACT`"]
-    #[inline(always)]
-    pub fn is_rxact(&self) -> bool {
-        *self == TSTOP_A::RXACT
-    }
-    #[doc = "Checks if the value of the field is `RXACTN`"]
-    #[inline(always)]
-    pub fn is_rxactn(&self) -> bool {
-        *self == TSTOP_A::RXACTN
-    }
-}
-#[doc = "Field `TSTOP` writer - Source used to disable comparator 1"]
-pub type TSTOP_W<'a, const O: u8> = crate::FieldWriter<'a, u32, TIMECMP1_SPEC, u8, TSTOP_A, 3, O>;
-impl<'a, const O: u8> TSTOP_W<'a, O> {
     #[doc = "Comparator 1 is disabled when the counter equals TCMPVAL and triggers a TCMP1 event"]
     #[inline(always)]
-    pub fn tcmp1(self) -> &'a mut W {
-        self.variant(TSTOP_A::TCMP1)
+    pub fn is_tcmp1(&self) -> bool {
+        *self == Tstop::Tcmp1
     }
     #[doc = "Comparator 1 is disabled at TX start TX Engine"]
     #[inline(always)]
-    pub fn txst(self) -> &'a mut W {
-        self.variant(TSTOP_A::TXST)
+    pub fn is_txst(&self) -> bool {
+        *self == Tstop::Txst
     }
     #[doc = "Comparator 1 is disabled on RX going going Active (default: low)"]
     #[inline(always)]
-    pub fn rxact(self) -> &'a mut W {
-        self.variant(TSTOP_A::RXACT)
+    pub fn is_rxact(&self) -> bool {
+        *self == Tstop::Rxact
     }
     #[doc = "Comparator 1 is disabled on RX going Inactive"]
     #[inline(always)]
-    pub fn rxactn(self) -> &'a mut W {
-        self.variant(TSTOP_A::RXACTN)
+    pub fn is_rxactn(&self) -> bool {
+        *self == Tstop::Rxactn
     }
 }
-#[doc = "Field `RESTARTEN` reader - Restart Timer on TCMP1"]
-pub type RESTARTEN_R = crate::BitReader<RESTARTEN_A>;
+#[doc = "Field `TSTOP` writer - Source used to disable comparator 1"]
+pub type TstopW<'a, REG> = crate::FieldWriter<'a, REG, 3, Tstop>;
+impl<'a, REG> TstopW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Comparator 1 is disabled when the counter equals TCMPVAL and triggers a TCMP1 event"]
+    #[inline(always)]
+    pub fn tcmp1(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstop::Tcmp1)
+    }
+    #[doc = "Comparator 1 is disabled at TX start TX Engine"]
+    #[inline(always)]
+    pub fn txst(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstop::Txst)
+    }
+    #[doc = "Comparator 1 is disabled on RX going going Active (default: low)"]
+    #[inline(always)]
+    pub fn rxact(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstop::Rxact)
+    }
+    #[doc = "Comparator 1 is disabled on RX going Inactive"]
+    #[inline(always)]
+    pub fn rxactn(self) -> &'a mut crate::W<REG> {
+        self.variant(Tstop::Rxactn)
+    }
+}
 #[doc = "Restart Timer on TCMP1\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum RESTARTEN_A {
+pub enum Restarten {
     #[doc = "0: Disable the timer restarting on TCMP1"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Enable the timer restarting on TCMP1"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<RESTARTEN_A> for bool {
+impl From<Restarten> for bool {
     #[inline(always)]
-    fn from(variant: RESTARTEN_A) -> Self {
+    fn from(variant: Restarten) -> Self {
         variant as u8 != 0
     }
 }
-impl RESTARTEN_R {
+#[doc = "Field `RESTARTEN` reader - Restart Timer on TCMP1"]
+pub type RestartenR = crate::BitReader<Restarten>;
+impl RestartenR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RESTARTEN_A {
+    pub const fn variant(&self) -> Restarten {
         match self.bits {
-            false => RESTARTEN_A::DISABLE,
-            true => RESTARTEN_A::ENABLE,
+            false => Restarten::Disable,
+            true => Restarten::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == RESTARTEN_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == RESTARTEN_A::ENABLE
-    }
-}
-#[doc = "Field `RESTARTEN` writer - Restart Timer on TCMP1"]
-pub type RESTARTEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, TIMECMP1_SPEC, RESTARTEN_A, O>;
-impl<'a, const O: u8> RESTARTEN_W<'a, O> {
     #[doc = "Disable the timer restarting on TCMP1"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(RESTARTEN_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Restarten::Disable
     }
     #[doc = "Enable the timer restarting on TCMP1"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(RESTARTEN_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Restarten::Enable
+    }
+}
+#[doc = "Field `RESTARTEN` writer - Restart Timer on TCMP1"]
+pub type RestartenW<'a, REG> = crate::BitWriter<'a, REG, Restarten>;
+impl<'a, REG> RestartenW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Disable the timer restarting on TCMP1"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Restarten::Disable)
+    }
+    #[doc = "Enable the timer restarting on TCMP1"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Restarten::Enable)
     }
 }
 impl R {
     #[doc = "Bits 0:7 - Timer comparator 1."]
     #[inline(always)]
-    pub fn tcmpval(&self) -> TCMPVAL_R {
-        TCMPVAL_R::new((self.bits & 0xff) as u8)
+    pub fn tcmpval(&self) -> TcmpvalR {
+        TcmpvalR::new((self.bits & 0xff) as u8)
     }
     #[doc = "Bits 16:18 - Timer start source"]
     #[inline(always)]
-    pub fn tstart(&self) -> TSTART_R {
-        TSTART_R::new(((self.bits >> 16) & 7) as u8)
+    pub fn tstart(&self) -> TstartR {
+        TstartR::new(((self.bits >> 16) & 7) as u8)
     }
     #[doc = "Bits 20:22 - Source used to disable comparator 1"]
     #[inline(always)]
-    pub fn tstop(&self) -> TSTOP_R {
-        TSTOP_R::new(((self.bits >> 20) & 7) as u8)
+    pub fn tstop(&self) -> TstopR {
+        TstopR::new(((self.bits >> 20) & 7) as u8)
     }
     #[doc = "Bit 24 - Restart Timer on TCMP1"]
     #[inline(always)]
-    pub fn restarten(&self) -> RESTARTEN_R {
-        RESTARTEN_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn restarten(&self) -> RestartenR {
+        RestartenR::new(((self.bits >> 24) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 0:7 - Timer comparator 1."]
     #[inline(always)]
-    #[must_use]
-    pub fn tcmpval(&mut self) -> TCMPVAL_W<0> {
-        TCMPVAL_W::new(self)
+    pub fn tcmpval(&mut self) -> TcmpvalW<Timecmp1Spec> {
+        TcmpvalW::new(self, 0)
     }
     #[doc = "Bits 16:18 - Timer start source"]
     #[inline(always)]
-    #[must_use]
-    pub fn tstart(&mut self) -> TSTART_W<16> {
-        TSTART_W::new(self)
+    pub fn tstart(&mut self) -> TstartW<Timecmp1Spec> {
+        TstartW::new(self, 16)
     }
     #[doc = "Bits 20:22 - Source used to disable comparator 1"]
     #[inline(always)]
-    #[must_use]
-    pub fn tstop(&mut self) -> TSTOP_W<20> {
-        TSTOP_W::new(self)
+    pub fn tstop(&mut self) -> TstopW<Timecmp1Spec> {
+        TstopW::new(self, 20)
     }
     #[doc = "Bit 24 - Restart Timer on TCMP1"]
     #[inline(always)]
-    #[must_use]
-    pub fn restarten(&mut self) -> RESTARTEN_W<24> {
-        RESTARTEN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn restarten(&mut self) -> RestartenW<Timecmp1Spec> {
+        RestartenW::new(self, 24)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [timecmp1](index.html) module"]
-pub struct TIMECMP1_SPEC;
-impl crate::RegisterSpec for TIMECMP1_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`timecmp1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`timecmp1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Timecmp1Spec;
+impl crate::RegisterSpec for Timecmp1Spec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [timecmp1::R](R) reader structure"]
-impl crate::Readable for TIMECMP1_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [timecmp1::W](W) writer structure"]
-impl crate::Writable for TIMECMP1_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`timecmp1::R`](R) reader structure"]
+impl crate::Readable for Timecmp1Spec {}
+#[doc = "`write(|w| ..)` method takes [`timecmp1::W`](W) writer structure"]
+impl crate::Writable for Timecmp1Spec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets TIMECMP1 to value 0"]
-impl crate::Resettable for TIMECMP1_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Timecmp1Spec {}

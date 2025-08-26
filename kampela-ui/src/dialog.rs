@@ -19,7 +19,7 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::{uistate::EventResult, widget::view::View};
+use crate::{uistate::{Event, EventResult, UnitScreen}, widget::view::View};
 use crate::widget::{view::{Widget, ViewScreen}, nav_bar::nav_bar::{NavBar, NavCommand, NAV_BAR_WIDGET}};
 
 use crate::display_def::*;
@@ -38,34 +38,45 @@ const HEADER_WIDGET: Widget = Widget::new(
     SCREEN_ZERO
 );
 
+pub type DialogUnitScreenArgs = (
+    &'static str,
+    (&'static str, &'static str),
+    (Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>),
+    bool
+);
+
 pub struct Dialog {
     navbar: NavBar,
     routes: Option<(Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>)>,
     message: &'static str,
     negative: bool,
+    unit: Option<UnitScreen>,
 }
 
 impl Dialog {
     pub fn new(
-        message: &'static str,
-        options: (&'static str, &'static str),
-        routes: (Box<dyn FnOnce() -> EventResult>, Box<dyn FnOnce() -> EventResult>),
-        negative: bool,
+        args: DialogUnitScreenArgs,
+        unit: Option<UnitScreen>,
     ) -> Self {
         Dialog{
-            navbar: NavBar::new(options),
-            routes: Some(routes),
-            message,
-            negative,
+            navbar: NavBar::new(args.1),
+            routes: Some(args.2),
+            message: args.0,
+            negative: args.3,
+            unit,
         }
+    }
+
+    pub fn get_unit(self) -> Option<UnitScreen> {
+        self.unit
     }
 }
 
 impl ViewScreen for Dialog {
     type DrawInput<'a> = ();
     type DrawOutput = ();
-    type TapInput<'a> = ();
-    type TapOutput = ();
+    type EventInput<'a> = ();
+    type EventOutput = ();
 
     
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, Self::DrawOutput), D::Error>
@@ -102,12 +113,12 @@ impl ViewScreen for Dialog {
 
         Ok((EventResult { request, state }, ()))
     }
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: ()) -> (EventResult, ())
+    fn handle_event_screen<'a>(&mut self, event: Event, _: ()) -> (EventResult, ())
     where
         Self: 'a
     {
-        let event_result = if let Some(Some(c)) = self.navbar.handle_tap(point, ()) {
-            let routes = core::mem::take(&mut self.routes).unwrap();
+        let event_result = if let Some(Some(c)) = self.navbar.handle_event(event, ()) {
+            let routes = core::mem::take(&mut self.routes).expect("routes should be present before routing");
             match c {
                 NavCommand::Left => {
                     routes.0()

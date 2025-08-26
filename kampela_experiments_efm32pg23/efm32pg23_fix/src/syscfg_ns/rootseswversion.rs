@@ -1,81 +1,35 @@
 #[doc = "Register `ROOTSESWVERSION` reader"]
-pub struct R(crate::R<ROOTSESWVERSION_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<ROOTSESWVERSION_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<ROOTSESWVERSION_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<ROOTSESWVERSION_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<RootseswversionSpec>;
 #[doc = "Register `ROOTSESWVERSION` writer"]
-pub struct W(crate::W<ROOTSESWVERSION_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<ROOTSESWVERSION_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<ROOTSESWVERSION_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<ROOTSESWVERSION_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<RootseswversionSpec>;
 #[doc = "Field `SWVERSION` reader - SW Version"]
-pub type SWVERSION_R = crate::FieldReader<u32, u32>;
+pub type SwversionR = crate::FieldReader<u32>;
 #[doc = "Field `SWVERSION` writer - SW Version"]
-pub type SWVERSION_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, ROOTSESWVERSION_SPEC, u32, u32, 32, O>;
+pub type SwversionW<'a, REG> = crate::FieldWriter<'a, REG, 32, u32>;
 impl R {
     #[doc = "Bits 0:31 - SW Version"]
     #[inline(always)]
-    pub fn swversion(&self) -> SWVERSION_R {
-        SWVERSION_R::new(self.bits)
+    pub fn swversion(&self) -> SwversionR {
+        SwversionR::new(self.bits)
     }
 }
 impl W {
     #[doc = "Bits 0:31 - SW Version"]
     #[inline(always)]
-    #[must_use]
-    pub fn swversion(&mut self) -> SWVERSION_W<0> {
-        SWVERSION_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn swversion(&mut self) -> SwversionW<RootseswversionSpec> {
+        SwversionW::new(self, 0)
     }
 }
-#[doc = "SE Software version\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [rootseswversion](index.html) module"]
-pub struct ROOTSESWVERSION_SPEC;
-impl crate::RegisterSpec for ROOTSESWVERSION_SPEC {
+#[doc = "SE Software version\n\nYou can [`read`](crate::Reg::read) this register and get [`rootseswversion::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`rootseswversion::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct RootseswversionSpec;
+impl crate::RegisterSpec for RootseswversionSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [rootseswversion::R](R) reader structure"]
-impl crate::Readable for ROOTSESWVERSION_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [rootseswversion::W](W) writer structure"]
-impl crate::Writable for ROOTSESWVERSION_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`rootseswversion::R`](R) reader structure"]
+impl crate::Readable for RootseswversionSpec {}
+#[doc = "`write(|w| ..)` method takes [`rootseswversion::W`](W) writer structure"]
+impl crate::Writable for RootseswversionSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets ROOTSESWVERSION to value 0"]
-impl crate::Resettable for ROOTSESWVERSION_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for RootseswversionSpec {}

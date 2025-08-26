@@ -1,140 +1,91 @@
 #[doc = "Register `IEN` reader"]
-pub struct R(crate::R<IEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<IEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<IEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub struct W(crate::W<IEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<IEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<IEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `UF` reader - Underflow Interrupt Read Flag"]
-pub type UF_R = crate::BitReader<bool>;
+pub type UfR = crate::BitReader;
 #[doc = "Field `UF` writer - Underflow Interrupt Read Flag"]
-pub type UF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type UfW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `OF` reader - Overflow Interrupt Read Flag"]
-pub type OF_R = crate::BitReader<bool>;
+pub type OfR = crate::BitReader;
 #[doc = "Field `OF` writer - Overflow Interrupt Read Flag"]
-pub type OF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type OfW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DIRCNG` reader - Direction Change Detect Interrupt Flag"]
-pub type DIRCNG_R = crate::BitReader<bool>;
+pub type DircngR = crate::BitReader;
 #[doc = "Field `DIRCNG` writer - Direction Change Detect Interrupt Flag"]
-pub type DIRCNG_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type DircngW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `AUXOF` reader - Auxiliary Overflow Interrupt Read Flag"]
-pub type AUXOF_R = crate::BitReader<bool>;
+pub type AuxofR = crate::BitReader;
 #[doc = "Field `AUXOF` writer - Auxiliary Overflow Interrupt Read Flag"]
-pub type AUXOF_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type AuxofW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `OQSTERR` reader - Oversampling Quad State Err Int Flag"]
-pub type OQSTERR_R = crate::BitReader<bool>;
+pub type OqsterrR = crate::BitReader;
 #[doc = "Field `OQSTERR` writer - Oversampling Quad State Err Int Flag"]
-pub type OQSTERR_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type OqsterrW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Underflow Interrupt Read Flag"]
     #[inline(always)]
-    pub fn uf(&self) -> UF_R {
-        UF_R::new((self.bits & 1) != 0)
+    pub fn uf(&self) -> UfR {
+        UfR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Overflow Interrupt Read Flag"]
     #[inline(always)]
-    pub fn of(&self) -> OF_R {
-        OF_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn of(&self) -> OfR {
+        OfR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
-    pub fn dircng(&self) -> DIRCNG_R {
-        DIRCNG_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn dircng(&self) -> DircngR {
+        DircngR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Auxiliary Overflow Interrupt Read Flag"]
     #[inline(always)]
-    pub fn auxof(&self) -> AUXOF_R {
-        AUXOF_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn auxof(&self) -> AuxofR {
+        AuxofR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - Oversampling Quad State Err Int Flag"]
     #[inline(always)]
-    pub fn oqsterr(&self) -> OQSTERR_R {
-        OQSTERR_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn oqsterr(&self) -> OqsterrR {
+        OqsterrR::new(((self.bits >> 4) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Underflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn uf(&mut self) -> UF_W<0> {
-        UF_W::new(self)
+    pub fn uf(&mut self) -> UfW<IenSpec> {
+        UfW::new(self, 0)
     }
     #[doc = "Bit 1 - Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn of(&mut self) -> OF_W<1> {
-        OF_W::new(self)
+    pub fn of(&mut self) -> OfW<IenSpec> {
+        OfW::new(self, 1)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn dircng(&mut self) -> DIRCNG_W<2> {
-        DIRCNG_W::new(self)
+    pub fn dircng(&mut self) -> DircngW<IenSpec> {
+        DircngW::new(self, 2)
     }
     #[doc = "Bit 3 - Auxiliary Overflow Interrupt Read Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn auxof(&mut self) -> AUXOF_W<3> {
-        AUXOF_W::new(self)
+    pub fn auxof(&mut self) -> AuxofW<IenSpec> {
+        AuxofW::new(self, 3)
     }
     #[doc = "Bit 4 - Oversampling Quad State Err Int Flag"]
     #[inline(always)]
-    #[must_use]
-    pub fn oqsterr(&mut self) -> OQSTERR_W<4> {
-        OQSTERR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn oqsterr(&mut self) -> OqsterrW<IenSpec> {
+        OqsterrW::new(self, 4)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ien](index.html) module"]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ien::R](R) reader structure"]
-impl crate::Readable for IEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ien::W](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ien::R`](R) reader structure"]
+impl crate::Readable for IenSpec {}
+#[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IenSpec {}

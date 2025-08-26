@@ -9,7 +9,7 @@ use embedded_graphics::{
     primitives::Rectangle,
 };
 
-use crate::uistate::EventResult;
+use crate::uistate::{Event, EventResult};
 
 pub struct DrawView<'a, D> where
     D: DrawTarget
@@ -84,7 +84,7 @@ impl Dimensions for Widget {
 pub trait View {
     type DrawInput<'a> where Self: 'a;
     type DrawOutput;
-    type TapInput<'a> where Self: 'a;
+    type EventInput<'a> where Self: 'a;
     type TapOutput;
     /// Getter for area field in Struct
     fn bounding_box(&self) -> Rectangle;
@@ -111,7 +111,7 @@ pub trait View {
         D: DrawTarget<Color = BinaryColor>,
         Self: 'a;
 
-    fn handle_tap_view<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, input: Self::EventInput<'a>) -> Self::TapOutput
     where Self: 'a;
 
     fn draw<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<Self::DrawOutput,D::Error>
@@ -123,13 +123,18 @@ pub trait View {
         self.draw_view(&mut window_target, input)
     }
 
-	fn handle_tap<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> Option<Self::TapOutput>
+	fn handle_event<'a>(&mut self, event: Event, input: Self::EventInput<'a>) -> Option<Self::TapOutput>
     where Self: 'a {
-        if self.bounding_box().contains(point) {
-            let point_offsetted = Point::new(point.x - self.bounding_box().top_left.x, point.y - self.bounding_box().top_left.y);
-            Some(self.handle_tap_view(point_offsetted, input))
-        } else {
-            None
+        match event {
+            Event::Tap(point) => {
+                if self.bounding_box().contains(point) {
+                    let point_offsetted = Point::new(point.x - self.bounding_box().top_left.x, point.y - self.bounding_box().top_left.y);
+                    Some(self.handle_event_view(Event::Tap(point_offsetted), input))
+                } else {
+                    None
+                }
+            },
+            a => Some(self.handle_event_view(a, input))
         }
     }
 }
@@ -137,12 +142,12 @@ pub trait View {
 pub trait ViewScreen {
     type DrawInput<'a> where Self: 'a;
     type DrawOutput;
-    type TapInput<'a> where Self: 'a;
-    type TapOutput;
+    type EventInput<'a> where Self: 'a;
+    type EventOutput;
     fn draw_screen<'a, D>(&mut self, target: &mut D, input: Self::DrawInput<'a>) -> Result<(EventResult, Self::DrawOutput), D::Error>
     where
         D: DrawTarget<Color = BinaryColor>,
         Self: 'a;
-    fn handle_tap_screen<'a>(&mut self, point: Point, input: Self::TapInput<'a>) -> (EventResult, Self::TapOutput) 
+    fn handle_event_screen<'a>(&mut self, event: Event, input: Self::EventInput<'a>) -> (EventResult, Self::EventOutput) 
     where Self: 'a;
 }

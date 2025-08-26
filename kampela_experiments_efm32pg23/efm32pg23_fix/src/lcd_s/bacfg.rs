@@ -1,185 +1,147 @@
 #[doc = "Register `BACFG` reader"]
-pub struct R(crate::R<BACFG_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<BACFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<BACFG_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<BACFG_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<BacfgSpec>;
 #[doc = "Register `BACFG` writer"]
-pub struct W(crate::W<BACFG_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<BACFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<BACFG_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<BACFG_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<BacfgSpec>;
 #[doc = "Field `ASTATETOP` reader - ASTATE top cnt"]
-pub type ASTATETOP_R = crate::FieldReader<u8, u8>;
+pub type AstatetopR = crate::FieldReader;
 #[doc = "Field `ASTATETOP` writer - ASTATE top cnt"]
-pub type ASTATETOP_W<'a, const O: u8> = crate::FieldWriter<'a, u32, BACFG_SPEC, u8, u8, 3, O>;
-#[doc = "Field `FCPRESC` reader - Frame Counter Prescaler"]
-pub type FCPRESC_R = crate::FieldReader<u8, FCPRESC_A>;
+pub type AstatetopW<'a, REG> = crate::FieldWriter<'a, REG, 3>;
 #[doc = "Frame Counter Prescaler\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum FCPRESC_A {
+pub enum Fcpresc {
     #[doc = "0: every frame clock"]
-    DIV1 = 0,
+    Div1 = 0,
     #[doc = "1: every 2nd frame clock"]
-    DIV2 = 1,
+    Div2 = 1,
     #[doc = "2: every 4th frame clock"]
-    DIV4 = 2,
+    Div4 = 2,
     #[doc = "3: every 8th frame clock"]
-    DIV8 = 3,
+    Div8 = 3,
 }
-impl From<FCPRESC_A> for u8 {
+impl From<Fcpresc> for u8 {
     #[inline(always)]
-    fn from(variant: FCPRESC_A) -> Self {
+    fn from(variant: Fcpresc) -> Self {
         variant as _
     }
 }
-impl FCPRESC_R {
+impl crate::FieldSpec for Fcpresc {
+    type Ux = u8;
+}
+impl crate::IsEnum for Fcpresc {}
+#[doc = "Field `FCPRESC` reader - Frame Counter Prescaler"]
+pub type FcprescR = crate::FieldReader<Fcpresc>;
+impl FcprescR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> FCPRESC_A {
+    pub const fn variant(&self) -> Fcpresc {
         match self.bits {
-            0 => FCPRESC_A::DIV1,
-            1 => FCPRESC_A::DIV2,
-            2 => FCPRESC_A::DIV4,
-            3 => FCPRESC_A::DIV8,
+            0 => Fcpresc::Div1,
+            1 => Fcpresc::Div2,
+            2 => Fcpresc::Div4,
+            3 => Fcpresc::Div8,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `DIV1`"]
-    #[inline(always)]
-    pub fn is_div1(&self) -> bool {
-        *self == FCPRESC_A::DIV1
-    }
-    #[doc = "Checks if the value of the field is `DIV2`"]
-    #[inline(always)]
-    pub fn is_div2(&self) -> bool {
-        *self == FCPRESC_A::DIV2
-    }
-    #[doc = "Checks if the value of the field is `DIV4`"]
-    #[inline(always)]
-    pub fn is_div4(&self) -> bool {
-        *self == FCPRESC_A::DIV4
-    }
-    #[doc = "Checks if the value of the field is `DIV8`"]
-    #[inline(always)]
-    pub fn is_div8(&self) -> bool {
-        *self == FCPRESC_A::DIV8
-    }
-}
-#[doc = "Field `FCPRESC` writer - Frame Counter Prescaler"]
-pub type FCPRESC_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, BACFG_SPEC, u8, FCPRESC_A, 2, O>;
-impl<'a, const O: u8> FCPRESC_W<'a, O> {
     #[doc = "every frame clock"]
     #[inline(always)]
-    pub fn div1(self) -> &'a mut W {
-        self.variant(FCPRESC_A::DIV1)
+    pub fn is_div1(&self) -> bool {
+        *self == Fcpresc::Div1
     }
     #[doc = "every 2nd frame clock"]
     #[inline(always)]
-    pub fn div2(self) -> &'a mut W {
-        self.variant(FCPRESC_A::DIV2)
+    pub fn is_div2(&self) -> bool {
+        *self == Fcpresc::Div2
     }
     #[doc = "every 4th frame clock"]
     #[inline(always)]
-    pub fn div4(self) -> &'a mut W {
-        self.variant(FCPRESC_A::DIV4)
+    pub fn is_div4(&self) -> bool {
+        *self == Fcpresc::Div4
     }
     #[doc = "every 8th frame clock"]
     #[inline(always)]
-    pub fn div8(self) -> &'a mut W {
-        self.variant(FCPRESC_A::DIV8)
+    pub fn is_div8(&self) -> bool {
+        *self == Fcpresc::Div8
+    }
+}
+#[doc = "Field `FCPRESC` writer - Frame Counter Prescaler"]
+pub type FcprescW<'a, REG> = crate::FieldWriter<'a, REG, 2, Fcpresc, crate::Safe>;
+impl<'a, REG> FcprescW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "every frame clock"]
+    #[inline(always)]
+    pub fn div1(self) -> &'a mut crate::W<REG> {
+        self.variant(Fcpresc::Div1)
+    }
+    #[doc = "every 2nd frame clock"]
+    #[inline(always)]
+    pub fn div2(self) -> &'a mut crate::W<REG> {
+        self.variant(Fcpresc::Div2)
+    }
+    #[doc = "every 4th frame clock"]
+    #[inline(always)]
+    pub fn div4(self) -> &'a mut crate::W<REG> {
+        self.variant(Fcpresc::Div4)
+    }
+    #[doc = "every 8th frame clock"]
+    #[inline(always)]
+    pub fn div8(self) -> &'a mut crate::W<REG> {
+        self.variant(Fcpresc::Div8)
     }
 }
 #[doc = "Field `FCTOP` reader - Frame Counter Top"]
-pub type FCTOP_R = crate::FieldReader<u8, u8>;
+pub type FctopR = crate::FieldReader;
 #[doc = "Field `FCTOP` writer - Frame Counter Top"]
-pub type FCTOP_W<'a, const O: u8> = crate::FieldWriter<'a, u32, BACFG_SPEC, u8, u8, 6, O>;
+pub type FctopW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 impl R {
     #[doc = "Bits 0:2 - ASTATE top cnt"]
     #[inline(always)]
-    pub fn astatetop(&self) -> ASTATETOP_R {
-        ASTATETOP_R::new((self.bits & 7) as u8)
+    pub fn astatetop(&self) -> AstatetopR {
+        AstatetopR::new((self.bits & 7) as u8)
     }
     #[doc = "Bits 16:17 - Frame Counter Prescaler"]
     #[inline(always)]
-    pub fn fcpresc(&self) -> FCPRESC_R {
-        FCPRESC_R::new(((self.bits >> 16) & 3) as u8)
+    pub fn fcpresc(&self) -> FcprescR {
+        FcprescR::new(((self.bits >> 16) & 3) as u8)
     }
     #[doc = "Bits 18:23 - Frame Counter Top"]
     #[inline(always)]
-    pub fn fctop(&self) -> FCTOP_R {
-        FCTOP_R::new(((self.bits >> 18) & 0x3f) as u8)
+    pub fn fctop(&self) -> FctopR {
+        FctopR::new(((self.bits >> 18) & 0x3f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - ASTATE top cnt"]
     #[inline(always)]
-    #[must_use]
-    pub fn astatetop(&mut self) -> ASTATETOP_W<0> {
-        ASTATETOP_W::new(self)
+    pub fn astatetop(&mut self) -> AstatetopW<BacfgSpec> {
+        AstatetopW::new(self, 0)
     }
     #[doc = "Bits 16:17 - Frame Counter Prescaler"]
     #[inline(always)]
-    #[must_use]
-    pub fn fcpresc(&mut self) -> FCPRESC_W<16> {
-        FCPRESC_W::new(self)
+    pub fn fcpresc(&mut self) -> FcprescW<BacfgSpec> {
+        FcprescW::new(self, 16)
     }
     #[doc = "Bits 18:23 - Frame Counter Top"]
     #[inline(always)]
-    #[must_use]
-    pub fn fctop(&mut self) -> FCTOP_W<18> {
-        FCTOP_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn fctop(&mut self) -> FctopW<BacfgSpec> {
+        FctopW::new(self, 18)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [bacfg](index.html) module"]
-pub struct BACFG_SPEC;
-impl crate::RegisterSpec for BACFG_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`bacfg::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`bacfg::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct BacfgSpec;
+impl crate::RegisterSpec for BacfgSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [bacfg::R](R) reader structure"]
-impl crate::Readable for BACFG_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [bacfg::W](W) writer structure"]
-impl crate::Writable for BACFG_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`bacfg::R`](R) reader structure"]
+impl crate::Readable for BacfgSpec {}
+#[doc = "`write(|w| ..)` method takes [`bacfg::W`](W) writer structure"]
+impl crate::Writable for BacfgSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets BACFG to value 0x07"]
-impl crate::Resettable for BACFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0x07;
+impl crate::Resettable for BacfgSpec {
+    const RESET_VALUE: u32 = 0x07;
 }

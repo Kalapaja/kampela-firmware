@@ -10,7 +10,9 @@ pub mod widget{
         pub mod nav_button;
     }
 }
-
+pub mod ethereum_decode;
+pub mod messages;
+pub mod parser;
 pub mod display_def;
 pub mod pin{
     pub mod pin;

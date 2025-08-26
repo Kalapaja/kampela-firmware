@@ -1,95 +1,90 @@
 #[doc = "Register `PART` reader"]
-pub struct R(crate::R<PART_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<PART_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<PART_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<PART_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<PartSpec>;
 #[doc = "Field `DEVICENUM` reader - Device Number"]
-pub type DEVICENUM_R = crate::FieldReader<u16, u16>;
+pub type DevicenumR = crate::FieldReader<u16>;
 #[doc = "Field `FAMILYNUM` reader - Device Family"]
-pub type FAMILYNUM_R = crate::FieldReader<u8, u8>;
-#[doc = "Field `FAMILY` reader - Device Family"]
-pub type FAMILY_R = crate::FieldReader<u8, FAMILY_A>;
+pub type FamilynumR = crate::FieldReader;
 #[doc = "Device Family\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum FAMILY_A {
+pub enum Family {
     #[doc = "0: Flex Gecko"]
-    FG = 0,
+    Fg = 0,
     #[doc = "3: Z-Wave Gecko"]
-    ZG = 3,
+    Zg = 3,
     #[doc = "5: Pearl Gecko"]
-    PG = 5,
+    Pg = 5,
+    #[doc = "8: Sidewalk Gecko"]
+    Sg = 8,
 }
-impl From<FAMILY_A> for u8 {
+impl From<Family> for u8 {
     #[inline(always)]
-    fn from(variant: FAMILY_A) -> Self {
+    fn from(variant: Family) -> Self {
         variant as _
     }
 }
-impl FAMILY_R {
+impl crate::FieldSpec for Family {
+    type Ux = u8;
+}
+impl crate::IsEnum for Family {}
+#[doc = "Field `FAMILY` reader - Device Family"]
+pub type FamilyR = crate::FieldReader<Family>;
+impl FamilyR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<FAMILY_A> {
+    pub const fn variant(&self) -> Option<Family> {
         match self.bits {
-            0 => Some(FAMILY_A::FG),
-            3 => Some(FAMILY_A::ZG),
-            5 => Some(FAMILY_A::PG),
+            0 => Some(Family::Fg),
+            3 => Some(Family::Zg),
+            5 => Some(Family::Pg),
+            8 => Some(Family::Sg),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `FG`"]
+    #[doc = "Flex Gecko"]
     #[inline(always)]
     pub fn is_fg(&self) -> bool {
-        *self == FAMILY_A::FG
+        *self == Family::Fg
     }
-    #[doc = "Checks if the value of the field is `ZG`"]
+    #[doc = "Z-Wave Gecko"]
     #[inline(always)]
     pub fn is_zg(&self) -> bool {
-        *self == FAMILY_A::ZG
+        *self == Family::Zg
     }
-    #[doc = "Checks if the value of the field is `PG`"]
+    #[doc = "Pearl Gecko"]
     #[inline(always)]
     pub fn is_pg(&self) -> bool {
-        *self == FAMILY_A::PG
+        *self == Family::Pg
+    }
+    #[doc = "Sidewalk Gecko"]
+    #[inline(always)]
+    pub fn is_sg(&self) -> bool {
+        *self == Family::Sg
     }
 }
 impl R {
     #[doc = "Bits 0:15 - Device Number"]
     #[inline(always)]
-    pub fn devicenum(&self) -> DEVICENUM_R {
-        DEVICENUM_R::new((self.bits & 0xffff) as u16)
+    pub fn devicenum(&self) -> DevicenumR {
+        DevicenumR::new((self.bits & 0xffff) as u16)
     }
     #[doc = "Bits 16:21 - Device Family"]
     #[inline(always)]
-    pub fn familynum(&self) -> FAMILYNUM_R {
-        FAMILYNUM_R::new(((self.bits >> 16) & 0x3f) as u8)
+    pub fn familynum(&self) -> FamilynumR {
+        FamilynumR::new(((self.bits >> 16) & 0x3f) as u8)
     }
     #[doc = "Bits 24:29 - Device Family"]
     #[inline(always)]
-    pub fn family(&self) -> FAMILY_R {
-        FAMILY_R::new(((self.bits >> 24) & 0x3f) as u8)
+    pub fn family(&self) -> FamilyR {
+        FamilyR::new(((self.bits >> 24) & 0x3f) as u8)
     }
 }
-#[doc = "Part description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [part](index.html) module"]
-pub struct PART_SPEC;
-impl crate::RegisterSpec for PART_SPEC {
+#[doc = "Part description\n\nYou can [`read`](crate::Reg::read) this register and get [`part::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PartSpec;
+impl crate::RegisterSpec for PartSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [part::R](R) reader structure"]
-impl crate::Readable for PART_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`part::R`](R) reader structure"]
+impl crate::Readable for PartSpec {}
 #[doc = "`reset()` method sets PART to value 0"]
-impl crate::Resettable for PART_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for PartSpec {}

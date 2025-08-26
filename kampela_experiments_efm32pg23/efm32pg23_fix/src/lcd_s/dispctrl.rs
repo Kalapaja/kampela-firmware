@@ -1,407 +1,387 @@
 #[doc = "Register `DISPCTRL` reader"]
-pub struct R(crate::R<DISPCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<DISPCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<DISPCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<DISPCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<DispctrlSpec>;
 #[doc = "Register `DISPCTRL` writer"]
-pub struct W(crate::W<DISPCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<DISPCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<DISPCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<DISPCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `MUX` reader - Mux Configuration"]
-pub type MUX_R = crate::FieldReader<u8, MUX_A>;
+pub type W = crate::W<DispctrlSpec>;
 #[doc = "Mux Configuration\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum MUX_A {
+pub enum Mux {
     #[doc = "0: Static"]
-    STATIC = 0,
+    Static = 0,
     #[doc = "1: Duplex"]
-    DUPLEX = 1,
+    Duplex = 1,
     #[doc = "2: Triplex"]
-    TRIPLEX = 2,
+    Triplex = 2,
     #[doc = "3: Quadruplex"]
-    QUADRUPLEX = 3,
+    Quadruplex = 3,
 }
-impl From<MUX_A> for u8 {
+impl From<Mux> for u8 {
     #[inline(always)]
-    fn from(variant: MUX_A) -> Self {
+    fn from(variant: Mux) -> Self {
         variant as _
     }
 }
-impl MUX_R {
+impl crate::FieldSpec for Mux {
+    type Ux = u8;
+}
+impl crate::IsEnum for Mux {}
+#[doc = "Field `MUX` reader - Mux Configuration"]
+pub type MuxR = crate::FieldReader<Mux>;
+impl MuxR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<MUX_A> {
+    pub const fn variant(&self) -> Option<Mux> {
         match self.bits {
-            0 => Some(MUX_A::STATIC),
-            1 => Some(MUX_A::DUPLEX),
-            2 => Some(MUX_A::TRIPLEX),
-            3 => Some(MUX_A::QUADRUPLEX),
+            0 => Some(Mux::Static),
+            1 => Some(Mux::Duplex),
+            2 => Some(Mux::Triplex),
+            3 => Some(Mux::Quadruplex),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `STATIC`"]
-    #[inline(always)]
-    pub fn is_static(&self) -> bool {
-        *self == MUX_A::STATIC
-    }
-    #[doc = "Checks if the value of the field is `DUPLEX`"]
-    #[inline(always)]
-    pub fn is_duplex(&self) -> bool {
-        *self == MUX_A::DUPLEX
-    }
-    #[doc = "Checks if the value of the field is `TRIPLEX`"]
-    #[inline(always)]
-    pub fn is_triplex(&self) -> bool {
-        *self == MUX_A::TRIPLEX
-    }
-    #[doc = "Checks if the value of the field is `QUADRUPLEX`"]
-    #[inline(always)]
-    pub fn is_quadruplex(&self) -> bool {
-        *self == MUX_A::QUADRUPLEX
-    }
-}
-#[doc = "Field `MUX` writer - Mux Configuration"]
-pub type MUX_W<'a, const O: u8> = crate::FieldWriter<'a, u32, DISPCTRL_SPEC, u8, MUX_A, 3, O>;
-impl<'a, const O: u8> MUX_W<'a, O> {
     #[doc = "Static"]
     #[inline(always)]
-    pub fn static_(self) -> &'a mut W {
-        self.variant(MUX_A::STATIC)
+    pub fn is_static(&self) -> bool {
+        *self == Mux::Static
     }
     #[doc = "Duplex"]
     #[inline(always)]
-    pub fn duplex(self) -> &'a mut W {
-        self.variant(MUX_A::DUPLEX)
+    pub fn is_duplex(&self) -> bool {
+        *self == Mux::Duplex
     }
     #[doc = "Triplex"]
     #[inline(always)]
-    pub fn triplex(self) -> &'a mut W {
-        self.variant(MUX_A::TRIPLEX)
+    pub fn is_triplex(&self) -> bool {
+        *self == Mux::Triplex
     }
     #[doc = "Quadruplex"]
     #[inline(always)]
-    pub fn quadruplex(self) -> &'a mut W {
-        self.variant(MUX_A::QUADRUPLEX)
+    pub fn is_quadruplex(&self) -> bool {
+        *self == Mux::Quadruplex
     }
 }
-#[doc = "Field `WAVE` reader - Waveform Selection"]
-pub type WAVE_R = crate::BitReader<WAVE_A>;
+#[doc = "Field `MUX` writer - Mux Configuration"]
+pub type MuxW<'a, REG> = crate::FieldWriter<'a, REG, 3, Mux>;
+impl<'a, REG> MuxW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Static"]
+    #[inline(always)]
+    pub fn static_(self) -> &'a mut crate::W<REG> {
+        self.variant(Mux::Static)
+    }
+    #[doc = "Duplex"]
+    #[inline(always)]
+    pub fn duplex(self) -> &'a mut crate::W<REG> {
+        self.variant(Mux::Duplex)
+    }
+    #[doc = "Triplex"]
+    #[inline(always)]
+    pub fn triplex(self) -> &'a mut crate::W<REG> {
+        self.variant(Mux::Triplex)
+    }
+    #[doc = "Quadruplex"]
+    #[inline(always)]
+    pub fn quadruplex(self) -> &'a mut crate::W<REG> {
+        self.variant(Mux::Quadruplex)
+    }
+}
 #[doc = "Waveform Selection\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum WAVE_A {
+pub enum Wave {
     #[doc = "0: Type B waveform"]
-    TYPEB = 0,
+    Typeb = 0,
     #[doc = "1: Type A waveform"]
-    TYPEA = 1,
+    Typea = 1,
 }
-impl From<WAVE_A> for bool {
+impl From<Wave> for bool {
     #[inline(always)]
-    fn from(variant: WAVE_A) -> Self {
+    fn from(variant: Wave) -> Self {
         variant as u8 != 0
     }
 }
-impl WAVE_R {
+#[doc = "Field `WAVE` reader - Waveform Selection"]
+pub type WaveR = crate::BitReader<Wave>;
+impl WaveR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> WAVE_A {
+    pub const fn variant(&self) -> Wave {
         match self.bits {
-            false => WAVE_A::TYPEB,
-            true => WAVE_A::TYPEA,
+            false => Wave::Typeb,
+            true => Wave::Typea,
         }
     }
-    #[doc = "Checks if the value of the field is `TYPEB`"]
-    #[inline(always)]
-    pub fn is_typeb(&self) -> bool {
-        *self == WAVE_A::TYPEB
-    }
-    #[doc = "Checks if the value of the field is `TYPEA`"]
-    #[inline(always)]
-    pub fn is_typea(&self) -> bool {
-        *self == WAVE_A::TYPEA
-    }
-}
-#[doc = "Field `WAVE` writer - Waveform Selection"]
-pub type WAVE_W<'a, const O: u8> = crate::BitWriter<'a, u32, DISPCTRL_SPEC, WAVE_A, O>;
-impl<'a, const O: u8> WAVE_W<'a, O> {
     #[doc = "Type B waveform"]
     #[inline(always)]
-    pub fn typeb(self) -> &'a mut W {
-        self.variant(WAVE_A::TYPEB)
+    pub fn is_typeb(&self) -> bool {
+        *self == Wave::Typeb
     }
     #[doc = "Type A waveform"]
     #[inline(always)]
-    pub fn typea(self) -> &'a mut W {
-        self.variant(WAVE_A::TYPEA)
+    pub fn is_typea(&self) -> bool {
+        *self == Wave::Typea
     }
 }
-#[doc = "Field `CHGRDST` reader - Charge Redistribution Cycles"]
-pub type CHGRDST_R = crate::FieldReader<u8, CHGRDST_A>;
+#[doc = "Field `WAVE` writer - Waveform Selection"]
+pub type WaveW<'a, REG> = crate::BitWriter<'a, REG, Wave>;
+impl<'a, REG> WaveW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Type B waveform"]
+    #[inline(always)]
+    pub fn typeb(self) -> &'a mut crate::W<REG> {
+        self.variant(Wave::Typeb)
+    }
+    #[doc = "Type A waveform"]
+    #[inline(always)]
+    pub fn typea(self) -> &'a mut crate::W<REG> {
+        self.variant(Wave::Typea)
+    }
+}
 #[doc = "Charge Redistribution Cycles\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CHGRDST_A {
+pub enum Chgrdst {
     #[doc = "0: Disable charge redistribution."]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Use 1 prescaled low frequency clock cycle for charge redistribution."]
-    ONE = 1,
+    One = 1,
     #[doc = "2: Use 2 prescaled low frequency clock cycles for charge redistribution."]
-    TWO = 2,
+    Two = 2,
     #[doc = "3: Use 3 prescaled low frequency clock cycles for charge redistribution."]
-    THREE = 3,
+    Three = 3,
     #[doc = "4: Use 4 prescaled low frequency clock cycles for charge redistribution."]
-    FOUR = 4,
+    Four = 4,
 }
-impl From<CHGRDST_A> for u8 {
+impl From<Chgrdst> for u8 {
     #[inline(always)]
-    fn from(variant: CHGRDST_A) -> Self {
+    fn from(variant: Chgrdst) -> Self {
         variant as _
     }
 }
-impl CHGRDST_R {
+impl crate::FieldSpec for Chgrdst {
+    type Ux = u8;
+}
+impl crate::IsEnum for Chgrdst {}
+#[doc = "Field `CHGRDST` reader - Charge Redistribution Cycles"]
+pub type ChgrdstR = crate::FieldReader<Chgrdst>;
+impl ChgrdstR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CHGRDST_A> {
+    pub const fn variant(&self) -> Option<Chgrdst> {
         match self.bits {
-            0 => Some(CHGRDST_A::DISABLE),
-            1 => Some(CHGRDST_A::ONE),
-            2 => Some(CHGRDST_A::TWO),
-            3 => Some(CHGRDST_A::THREE),
-            4 => Some(CHGRDST_A::FOUR),
+            0 => Some(Chgrdst::Disable),
+            1 => Some(Chgrdst::One),
+            2 => Some(Chgrdst::Two),
+            3 => Some(Chgrdst::Three),
+            4 => Some(Chgrdst::Four),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == CHGRDST_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ONE`"]
-    #[inline(always)]
-    pub fn is_one(&self) -> bool {
-        *self == CHGRDST_A::ONE
-    }
-    #[doc = "Checks if the value of the field is `TWO`"]
-    #[inline(always)]
-    pub fn is_two(&self) -> bool {
-        *self == CHGRDST_A::TWO
-    }
-    #[doc = "Checks if the value of the field is `THREE`"]
-    #[inline(always)]
-    pub fn is_three(&self) -> bool {
-        *self == CHGRDST_A::THREE
-    }
-    #[doc = "Checks if the value of the field is `FOUR`"]
-    #[inline(always)]
-    pub fn is_four(&self) -> bool {
-        *self == CHGRDST_A::FOUR
-    }
-}
-#[doc = "Field `CHGRDST` writer - Charge Redistribution Cycles"]
-pub type CHGRDST_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, DISPCTRL_SPEC, u8, CHGRDST_A, 3, O>;
-impl<'a, const O: u8> CHGRDST_W<'a, O> {
     #[doc = "Disable charge redistribution."]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(CHGRDST_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Chgrdst::Disable
     }
     #[doc = "Use 1 prescaled low frequency clock cycle for charge redistribution."]
     #[inline(always)]
-    pub fn one(self) -> &'a mut W {
-        self.variant(CHGRDST_A::ONE)
+    pub fn is_one(&self) -> bool {
+        *self == Chgrdst::One
     }
     #[doc = "Use 2 prescaled low frequency clock cycles for charge redistribution."]
     #[inline(always)]
-    pub fn two(self) -> &'a mut W {
-        self.variant(CHGRDST_A::TWO)
+    pub fn is_two(&self) -> bool {
+        *self == Chgrdst::Two
     }
     #[doc = "Use 3 prescaled low frequency clock cycles for charge redistribution."]
     #[inline(always)]
-    pub fn three(self) -> &'a mut W {
-        self.variant(CHGRDST_A::THREE)
+    pub fn is_three(&self) -> bool {
+        *self == Chgrdst::Three
     }
     #[doc = "Use 4 prescaled low frequency clock cycles for charge redistribution."]
     #[inline(always)]
-    pub fn four(self) -> &'a mut W {
-        self.variant(CHGRDST_A::FOUR)
+    pub fn is_four(&self) -> bool {
+        *self == Chgrdst::Four
     }
 }
-#[doc = "Field `BIAS` reader - Bias Configuration"]
-pub type BIAS_R = crate::FieldReader<u8, BIAS_A>;
+#[doc = "Field `CHGRDST` writer - Charge Redistribution Cycles"]
+pub type ChgrdstW<'a, REG> = crate::FieldWriter<'a, REG, 3, Chgrdst>;
+impl<'a, REG> ChgrdstW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Disable charge redistribution."]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Chgrdst::Disable)
+    }
+    #[doc = "Use 1 prescaled low frequency clock cycle for charge redistribution."]
+    #[inline(always)]
+    pub fn one(self) -> &'a mut crate::W<REG> {
+        self.variant(Chgrdst::One)
+    }
+    #[doc = "Use 2 prescaled low frequency clock cycles for charge redistribution."]
+    #[inline(always)]
+    pub fn two(self) -> &'a mut crate::W<REG> {
+        self.variant(Chgrdst::Two)
+    }
+    #[doc = "Use 3 prescaled low frequency clock cycles for charge redistribution."]
+    #[inline(always)]
+    pub fn three(self) -> &'a mut crate::W<REG> {
+        self.variant(Chgrdst::Three)
+    }
+    #[doc = "Use 4 prescaled low frequency clock cycles for charge redistribution."]
+    #[inline(always)]
+    pub fn four(self) -> &'a mut crate::W<REG> {
+        self.variant(Chgrdst::Four)
+    }
+}
 #[doc = "Bias Configuration\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum BIAS_A {
+pub enum Bias {
     #[doc = "0: Static"]
-    STATIC = 0,
+    Static = 0,
     #[doc = "1: 1/2 Bias"]
-    ONEHALF = 1,
+    Onehalf = 1,
     #[doc = "2: 1/3 Bias"]
-    ONETHIRD = 2,
+    Onethird = 2,
     #[doc = "3: 1/4 Bias"]
-    ONEFOURTH = 3,
+    Onefourth = 3,
 }
-impl From<BIAS_A> for u8 {
+impl From<Bias> for u8 {
     #[inline(always)]
-    fn from(variant: BIAS_A) -> Self {
+    fn from(variant: Bias) -> Self {
         variant as _
     }
 }
-impl BIAS_R {
+impl crate::FieldSpec for Bias {
+    type Ux = u8;
+}
+impl crate::IsEnum for Bias {}
+#[doc = "Field `BIAS` reader - Bias Configuration"]
+pub type BiasR = crate::FieldReader<Bias>;
+impl BiasR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> BIAS_A {
+    pub const fn variant(&self) -> Bias {
         match self.bits {
-            0 => BIAS_A::STATIC,
-            1 => BIAS_A::ONEHALF,
-            2 => BIAS_A::ONETHIRD,
-            3 => BIAS_A::ONEFOURTH,
+            0 => Bias::Static,
+            1 => Bias::Onehalf,
+            2 => Bias::Onethird,
+            3 => Bias::Onefourth,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `STATIC`"]
-    #[inline(always)]
-    pub fn is_static(&self) -> bool {
-        *self == BIAS_A::STATIC
-    }
-    #[doc = "Checks if the value of the field is `ONEHALF`"]
-    #[inline(always)]
-    pub fn is_onehalf(&self) -> bool {
-        *self == BIAS_A::ONEHALF
-    }
-    #[doc = "Checks if the value of the field is `ONETHIRD`"]
-    #[inline(always)]
-    pub fn is_onethird(&self) -> bool {
-        *self == BIAS_A::ONETHIRD
-    }
-    #[doc = "Checks if the value of the field is `ONEFOURTH`"]
-    #[inline(always)]
-    pub fn is_onefourth(&self) -> bool {
-        *self == BIAS_A::ONEFOURTH
-    }
-}
-#[doc = "Field `BIAS` writer - Bias Configuration"]
-pub type BIAS_W<'a, const O: u8> = crate::FieldWriterSafe<'a, u32, DISPCTRL_SPEC, u8, BIAS_A, 2, O>;
-impl<'a, const O: u8> BIAS_W<'a, O> {
     #[doc = "Static"]
     #[inline(always)]
-    pub fn static_(self) -> &'a mut W {
-        self.variant(BIAS_A::STATIC)
+    pub fn is_static(&self) -> bool {
+        *self == Bias::Static
     }
     #[doc = "1/2 Bias"]
     #[inline(always)]
-    pub fn onehalf(self) -> &'a mut W {
-        self.variant(BIAS_A::ONEHALF)
+    pub fn is_onehalf(&self) -> bool {
+        *self == Bias::Onehalf
     }
     #[doc = "1/3 Bias"]
     #[inline(always)]
-    pub fn onethird(self) -> &'a mut W {
-        self.variant(BIAS_A::ONETHIRD)
+    pub fn is_onethird(&self) -> bool {
+        *self == Bias::Onethird
     }
     #[doc = "1/4 Bias"]
     #[inline(always)]
-    pub fn onefourth(self) -> &'a mut W {
-        self.variant(BIAS_A::ONEFOURTH)
+    pub fn is_onefourth(&self) -> bool {
+        *self == Bias::Onefourth
+    }
+}
+#[doc = "Field `BIAS` writer - Bias Configuration"]
+pub type BiasW<'a, REG> = crate::FieldWriter<'a, REG, 2, Bias, crate::Safe>;
+impl<'a, REG> BiasW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Static"]
+    #[inline(always)]
+    pub fn static_(self) -> &'a mut crate::W<REG> {
+        self.variant(Bias::Static)
+    }
+    #[doc = "1/2 Bias"]
+    #[inline(always)]
+    pub fn onehalf(self) -> &'a mut crate::W<REG> {
+        self.variant(Bias::Onehalf)
+    }
+    #[doc = "1/3 Bias"]
+    #[inline(always)]
+    pub fn onethird(self) -> &'a mut crate::W<REG> {
+        self.variant(Bias::Onethird)
+    }
+    #[doc = "1/4 Bias"]
+    #[inline(always)]
+    pub fn onefourth(self) -> &'a mut crate::W<REG> {
+        self.variant(Bias::Onefourth)
     }
 }
 impl R {
     #[doc = "Bits 0:2 - Mux Configuration"]
     #[inline(always)]
-    pub fn mux(&self) -> MUX_R {
-        MUX_R::new((self.bits & 7) as u8)
+    pub fn mux(&self) -> MuxR {
+        MuxR::new((self.bits & 7) as u8)
     }
     #[doc = "Bit 4 - Waveform Selection"]
     #[inline(always)]
-    pub fn wave(&self) -> WAVE_R {
-        WAVE_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn wave(&self) -> WaveR {
+        WaveR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bits 20:22 - Charge Redistribution Cycles"]
     #[inline(always)]
-    pub fn chgrdst(&self) -> CHGRDST_R {
-        CHGRDST_R::new(((self.bits >> 20) & 7) as u8)
+    pub fn chgrdst(&self) -> ChgrdstR {
+        ChgrdstR::new(((self.bits >> 20) & 7) as u8)
     }
     #[doc = "Bits 24:25 - Bias Configuration"]
     #[inline(always)]
-    pub fn bias(&self) -> BIAS_R {
-        BIAS_R::new(((self.bits >> 24) & 3) as u8)
+    pub fn bias(&self) -> BiasR {
+        BiasR::new(((self.bits >> 24) & 3) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Mux Configuration"]
     #[inline(always)]
-    #[must_use]
-    pub fn mux(&mut self) -> MUX_W<0> {
-        MUX_W::new(self)
+    pub fn mux(&mut self) -> MuxW<DispctrlSpec> {
+        MuxW::new(self, 0)
     }
     #[doc = "Bit 4 - Waveform Selection"]
     #[inline(always)]
-    #[must_use]
-    pub fn wave(&mut self) -> WAVE_W<4> {
-        WAVE_W::new(self)
+    pub fn wave(&mut self) -> WaveW<DispctrlSpec> {
+        WaveW::new(self, 4)
     }
     #[doc = "Bits 20:22 - Charge Redistribution Cycles"]
     #[inline(always)]
-    #[must_use]
-    pub fn chgrdst(&mut self) -> CHGRDST_W<20> {
-        CHGRDST_W::new(self)
+    pub fn chgrdst(&mut self) -> ChgrdstW<DispctrlSpec> {
+        ChgrdstW::new(self, 20)
     }
     #[doc = "Bits 24:25 - Bias Configuration"]
     #[inline(always)]
-    #[must_use]
-    pub fn bias(&mut self) -> BIAS_W<24> {
-        BIAS_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn bias(&mut self) -> BiasW<DispctrlSpec> {
+        BiasW::new(self, 24)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [dispctrl](index.html) module"]
-pub struct DISPCTRL_SPEC;
-impl crate::RegisterSpec for DISPCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dispctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dispctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DispctrlSpec;
+impl crate::RegisterSpec for DispctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [dispctrl::R](R) reader structure"]
-impl crate::Readable for DISPCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [dispctrl::W](W) writer structure"]
-impl crate::Writable for DISPCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`dispctrl::R`](R) reader structure"]
+impl crate::Readable for DispctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`dispctrl::W`](W) writer structure"]
+impl crate::Writable for DispctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DISPCTRL to value 0x0010_0000"]
-impl crate::Resettable for DISPCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0010_0000;
+impl crate::Resettable for DispctrlSpec {
+    const RESET_VALUE: u32 = 0x0010_0000;
 }

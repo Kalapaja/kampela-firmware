@@ -1,95 +1,49 @@
 #[doc = "Register `CH5_REQSEL` reader"]
-pub struct R(crate::R<CH5_REQSEL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CH5_REQSEL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CH5_REQSEL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CH5_REQSEL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Ch5ReqselSpec>;
 #[doc = "Register `CH5_REQSEL` writer"]
-pub struct W(crate::W<CH5_REQSEL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CH5_REQSEL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CH5_REQSEL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CH5_REQSEL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Ch5ReqselSpec>;
 #[doc = "Field `SIGSEL` reader - Signal Select"]
-pub type SIGSEL_R = crate::FieldReader<u8, u8>;
+pub type SigselR = crate::FieldReader;
 #[doc = "Field `SIGSEL` writer - Signal Select"]
-pub type SIGSEL_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CH5_REQSEL_SPEC, u8, u8, 4, O>;
+pub type SigselW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `SOURCESEL` reader - Source Select"]
-pub type SOURCESEL_R = crate::FieldReader<u8, u8>;
+pub type SourceselR = crate::FieldReader;
 #[doc = "Field `SOURCESEL` writer - Source Select"]
-pub type SOURCESEL_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CH5_REQSEL_SPEC, u8, u8, 6, O>;
+pub type SourceselW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 impl R {
     #[doc = "Bits 0:3 - Signal Select"]
     #[inline(always)]
-    pub fn sigsel(&self) -> SIGSEL_R {
-        SIGSEL_R::new((self.bits & 0x0f) as u8)
+    pub fn sigsel(&self) -> SigselR {
+        SigselR::new((self.bits & 0x0f) as u8)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
-    pub fn sourcesel(&self) -> SOURCESEL_R {
-        SOURCESEL_R::new(((self.bits >> 16) & 0x3f) as u8)
+    pub fn sourcesel(&self) -> SourceselR {
+        SourceselR::new(((self.bits >> 16) & 0x3f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:3 - Signal Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sigsel(&mut self) -> SIGSEL_W<0> {
-        SIGSEL_W::new(self)
+    pub fn sigsel(&mut self) -> SigselW<Ch5ReqselSpec> {
+        SigselW::new(self, 0)
     }
     #[doc = "Bits 16:21 - Source Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn sourcesel(&mut self) -> SOURCESEL_W<16> {
-        SOURCESEL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn sourcesel(&mut self) -> SourceselW<Ch5ReqselSpec> {
+        SourceselW::new(self, 16)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ch5_reqsel](index.html) module"]
-pub struct CH5_REQSEL_SPEC;
-impl crate::RegisterSpec for CH5_REQSEL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ch5_reqsel::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ch5_reqsel::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Ch5ReqselSpec;
+impl crate::RegisterSpec for Ch5ReqselSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ch5_reqsel::R](R) reader structure"]
-impl crate::Readable for CH5_REQSEL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ch5_reqsel::W](W) writer structure"]
-impl crate::Writable for CH5_REQSEL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ch5_reqsel::R`](R) reader structure"]
+impl crate::Readable for Ch5ReqselSpec {}
+#[doc = "`write(|w| ..)` method takes [`ch5_reqsel::W`](W) writer structure"]
+impl crate::Writable for Ch5ReqselSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CH5_REQSEL to value 0"]
-impl crate::Resettable for CH5_REQSEL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Ch5ReqselSpec {}

@@ -1,74 +1,131 @@
-#[doc = r"Register block"]
 #[repr(C)]
+#[doc = "Register block"]
 pub struct RegisterBlock {
-    #[doc = "0x00 - IPVERSION"]
-    pub ipversion: IPVERSION,
-    #[doc = "0x04 - Control"]
-    pub ctrl: CTRL,
-    #[doc = "0x08 - EM01 Configurations"]
-    pub em01ctrl0: EM01CTRL0,
+    ipversion: Ipversion,
+    ctrl: Ctrl,
+    em01ctrl0: Em01ctrl0,
     _reserved3: [u8; 0x04],
-    #[doc = "0x10 - EM23 Configurations"]
-    pub em23ctrl0: EM23CTRL0,
+    em23ctrl0: Em23ctrl0,
     _reserved4: [u8; 0x0c],
-    #[doc = "0x20 - PFMX Control Register"]
-    pub pfmxctrl: PFMXCTRL,
+    pfmxctrl: Pfmxctrl,
     _reserved5: [u8; 0x04],
-    #[doc = "0x28 - Interrupt Flags"]
-    pub if_: IF,
-    #[doc = "0x2c - Interrupt Enable"]
-    pub ien: IEN,
-    #[doc = "0x30 - DCDC Status Register"]
-    pub status: STATUS,
-    #[doc = "0x34 - Syncbusy Status Register"]
-    pub syncbusy: SYNCBUSY,
+    if_: If,
+    ien: Ien,
+    status: Status,
+    syncbusy: Syncbusy,
     _reserved9: [u8; 0x08],
-    #[doc = "0x40 - No Description"]
-    pub lock: LOCK,
-    #[doc = "0x44 - No Description"]
-    pub lockstatus: LOCKSTATUS,
+    lock: Lock,
+    lockstatus: Lockstatus,
 }
-#[doc = "IPVERSION (r) register accessor: an alias for `Reg<IPVERSION_SPEC>`"]
-pub type IPVERSION = crate::Reg<ipversion::IPVERSION_SPEC>;
+impl RegisterBlock {
+    #[doc = "0x00 - IPVERSION"]
+    #[inline(always)]
+    pub const fn ipversion(&self) -> &Ipversion {
+        &self.ipversion
+    }
+    #[doc = "0x04 - Control"]
+    #[inline(always)]
+    pub const fn ctrl(&self) -> &Ctrl {
+        &self.ctrl
+    }
+    #[doc = "0x08 - EM01 Configurations"]
+    #[inline(always)]
+    pub const fn em01ctrl0(&self) -> &Em01ctrl0 {
+        &self.em01ctrl0
+    }
+    #[doc = "0x10 - EM23 Configurations"]
+    #[inline(always)]
+    pub const fn em23ctrl0(&self) -> &Em23ctrl0 {
+        &self.em23ctrl0
+    }
+    #[doc = "0x20 - PFMX Control Register"]
+    #[inline(always)]
+    pub const fn pfmxctrl(&self) -> &Pfmxctrl {
+        &self.pfmxctrl
+    }
+    #[doc = "0x28 - Interrupt Flags"]
+    #[inline(always)]
+    pub const fn if_(&self) -> &If {
+        &self.if_
+    }
+    #[doc = "0x2c - Interrupt Enable"]
+    #[inline(always)]
+    pub const fn ien(&self) -> &Ien {
+        &self.ien
+    }
+    #[doc = "0x30 - DCDC Status Register"]
+    #[inline(always)]
+    pub const fn status(&self) -> &Status {
+        &self.status
+    }
+    #[doc = "0x34 - Syncbusy Status Register"]
+    #[inline(always)]
+    pub const fn syncbusy(&self) -> &Syncbusy {
+        &self.syncbusy
+    }
+    #[doc = "0x40 - No Description"]
+    #[inline(always)]
+    pub const fn lock(&self) -> &Lock {
+        &self.lock
+    }
+    #[doc = "0x44 - No Description"]
+    #[inline(always)]
+    pub const fn lockstatus(&self) -> &Lockstatus {
+        &self.lockstatus
+    }
+}
+#[doc = "IPVERSION (r) register accessor: IPVERSION\n\nYou can [`read`](crate::Reg::read) this register and get [`ipversion::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ipversion`] module"]
+#[doc(alias = "IPVERSION")]
+pub type Ipversion = crate::Reg<ipversion::IpversionSpec>;
 #[doc = "IPVERSION"]
 pub mod ipversion;
-#[doc = "CTRL (rw) register accessor: an alias for `Reg<CTRL_SPEC>`"]
-pub type CTRL = crate::Reg<ctrl::CTRL_SPEC>;
+#[doc = "CTRL (rw) register accessor: Control\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ctrl`] module"]
+#[doc(alias = "CTRL")]
+pub type Ctrl = crate::Reg<ctrl::CtrlSpec>;
 #[doc = "Control"]
 pub mod ctrl;
-#[doc = "EM01CTRL0 (rw) register accessor: an alias for `Reg<EM01CTRL0_SPEC>`"]
-pub type EM01CTRL0 = crate::Reg<em01ctrl0::EM01CTRL0_SPEC>;
+#[doc = "EM01CTRL0 (rw) register accessor: EM01 Configurations\n\nYou can [`read`](crate::Reg::read) this register and get [`em01ctrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`em01ctrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@em01ctrl0`] module"]
+#[doc(alias = "EM01CTRL0")]
+pub type Em01ctrl0 = crate::Reg<em01ctrl0::Em01ctrl0Spec>;
 #[doc = "EM01 Configurations"]
 pub mod em01ctrl0;
-#[doc = "EM23CTRL0 (rw) register accessor: an alias for `Reg<EM23CTRL0_SPEC>`"]
-pub type EM23CTRL0 = crate::Reg<em23ctrl0::EM23CTRL0_SPEC>;
+#[doc = "EM23CTRL0 (rw) register accessor: EM23 Configurations\n\nYou can [`read`](crate::Reg::read) this register and get [`em23ctrl0::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`em23ctrl0::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@em23ctrl0`] module"]
+#[doc(alias = "EM23CTRL0")]
+pub type Em23ctrl0 = crate::Reg<em23ctrl0::Em23ctrl0Spec>;
 #[doc = "EM23 Configurations"]
 pub mod em23ctrl0;
-#[doc = "PFMXCTRL (rw) register accessor: an alias for `Reg<PFMXCTRL_SPEC>`"]
-pub type PFMXCTRL = crate::Reg<pfmxctrl::PFMXCTRL_SPEC>;
+#[doc = "PFMXCTRL (rw) register accessor: PFMX Control Register\n\nYou can [`read`](crate::Reg::read) this register and get [`pfmxctrl::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`pfmxctrl::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@pfmxctrl`] module"]
+#[doc(alias = "PFMXCTRL")]
+pub type Pfmxctrl = crate::Reg<pfmxctrl::PfmxctrlSpec>;
 #[doc = "PFMX Control Register"]
 pub mod pfmxctrl;
-#[doc = "IF (rw) register accessor: an alias for `Reg<IF_SPEC>`"]
-pub type IF = crate::Reg<if_::IF_SPEC>;
+#[doc = "IF (rw) register accessor: Interrupt Flags\n\nYou can [`read`](crate::Reg::read) this register and get [`if_::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`if_::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@if_`] module"]
+#[doc(alias = "IF")]
+pub type If = crate::Reg<if_::IfSpec>;
 #[doc = "Interrupt Flags"]
 pub mod if_;
-#[doc = "IEN (rw) register accessor: an alias for `Reg<IEN_SPEC>`"]
-pub type IEN = crate::Reg<ien::IEN_SPEC>;
+#[doc = "IEN (rw) register accessor: Interrupt Enable\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`]. You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`]. You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@ien`] module"]
+#[doc(alias = "IEN")]
+pub type Ien = crate::Reg<ien::IenSpec>;
 #[doc = "Interrupt Enable"]
 pub mod ien;
-#[doc = "STATUS (r) register accessor: an alias for `Reg<STATUS_SPEC>`"]
-pub type STATUS = crate::Reg<status::STATUS_SPEC>;
+#[doc = "STATUS (r) register accessor: DCDC Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@status`] module"]
+#[doc(alias = "STATUS")]
+pub type Status = crate::Reg<status::StatusSpec>;
 #[doc = "DCDC Status Register"]
 pub mod status;
-#[doc = "SYNCBUSY (r) register accessor: an alias for `Reg<SYNCBUSY_SPEC>`"]
-pub type SYNCBUSY = crate::Reg<syncbusy::SYNCBUSY_SPEC>;
+#[doc = "SYNCBUSY (r) register accessor: Syncbusy Status Register\n\nYou can [`read`](crate::Reg::read) this register and get [`syncbusy::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@syncbusy`] module"]
+#[doc(alias = "SYNCBUSY")]
+pub type Syncbusy = crate::Reg<syncbusy::SyncbusySpec>;
 #[doc = "Syncbusy Status Register"]
 pub mod syncbusy;
-#[doc = "LOCK (w) register accessor: an alias for `Reg<LOCK_SPEC>`"]
-pub type LOCK = crate::Reg<lock::LOCK_SPEC>;
+#[doc = "LOCK (w) register accessor: No Description\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`lock::W`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@lock`] module"]
+#[doc(alias = "LOCK")]
+pub type Lock = crate::Reg<lock::LockSpec>;
 #[doc = "No Description"]
 pub mod lock;
-#[doc = "LOCKSTATUS (r) register accessor: an alias for `Reg<LOCKSTATUS_SPEC>`"]
-pub type LOCKSTATUS = crate::Reg<lockstatus::LOCKSTATUS_SPEC>;
+#[doc = "LOCKSTATUS (r) register accessor: No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`lockstatus::R`]. See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [`mod@lockstatus`] module"]
+#[doc(alias = "LOCKSTATUS")]
+pub type Lockstatus = crate::Reg<lockstatus::LockstatusSpec>;
 #[doc = "No Description"]
 pub mod lockstatus;

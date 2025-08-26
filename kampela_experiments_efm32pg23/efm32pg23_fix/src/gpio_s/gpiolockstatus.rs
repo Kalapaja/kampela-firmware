@@ -1,71 +1,54 @@
 #[doc = "Register `GPIOLOCKSTATUS` reader"]
-pub struct R(crate::R<GPIOLOCKSTATUS_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<GPIOLOCKSTATUS_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<GPIOLOCKSTATUS_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<GPIOLOCKSTATUS_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `LOCK` reader - GPIO LOCK status"]
-pub type LOCK_R = crate::BitReader<LOCK_A>;
+pub type R = crate::R<GpiolockstatusSpec>;
 #[doc = "GPIO LOCK status\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LOCK_A {
+pub enum Lock {
     #[doc = "0: Registers are unlocked"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: Registers are locked"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<LOCK_A> for bool {
+impl From<Lock> for bool {
     #[inline(always)]
-    fn from(variant: LOCK_A) -> Self {
+    fn from(variant: Lock) -> Self {
         variant as u8 != 0
     }
 }
-impl LOCK_R {
+#[doc = "Field `LOCK` reader - GPIO LOCK status"]
+pub type LockR = crate::BitReader<Lock>;
+impl LockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LOCK_A {
+    pub const fn variant(&self) -> Lock {
         match self.bits {
-            false => LOCK_A::UNLOCKED,
-            true => LOCK_A::LOCKED,
+            false => Lock::Unlocked,
+            true => Lock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "Registers are unlocked"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == LOCK_A::UNLOCKED
+        *self == Lock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "Registers are locked"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == LOCK_A::LOCKED
+        *self == Lock::Locked
     }
 }
 impl R {
     #[doc = "Bit 0 - GPIO LOCK status"]
     #[inline(always)]
-    pub fn lock(&self) -> LOCK_R {
-        LOCK_R::new((self.bits & 1) != 0)
+    pub fn lock(&self) -> LockR {
+        LockR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [gpiolockstatus](index.html) module"]
-pub struct GPIOLOCKSTATUS_SPEC;
-impl crate::RegisterSpec for GPIOLOCKSTATUS_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`gpiolockstatus::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct GpiolockstatusSpec;
+impl crate::RegisterSpec for GpiolockstatusSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [gpiolockstatus::R](R) reader structure"]
-impl crate::Readable for GPIOLOCKSTATUS_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`gpiolockstatus::R`](R) reader structure"]
+impl crate::Readable for GpiolockstatusSpec {}
 #[doc = "`reset()` method sets GPIOLOCKSTATUS to value 0"]
-impl crate::Resettable for GPIOLOCKSTATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for GpiolockstatusSpec {}

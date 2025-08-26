@@ -1,275 +1,217 @@
 #[doc = "Register `IEN` reader"]
-pub struct R(crate::R<IEN_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<IEN_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<IEN_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<IenSpec>;
 #[doc = "Register `IEN` writer"]
-pub struct W(crate::W<IEN_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<IEN_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<IEN_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<IEN_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<IenSpec>;
 #[doc = "Field `SW0` reader - Software Interrupt Enable"]
-pub type SW0_R = crate::BitReader<bool>;
+pub type Sw0R = crate::BitReader;
 #[doc = "Field `SW0` writer - Software Interrupt Enable"]
-pub type SW0_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Sw0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SW1` reader - Software Interrupt Enable"]
-pub type SW1_R = crate::BitReader<bool>;
+pub type Sw1R = crate::BitReader;
 #[doc = "Field `SW1` writer - Software Interrupt Enable"]
-pub type SW1_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Sw1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SW2` reader - Software Interrupt Enable"]
-pub type SW2_R = crate::BitReader<bool>;
+pub type Sw2R = crate::BitReader;
 #[doc = "Field `SW2` writer - Software Interrupt Enable"]
-pub type SW2_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Sw2W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SW3` reader - Software Interrupt Enable"]
-pub type SW3_R = crate::BitReader<bool>;
+pub type Sw3R = crate::BitReader;
 #[doc = "Field `SW3` writer - Software Interrupt Enable"]
-pub type SW3_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Sw3W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPIOC` reader - FPU Invalid Operation Interrupt Enable"]
-pub type FPIOC_R = crate::BitReader<bool>;
+pub type FpiocR = crate::BitReader;
 #[doc = "Field `FPIOC` writer - FPU Invalid Operation Interrupt Enable"]
-pub type FPIOC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpiocW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPDZC` reader - FPU Divide by zero Interrupt Enable"]
-pub type FPDZC_R = crate::BitReader<bool>;
+pub type FpdzcR = crate::BitReader;
 #[doc = "Field `FPDZC` writer - FPU Divide by zero Interrupt Enable"]
-pub type FPDZC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpdzcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPUFC` reader - FPU Underflow Interrupt Enable"]
-pub type FPUFC_R = crate::BitReader<bool>;
+pub type FpufcR = crate::BitReader;
 #[doc = "Field `FPUFC` writer - FPU Underflow Interrupt Enable"]
-pub type FPUFC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpufcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPOFC` reader - FPU Overflow Interrupt Enable"]
-pub type FPOFC_R = crate::BitReader<bool>;
+pub type FpofcR = crate::BitReader;
 #[doc = "Field `FPOFC` writer - FPU Overflow Interrupt Enable"]
-pub type FPOFC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpofcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPIDC` reader - FPU Input denormal Interrupt Enable"]
-pub type FPIDC_R = crate::BitReader<bool>;
+pub type FpidcR = crate::BitReader;
 #[doc = "Field `FPIDC` writer - FPU Input denormal Interrupt Enable"]
-pub type FPIDC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpidcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FPIXC` reader - FPU Inexact Interrupt Enable"]
-pub type FPIXC_R = crate::BitReader<bool>;
+pub type FpixcR = crate::BitReader;
 #[doc = "Field `FPIXC` writer - FPU Inexact Interrupt Enable"]
-pub type FPIXC_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type FpixcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SEQRAMERR1B` reader - SEQRAM Error 1-bit Interrupt Enable"]
-pub type SEQRAMERR1B_R = crate::BitReader<bool>;
+pub type Seqramerr1bR = crate::BitReader;
 #[doc = "Field `SEQRAMERR1B` writer - SEQRAM Error 1-bit Interrupt Enable"]
-pub type SEQRAMERR1B_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Seqramerr1bW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SEQRAMERR2B` reader - SEQRAM Error 2-bit Interrupt Enable"]
-pub type SEQRAMERR2B_R = crate::BitReader<bool>;
+pub type Seqramerr2bR = crate::BitReader;
 #[doc = "Field `SEQRAMERR2B` writer - SEQRAM Error 2-bit Interrupt Enable"]
-pub type SEQRAMERR2B_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Seqramerr2bW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FRCRAMERR1B` reader - FRCRAM Error 1-bit Interrupt Enable"]
-pub type FRCRAMERR1B_R = crate::BitReader<bool>;
+pub type Frcramerr1bR = crate::BitReader;
 #[doc = "Field `FRCRAMERR1B` writer - FRCRAM Error 1-bit Interrupt Enable"]
-pub type FRCRAMERR1B_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Frcramerr1bW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FRCRAMERR2B` reader - FRCRAM Error 2-bit Interrupt Enable"]
-pub type FRCRAMERR2B_R = crate::BitReader<bool>;
+pub type Frcramerr2bR = crate::BitReader;
 #[doc = "Field `FRCRAMERR2B` writer - FRCRAM Error 2-bit Interrupt Enable"]
-pub type FRCRAMERR2B_W<'a, const O: u8> = crate::BitWriter<'a, u32, IEN_SPEC, bool, O>;
+pub type Frcramerr2bW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - Software Interrupt Enable"]
     #[inline(always)]
-    pub fn sw0(&self) -> SW0_R {
-        SW0_R::new((self.bits & 1) != 0)
+    pub fn sw0(&self) -> Sw0R {
+        Sw0R::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Software Interrupt Enable"]
     #[inline(always)]
-    pub fn sw1(&self) -> SW1_R {
-        SW1_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn sw1(&self) -> Sw1R {
+        Sw1R::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Software Interrupt Enable"]
     #[inline(always)]
-    pub fn sw2(&self) -> SW2_R {
-        SW2_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn sw2(&self) -> Sw2R {
+        Sw2R::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Software Interrupt Enable"]
     #[inline(always)]
-    pub fn sw3(&self) -> SW3_R {
-        SW3_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn sw3(&self) -> Sw3R {
+        Sw3R::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 8 - FPU Invalid Operation Interrupt Enable"]
     #[inline(always)]
-    pub fn fpioc(&self) -> FPIOC_R {
-        FPIOC_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn fpioc(&self) -> FpiocR {
+        FpiocR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - FPU Divide by zero Interrupt Enable"]
     #[inline(always)]
-    pub fn fpdzc(&self) -> FPDZC_R {
-        FPDZC_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn fpdzc(&self) -> FpdzcR {
+        FpdzcR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - FPU Underflow Interrupt Enable"]
     #[inline(always)]
-    pub fn fpufc(&self) -> FPUFC_R {
-        FPUFC_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn fpufc(&self) -> FpufcR {
+        FpufcR::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bit 11 - FPU Overflow Interrupt Enable"]
     #[inline(always)]
-    pub fn fpofc(&self) -> FPOFC_R {
-        FPOFC_R::new(((self.bits >> 11) & 1) != 0)
+    pub fn fpofc(&self) -> FpofcR {
+        FpofcR::new(((self.bits >> 11) & 1) != 0)
     }
     #[doc = "Bit 12 - FPU Input denormal Interrupt Enable"]
     #[inline(always)]
-    pub fn fpidc(&self) -> FPIDC_R {
-        FPIDC_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn fpidc(&self) -> FpidcR {
+        FpidcR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - FPU Inexact Interrupt Enable"]
     #[inline(always)]
-    pub fn fpixc(&self) -> FPIXC_R {
-        FPIXC_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn fpixc(&self) -> FpixcR {
+        FpixcR::new(((self.bits >> 13) & 1) != 0)
     }
     #[doc = "Bit 24 - SEQRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    pub fn seqramerr1b(&self) -> SEQRAMERR1B_R {
-        SEQRAMERR1B_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn seqramerr1b(&self) -> Seqramerr1bR {
+        Seqramerr1bR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 25 - SEQRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    pub fn seqramerr2b(&self) -> SEQRAMERR2B_R {
-        SEQRAMERR2B_R::new(((self.bits >> 25) & 1) != 0)
+    pub fn seqramerr2b(&self) -> Seqramerr2bR {
+        Seqramerr2bR::new(((self.bits >> 25) & 1) != 0)
     }
     #[doc = "Bit 28 - FRCRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    pub fn frcramerr1b(&self) -> FRCRAMERR1B_R {
-        FRCRAMERR1B_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn frcramerr1b(&self) -> Frcramerr1bR {
+        Frcramerr1bR::new(((self.bits >> 28) & 1) != 0)
     }
     #[doc = "Bit 29 - FRCRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    pub fn frcramerr2b(&self) -> FRCRAMERR2B_R {
-        FRCRAMERR2B_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn frcramerr2b(&self) -> Frcramerr2bR {
+        Frcramerr2bR::new(((self.bits >> 29) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn sw0(&mut self) -> SW0_W<0> {
-        SW0_W::new(self)
+    pub fn sw0(&mut self) -> Sw0W<IenSpec> {
+        Sw0W::new(self, 0)
     }
     #[doc = "Bit 1 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn sw1(&mut self) -> SW1_W<1> {
-        SW1_W::new(self)
+    pub fn sw1(&mut self) -> Sw1W<IenSpec> {
+        Sw1W::new(self, 1)
     }
     #[doc = "Bit 2 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn sw2(&mut self) -> SW2_W<2> {
-        SW2_W::new(self)
+    pub fn sw2(&mut self) -> Sw2W<IenSpec> {
+        Sw2W::new(self, 2)
     }
     #[doc = "Bit 3 - Software Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn sw3(&mut self) -> SW3_W<3> {
-        SW3_W::new(self)
+    pub fn sw3(&mut self) -> Sw3W<IenSpec> {
+        Sw3W::new(self, 3)
     }
     #[doc = "Bit 8 - FPU Invalid Operation Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpioc(&mut self) -> FPIOC_W<8> {
-        FPIOC_W::new(self)
+    pub fn fpioc(&mut self) -> FpiocW<IenSpec> {
+        FpiocW::new(self, 8)
     }
     #[doc = "Bit 9 - FPU Divide by zero Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpdzc(&mut self) -> FPDZC_W<9> {
-        FPDZC_W::new(self)
+    pub fn fpdzc(&mut self) -> FpdzcW<IenSpec> {
+        FpdzcW::new(self, 9)
     }
     #[doc = "Bit 10 - FPU Underflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpufc(&mut self) -> FPUFC_W<10> {
-        FPUFC_W::new(self)
+    pub fn fpufc(&mut self) -> FpufcW<IenSpec> {
+        FpufcW::new(self, 10)
     }
     #[doc = "Bit 11 - FPU Overflow Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpofc(&mut self) -> FPOFC_W<11> {
-        FPOFC_W::new(self)
+    pub fn fpofc(&mut self) -> FpofcW<IenSpec> {
+        FpofcW::new(self, 11)
     }
     #[doc = "Bit 12 - FPU Input denormal Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpidc(&mut self) -> FPIDC_W<12> {
-        FPIDC_W::new(self)
+    pub fn fpidc(&mut self) -> FpidcW<IenSpec> {
+        FpidcW::new(self, 12)
     }
     #[doc = "Bit 13 - FPU Inexact Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn fpixc(&mut self) -> FPIXC_W<13> {
-        FPIXC_W::new(self)
+    pub fn fpixc(&mut self) -> FpixcW<IenSpec> {
+        FpixcW::new(self, 13)
     }
     #[doc = "Bit 24 - SEQRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn seqramerr1b(&mut self) -> SEQRAMERR1B_W<24> {
-        SEQRAMERR1B_W::new(self)
+    pub fn seqramerr1b(&mut self) -> Seqramerr1bW<IenSpec> {
+        Seqramerr1bW::new(self, 24)
     }
     #[doc = "Bit 25 - SEQRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn seqramerr2b(&mut self) -> SEQRAMERR2B_W<25> {
-        SEQRAMERR2B_W::new(self)
+    pub fn seqramerr2b(&mut self) -> Seqramerr2bW<IenSpec> {
+        Seqramerr2bW::new(self, 25)
     }
     #[doc = "Bit 28 - FRCRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn frcramerr1b(&mut self) -> FRCRAMERR1B_W<28> {
-        FRCRAMERR1B_W::new(self)
+    pub fn frcramerr1b(&mut self) -> Frcramerr1bW<IenSpec> {
+        Frcramerr1bW::new(self, 28)
     }
     #[doc = "Bit 29 - FRCRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn frcramerr2b(&mut self) -> FRCRAMERR2B_W<29> {
-        FRCRAMERR2B_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn frcramerr2b(&mut self) -> Frcramerr2bW<IenSpec> {
+        Frcramerr2bW::new(self, 29)
     }
 }
-#[doc = "Write to enable interrupts.\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ien](index.html) module"]
-pub struct IEN_SPEC;
-impl crate::RegisterSpec for IEN_SPEC {
+#[doc = "Write to enable interrupts.\n\nYou can [`read`](crate::Reg::read) this register and get [`ien::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ien::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct IenSpec;
+impl crate::RegisterSpec for IenSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ien::R](R) reader structure"]
-impl crate::Readable for IEN_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ien::W](W) writer structure"]
-impl crate::Writable for IEN_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ien::R`](R) reader structure"]
+impl crate::Readable for IenSpec {}
+#[doc = "`write(|w| ..)` method takes [`ien::W`](W) writer structure"]
+impl crate::Writable for IenSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets IEN to value 0"]
-impl crate::Resettable for IEN_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for IenSpec {}

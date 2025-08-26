@@ -1,301 +1,262 @@
 #[doc = "Register `CFG` reader"]
-pub struct R(crate::R<CFG_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CFG_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CFG_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CfgSpec>;
 #[doc = "Register `CFG` writer"]
-pub struct W(crate::W<CFG_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CFG_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CFG_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `MODE` reader - Mode Select"]
-pub type MODE_R = crate::FieldReader<u8, MODE_A>;
+pub type W = crate::W<CfgSpec>;
 #[doc = "Mode Select\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum MODE_A {
+pub enum Mode {
     #[doc = "0: Single input EM23GRPACLK oversampling mode (available in EM0-EM3)."]
-    OVSSINGLE = 0,
+    Ovssingle = 0,
     #[doc = "1: Externally clocked single input counter mode (available in EM0-EM3)."]
-    EXTCLKSINGLE = 1,
+    Extclksingle = 1,
     #[doc = "2: Externally clocked quadrature decoder mode (available in EM0-EM3)."]
-    EXTCLKQUAD = 2,
+    Extclkquad = 2,
     #[doc = "3: EM23GRPACLK oversampling quadrature decoder 1X mode (available in EM0-EM3)."]
-    OVSQUAD1X = 3,
+    Ovsquad1x = 3,
     #[doc = "4: EM23GRPACLK oversampling quadrature decoder 2X mode (available in EM0-EM3)."]
-    OVSQUAD2X = 4,
+    Ovsquad2x = 4,
     #[doc = "5: EM23GRPACLK oversampling quadrature decoder 4X mode (available in EM0-EM3)."]
-    OVSQUAD4X = 5,
+    Ovsquad4x = 5,
 }
-impl From<MODE_A> for u8 {
+impl From<Mode> for u8 {
     #[inline(always)]
-    fn from(variant: MODE_A) -> Self {
+    fn from(variant: Mode) -> Self {
         variant as _
     }
 }
-impl MODE_R {
+impl crate::FieldSpec for Mode {
+    type Ux = u8;
+}
+impl crate::IsEnum for Mode {}
+#[doc = "Field `MODE` reader - Mode Select"]
+pub type ModeR = crate::FieldReader<Mode>;
+impl ModeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<MODE_A> {
+    pub const fn variant(&self) -> Option<Mode> {
         match self.bits {
-            0 => Some(MODE_A::OVSSINGLE),
-            1 => Some(MODE_A::EXTCLKSINGLE),
-            2 => Some(MODE_A::EXTCLKQUAD),
-            3 => Some(MODE_A::OVSQUAD1X),
-            4 => Some(MODE_A::OVSQUAD2X),
-            5 => Some(MODE_A::OVSQUAD4X),
+            0 => Some(Mode::Ovssingle),
+            1 => Some(Mode::Extclksingle),
+            2 => Some(Mode::Extclkquad),
+            3 => Some(Mode::Ovsquad1x),
+            4 => Some(Mode::Ovsquad2x),
+            5 => Some(Mode::Ovsquad4x),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `OVSSINGLE`"]
-    #[inline(always)]
-    pub fn is_ovssingle(&self) -> bool {
-        *self == MODE_A::OVSSINGLE
-    }
-    #[doc = "Checks if the value of the field is `EXTCLKSINGLE`"]
-    #[inline(always)]
-    pub fn is_extclksingle(&self) -> bool {
-        *self == MODE_A::EXTCLKSINGLE
-    }
-    #[doc = "Checks if the value of the field is `EXTCLKQUAD`"]
-    #[inline(always)]
-    pub fn is_extclkquad(&self) -> bool {
-        *self == MODE_A::EXTCLKQUAD
-    }
-    #[doc = "Checks if the value of the field is `OVSQUAD1X`"]
-    #[inline(always)]
-    pub fn is_ovsquad1x(&self) -> bool {
-        *self == MODE_A::OVSQUAD1X
-    }
-    #[doc = "Checks if the value of the field is `OVSQUAD2X`"]
-    #[inline(always)]
-    pub fn is_ovsquad2x(&self) -> bool {
-        *self == MODE_A::OVSQUAD2X
-    }
-    #[doc = "Checks if the value of the field is `OVSQUAD4X`"]
-    #[inline(always)]
-    pub fn is_ovsquad4x(&self) -> bool {
-        *self == MODE_A::OVSQUAD4X
-    }
-}
-#[doc = "Field `MODE` writer - Mode Select"]
-pub type MODE_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CFG_SPEC, u8, MODE_A, 3, O>;
-impl<'a, const O: u8> MODE_W<'a, O> {
     #[doc = "Single input EM23GRPACLK oversampling mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn ovssingle(self) -> &'a mut W {
-        self.variant(MODE_A::OVSSINGLE)
+    pub fn is_ovssingle(&self) -> bool {
+        *self == Mode::Ovssingle
     }
     #[doc = "Externally clocked single input counter mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn extclksingle(self) -> &'a mut W {
-        self.variant(MODE_A::EXTCLKSINGLE)
+    pub fn is_extclksingle(&self) -> bool {
+        *self == Mode::Extclksingle
     }
     #[doc = "Externally clocked quadrature decoder mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn extclkquad(self) -> &'a mut W {
-        self.variant(MODE_A::EXTCLKQUAD)
+    pub fn is_extclkquad(&self) -> bool {
+        *self == Mode::Extclkquad
     }
     #[doc = "EM23GRPACLK oversampling quadrature decoder 1X mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn ovsquad1x(self) -> &'a mut W {
-        self.variant(MODE_A::OVSQUAD1X)
+    pub fn is_ovsquad1x(&self) -> bool {
+        *self == Mode::Ovsquad1x
     }
     #[doc = "EM23GRPACLK oversampling quadrature decoder 2X mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn ovsquad2x(self) -> &'a mut W {
-        self.variant(MODE_A::OVSQUAD2X)
+    pub fn is_ovsquad2x(&self) -> bool {
+        *self == Mode::Ovsquad2x
     }
     #[doc = "EM23GRPACLK oversampling quadrature decoder 4X mode (available in EM0-EM3)."]
     #[inline(always)]
-    pub fn ovsquad4x(self) -> &'a mut W {
-        self.variant(MODE_A::OVSQUAD4X)
+    pub fn is_ovsquad4x(&self) -> bool {
+        *self == Mode::Ovsquad4x
     }
 }
-#[doc = "Field `DEBUGHALT` reader - Debug Mode Halt Enable"]
-pub type DEBUGHALT_R = crate::BitReader<DEBUGHALT_A>;
+#[doc = "Field `MODE` writer - Mode Select"]
+pub type ModeW<'a, REG> = crate::FieldWriter<'a, REG, 3, Mode>;
+impl<'a, REG> ModeW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Single input EM23GRPACLK oversampling mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn ovssingle(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Ovssingle)
+    }
+    #[doc = "Externally clocked single input counter mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn extclksingle(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Extclksingle)
+    }
+    #[doc = "Externally clocked quadrature decoder mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn extclkquad(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Extclkquad)
+    }
+    #[doc = "EM23GRPACLK oversampling quadrature decoder 1X mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn ovsquad1x(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Ovsquad1x)
+    }
+    #[doc = "EM23GRPACLK oversampling quadrature decoder 2X mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn ovsquad2x(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Ovsquad2x)
+    }
+    #[doc = "EM23GRPACLK oversampling quadrature decoder 4X mode (available in EM0-EM3)."]
+    #[inline(always)]
+    pub fn ovsquad4x(self) -> &'a mut crate::W<REG> {
+        self.variant(Mode::Ovsquad4x)
+    }
+}
 #[doc = "Debug Mode Halt Enable\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum DEBUGHALT_A {
+pub enum Debughalt {
     #[doc = "0: PCNT is running in debug mode."]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: PCNT is frozen in debug mode."]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<DEBUGHALT_A> for bool {
+impl From<Debughalt> for bool {
     #[inline(always)]
-    fn from(variant: DEBUGHALT_A) -> Self {
+    fn from(variant: Debughalt) -> Self {
         variant as u8 != 0
     }
 }
-impl DEBUGHALT_R {
+#[doc = "Field `DEBUGHALT` reader - Debug Mode Halt Enable"]
+pub type DebughaltR = crate::BitReader<Debughalt>;
+impl DebughaltR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> DEBUGHALT_A {
+    pub const fn variant(&self) -> Debughalt {
         match self.bits {
-            false => DEBUGHALT_A::DISABLE,
-            true => DEBUGHALT_A::ENABLE,
+            false => Debughalt::Disable,
+            true => Debughalt::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == DEBUGHALT_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == DEBUGHALT_A::ENABLE
-    }
-}
-#[doc = "Field `DEBUGHALT` writer - Debug Mode Halt Enable"]
-pub type DEBUGHALT_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, DEBUGHALT_A, O>;
-impl<'a, const O: u8> DEBUGHALT_W<'a, O> {
     #[doc = "PCNT is running in debug mode."]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(DEBUGHALT_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Debughalt::Disable
     }
     #[doc = "PCNT is frozen in debug mode."]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(DEBUGHALT_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Debughalt::Enable
+    }
+}
+#[doc = "Field `DEBUGHALT` writer - Debug Mode Halt Enable"]
+pub type DebughaltW<'a, REG> = crate::BitWriter<'a, REG, Debughalt>;
+impl<'a, REG> DebughaltW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "PCNT is running in debug mode."]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Debughalt::Disable)
+    }
+    #[doc = "PCNT is frozen in debug mode."]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Debughalt::Enable)
     }
 }
 #[doc = "Field `FILTEN` reader - Enable Digital Pulse Width Filter"]
-pub type FILTEN_R = crate::BitReader<bool>;
+pub type FiltenR = crate::BitReader;
 #[doc = "Field `FILTEN` writer - Enable Digital Pulse Width Filter"]
-pub type FILTEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, bool, O>;
+pub type FiltenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `HYST` reader - Enable Hysteresis"]
-pub type HYST_R = crate::BitReader<bool>;
+pub type HystR = crate::BitReader;
 #[doc = "Field `HYST` writer - Enable Hysteresis"]
-pub type HYST_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, bool, O>;
+pub type HystW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `S0PRSEN` reader - S0IN PRS Enable"]
-pub type S0PRSEN_R = crate::BitReader<bool>;
+pub type S0prsenR = crate::BitReader;
 #[doc = "Field `S0PRSEN` writer - S0IN PRS Enable"]
-pub type S0PRSEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, bool, O>;
+pub type S0prsenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `S1PRSEN` reader - S1IN PRS Enable"]
-pub type S1PRSEN_R = crate::BitReader<bool>;
+pub type S1prsenR = crate::BitReader;
 #[doc = "Field `S1PRSEN` writer - S1IN PRS Enable"]
-pub type S1PRSEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG_SPEC, bool, O>;
+pub type S1prsenW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:2 - Mode Select"]
     #[inline(always)]
-    pub fn mode(&self) -> MODE_R {
-        MODE_R::new((self.bits & 7) as u8)
+    pub fn mode(&self) -> ModeR {
+        ModeR::new((self.bits & 7) as u8)
     }
     #[doc = "Bit 4 - Debug Mode Halt Enable"]
     #[inline(always)]
-    pub fn debughalt(&self) -> DEBUGHALT_R {
-        DEBUGHALT_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn debughalt(&self) -> DebughaltR {
+        DebughaltR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - Enable Digital Pulse Width Filter"]
     #[inline(always)]
-    pub fn filten(&self) -> FILTEN_R {
-        FILTEN_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn filten(&self) -> FiltenR {
+        FiltenR::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - Enable Hysteresis"]
     #[inline(always)]
-    pub fn hyst(&self) -> HYST_R {
-        HYST_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn hyst(&self) -> HystR {
+        HystR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 8 - S0IN PRS Enable"]
     #[inline(always)]
-    pub fn s0prsen(&self) -> S0PRSEN_R {
-        S0PRSEN_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn s0prsen(&self) -> S0prsenR {
+        S0prsenR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - S1IN PRS Enable"]
     #[inline(always)]
-    pub fn s1prsen(&self) -> S1PRSEN_R {
-        S1PRSEN_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn s1prsen(&self) -> S1prsenR {
+        S1prsenR::new(((self.bits >> 9) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Mode Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
-        MODE_W::new(self)
+    pub fn mode(&mut self) -> ModeW<CfgSpec> {
+        ModeW::new(self, 0)
     }
     #[doc = "Bit 4 - Debug Mode Halt Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn debughalt(&mut self) -> DEBUGHALT_W<4> {
-        DEBUGHALT_W::new(self)
+    pub fn debughalt(&mut self) -> DebughaltW<CfgSpec> {
+        DebughaltW::new(self, 4)
     }
     #[doc = "Bit 5 - Enable Digital Pulse Width Filter"]
     #[inline(always)]
-    #[must_use]
-    pub fn filten(&mut self) -> FILTEN_W<5> {
-        FILTEN_W::new(self)
+    pub fn filten(&mut self) -> FiltenW<CfgSpec> {
+        FiltenW::new(self, 5)
     }
     #[doc = "Bit 6 - Enable Hysteresis"]
     #[inline(always)]
-    #[must_use]
-    pub fn hyst(&mut self) -> HYST_W<6> {
-        HYST_W::new(self)
+    pub fn hyst(&mut self) -> HystW<CfgSpec> {
+        HystW::new(self, 6)
     }
     #[doc = "Bit 8 - S0IN PRS Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn s0prsen(&mut self) -> S0PRSEN_W<8> {
-        S0PRSEN_W::new(self)
+    pub fn s0prsen(&mut self) -> S0prsenW<CfgSpec> {
+        S0prsenW::new(self, 8)
     }
     #[doc = "Bit 9 - S1IN PRS Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn s1prsen(&mut self) -> S1PRSEN_W<9> {
-        S1PRSEN_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn s1prsen(&mut self) -> S1prsenW<CfgSpec> {
+        S1prsenW::new(self, 9)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
-pub struct CFG_SPEC;
-impl crate::RegisterSpec for CFG_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CfgSpec;
+impl crate::RegisterSpec for CfgSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [cfg::R](R) reader structure"]
-impl crate::Readable for CFG_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [cfg::W](W) writer structure"]
-impl crate::Writable for CFG_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`cfg::R`](R) reader structure"]
+impl crate::Readable for CfgSpec {}
+#[doc = "`write(|w| ..)` method takes [`cfg::W`](W) writer structure"]
+impl crate::Writable for CfgSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CFG to value 0"]
-impl crate::Resettable for CFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CfgSpec {}

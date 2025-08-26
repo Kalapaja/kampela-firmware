@@ -1,530 +1,457 @@
 #[doc = "Register `PPUPATD0` reader"]
-pub struct R(crate::R<PPUPATD0_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<PPUPATD0_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<PPUPATD0_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<PPUPATD0_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Ppupatd0Spec>;
 #[doc = "Register `PPUPATD0` writer"]
-pub struct W(crate::W<PPUPATD0_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<PPUPATD0_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<PPUPATD0_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<PPUPATD0_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<Ppupatd0Spec>;
 #[doc = "Field `EMU` reader - EMU Privileged Access"]
-pub type EMU_R = crate::BitReader<bool>;
+pub type EmuR = crate::BitReader;
 #[doc = "Field `EMU` writer - EMU Privileged Access"]
-pub type EMU_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type EmuW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CMU` reader - CMU Privileged Access"]
-pub type CMU_R = crate::BitReader<bool>;
+pub type CmuR = crate::BitReader;
 #[doc = "Field `CMU` writer - CMU Privileged Access"]
-pub type CMU_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type CmuW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `HFRCO0` reader - HFRCO0 Privileged Access"]
-pub type HFRCO0_R = crate::BitReader<bool>;
+pub type Hfrco0R = crate::BitReader;
 #[doc = "Field `HFRCO0` writer - HFRCO0 Privileged Access"]
-pub type HFRCO0_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Hfrco0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `FSRCO` reader - FSRCO Privileged Access"]
-pub type FSRCO_R = crate::BitReader<bool>;
+pub type FsrcoR = crate::BitReader;
 #[doc = "Field `FSRCO` writer - FSRCO Privileged Access"]
-pub type FSRCO_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type FsrcoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DPLL0` reader - DPLL0 Privileged Access"]
-pub type DPLL0_R = crate::BitReader<bool>;
+pub type Dpll0R = crate::BitReader;
 #[doc = "Field `DPLL0` writer - DPLL0 Privileged Access"]
-pub type DPLL0_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Dpll0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LFXO` reader - LFXO Privileged Access"]
-pub type LFXO_R = crate::BitReader<bool>;
+pub type LfxoR = crate::BitReader;
 #[doc = "Field `LFXO` writer - LFXO Privileged Access"]
-pub type LFXO_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type LfxoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LFRCO` reader - LFRCO Privileged Access"]
-pub type LFRCO_R = crate::BitReader<bool>;
+pub type LfrcoR = crate::BitReader;
 #[doc = "Field `LFRCO` writer - LFRCO Privileged Access"]
-pub type LFRCO_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type LfrcoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ULFRCO` reader - ULFRCO Privileged Access"]
-pub type ULFRCO_R = crate::BitReader<bool>;
+pub type UlfrcoR = crate::BitReader;
 #[doc = "Field `ULFRCO` writer - ULFRCO Privileged Access"]
-pub type ULFRCO_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type UlfrcoW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `MSC` reader - MSC Privileged Access"]
-pub type MSC_R = crate::BitReader<bool>;
+pub type MscR = crate::BitReader;
 #[doc = "Field `MSC` writer - MSC Privileged Access"]
-pub type MSC_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type MscW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `ICACHE0` reader - ICACHE0 Privileged Access"]
-pub type ICACHE0_R = crate::BitReader<bool>;
+pub type Icache0R = crate::BitReader;
 #[doc = "Field `ICACHE0` writer - ICACHE0 Privileged Access"]
-pub type ICACHE0_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Icache0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `PRS` reader - PRS Privileged Access"]
-pub type PRS_R = crate::BitReader<bool>;
+pub type PrsR = crate::BitReader;
 #[doc = "Field `PRS` writer - PRS Privileged Access"]
-pub type PRS_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type PrsW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `GPIO` reader - GPIO Privileged Access"]
-pub type GPIO_R = crate::BitReader<bool>;
+pub type GpioR = crate::BitReader;
 #[doc = "Field `GPIO` writer - GPIO Privileged Access"]
-pub type GPIO_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type GpioW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LDMA` reader - LDMA Privileged Access"]
-pub type LDMA_R = crate::BitReader<bool>;
+pub type LdmaR = crate::BitReader;
 #[doc = "Field `LDMA` writer - LDMA Privileged Access"]
-pub type LDMA_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type LdmaW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `LDMAXBAR` reader - LDMAXBAR Privileged Access"]
-pub type LDMAXBAR_R = crate::BitReader<bool>;
+pub type LdmaxbarR = crate::BitReader;
 #[doc = "Field `LDMAXBAR` writer - LDMAXBAR Privileged Access"]
-pub type LDMAXBAR_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type LdmaxbarW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMER0` reader - TIMER0 Privileged Access"]
-pub type TIMER0_R = crate::BitReader<bool>;
+pub type Timer0R = crate::BitReader;
 #[doc = "Field `TIMER0` writer - TIMER0 Privileged Access"]
-pub type TIMER0_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Timer0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMER1` reader - TIMER1 Privileged Access"]
-pub type TIMER1_R = crate::BitReader<bool>;
+pub type Timer1R = crate::BitReader;
 #[doc = "Field `TIMER1` writer - TIMER1 Privileged Access"]
-pub type TIMER1_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Timer1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMER2` reader - TIMER2 Privileged Access"]
-pub type TIMER2_R = crate::BitReader<bool>;
+pub type Timer2R = crate::BitReader;
 #[doc = "Field `TIMER2` writer - TIMER2 Privileged Access"]
-pub type TIMER2_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Timer2W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMER3` reader - TIMER3 Privileged Access"]
-pub type TIMER3_R = crate::BitReader<bool>;
+pub type Timer3R = crate::BitReader;
 #[doc = "Field `TIMER3` writer - TIMER3 Privileged Access"]
-pub type TIMER3_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Timer3W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMER4` reader - TIMER4 Privileged Access"]
-pub type TIMER4_R = crate::BitReader<bool>;
+pub type Timer4R = crate::BitReader;
 #[doc = "Field `TIMER4` writer - TIMER4 Privileged Access"]
-pub type TIMER4_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Timer4W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `USART0` reader - USART0 Privileged Access"]
-pub type USART0_R = crate::BitReader<bool>;
+pub type Usart0R = crate::BitReader;
 #[doc = "Field `USART0` writer - USART0 Privileged Access"]
-pub type USART0_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Usart0W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BURTC` reader - BURTC Privileged Access"]
-pub type BURTC_R = crate::BitReader<bool>;
+pub type BurtcR = crate::BitReader;
 #[doc = "Field `BURTC` writer - BURTC Privileged Access"]
-pub type BURTC_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type BurtcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `I2C1` reader - I2C1 Privileged Access"]
-pub type I2C1_R = crate::BitReader<bool>;
+pub type I2c1R = crate::BitReader;
 #[doc = "Field `I2C1` writer - I2C1 Privileged Access"]
-pub type I2C1_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type I2c1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `CHIPTESTCTRL` reader - CHIPTESTCTRL Privileged Access"]
-pub type CHIPTESTCTRL_R = crate::BitReader<bool>;
+pub type ChiptestctrlR = crate::BitReader;
 #[doc = "Field `CHIPTESTCTRL` writer - CHIPTESTCTRL Privileged Access"]
-pub type CHIPTESTCTRL_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type ChiptestctrlW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SYSCFGCFGNS` reader - SYSCFGCFGNS Privileged Access"]
-pub type SYSCFGCFGNS_R = crate::BitReader<bool>;
+pub type SyscfgcfgnsR = crate::BitReader;
 #[doc = "Field `SYSCFGCFGNS` writer - SYSCFGCFGNS Privileged Access"]
-pub type SYSCFGCFGNS_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type SyscfgcfgnsW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SYSCFG` reader - SYSCFG Privileged Access"]
-pub type SYSCFG_R = crate::BitReader<bool>;
+pub type SyscfgR = crate::BitReader;
 #[doc = "Field `SYSCFG` writer - SYSCFG Privileged Access"]
-pub type SYSCFG_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type SyscfgW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BURAM` reader - BURAM Privileged Access"]
-pub type BURAM_R = crate::BitReader<bool>;
+pub type BuramR = crate::BitReader;
 #[doc = "Field `BURAM` writer - BURAM Privileged Access"]
-pub type BURAM_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type BuramW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `GPCRC` reader - GPCRC Privileged Access"]
-pub type GPCRC_R = crate::BitReader<bool>;
+pub type GpcrcR = crate::BitReader;
 #[doc = "Field `GPCRC` writer - GPCRC Privileged Access"]
-pub type GPCRC_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type GpcrcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `DCDC` reader - DCDC Privileged Access"]
-pub type DCDC_R = crate::BitReader<bool>;
+pub type DcdcR = crate::BitReader;
 #[doc = "Field `DCDC` writer - DCDC Privileged Access"]
-pub type DCDC_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type DcdcW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `HOSTMAILBOX` reader - HOSTMAILBOX Privileged Access"]
-pub type HOSTMAILBOX_R = crate::BitReader<bool>;
+pub type HostmailboxR = crate::BitReader;
 #[doc = "Field `HOSTMAILBOX` writer - HOSTMAILBOX Privileged Access"]
-pub type HOSTMAILBOX_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type HostmailboxW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EUSART1` reader - EUSART1 Privileged Access"]
-pub type EUSART1_R = crate::BitReader<bool>;
+pub type Eusart1R = crate::BitReader;
 #[doc = "Field `EUSART1` writer - EUSART1 Privileged Access"]
-pub type EUSART1_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Eusart1W<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `EUSART2` reader - EUSART2 Privileged Access"]
-pub type EUSART2_R = crate::BitReader<bool>;
+pub type Eusart2R = crate::BitReader;
 #[doc = "Field `EUSART2` writer - EUSART2 Privileged Access"]
-pub type EUSART2_W<'a, const O: u8> = crate::BitWriter<'a, u32, PPUPATD0_SPEC, bool, O>;
+pub type Eusart2W<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 1 - EMU Privileged Access"]
     #[inline(always)]
-    pub fn emu(&self) -> EMU_R {
-        EMU_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn emu(&self) -> EmuR {
+        EmuR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - CMU Privileged Access"]
     #[inline(always)]
-    pub fn cmu(&self) -> CMU_R {
-        CMU_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn cmu(&self) -> CmuR {
+        CmuR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - HFRCO0 Privileged Access"]
     #[inline(always)]
-    pub fn hfrco0(&self) -> HFRCO0_R {
-        HFRCO0_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn hfrco0(&self) -> Hfrco0R {
+        Hfrco0R::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - FSRCO Privileged Access"]
     #[inline(always)]
-    pub fn fsrco(&self) -> FSRCO_R {
-        FSRCO_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn fsrco(&self) -> FsrcoR {
+        FsrcoR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bit 5 - DPLL0 Privileged Access"]
     #[inline(always)]
-    pub fn dpll0(&self) -> DPLL0_R {
-        DPLL0_R::new(((self.bits >> 5) & 1) != 0)
+    pub fn dpll0(&self) -> Dpll0R {
+        Dpll0R::new(((self.bits >> 5) & 1) != 0)
     }
     #[doc = "Bit 6 - LFXO Privileged Access"]
     #[inline(always)]
-    pub fn lfxo(&self) -> LFXO_R {
-        LFXO_R::new(((self.bits >> 6) & 1) != 0)
+    pub fn lfxo(&self) -> LfxoR {
+        LfxoR::new(((self.bits >> 6) & 1) != 0)
     }
     #[doc = "Bit 7 - LFRCO Privileged Access"]
     #[inline(always)]
-    pub fn lfrco(&self) -> LFRCO_R {
-        LFRCO_R::new(((self.bits >> 7) & 1) != 0)
+    pub fn lfrco(&self) -> LfrcoR {
+        LfrcoR::new(((self.bits >> 7) & 1) != 0)
     }
     #[doc = "Bit 8 - ULFRCO Privileged Access"]
     #[inline(always)]
-    pub fn ulfrco(&self) -> ULFRCO_R {
-        ULFRCO_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn ulfrco(&self) -> UlfrcoR {
+        UlfrcoR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - MSC Privileged Access"]
     #[inline(always)]
-    pub fn msc(&self) -> MSC_R {
-        MSC_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn msc(&self) -> MscR {
+        MscR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - ICACHE0 Privileged Access"]
     #[inline(always)]
-    pub fn icache0(&self) -> ICACHE0_R {
-        ICACHE0_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn icache0(&self) -> Icache0R {
+        Icache0R::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bit 11 - PRS Privileged Access"]
     #[inline(always)]
-    pub fn prs(&self) -> PRS_R {
-        PRS_R::new(((self.bits >> 11) & 1) != 0)
+    pub fn prs(&self) -> PrsR {
+        PrsR::new(((self.bits >> 11) & 1) != 0)
     }
     #[doc = "Bit 12 - GPIO Privileged Access"]
     #[inline(always)]
-    pub fn gpio(&self) -> GPIO_R {
-        GPIO_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn gpio(&self) -> GpioR {
+        GpioR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - LDMA Privileged Access"]
     #[inline(always)]
-    pub fn ldma(&self) -> LDMA_R {
-        LDMA_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn ldma(&self) -> LdmaR {
+        LdmaR::new(((self.bits >> 13) & 1) != 0)
     }
     #[doc = "Bit 14 - LDMAXBAR Privileged Access"]
     #[inline(always)]
-    pub fn ldmaxbar(&self) -> LDMAXBAR_R {
-        LDMAXBAR_R::new(((self.bits >> 14) & 1) != 0)
+    pub fn ldmaxbar(&self) -> LdmaxbarR {
+        LdmaxbarR::new(((self.bits >> 14) & 1) != 0)
     }
     #[doc = "Bit 15 - TIMER0 Privileged Access"]
     #[inline(always)]
-    pub fn timer0(&self) -> TIMER0_R {
-        TIMER0_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn timer0(&self) -> Timer0R {
+        Timer0R::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bit 16 - TIMER1 Privileged Access"]
     #[inline(always)]
-    pub fn timer1(&self) -> TIMER1_R {
-        TIMER1_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn timer1(&self) -> Timer1R {
+        Timer1R::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - TIMER2 Privileged Access"]
     #[inline(always)]
-    pub fn timer2(&self) -> TIMER2_R {
-        TIMER2_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn timer2(&self) -> Timer2R {
+        Timer2R::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - TIMER3 Privileged Access"]
     #[inline(always)]
-    pub fn timer3(&self) -> TIMER3_R {
-        TIMER3_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn timer3(&self) -> Timer3R {
+        Timer3R::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 19 - TIMER4 Privileged Access"]
     #[inline(always)]
-    pub fn timer4(&self) -> TIMER4_R {
-        TIMER4_R::new(((self.bits >> 19) & 1) != 0)
+    pub fn timer4(&self) -> Timer4R {
+        Timer4R::new(((self.bits >> 19) & 1) != 0)
     }
     #[doc = "Bit 20 - USART0 Privileged Access"]
     #[inline(always)]
-    pub fn usart0(&self) -> USART0_R {
-        USART0_R::new(((self.bits >> 20) & 1) != 0)
+    pub fn usart0(&self) -> Usart0R {
+        Usart0R::new(((self.bits >> 20) & 1) != 0)
     }
     #[doc = "Bit 21 - BURTC Privileged Access"]
     #[inline(always)]
-    pub fn burtc(&self) -> BURTC_R {
-        BURTC_R::new(((self.bits >> 21) & 1) != 0)
+    pub fn burtc(&self) -> BurtcR {
+        BurtcR::new(((self.bits >> 21) & 1) != 0)
     }
     #[doc = "Bit 22 - I2C1 Privileged Access"]
     #[inline(always)]
-    pub fn i2c1(&self) -> I2C1_R {
-        I2C1_R::new(((self.bits >> 22) & 1) != 0)
+    pub fn i2c1(&self) -> I2c1R {
+        I2c1R::new(((self.bits >> 22) & 1) != 0)
     }
     #[doc = "Bit 23 - CHIPTESTCTRL Privileged Access"]
     #[inline(always)]
-    pub fn chiptestctrl(&self) -> CHIPTESTCTRL_R {
-        CHIPTESTCTRL_R::new(((self.bits >> 23) & 1) != 0)
+    pub fn chiptestctrl(&self) -> ChiptestctrlR {
+        ChiptestctrlR::new(((self.bits >> 23) & 1) != 0)
     }
     #[doc = "Bit 24 - SYSCFGCFGNS Privileged Access"]
     #[inline(always)]
-    pub fn syscfgcfgns(&self) -> SYSCFGCFGNS_R {
-        SYSCFGCFGNS_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn syscfgcfgns(&self) -> SyscfgcfgnsR {
+        SyscfgcfgnsR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 25 - SYSCFG Privileged Access"]
     #[inline(always)]
-    pub fn syscfg(&self) -> SYSCFG_R {
-        SYSCFG_R::new(((self.bits >> 25) & 1) != 0)
+    pub fn syscfg(&self) -> SyscfgR {
+        SyscfgR::new(((self.bits >> 25) & 1) != 0)
     }
     #[doc = "Bit 26 - BURAM Privileged Access"]
     #[inline(always)]
-    pub fn buram(&self) -> BURAM_R {
-        BURAM_R::new(((self.bits >> 26) & 1) != 0)
+    pub fn buram(&self) -> BuramR {
+        BuramR::new(((self.bits >> 26) & 1) != 0)
     }
     #[doc = "Bit 27 - GPCRC Privileged Access"]
     #[inline(always)]
-    pub fn gpcrc(&self) -> GPCRC_R {
-        GPCRC_R::new(((self.bits >> 27) & 1) != 0)
+    pub fn gpcrc(&self) -> GpcrcR {
+        GpcrcR::new(((self.bits >> 27) & 1) != 0)
     }
     #[doc = "Bit 28 - DCDC Privileged Access"]
     #[inline(always)]
-    pub fn dcdc(&self) -> DCDC_R {
-        DCDC_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn dcdc(&self) -> DcdcR {
+        DcdcR::new(((self.bits >> 28) & 1) != 0)
     }
     #[doc = "Bit 29 - HOSTMAILBOX Privileged Access"]
     #[inline(always)]
-    pub fn hostmailbox(&self) -> HOSTMAILBOX_R {
-        HOSTMAILBOX_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn hostmailbox(&self) -> HostmailboxR {
+        HostmailboxR::new(((self.bits >> 29) & 1) != 0)
     }
     #[doc = "Bit 30 - EUSART1 Privileged Access"]
     #[inline(always)]
-    pub fn eusart1(&self) -> EUSART1_R {
-        EUSART1_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn eusart1(&self) -> Eusart1R {
+        Eusart1R::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - EUSART2 Privileged Access"]
     #[inline(always)]
-    pub fn eusart2(&self) -> EUSART2_R {
-        EUSART2_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn eusart2(&self) -> Eusart2R {
+        Eusart2R::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 1 - EMU Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn emu(&mut self) -> EMU_W<1> {
-        EMU_W::new(self)
+    pub fn emu(&mut self) -> EmuW<Ppupatd0Spec> {
+        EmuW::new(self, 1)
     }
     #[doc = "Bit 2 - CMU Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn cmu(&mut self) -> CMU_W<2> {
-        CMU_W::new(self)
+    pub fn cmu(&mut self) -> CmuW<Ppupatd0Spec> {
+        CmuW::new(self, 2)
     }
     #[doc = "Bit 3 - HFRCO0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn hfrco0(&mut self) -> HFRCO0_W<3> {
-        HFRCO0_W::new(self)
+    pub fn hfrco0(&mut self) -> Hfrco0W<Ppupatd0Spec> {
+        Hfrco0W::new(self, 3)
     }
     #[doc = "Bit 4 - FSRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn fsrco(&mut self) -> FSRCO_W<4> {
-        FSRCO_W::new(self)
+    pub fn fsrco(&mut self) -> FsrcoW<Ppupatd0Spec> {
+        FsrcoW::new(self, 4)
     }
     #[doc = "Bit 5 - DPLL0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn dpll0(&mut self) -> DPLL0_W<5> {
-        DPLL0_W::new(self)
+    pub fn dpll0(&mut self) -> Dpll0W<Ppupatd0Spec> {
+        Dpll0W::new(self, 5)
     }
     #[doc = "Bit 6 - LFXO Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfxo(&mut self) -> LFXO_W<6> {
-        LFXO_W::new(self)
+    pub fn lfxo(&mut self) -> LfxoW<Ppupatd0Spec> {
+        LfxoW::new(self, 6)
     }
     #[doc = "Bit 7 - LFRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn lfrco(&mut self) -> LFRCO_W<7> {
-        LFRCO_W::new(self)
+    pub fn lfrco(&mut self) -> LfrcoW<Ppupatd0Spec> {
+        LfrcoW::new(self, 7)
     }
     #[doc = "Bit 8 - ULFRCO Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn ulfrco(&mut self) -> ULFRCO_W<8> {
-        ULFRCO_W::new(self)
+    pub fn ulfrco(&mut self) -> UlfrcoW<Ppupatd0Spec> {
+        UlfrcoW::new(self, 8)
     }
     #[doc = "Bit 9 - MSC Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn msc(&mut self) -> MSC_W<9> {
-        MSC_W::new(self)
+    pub fn msc(&mut self) -> MscW<Ppupatd0Spec> {
+        MscW::new(self, 9)
     }
     #[doc = "Bit 10 - ICACHE0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn icache0(&mut self) -> ICACHE0_W<10> {
-        ICACHE0_W::new(self)
+    pub fn icache0(&mut self) -> Icache0W<Ppupatd0Spec> {
+        Icache0W::new(self, 10)
     }
     #[doc = "Bit 11 - PRS Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn prs(&mut self) -> PRS_W<11> {
-        PRS_W::new(self)
+    pub fn prs(&mut self) -> PrsW<Ppupatd0Spec> {
+        PrsW::new(self, 11)
     }
     #[doc = "Bit 12 - GPIO Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn gpio(&mut self) -> GPIO_W<12> {
-        GPIO_W::new(self)
+    pub fn gpio(&mut self) -> GpioW<Ppupatd0Spec> {
+        GpioW::new(self, 12)
     }
     #[doc = "Bit 13 - LDMA Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn ldma(&mut self) -> LDMA_W<13> {
-        LDMA_W::new(self)
+    pub fn ldma(&mut self) -> LdmaW<Ppupatd0Spec> {
+        LdmaW::new(self, 13)
     }
     #[doc = "Bit 14 - LDMAXBAR Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn ldmaxbar(&mut self) -> LDMAXBAR_W<14> {
-        LDMAXBAR_W::new(self)
+    pub fn ldmaxbar(&mut self) -> LdmaxbarW<Ppupatd0Spec> {
+        LdmaxbarW::new(self, 14)
     }
     #[doc = "Bit 15 - TIMER0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn timer0(&mut self) -> TIMER0_W<15> {
-        TIMER0_W::new(self)
+    pub fn timer0(&mut self) -> Timer0W<Ppupatd0Spec> {
+        Timer0W::new(self, 15)
     }
     #[doc = "Bit 16 - TIMER1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn timer1(&mut self) -> TIMER1_W<16> {
-        TIMER1_W::new(self)
+    pub fn timer1(&mut self) -> Timer1W<Ppupatd0Spec> {
+        Timer1W::new(self, 16)
     }
     #[doc = "Bit 17 - TIMER2 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn timer2(&mut self) -> TIMER2_W<17> {
-        TIMER2_W::new(self)
+    pub fn timer2(&mut self) -> Timer2W<Ppupatd0Spec> {
+        Timer2W::new(self, 17)
     }
     #[doc = "Bit 18 - TIMER3 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn timer3(&mut self) -> TIMER3_W<18> {
-        TIMER3_W::new(self)
+    pub fn timer3(&mut self) -> Timer3W<Ppupatd0Spec> {
+        Timer3W::new(self, 18)
     }
     #[doc = "Bit 19 - TIMER4 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn timer4(&mut self) -> TIMER4_W<19> {
-        TIMER4_W::new(self)
+    pub fn timer4(&mut self) -> Timer4W<Ppupatd0Spec> {
+        Timer4W::new(self, 19)
     }
     #[doc = "Bit 20 - USART0 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn usart0(&mut self) -> USART0_W<20> {
-        USART0_W::new(self)
+    pub fn usart0(&mut self) -> Usart0W<Ppupatd0Spec> {
+        Usart0W::new(self, 20)
     }
     #[doc = "Bit 21 - BURTC Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn burtc(&mut self) -> BURTC_W<21> {
-        BURTC_W::new(self)
+    pub fn burtc(&mut self) -> BurtcW<Ppupatd0Spec> {
+        BurtcW::new(self, 21)
     }
     #[doc = "Bit 22 - I2C1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn i2c1(&mut self) -> I2C1_W<22> {
-        I2C1_W::new(self)
+    pub fn i2c1(&mut self) -> I2c1W<Ppupatd0Spec> {
+        I2c1W::new(self, 22)
     }
     #[doc = "Bit 23 - CHIPTESTCTRL Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn chiptestctrl(&mut self) -> CHIPTESTCTRL_W<23> {
-        CHIPTESTCTRL_W::new(self)
+    pub fn chiptestctrl(&mut self) -> ChiptestctrlW<Ppupatd0Spec> {
+        ChiptestctrlW::new(self, 23)
     }
     #[doc = "Bit 24 - SYSCFGCFGNS Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn syscfgcfgns(&mut self) -> SYSCFGCFGNS_W<24> {
-        SYSCFGCFGNS_W::new(self)
+    pub fn syscfgcfgns(&mut self) -> SyscfgcfgnsW<Ppupatd0Spec> {
+        SyscfgcfgnsW::new(self, 24)
     }
     #[doc = "Bit 25 - SYSCFG Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn syscfg(&mut self) -> SYSCFG_W<25> {
-        SYSCFG_W::new(self)
+    pub fn syscfg(&mut self) -> SyscfgW<Ppupatd0Spec> {
+        SyscfgW::new(self, 25)
     }
     #[doc = "Bit 26 - BURAM Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn buram(&mut self) -> BURAM_W<26> {
-        BURAM_W::new(self)
+    pub fn buram(&mut self) -> BuramW<Ppupatd0Spec> {
+        BuramW::new(self, 26)
     }
     #[doc = "Bit 27 - GPCRC Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn gpcrc(&mut self) -> GPCRC_W<27> {
-        GPCRC_W::new(self)
+    pub fn gpcrc(&mut self) -> GpcrcW<Ppupatd0Spec> {
+        GpcrcW::new(self, 27)
     }
     #[doc = "Bit 28 - DCDC Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn dcdc(&mut self) -> DCDC_W<28> {
-        DCDC_W::new(self)
+    pub fn dcdc(&mut self) -> DcdcW<Ppupatd0Spec> {
+        DcdcW::new(self, 28)
     }
     #[doc = "Bit 29 - HOSTMAILBOX Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn hostmailbox(&mut self) -> HOSTMAILBOX_W<29> {
-        HOSTMAILBOX_W::new(self)
+    pub fn hostmailbox(&mut self) -> HostmailboxW<Ppupatd0Spec> {
+        HostmailboxW::new(self, 29)
     }
     #[doc = "Bit 30 - EUSART1 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn eusart1(&mut self) -> EUSART1_W<30> {
-        EUSART1_W::new(self)
+    pub fn eusart1(&mut self) -> Eusart1W<Ppupatd0Spec> {
+        Eusart1W::new(self, 30)
     }
     #[doc = "Bit 31 - EUSART2 Privileged Access"]
     #[inline(always)]
-    #[must_use]
-    pub fn eusart2(&mut self) -> EUSART2_W<31> {
-        EUSART2_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn eusart2(&mut self) -> Eusart2W<Ppupatd0Spec> {
+        Eusart2W::new(self, 31)
     }
 }
-#[doc = "Set peripheral bits to 1 to mark as privileged access only\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ppupatd0](index.html) module"]
-pub struct PPUPATD0_SPEC;
-impl crate::RegisterSpec for PPUPATD0_SPEC {
+#[doc = "Set peripheral bits to 1 to mark as privileged access only\n\nYou can [`read`](crate::Reg::read) this register and get [`ppupatd0::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ppupatd0::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Ppupatd0Spec;
+impl crate::RegisterSpec for Ppupatd0Spec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ppupatd0::R](R) reader structure"]
-impl crate::Readable for PPUPATD0_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ppupatd0::W](W) writer structure"]
-impl crate::Writable for PPUPATD0_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ppupatd0::R`](R) reader structure"]
+impl crate::Readable for Ppupatd0Spec {}
+#[doc = "`write(|w| ..)` method takes [`ppupatd0::W`](W) writer structure"]
+impl crate::Writable for Ppupatd0Spec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets PPUPATD0 to value 0xffff_ffff"]
-impl crate::Resettable for PPUPATD0_SPEC {
-    const RESET_VALUE: Self::Ux = 0xffff_ffff;
+impl crate::Resettable for Ppupatd0Spec {
+    const RESET_VALUE: u32 = 0xffff_ffff;
 }

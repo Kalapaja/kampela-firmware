@@ -1,181 +1,145 @@
 #[doc = "Register `EM01GRPCCLKCTRL` reader"]
-pub struct R(crate::R<EM01GRPCCLKCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<EM01GRPCCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<EM01GRPCCLKCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<EM01GRPCCLKCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Em01grpcclkctrlSpec>;
 #[doc = "Register `EM01GRPCCLKCTRL` writer"]
-pub struct W(crate::W<EM01GRPCCLKCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<EM01GRPCCLKCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<EM01GRPCCLKCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<EM01GRPCCLKCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
-#[doc = "Field `CLKSEL` reader - Clock Select"]
-pub type CLKSEL_R = crate::FieldReader<u8, CLKSEL_A>;
+pub type W = crate::W<Em01grpcclkctrlSpec>;
 #[doc = "Clock Select\n\nValue on reset: 1"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum CLKSEL_A {
+pub enum Clksel {
     #[doc = "1: HFRCODPLL is clocking EM01GRPCCLK"]
-    HFRCODPLL = 1,
+    Hfrcodpll = 1,
     #[doc = "2: HFXO is clocking EM01GRPCCLK"]
-    HFXO = 2,
+    Hfxo = 2,
     #[doc = "3: FSRCO is clocking EM01GRPCCLK"]
-    FSRCO = 3,
+    Fsrco = 3,
     #[doc = "4: HFRCOEM23 is clocking EM01GRPCCLK"]
-    HFRCOEM23 = 4,
+    Hfrcoem23 = 4,
     #[doc = "5: HFRCODPLL (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
-    HFRCODPLLRT = 5,
+    Hfrcodpllrt = 5,
     #[doc = "6: HFXO (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
-    HFXORT = 6,
+    Hfxort = 6,
 }
-impl From<CLKSEL_A> for u8 {
+impl From<Clksel> for u8 {
     #[inline(always)]
-    fn from(variant: CLKSEL_A) -> Self {
+    fn from(variant: Clksel) -> Self {
         variant as _
     }
 }
-impl CLKSEL_R {
+impl crate::FieldSpec for Clksel {
+    type Ux = u8;
+}
+impl crate::IsEnum for Clksel {}
+#[doc = "Field `CLKSEL` reader - Clock Select"]
+pub type ClkselR = crate::FieldReader<Clksel>;
+impl ClkselR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<CLKSEL_A> {
+    pub const fn variant(&self) -> Option<Clksel> {
         match self.bits {
-            1 => Some(CLKSEL_A::HFRCODPLL),
-            2 => Some(CLKSEL_A::HFXO),
-            3 => Some(CLKSEL_A::FSRCO),
-            4 => Some(CLKSEL_A::HFRCOEM23),
-            5 => Some(CLKSEL_A::HFRCODPLLRT),
-            6 => Some(CLKSEL_A::HFXORT),
+            1 => Some(Clksel::Hfrcodpll),
+            2 => Some(Clksel::Hfxo),
+            3 => Some(Clksel::Fsrco),
+            4 => Some(Clksel::Hfrcoem23),
+            5 => Some(Clksel::Hfrcodpllrt),
+            6 => Some(Clksel::Hfxort),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `HFRCODPLL`"]
-    #[inline(always)]
-    pub fn is_hfrcodpll(&self) -> bool {
-        *self == CLKSEL_A::HFRCODPLL
-    }
-    #[doc = "Checks if the value of the field is `HFXO`"]
-    #[inline(always)]
-    pub fn is_hfxo(&self) -> bool {
-        *self == CLKSEL_A::HFXO
-    }
-    #[doc = "Checks if the value of the field is `FSRCO`"]
-    #[inline(always)]
-    pub fn is_fsrco(&self) -> bool {
-        *self == CLKSEL_A::FSRCO
-    }
-    #[doc = "Checks if the value of the field is `HFRCOEM23`"]
-    #[inline(always)]
-    pub fn is_hfrcoem23(&self) -> bool {
-        *self == CLKSEL_A::HFRCOEM23
-    }
-    #[doc = "Checks if the value of the field is `HFRCODPLLRT`"]
-    #[inline(always)]
-    pub fn is_hfrcodpllrt(&self) -> bool {
-        *self == CLKSEL_A::HFRCODPLLRT
-    }
-    #[doc = "Checks if the value of the field is `HFXORT`"]
-    #[inline(always)]
-    pub fn is_hfxort(&self) -> bool {
-        *self == CLKSEL_A::HFXORT
-    }
-}
-#[doc = "Field `CLKSEL` writer - Clock Select"]
-pub type CLKSEL_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, EM01GRPCCLKCTRL_SPEC, u8, CLKSEL_A, 3, O>;
-impl<'a, const O: u8> CLKSEL_W<'a, O> {
     #[doc = "HFRCODPLL is clocking EM01GRPCCLK"]
     #[inline(always)]
-    pub fn hfrcodpll(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFRCODPLL)
+    pub fn is_hfrcodpll(&self) -> bool {
+        *self == Clksel::Hfrcodpll
     }
     #[doc = "HFXO is clocking EM01GRPCCLK"]
     #[inline(always)]
-    pub fn hfxo(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFXO)
+    pub fn is_hfxo(&self) -> bool {
+        *self == Clksel::Hfxo
     }
     #[doc = "FSRCO is clocking EM01GRPCCLK"]
     #[inline(always)]
-    pub fn fsrco(self) -> &'a mut W {
-        self.variant(CLKSEL_A::FSRCO)
+    pub fn is_fsrco(&self) -> bool {
+        *self == Clksel::Fsrco
     }
     #[doc = "HFRCOEM23 is clocking EM01GRPCCLK"]
     #[inline(always)]
-    pub fn hfrcoem23(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFRCOEM23)
+    pub fn is_hfrcoem23(&self) -> bool {
+        *self == Clksel::Hfrcoem23
     }
     #[doc = "HFRCODPLL (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
     #[inline(always)]
-    pub fn hfrcodpllrt(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFRCODPLLRT)
+    pub fn is_hfrcodpllrt(&self) -> bool {
+        *self == Clksel::Hfrcodpllrt
     }
     #[doc = "HFXO (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
     #[inline(always)]
-    pub fn hfxort(self) -> &'a mut W {
-        self.variant(CLKSEL_A::HFXORT)
+    pub fn is_hfxort(&self) -> bool {
+        *self == Clksel::Hfxort
+    }
+}
+#[doc = "Field `CLKSEL` writer - Clock Select"]
+pub type ClkselW<'a, REG> = crate::FieldWriter<'a, REG, 3, Clksel>;
+impl<'a, REG> ClkselW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "HFRCODPLL is clocking EM01GRPCCLK"]
+    #[inline(always)]
+    pub fn hfrcodpll(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfrcodpll)
+    }
+    #[doc = "HFXO is clocking EM01GRPCCLK"]
+    #[inline(always)]
+    pub fn hfxo(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfxo)
+    }
+    #[doc = "FSRCO is clocking EM01GRPCCLK"]
+    #[inline(always)]
+    pub fn fsrco(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Fsrco)
+    }
+    #[doc = "HFRCOEM23 is clocking EM01GRPCCLK"]
+    #[inline(always)]
+    pub fn hfrcoem23(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfrcoem23)
+    }
+    #[doc = "HFRCODPLL (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
+    #[inline(always)]
+    pub fn hfrcodpllrt(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfrcodpllrt)
+    }
+    #[doc = "HFXO (retimed) is clocking EM01GRPCCLK. Check with datasheet for frequency limitation when using retiming with voltage scaling."]
+    #[inline(always)]
+    pub fn hfxort(self) -> &'a mut crate::W<REG> {
+        self.variant(Clksel::Hfxort)
     }
 }
 impl R {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    pub fn clksel(&self) -> CLKSEL_R {
-        CLKSEL_R::new((self.bits & 7) as u8)
+    pub fn clksel(&self) -> ClkselR {
+        ClkselR::new((self.bits & 7) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn clksel(&mut self) -> CLKSEL_W<0> {
-        CLKSEL_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn clksel(&mut self) -> ClkselW<Em01grpcclkctrlSpec> {
+        ClkselW::new(self, 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [em01grpcclkctrl](index.html) module"]
-pub struct EM01GRPCCLKCTRL_SPEC;
-impl crate::RegisterSpec for EM01GRPCCLKCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`em01grpcclkctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`em01grpcclkctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Em01grpcclkctrlSpec;
+impl crate::RegisterSpec for Em01grpcclkctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [em01grpcclkctrl::R](R) reader structure"]
-impl crate::Readable for EM01GRPCCLKCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [em01grpcclkctrl::W](W) writer structure"]
-impl crate::Writable for EM01GRPCCLKCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`em01grpcclkctrl::R`](R) reader structure"]
+impl crate::Readable for Em01grpcclkctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`em01grpcclkctrl::W`](W) writer structure"]
+impl crate::Writable for Em01grpcclkctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets EM01GRPCCLKCTRL to value 0x01"]
-impl crate::Resettable for EM01GRPCCLKCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x01;
+impl crate::Resettable for Em01grpcclkctrlSpec {
+    const RESET_VALUE: u32 = 0x01;
 }

@@ -1,37 +1,20 @@
 #[doc = "Register `CC0_ICOF` reader"]
-pub struct R(crate::R<CC0_ICOF_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CC0_ICOF_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CC0_ICOF_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CC0_ICOF_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Cc0IcofSpec>;
 #[doc = "Field `ICOF` reader - Input Capture FIFO Overflow"]
-pub type ICOF_R = crate::FieldReader<u32, u32>;
+pub type IcofR = crate::FieldReader<u32>;
 impl R {
     #[doc = "Bits 0:31 - Input Capture FIFO Overflow"]
     #[inline(always)]
-    pub fn icof(&self) -> ICOF_R {
-        ICOF_R::new(self.bits)
+    pub fn icof(&self) -> IcofR {
+        IcofR::new(self.bits)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [cc0_icof](index.html) module"]
-pub struct CC0_ICOF_SPEC;
-impl crate::RegisterSpec for CC0_ICOF_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cc0_icof::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cc0IcofSpec;
+impl crate::RegisterSpec for Cc0IcofSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [cc0_icof::R](R) reader structure"]
-impl crate::Readable for CC0_ICOF_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`cc0_icof::R`](R) reader structure"]
+impl crate::Readable for Cc0IcofSpec {}
 #[doc = "`reset()` method sets CC0_ICOF to value 0"]
-impl crate::Resettable for CC0_ICOF_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Cc0IcofSpec {}

@@ -1,108 +1,71 @@
 #[doc = "Register `CMD` writer"]
-pub struct W(crate::W<CMD_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CMD_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CMD_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CMD_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<CmdSpec>;
 #[doc = "Field `SINGLESTART` writer - Single Queue Start"]
-pub type SINGLESTART_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type SinglestartW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLESTOP` writer - Single Queue Stop"]
-pub type SINGLESTOP_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type SinglestopW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANSTART` writer - Scan Queue Start"]
-pub type SCANSTART_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type ScanstartW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANSTOP` writer - Scan Queue Stop"]
-pub type SCANSTOP_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type ScanstopW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMEREN` writer - Timer Enable"]
-pub type TIMEREN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type TimerenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `TIMERDIS` writer - Timer Disable"]
-pub type TIMERDIS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type TimerdisW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SINGLEFIFOFLUSH` writer - Flush the Single FIFO"]
-pub type SINGLEFIFOFLUSH_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type SinglefifoflushW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCANFIFOFLUSH` writer - Flush the Scan FIFO"]
-pub type SCANFIFOFLUSH_W<'a, const O: u8> = crate::BitWriter<'a, u32, CMD_SPEC, bool, O>;
+pub type ScanfifoflushW<'a, REG> = crate::BitWriter<'a, REG>;
 impl W {
     #[doc = "Bit 0 - Single Queue Start"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlestart(&mut self) -> SINGLESTART_W<0> {
-        SINGLESTART_W::new(self)
+    pub fn singlestart(&mut self) -> SinglestartW<CmdSpec> {
+        SinglestartW::new(self, 0)
     }
     #[doc = "Bit 1 - Single Queue Stop"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlestop(&mut self) -> SINGLESTOP_W<1> {
-        SINGLESTOP_W::new(self)
+    pub fn singlestop(&mut self) -> SinglestopW<CmdSpec> {
+        SinglestopW::new(self, 1)
     }
     #[doc = "Bit 3 - Scan Queue Start"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanstart(&mut self) -> SCANSTART_W<3> {
-        SCANSTART_W::new(self)
+    pub fn scanstart(&mut self) -> ScanstartW<CmdSpec> {
+        ScanstartW::new(self, 3)
     }
     #[doc = "Bit 4 - Scan Queue Stop"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanstop(&mut self) -> SCANSTOP_W<4> {
-        SCANSTOP_W::new(self)
+    pub fn scanstop(&mut self) -> ScanstopW<CmdSpec> {
+        ScanstopW::new(self, 4)
     }
     #[doc = "Bit 16 - Timer Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn timeren(&mut self) -> TIMEREN_W<16> {
-        TIMEREN_W::new(self)
+    pub fn timeren(&mut self) -> TimerenW<CmdSpec> {
+        TimerenW::new(self, 16)
     }
     #[doc = "Bit 17 - Timer Disable"]
     #[inline(always)]
-    #[must_use]
-    pub fn timerdis(&mut self) -> TIMERDIS_W<17> {
-        TIMERDIS_W::new(self)
+    pub fn timerdis(&mut self) -> TimerdisW<CmdSpec> {
+        TimerdisW::new(self, 17)
     }
     #[doc = "Bit 24 - Flush the Single FIFO"]
     #[inline(always)]
-    #[must_use]
-    pub fn singlefifoflush(&mut self) -> SINGLEFIFOFLUSH_W<24> {
-        SINGLEFIFOFLUSH_W::new(self)
+    pub fn singlefifoflush(&mut self) -> SinglefifoflushW<CmdSpec> {
+        SinglefifoflushW::new(self, 24)
     }
     #[doc = "Bit 25 - Flush the Scan FIFO"]
     #[inline(always)]
-    #[must_use]
-    pub fn scanfifoflush(&mut self) -> SCANFIFOFLUSH_W<25> {
-        SCANFIFOFLUSH_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn scanfifoflush(&mut self) -> ScanfifoflushW<CmdSpec> {
+        ScanfifoflushW::new(self, 25)
     }
 }
-#[doc = "Command\n\nThis register you can [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [cmd](index.html) module"]
-pub struct CMD_SPEC;
-impl crate::RegisterSpec for CMD_SPEC {
+#[doc = "Command\n\nYou can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cmd::W`](W). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CmdSpec;
+impl crate::RegisterSpec for CmdSpec {
     type Ux = u32;
 }
-#[doc = "`write(|w| ..)` method takes [cmd::W](W) writer structure"]
-impl crate::Writable for CMD_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`write(|w| ..)` method takes [`cmd::W`](W) writer structure"]
+impl crate::Writable for CmdSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CMD to value 0"]
-impl crate::Resettable for CMD_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CmdSpec {}

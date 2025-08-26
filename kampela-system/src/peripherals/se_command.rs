@@ -85,8 +85,8 @@ impl<'a> SeCommand<'a> {
         // TXINT bit is set when there is space in FIFO for at least 16 words.
         // Wait for it here.
         while peripherals
-            .SEMAILBOX_S_HOST
-            .tx_status
+            .semailbox_s_host
+            .tx_status()
             .read()
             .txint()
             .bit_is_clear()
@@ -102,17 +102,17 @@ impl<'a> SeCommand<'a> {
 
         // Header is sent into TX_HEADER register.
         peripherals
-            .SEMAILBOX_S_HOST
-            .tx_header
-            .write(|w_reg| w_reg.txheader().variant(into_header as u32));
+            .semailbox_s_host
+            .tx_header()
+            .write(|w_reg| unsafe { w_reg.txheader().bits(into_header as u32) });
         rembytes -= REMBYTES_DECREMENT;
         expect_rembytes(peripherals, rembytes);
 
         // Command word is sent into FIFO register.
         peripherals
-            .SEMAILBOX_S_HOST
-            .fifo
-            .write(|w_reg| w_reg.fifo().variant(self.command_word));
+            .semailbox_s_host
+            .fifo()
+            .write(|w_reg| unsafe { w_reg.fifo().bits(self.command_word) });
         rembytes -= REMBYTES_DECREMENT;
         expect_rembytes(peripherals, rembytes);
 
@@ -121,9 +121,9 @@ impl<'a> SeCommand<'a> {
         // SE gets further input elements through pointers in [`DataTransfer`].
         // Input ends when `SE_DATATRANSFER_STOP` is encoutered.
         peripherals
-            .SEMAILBOX_S_HOST
-            .fifo
-            .write(|w_reg| w_reg.fifo().variant(self.data_in));
+            .semailbox_s_host
+            .fifo()
+            .write(|w_reg| unsafe { w_reg.fifo().bits(self.data_in) });
         rembytes -= REMBYTES_DECREMENT;
         expect_rembytes(peripherals, rembytes);
 
@@ -132,18 +132,18 @@ impl<'a> SeCommand<'a> {
         // SE gets further input elements through pointers in [`DataTransfer`].
         // Output ends when `SE_DATATRANSFER_STOP` is encoutered.
         peripherals
-            .SEMAILBOX_S_HOST
-            .fifo
-            .write(|w_reg| w_reg.fifo().variant(self.data_out));
+            .semailbox_s_host
+            .fifo()
+            .write(|w_reg| unsafe { w_reg.fifo().bits(self.data_out) });
         rembytes -= REMBYTES_DECREMENT;
         expect_rembytes(peripherals, rembytes);
 
         // Parameters are sent into FIFO register.
         for param in self.parameters.iter() {
             peripherals
-                .SEMAILBOX_S_HOST
-                .fifo
-                .write(|w_reg| w_reg.fifo().variant(*param));
+                .semailbox_s_host
+                .fifo()
+                .write(|w_reg| unsafe { w_reg.fifo().bits(*param) });
             rembytes -= REMBYTES_DECREMENT;
             expect_rembytes(peripherals, rembytes);
         }
@@ -152,8 +152,8 @@ impl<'a> SeCommand<'a> {
         // final word of the message is present in the FIFO.
         // Wait for it here.
         while peripherals
-            .SEMAILBOX_S_HOST
-            .rx_status
+            .semailbox_s_host
+            .rx_status()
             .read()
             .rxint()
             .bit_is_clear()
@@ -164,15 +164,15 @@ impl<'a> SeCommand<'a> {
             // This does not work properly without the delay.
             // Minimal delay is sufficient.
             delay(1);
-            let rx_header = peripherals.SEMAILBOX_S_HOST.rx_header.read().bits();
+            let rx_header = peripherals.semailbox_s_host.rx_header().read().bits();
             if rx_header.eq(&0) {
                 break;
             }
         }
 
         match peripherals
-            .SEMAILBOX_S_HOST
-            .rx_status
+            .semailbox_s_host
+            .rx_status()
             .read()
             .msginfo()
             .bits()
@@ -212,8 +212,8 @@ pub enum RxError {
 /// Wait for expected remaining bytes value.
 fn expect_rembytes(peripherals: &mut Peripherals, rembytes: u16) {
     while peripherals
-        .SEMAILBOX_S_HOST
-        .tx_status
+        .semailbox_s_host
+        .tx_status()
         .read()
         .rembytes()
         .bits()

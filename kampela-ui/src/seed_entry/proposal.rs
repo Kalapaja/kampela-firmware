@@ -22,7 +22,7 @@ use embedded_text::{
 use mnemonic_external::{AsWordList, WordListElement};
 const MAX_PROPOSAL: usize = 3;
 
-use crate::{platform::Platform, display_def::*, widget::view::{DrawView, View, Widget}};
+use crate::{display_def::*, platform::Platform, uistate::Event, widget::view::{DrawView, View, Widget}};
 
 use crate::seed_entry::phrase::PHRASE_AREA;
 
@@ -78,7 +78,6 @@ pub struct Proposal<P> where
     entered_count: usize,
     variants: Vec<String>,
     guess: Vec<WordListElement<P::AsWordList>>,
-    guess_depth: usize,
     wordlist: P::AsWordList,
 }
 
@@ -89,7 +88,6 @@ impl<P: Platform> Proposal<P> {
             entered_count: 0,
             variants: Vec::new(),
             guess: Vec::new(),
-            guess_depth: 0,
             wordlist,
         }
     }
@@ -99,7 +97,6 @@ impl<P: Platform> Proposal<P> {
         self.entered_count = 0;
         self.variants = Vec::new();
         self.guess = Vec::new();
-        self.guess_depth = 0;
     }
     pub fn add_letters(&mut self, letters: Vec<char>) {
         if self.entered.len() < ENOUGH_LEN {
@@ -125,7 +122,7 @@ impl<P: Platform> Proposal<P> {
 
     fn make_guess(&mut self) {
         let mut guess = Vec::<WordListElement<P::AsWordList>>::new();
-        if self.variants.len() < 4 {
+        if self.variants.len() <= MAX_PROPOSAL {
             self.variants = Vec::new();
         }
         let variants = Variants::new(&self.entered, &self.variants);
@@ -144,8 +141,7 @@ impl<P: Platform> Proposal<P> {
             guess.append(&mut g);
             // break if there too many guesses to display
             // and if at least found two variants
-            // except if all variants needed, hence !guessed_variants_is_some
-            if guess.len() >= MAX_PROPOSAL && new_variants.len() > 1 {
+            if guess.len() >= MAX_PROPOSAL && (new_variants.len() > 1 || self.entered.len() <= 1) {
                 break;
             }
         }
@@ -157,10 +153,10 @@ impl<P: Platform> Proposal<P> {
 }
 
 impl<P: Platform> View for Proposal<P> {
-    type DrawInput<'a> = (bool, bool) where P: 'a;
+    type DrawInput<'a> = bool where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = () where P: 'a;
-    type TapOutput = Option<WordListElement<P::AsWordList>>;
+    type EventInput<'a> = () where P: 'a;
+    type TapOutput = Option<Option<WordListElement<P::AsWordList>>>;
 
     fn bounding_box(&self) -> Rectangle {
         PROPOSAL_WIDGET.bounding_box()
@@ -170,63 +166,62 @@ impl<P: Platform> View for Proposal<P> {
         PROPOSAL_WIDGET.bounding_box_absolute()
     }
 
-    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, (t, n): Self::DrawInput<'a>) -> Result<(), D::Error>
+    fn draw_view<'a, D>(&mut self, target: &mut DrawView<D>, n: Self::DrawInput<'a>) -> Result<(), D::Error>
         where 
             D: DrawTarget<Color = BinaryColor>,
             Self: 'a,
         {
 
-        if t == false {
-            let (on, _) = if n {
-                (BinaryColor::Off, BinaryColor::On)
-            } else {
-                (BinaryColor::On, BinaryColor::Off)
+        let (on, _) = if n {
+            (BinaryColor::Off, BinaryColor::On)
+        } else {
+            (BinaryColor::On, BinaryColor::Off)
+        };
+
+        let character_style = MonoTextStyleBuilder::new()
+            .font(&PROPOSAL_FONT)
+            .text_color(on)
+            .underline()
+            .build();
+
+        let textbox_style = TextBoxStyleBuilder::new()
+            .alignment(HorizontalAlignment::Center)
+            .vertical_alignment(VerticalAlignment::Middle)
+            .build();
+        for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
+            let text = match self.guess.get(i) {
+                Some(w) => {
+                    w.word.as_ref()
+                },
+                None => "",
             };
-
-            if self.guess_depth != self.entered.len() { // to guess only first draw in row
-                self.guess_depth = self.entered.len();
-                self.make_guess();
-            }
-    
-            let character_style = MonoTextStyleBuilder::new()
-                .font(&PROPOSAL_FONT)
-                .text_color(on)
-                .underline()
-                .build();
-
-            let textbox_style = TextBoxStyleBuilder::new()
-                .alignment(HorizontalAlignment::Center)
-                .vertical_alignment(VerticalAlignment::Middle)
-                .build();
-            for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
-                let text = match self.guess.get(i) {
-                    Some(w) => {
-                        w.word.as_ref()
-                    },
-                    None => "",
-                };
-                TextBox::with_textbox_style(
-                    &text,
-                    *section,
-                    character_style,
-                    textbox_style,
-                ).draw(target)?;
-            }
+            TextBox::with_textbox_style(
+                &text,
+                *section,
+                character_style,
+                textbox_style,
+            ).draw(target)?;
         }
 
         Ok(())
     }
 
-    fn handle_tap_view<'a>(&mut self, point: Point, _: ()) -> Self::TapOutput
+    fn handle_event_view<'a>(&mut self, event: Event, _: ()) -> Self::TapOutput
     where Self: 'a
     {
         let mut guess_tapped = None;
-        for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
-            if section.contains(point) {
-                if i < self.guess.len() {
-                    guess_tapped = Some(self.guess.swap_remove(i));
-                };
-                self.clear();
+        if let Event::Invocation = event {
+            self.make_guess();
+            guess_tapped = Some(None)
+        }
+        if let Event::Tap(point) = event {
+            for (i, section) in PROPOSAL_SECTIONS.iter().enumerate() {
+                if section.contains(point) {
+                    if i < self.guess.len() {
+                        guess_tapped = Some(Some(self.guess.swap_remove(i)));
+                    };
+                    self.clear();
+                }
             }
         }
         guess_tapped

@@ -1,155 +1,146 @@
 #[doc = "Register `PKGINFO` reader"]
-pub struct R(crate::R<PKGINFO_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<PKGINFO_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<PKGINFO_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<PKGINFO_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `TEMPGRADE` reader - Temperature Grade"]
-pub type TEMPGRADE_R = crate::FieldReader<u8, TEMPGRADE_A>;
+pub type R = crate::R<PkginfoSpec>;
 #[doc = "Temperature Grade\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TEMPGRADE_A {
+pub enum Tempgrade {
     #[doc = "0: -40 to 85 degC"]
-    N40TO85 = 0,
+    N40to85 = 0,
     #[doc = "1: -40 to 125 degC"]
-    N40TO125 = 1,
+    N40to125 = 1,
     #[doc = "2: -40 to 105 degC"]
-    N40TO105 = 2,
+    N40to105 = 2,
     #[doc = "3: 0 to 70 degC"]
-    N0TO70 = 3,
+    N0to70 = 3,
 }
-impl From<TEMPGRADE_A> for u8 {
+impl From<Tempgrade> for u8 {
     #[inline(always)]
-    fn from(variant: TEMPGRADE_A) -> Self {
+    fn from(variant: Tempgrade) -> Self {
         variant as _
     }
 }
-impl TEMPGRADE_R {
+impl crate::FieldSpec for Tempgrade {
+    type Ux = u8;
+}
+impl crate::IsEnum for Tempgrade {}
+#[doc = "Field `TEMPGRADE` reader - Temperature Grade"]
+pub type TempgradeR = crate::FieldReader<Tempgrade>;
+impl TempgradeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<TEMPGRADE_A> {
+    pub const fn variant(&self) -> Option<Tempgrade> {
         match self.bits {
-            0 => Some(TEMPGRADE_A::N40TO85),
-            1 => Some(TEMPGRADE_A::N40TO125),
-            2 => Some(TEMPGRADE_A::N40TO105),
-            3 => Some(TEMPGRADE_A::N0TO70),
+            0 => Some(Tempgrade::N40to85),
+            1 => Some(Tempgrade::N40to125),
+            2 => Some(Tempgrade::N40to105),
+            3 => Some(Tempgrade::N0to70),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `N40TO85`"]
+    #[doc = "-40 to 85 degC"]
     #[inline(always)]
     pub fn is_n40to85(&self) -> bool {
-        *self == TEMPGRADE_A::N40TO85
+        *self == Tempgrade::N40to85
     }
-    #[doc = "Checks if the value of the field is `N40TO125`"]
+    #[doc = "-40 to 125 degC"]
     #[inline(always)]
     pub fn is_n40to125(&self) -> bool {
-        *self == TEMPGRADE_A::N40TO125
+        *self == Tempgrade::N40to125
     }
-    #[doc = "Checks if the value of the field is `N40TO105`"]
+    #[doc = "-40 to 105 degC"]
     #[inline(always)]
     pub fn is_n40to105(&self) -> bool {
-        *self == TEMPGRADE_A::N40TO105
+        *self == Tempgrade::N40to105
     }
-    #[doc = "Checks if the value of the field is `N0TO70`"]
+    #[doc = "0 to 70 degC"]
     #[inline(always)]
     pub fn is_n0to70(&self) -> bool {
-        *self == TEMPGRADE_A::N0TO70
+        *self == Tempgrade::N0to70
     }
 }
-#[doc = "Field `PKGTYPE` reader - Package Type"]
-pub type PKGTYPE_R = crate::FieldReader<u8, PKGTYPE_A>;
 #[doc = "Package Type\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum PKGTYPE_A {
+pub enum Pkgtype {
     #[doc = "74: WLCSP package"]
-    WLCSP = 74,
+    Wlcsp = 74,
     #[doc = "76: BGA package"]
-    BGA = 76,
+    Bga = 76,
     #[doc = "77: QFN package"]
-    QFN = 77,
+    Qfn = 77,
     #[doc = "81: QFP package"]
-    QFP = 81,
+    Qfp = 81,
 }
-impl From<PKGTYPE_A> for u8 {
+impl From<Pkgtype> for u8 {
     #[inline(always)]
-    fn from(variant: PKGTYPE_A) -> Self {
+    fn from(variant: Pkgtype) -> Self {
         variant as _
     }
 }
-impl PKGTYPE_R {
+impl crate::FieldSpec for Pkgtype {
+    type Ux = u8;
+}
+impl crate::IsEnum for Pkgtype {}
+#[doc = "Field `PKGTYPE` reader - Package Type"]
+pub type PkgtypeR = crate::FieldReader<Pkgtype>;
+impl PkgtypeR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> Option<PKGTYPE_A> {
+    pub const fn variant(&self) -> Option<Pkgtype> {
         match self.bits {
-            74 => Some(PKGTYPE_A::WLCSP),
-            76 => Some(PKGTYPE_A::BGA),
-            77 => Some(PKGTYPE_A::QFN),
-            81 => Some(PKGTYPE_A::QFP),
+            74 => Some(Pkgtype::Wlcsp),
+            76 => Some(Pkgtype::Bga),
+            77 => Some(Pkgtype::Qfn),
+            81 => Some(Pkgtype::Qfp),
             _ => None,
         }
     }
-    #[doc = "Checks if the value of the field is `WLCSP`"]
+    #[doc = "WLCSP package"]
     #[inline(always)]
     pub fn is_wlcsp(&self) -> bool {
-        *self == PKGTYPE_A::WLCSP
+        *self == Pkgtype::Wlcsp
     }
-    #[doc = "Checks if the value of the field is `BGA`"]
+    #[doc = "BGA package"]
     #[inline(always)]
     pub fn is_bga(&self) -> bool {
-        *self == PKGTYPE_A::BGA
+        *self == Pkgtype::Bga
     }
-    #[doc = "Checks if the value of the field is `QFN`"]
+    #[doc = "QFN package"]
     #[inline(always)]
     pub fn is_qfn(&self) -> bool {
-        *self == PKGTYPE_A::QFN
+        *self == Pkgtype::Qfn
     }
-    #[doc = "Checks if the value of the field is `QFP`"]
+    #[doc = "QFP package"]
     #[inline(always)]
     pub fn is_qfp(&self) -> bool {
-        *self == PKGTYPE_A::QFP
+        *self == Pkgtype::Qfp
     }
 }
 #[doc = "Field `PINCOUNT` reader - Pin Count"]
-pub type PINCOUNT_R = crate::FieldReader<u8, u8>;
+pub type PincountR = crate::FieldReader;
 impl R {
     #[doc = "Bits 0:7 - Temperature Grade"]
     #[inline(always)]
-    pub fn tempgrade(&self) -> TEMPGRADE_R {
-        TEMPGRADE_R::new((self.bits & 0xff) as u8)
+    pub fn tempgrade(&self) -> TempgradeR {
+        TempgradeR::new((self.bits & 0xff) as u8)
     }
     #[doc = "Bits 8:15 - Package Type"]
     #[inline(always)]
-    pub fn pkgtype(&self) -> PKGTYPE_R {
-        PKGTYPE_R::new(((self.bits >> 8) & 0xff) as u8)
+    pub fn pkgtype(&self) -> PkgtypeR {
+        PkgtypeR::new(((self.bits >> 8) & 0xff) as u8)
     }
     #[doc = "Bits 16:23 - Pin Count"]
     #[inline(always)]
-    pub fn pincount(&self) -> PINCOUNT_R {
-        PINCOUNT_R::new(((self.bits >> 16) & 0xff) as u8)
+    pub fn pincount(&self) -> PincountR {
+        PincountR::new(((self.bits >> 16) & 0xff) as u8)
     }
 }
-#[doc = "Miscellaneous device information\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [pkginfo](index.html) module"]
-pub struct PKGINFO_SPEC;
-impl crate::RegisterSpec for PKGINFO_SPEC {
+#[doc = "Miscellaneous device information\n\nYou can [`read`](crate::Reg::read) this register and get [`pkginfo::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct PkginfoSpec;
+impl crate::RegisterSpec for PkginfoSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [pkginfo::R](R) reader structure"]
-impl crate::Readable for PKGINFO_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`pkginfo::R`](R) reader structure"]
+impl crate::Readable for PkginfoSpec {}
 #[doc = "`reset()` method sets PKGINFO to value 0"]
-impl crate::Resettable for PKGINFO_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for PkginfoSpec {}

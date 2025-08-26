@@ -1,24 +1,20 @@
 #[cfg(not(feature="std"))]
-use alloc::{vec::Vec, boxed::Box};
+use alloc::{vec::Vec, vec, boxed::Box};
 #[cfg(feature="std")]
-use std::{vec::Vec, boxed::Box};
+use std::{vec::Vec, vec, boxed::Box};
 
 use embedded_graphics::{
-    geometry::Point,
     pixelcolor::BinaryColor,
     prelude::{DrawTarget, Drawable},
-    primitives::{Primitive, PrimitiveStyle}
+    primitives::{Primitive, PrimitiveStyle, Rectangle}
 };
 
 use mnemonic_external::{AsWordList, Bits11, WordListElement, WordSet};
 
 use crate::{
-    platform::Platform,
-    widget::{
-        view::{View, ViewScreen},
-        nav_bar::nav_bar::{NavBar, NavCommand}
-    },
-    uistate::{EventResult, UpdateRequest, UnitScreen},
+    platform::Platform, uistate::{Event, EventResult, UnitScreen, UpdateRequest}, widget::{
+        nav_bar::nav_bar::{NavBar, NavCommand}, view::{View, ViewScreen}
+    }
 };
 
 use crate::seed_entry::{
@@ -31,9 +27,8 @@ use crate::seed_entry::{
 
 enum KeyboardState {
     Initial,
-    Tapped,
-    DrawTapped,
-    InitialInverse,
+    Tapped(Rectangle),
+    DrawTapped(Rectangle),
 }
 
 pub struct SeedEntry<P> where
@@ -47,7 +42,6 @@ pub struct SeedEntry<P> where
     navbar_entry: NavBar,
     navbar_phrase: NavBar,
     tapped: KeyboardState,
-    negative: bool,
 }
 
 impl<P: Platform> SeedEntry<P> {
@@ -70,7 +64,6 @@ impl<P: Platform> SeedEntry<P> {
             navbar_entry: NavBar::new(("clear", "")),
             navbar_phrase: NavBar::new(("back", "")),
             tapped: KeyboardState::Initial,
-            negative: false,
         };
         Self::update_navbar_phrase(&mut state);
         state
@@ -89,25 +82,14 @@ impl<P: Platform> SeedEntry<P> {
     fn switch_tapped(&mut self) -> bool {
         match self.tapped {
             KeyboardState::Initial => false,
-            KeyboardState::Tapped => {
-                if self.negative {
-                    self.tapped = KeyboardState::InitialInverse;
-                } else {
-                    self.tapped = KeyboardState::DrawTapped;
-                }
-                self.negative = !self.negative;
+            KeyboardState::Tapped(r) => {
+                self.tapped = KeyboardState::DrawTapped(r);
                 true
             },
-            KeyboardState::DrawTapped => {
+            KeyboardState::DrawTapped(_) => {
                 self.tapped = KeyboardState::Initial;
-                self.negative = false;
                 false
             },
-            KeyboardState::InitialInverse => {
-                self.tapped = KeyboardState::DrawTapped;
-                self.negative = true;
-                false
-            }
         }
     }
     fn update_navbar_phrase(&mut self) {
@@ -122,8 +104,8 @@ impl<P: Platform> SeedEntry<P> {
 impl<P: Platform> ViewScreen for SeedEntry<P> {
     type DrawInput<'a> = () where P: 'a;
     type DrawOutput = ();
-    type TapInput<'a> = () where P: 'a;
-    type TapOutput = ();
+    type EventInput<'a> = () where P: 'a;
+    type EventOutput = ();
 
     fn draw_screen<'a, D>(&mut self, target: &mut D, _: ()) -> Result<(EventResult, ()), D::Error>
     where
@@ -134,44 +116,39 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
         let mut request = None;
         
         let t = self.switch_tapped();
+        if !t {
+            target.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
+        }
 
-        let filled = if self.negative {
-            PrimitiveStyle::with_fill(BinaryColor::On)
-        } else {
-            PrimitiveStyle::with_fill(BinaryColor::Off)
-        };
-        target.bounding_box().into_styled(filled).draw(target)?;
-
-        self.remove.draw(target, self.negative)?;
-        self.keyboard.draw(target, self.negative)?;
+        self.keyboard.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
+        self.remove.draw(target, false)?;
+        self.keyboard.draw(target, false)?;
+        self.phrase.bounding_box().into_styled(PrimitiveStyle::with_fill(BinaryColor::Off)).draw(target)?;
+        self.entry.draw(target, false)?;
 
         if self.entry.is_empty() {
-            self.phrase.draw(target, self.negative)?;
-            self.navbar_phrase.draw(target, self.negative)?;
+            self.phrase.draw(target, false)?;
+            self.navbar_phrase.draw(target, false)?;
         } else {
-            self.entry.draw(target, self.negative)?;
-            self.proposal.draw(target, (t, self.negative))?;
-            self.navbar_entry.draw(target, self.negative)?;
+            self.proposal.draw(target, false)?;
+            self.navbar_entry.draw(target, false)?;
         }
 
-        match self.tapped {
-            KeyboardState::DrawTapped |
-            KeyboardState::InitialInverse => {
-                request = Some(UpdateRequest::UltraFast);
-            },
-            _ => {},
+        if matches!(self.tapped, KeyboardState::DrawTapped(_)) {
+            request = Some(UpdateRequest::Invocate);
         }
+        
         Ok((EventResult { request, state }, ()))
     }
 
-    fn handle_tap_screen<'a>(&mut self, point: Point, _: Self::TapInput<'a>) -> (crate::uistate::EventResult, Self::TapOutput)
+    fn handle_event_screen<'a>(&mut self, event: Event, _: Self::EventInput<'a>) -> (crate::uistate::EventResult, Self::EventOutput)
     where
         Self: 'a
     {
         let mut state = None;
         let mut request = None;
-
-        if let Some(Some(c)) = self.keyboard.handle_tap(point, ()) {
+        let mut tapped_area = None;
+        if let Some(Some((c, r))) = self.keyboard.handle_event(event, ()) {
             if !self.phrase.is_maxed() {
                 if !self.entry.is_maxed() {
                     self.entry.add_letter(c[0]);
@@ -182,34 +159,53 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
             } else {
                 self.phrase.set_invalid();
             }
-            self.tapped = KeyboardState::Tapped;
-            request = Some(UpdateRequest::UltraFast);
+            tapped_area = Some(r);
         };
 
         if self.entry.is_empty() && matches!(self.tapped, KeyboardState::Initial) {
-            if self.remove.handle_tap(point, ()).is_some() {
+            if self.remove.handle_event(event, ()).unwrap_or(None).is_some() {
                 self.phrase.remove_word();
                 self.update_navbar_phrase();
-                self.tapped = KeyboardState::Tapped;
-                request = Some(UpdateRequest::UltraFast);
+                tapped_area = Some(self.remove.bounding_box_absolut());
             }
         }
         if !self.entry.is_empty() {
-            if self.remove.handle_tap(point, ()).is_some() {
+            if self.remove.handle_event(event, ()).unwrap_or(None).is_some() {
                 self.proposal.remove_letter();
                 self.entry.remove_letter();
-                self.tapped = KeyboardState::Tapped;
-                request = Some(UpdateRequest::UltraFast);
+                tapped_area = Some(self.remove.bounding_box_absolut());
             }
         }
-        if let Some(Some(guess)) = self.proposal.handle_tap(point, ()) {
-            self.phrase.add_word(guess);
-            self.entry.clear();
-            self.update_navbar_phrase();
-            request = Some(UpdateRequest::Fast);
+        if let Some(r) = tapped_area {
+            let mut vec_r = vec![r];
+            match self.tapped {
+                KeyboardState::DrawTapped(prev) => {
+                    vec_r.push(prev);
+                    vec_r.push(self.entry.bounding_box_absolut())
+                },
+                KeyboardState::Initial => {
+                    vec_r.push(self.phrase.bounding_box_absolut())
+                },
+                _ => ()
+            }
+            self.tapped = KeyboardState::Tapped(r);
+            request = Some(UpdateRequest::Part(vec_r));
+        }
+        match self.proposal.handle_event(event, ()) {
+            Some(Some(Some(guess))) => {
+                self.phrase.add_word(guess);
+                self.entry.clear();
+                self.update_navbar_phrase();
+                request = Some(UpdateRequest::UltraFastSelective);
+            },
+            Some(Some(None)) => {
+                // after invocate
+                request = Some(UpdateRequest::UltraFastSelective);
+            },
+            _ => {}
         }
         if self.entry.is_empty() {
-            if let Some(Some(c)) = self.navbar_phrase.handle_tap(point, ()) {
+            if let Some(Some(c)) = self.navbar_phrase.handle_event(event, ()) {
                 match c {
                     NavCommand::Left => {
                         if self.phrase.is_empty() {
@@ -217,7 +213,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                             request = Some(UpdateRequest::Fast);
                         } else {
                             let buffer = self.get_buffer();
-                            state = Some(UnitScreen::ShowDialog(
+                            state = Some(UnitScreen::ShowDialog((
                                 "Are you sure?\nEntered data will be lost",
                                 ("no", "yes"),
                                 (
@@ -231,7 +227,7 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                                     })
                                 ),
                                 true,
-                            ));
+                            )));
                             request = Some(UpdateRequest::UltraFast);
                         }
                     },
@@ -247,10 +243,10 @@ impl<P: Platform> ViewScreen for SeedEntry<P> {
                 }
             }
         } else {
-            if matches!(self.navbar_entry.handle_tap(point, ()), Some(Some(NavCommand::Left))) {
+            if matches!(self.navbar_entry.handle_event(event, ()), Some(Some(NavCommand::Left))) {
                 self.entry.clear();
                 self.proposal.clear();
-                request = Some(UpdateRequest::Fast);
+                request = Some(UpdateRequest::UltraFastSelective);
             }
         }
 

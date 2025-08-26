@@ -1,1247 +1,1233 @@
 #[doc = "Register `CFG1` reader"]
-pub struct R(crate::R<CFG1_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CFG1_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CFG1_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CFG1_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<Cfg1Spec>;
 #[doc = "Register `CFG1` writer"]
-pub struct W(crate::W<CFG1_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CFG1_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+pub type W = crate::W<Cfg1Spec>;
+#[doc = "Debug halt\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Dbghalt {
+    #[doc = "0: Continue normal EUSART operation even if core is halted"]
+    Disable = 0,
+    #[doc = "1: If core is halted, receive one frame and then halt reception by deactivating RTS. Next frame reception happens when the core is unhalted during single stepping."]
+    Enable = 1,
 }
-impl core::ops::DerefMut for W {
+impl From<Dbghalt> for bool {
     #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CFG1_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CFG1_SPEC>) -> Self {
-        W(writer)
+    fn from(variant: Dbghalt) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `DBGHALT` reader - Debug halt"]
-pub type DBGHALT_R = crate::BitReader<DBGHALT_A>;
-#[doc = "Debug halt\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum DBGHALT_A {
-    #[doc = "0: Continue normal EUSART operation even if core is halted"]
-    DISABLE = 0,
-    #[doc = "1: If core is halted, receive one frame and then halt reception by deactivating RTS. Next frame reception happens when the core is unhalted during single stepping."]
-    ENABLE = 1,
-}
-impl From<DBGHALT_A> for bool {
-    #[inline(always)]
-    fn from(variant: DBGHALT_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl DBGHALT_R {
+pub type DbghaltR = crate::BitReader<Dbghalt>;
+impl DbghaltR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> DBGHALT_A {
+    pub const fn variant(&self) -> Dbghalt {
         match self.bits {
-            false => DBGHALT_A::DISABLE,
-            true => DBGHALT_A::ENABLE,
+            false => Dbghalt::Disable,
+            true => Dbghalt::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == DBGHALT_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == DBGHALT_A::ENABLE
-    }
-}
-#[doc = "Field `DBGHALT` writer - Debug halt"]
-pub type DBGHALT_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, DBGHALT_A, O>;
-impl<'a, const O: u8> DBGHALT_W<'a, O> {
     #[doc = "Continue normal EUSART operation even if core is halted"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(DBGHALT_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Dbghalt::Disable
     }
     #[doc = "If core is halted, receive one frame and then halt reception by deactivating RTS. Next frame reception happens when the core is unhalted during single stepping."]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(DBGHALT_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Dbghalt::Enable
+    }
+}
+#[doc = "Field `DBGHALT` writer - Debug halt"]
+pub type DbghaltW<'a, REG> = crate::BitWriter<'a, REG, Dbghalt>;
+impl<'a, REG> DbghaltW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Continue normal EUSART operation even if core is halted"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Dbghalt::Disable)
+    }
+    #[doc = "If core is halted, receive one frame and then halt reception by deactivating RTS. Next frame reception happens when the core is unhalted during single stepping."]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Dbghalt::Enable)
+    }
+}
+#[doc = "Clear-to-send Invert Enable\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Ctsinv {
+    #[doc = "0: The CTS pin is active low"]
+    Disable = 0,
+    #[doc = "1: The CTS pin is active high"]
+    Enable = 1,
+}
+impl From<Ctsinv> for bool {
+    #[inline(always)]
+    fn from(variant: Ctsinv) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CTSINV` reader - Clear-to-send Invert Enable"]
-pub type CTSINV_R = crate::BitReader<CTSINV_A>;
-#[doc = "Clear-to-send Invert Enable\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CTSINV_A {
-    #[doc = "0: The CTS pin is active low"]
-    DISABLE = 0,
-    #[doc = "1: The CTS pin is active high"]
-    ENABLE = 1,
-}
-impl From<CTSINV_A> for bool {
-    #[inline(always)]
-    fn from(variant: CTSINV_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CTSINV_R {
+pub type CtsinvR = crate::BitReader<Ctsinv>;
+impl CtsinvR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CTSINV_A {
+    pub const fn variant(&self) -> Ctsinv {
         match self.bits {
-            false => CTSINV_A::DISABLE,
-            true => CTSINV_A::ENABLE,
+            false => Ctsinv::Disable,
+            true => Ctsinv::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == CTSINV_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == CTSINV_A::ENABLE
-    }
-}
-#[doc = "Field `CTSINV` writer - Clear-to-send Invert Enable"]
-pub type CTSINV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, CTSINV_A, O>;
-impl<'a, const O: u8> CTSINV_W<'a, O> {
     #[doc = "The CTS pin is active low"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(CTSINV_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Ctsinv::Disable
     }
     #[doc = "The CTS pin is active high"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(CTSINV_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Ctsinv::Enable
+    }
+}
+#[doc = "Field `CTSINV` writer - Clear-to-send Invert Enable"]
+pub type CtsinvW<'a, REG> = crate::BitWriter<'a, REG, Ctsinv>;
+impl<'a, REG> CtsinvW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The CTS pin is active low"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ctsinv::Disable)
+    }
+    #[doc = "The CTS pin is active high"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ctsinv::Enable)
+    }
+}
+#[doc = "Clear-to-send Enable\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Ctsen {
+    #[doc = "0: Ignore CTS"]
+    Disable = 0,
+    #[doc = "1: Stop transmitting when CTS is inactive"]
+    Enable = 1,
+}
+impl From<Ctsen> for bool {
+    #[inline(always)]
+    fn from(variant: Ctsen) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CTSEN` reader - Clear-to-send Enable"]
-pub type CTSEN_R = crate::BitReader<CTSEN_A>;
-#[doc = "Clear-to-send Enable\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CTSEN_A {
-    #[doc = "0: Ignore CTS"]
-    DISABLE = 0,
-    #[doc = "1: Stop transmitting when CTS is inactive"]
-    ENABLE = 1,
-}
-impl From<CTSEN_A> for bool {
-    #[inline(always)]
-    fn from(variant: CTSEN_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CTSEN_R {
+pub type CtsenR = crate::BitReader<Ctsen>;
+impl CtsenR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CTSEN_A {
+    pub const fn variant(&self) -> Ctsen {
         match self.bits {
-            false => CTSEN_A::DISABLE,
-            true => CTSEN_A::ENABLE,
+            false => Ctsen::Disable,
+            true => Ctsen::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == CTSEN_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == CTSEN_A::ENABLE
-    }
-}
-#[doc = "Field `CTSEN` writer - Clear-to-send Enable"]
-pub type CTSEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, CTSEN_A, O>;
-impl<'a, const O: u8> CTSEN_W<'a, O> {
     #[doc = "Ignore CTS"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(CTSEN_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Ctsen::Disable
     }
     #[doc = "Stop transmitting when CTS is inactive"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(CTSEN_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Ctsen::Enable
     }
 }
-#[doc = "Field `RTSINV` reader - Request-to-send Invert Enable"]
-pub type RTSINV_R = crate::BitReader<RTSINV_A>;
+#[doc = "Field `CTSEN` writer - Clear-to-send Enable"]
+pub type CtsenW<'a, REG> = crate::BitWriter<'a, REG, Ctsen>;
+impl<'a, REG> CtsenW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Ignore CTS"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ctsen::Disable)
+    }
+    #[doc = "Stop transmitting when CTS is inactive"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ctsen::Enable)
+    }
+}
 #[doc = "Request-to-send Invert Enable\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum RTSINV_A {
+pub enum Rtsinv {
     #[doc = "0: The RTS pin is active low"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: The RTS pin is active high"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<RTSINV_A> for bool {
+impl From<Rtsinv> for bool {
     #[inline(always)]
-    fn from(variant: RTSINV_A) -> Self {
+    fn from(variant: Rtsinv) -> Self {
         variant as u8 != 0
     }
 }
-impl RTSINV_R {
+#[doc = "Field `RTSINV` reader - Request-to-send Invert Enable"]
+pub type RtsinvR = crate::BitReader<Rtsinv>;
+impl RtsinvR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RTSINV_A {
+    pub const fn variant(&self) -> Rtsinv {
         match self.bits {
-            false => RTSINV_A::DISABLE,
-            true => RTSINV_A::ENABLE,
+            false => Rtsinv::Disable,
+            true => Rtsinv::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == RTSINV_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == RTSINV_A::ENABLE
-    }
-}
-#[doc = "Field `RTSINV` writer - Request-to-send Invert Enable"]
-pub type RTSINV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, RTSINV_A, O>;
-impl<'a, const O: u8> RTSINV_W<'a, O> {
     #[doc = "The RTS pin is active low"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(RTSINV_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Rtsinv::Disable
     }
     #[doc = "The RTS pin is active high"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(RTSINV_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Rtsinv::Enable
     }
 }
-#[doc = "Field `RXTIMEOUT` reader - RX Timeout"]
-pub type RXTIMEOUT_R = crate::FieldReader<u8, RXTIMEOUT_A>;
+#[doc = "Field `RTSINV` writer - Request-to-send Invert Enable"]
+pub type RtsinvW<'a, REG> = crate::BitWriter<'a, REG, Rtsinv>;
+impl<'a, REG> RtsinvW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The RTS pin is active low"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsinv::Disable)
+    }
+    #[doc = "The RTS pin is active high"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsinv::Enable)
+    }
+}
 #[doc = "RX Timeout\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum RXTIMEOUT_A {
+pub enum Rxtimeout {
     #[doc = "0: DISABLED"]
-    DISABLED = 0,
+    Disabled = 0,
     #[doc = "1: ONEFRAME"]
-    ONEFRAME = 1,
+    Oneframe = 1,
     #[doc = "2: TWOFRAMES"]
-    TWOFRAMES = 2,
+    Twoframes = 2,
     #[doc = "3: THREEFRAMES"]
-    THREEFRAMES = 3,
+    Threeframes = 3,
     #[doc = "4: FOURFRAMES"]
-    FOURFRAMES = 4,
+    Fourframes = 4,
     #[doc = "5: FIVEFRAMES"]
-    FIVEFRAMES = 5,
+    Fiveframes = 5,
     #[doc = "6: SIXFRAMES"]
-    SIXFRAMES = 6,
+    Sixframes = 6,
     #[doc = "7: SEVENFRAMES"]
-    SEVENFRAMES = 7,
+    Sevenframes = 7,
 }
-impl From<RXTIMEOUT_A> for u8 {
+impl From<Rxtimeout> for u8 {
     #[inline(always)]
-    fn from(variant: RXTIMEOUT_A) -> Self {
+    fn from(variant: Rxtimeout) -> Self {
         variant as _
     }
 }
-impl RXTIMEOUT_R {
+impl crate::FieldSpec for Rxtimeout {
+    type Ux = u8;
+}
+impl crate::IsEnum for Rxtimeout {}
+#[doc = "Field `RXTIMEOUT` reader - RX Timeout"]
+pub type RxtimeoutR = crate::FieldReader<Rxtimeout>;
+impl RxtimeoutR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RXTIMEOUT_A {
+    pub const fn variant(&self) -> Rxtimeout {
         match self.bits {
-            0 => RXTIMEOUT_A::DISABLED,
-            1 => RXTIMEOUT_A::ONEFRAME,
-            2 => RXTIMEOUT_A::TWOFRAMES,
-            3 => RXTIMEOUT_A::THREEFRAMES,
-            4 => RXTIMEOUT_A::FOURFRAMES,
-            5 => RXTIMEOUT_A::FIVEFRAMES,
-            6 => RXTIMEOUT_A::SIXFRAMES,
-            7 => RXTIMEOUT_A::SEVENFRAMES,
+            0 => Rxtimeout::Disabled,
+            1 => Rxtimeout::Oneframe,
+            2 => Rxtimeout::Twoframes,
+            3 => Rxtimeout::Threeframes,
+            4 => Rxtimeout::Fourframes,
+            5 => Rxtimeout::Fiveframes,
+            6 => Rxtimeout::Sixframes,
+            7 => Rxtimeout::Sevenframes,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLED`"]
-    #[inline(always)]
-    pub fn is_disabled(&self) -> bool {
-        *self == RXTIMEOUT_A::DISABLED
-    }
-    #[doc = "Checks if the value of the field is `ONEFRAME`"]
-    #[inline(always)]
-    pub fn is_oneframe(&self) -> bool {
-        *self == RXTIMEOUT_A::ONEFRAME
-    }
-    #[doc = "Checks if the value of the field is `TWOFRAMES`"]
-    #[inline(always)]
-    pub fn is_twoframes(&self) -> bool {
-        *self == RXTIMEOUT_A::TWOFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THREEFRAMES`"]
-    #[inline(always)]
-    pub fn is_threeframes(&self) -> bool {
-        *self == RXTIMEOUT_A::THREEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourframes(&self) -> bool {
-        *self == RXTIMEOUT_A::FOURFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_fiveframes(&self) -> bool {
-        *self == RXTIMEOUT_A::FIVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixframes(&self) -> bool {
-        *self == RXTIMEOUT_A::SIXFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sevenframes(&self) -> bool {
-        *self == RXTIMEOUT_A::SEVENFRAMES
-    }
-}
-#[doc = "Field `RXTIMEOUT` writer - RX Timeout"]
-pub type RXTIMEOUT_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, CFG1_SPEC, u8, RXTIMEOUT_A, 3, O>;
-impl<'a, const O: u8> RXTIMEOUT_W<'a, O> {
     #[doc = "DISABLED"]
     #[inline(always)]
-    pub fn disabled(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::DISABLED)
+    pub fn is_disabled(&self) -> bool {
+        *self == Rxtimeout::Disabled
     }
     #[doc = "ONEFRAME"]
     #[inline(always)]
-    pub fn oneframe(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::ONEFRAME)
+    pub fn is_oneframe(&self) -> bool {
+        *self == Rxtimeout::Oneframe
     }
     #[doc = "TWOFRAMES"]
     #[inline(always)]
-    pub fn twoframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::TWOFRAMES)
+    pub fn is_twoframes(&self) -> bool {
+        *self == Rxtimeout::Twoframes
     }
     #[doc = "THREEFRAMES"]
     #[inline(always)]
-    pub fn threeframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::THREEFRAMES)
+    pub fn is_threeframes(&self) -> bool {
+        *self == Rxtimeout::Threeframes
     }
     #[doc = "FOURFRAMES"]
     #[inline(always)]
-    pub fn fourframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::FOURFRAMES)
+    pub fn is_fourframes(&self) -> bool {
+        *self == Rxtimeout::Fourframes
     }
     #[doc = "FIVEFRAMES"]
     #[inline(always)]
-    pub fn fiveframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::FIVEFRAMES)
+    pub fn is_fiveframes(&self) -> bool {
+        *self == Rxtimeout::Fiveframes
     }
     #[doc = "SIXFRAMES"]
     #[inline(always)]
-    pub fn sixframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::SIXFRAMES)
+    pub fn is_sixframes(&self) -> bool {
+        *self == Rxtimeout::Sixframes
     }
     #[doc = "SEVENFRAMES"]
     #[inline(always)]
-    pub fn sevenframes(self) -> &'a mut W {
-        self.variant(RXTIMEOUT_A::SEVENFRAMES)
+    pub fn is_sevenframes(&self) -> bool {
+        *self == Rxtimeout::Sevenframes
+    }
+}
+#[doc = "Field `RXTIMEOUT` writer - RX Timeout"]
+pub type RxtimeoutW<'a, REG> = crate::FieldWriter<'a, REG, 3, Rxtimeout, crate::Safe>;
+impl<'a, REG> RxtimeoutW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "DISABLED"]
+    #[inline(always)]
+    pub fn disabled(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Disabled)
+    }
+    #[doc = "ONEFRAME"]
+    #[inline(always)]
+    pub fn oneframe(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Oneframe)
+    }
+    #[doc = "TWOFRAMES"]
+    #[inline(always)]
+    pub fn twoframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Twoframes)
+    }
+    #[doc = "THREEFRAMES"]
+    #[inline(always)]
+    pub fn threeframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Threeframes)
+    }
+    #[doc = "FOURFRAMES"]
+    #[inline(always)]
+    pub fn fourframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Fourframes)
+    }
+    #[doc = "FIVEFRAMES"]
+    #[inline(always)]
+    pub fn fiveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Fiveframes)
+    }
+    #[doc = "SIXFRAMES"]
+    #[inline(always)]
+    pub fn sixframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Sixframes)
+    }
+    #[doc = "SEVENFRAMES"]
+    #[inline(always)]
+    pub fn sevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxtimeout::Sevenframes)
     }
 }
 #[doc = "Field `TXDMAWU` reader - Transmitter DMA Wakeup"]
-pub type TXDMAWU_R = crate::BitReader<bool>;
+pub type TxdmawuR = crate::BitReader;
 #[doc = "Field `TXDMAWU` writer - Transmitter DMA Wakeup"]
-pub type TXDMAWU_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, bool, O>;
+pub type TxdmawuW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXDMAWU` reader - Receiver DMA Wakeup"]
-pub type RXDMAWU_R = crate::BitReader<bool>;
+pub type RxdmawuR = crate::BitReader;
 #[doc = "Field `RXDMAWU` writer - Receiver DMA Wakeup"]
-pub type RXDMAWU_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, bool, O>;
+pub type RxdmawuW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SFUBRX` reader - Start Frame Unblock Receiver"]
-pub type SFUBRX_R = crate::BitReader<bool>;
+pub type SfubrxR = crate::BitReader;
 #[doc = "Field `SFUBRX` writer - Start Frame Unblock Receiver"]
-pub type SFUBRX_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, bool, O>;
+pub type SfubrxW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `RXPRSEN` reader - PRS RX Enable"]
-pub type RXPRSEN_R = crate::BitReader<bool>;
+pub type RxprsenR = crate::BitReader;
 #[doc = "Field `RXPRSEN` writer - PRS RX Enable"]
-pub type RXPRSEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CFG1_SPEC, bool, O>;
-#[doc = "Field `TXFIW` reader - TX FIFO Interrupt Watermark"]
-pub type TXFIW_R = crate::FieldReader<u8, TXFIW_A>;
+pub type RxprsenW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "TX FIFO Interrupt Watermark\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TXFIW_A {
+pub enum Txfiw {
     #[doc = "0: TXFL status flag and IF are set when the TX FIFO has space for at least one more frame."]
-    ONEFRAME = 0,
+    Oneframe = 0,
     #[doc = "1: TXFL status flag and IF are set when the TX FIFO has space for at least two more frames."]
-    TWOFRAMES = 1,
+    Twoframes = 1,
     #[doc = "2: TXFL status flag and IF are set when the TX FIFO has space for at least three more frames."]
-    THREEFRAMES = 2,
+    Threeframes = 2,
     #[doc = "3: TXFL status flag and IF are set when the TX FIFO has space for at least four more frames."]
-    FOURFRAMES = 3,
+    Fourframes = 3,
     #[doc = "4: TXFL status flag and IF are set when the TX FIFO has space for at least five more frames."]
-    FIVEFRAMES = 4,
+    Fiveframes = 4,
     #[doc = "5: TXFL status flag and IF are set when the TX FIFO has space for at least six more frames."]
-    SIXFRAMES = 5,
+    Sixframes = 5,
     #[doc = "6: TXFL status flag and IF are set when the TX FIFO has space for at least seven more frames."]
-    SEVENFRAMES = 6,
+    Sevenframes = 6,
     #[doc = "7: TXFL status flag and IF are set when the TX FIFO has space for at least eight more frames."]
-    EIGHTFRAMES = 7,
+    Eightframes = 7,
     #[doc = "8: TXFL status flag and IF are set when the TX FIFO has space for at least nine more frames."]
-    NINEFRAMES = 8,
+    Nineframes = 8,
     #[doc = "9: TXFL status flag and IF are set when the TX FIFO has space for at least ten more frames."]
-    TENFRAMES = 9,
+    Tenframes = 9,
     #[doc = "10: TXFL status flag and IF are set when the TX FIFO has space for at least eleven more frames."]
-    ELEVENFRAMES = 10,
+    Elevenframes = 10,
     #[doc = "11: TXFL status flag and IF are set when the TX FIFO has space for at least twelve more frames."]
-    TWELVEFRAMES = 11,
+    Twelveframes = 11,
     #[doc = "12: TXFL status flag and IF are set when the TX FIFO has space for at least thriteen more frames."]
-    THIRTEENFRAMES = 12,
+    Thirteenframes = 12,
     #[doc = "13: TXFL status flag and IF are set when the TX FIFO has space for at least fourteen more frames."]
-    FOURTEENFRAMES = 13,
+    Fourteenframes = 13,
     #[doc = "14: TXFL status flag and IF are set when the TX FIFO has space for at least fifteen more frames."]
-    FIFTEENFRAMES = 14,
+    Fifteenframes = 14,
     #[doc = "15: TXFL status flag and IF are set when the TX FIFO has space for at least sixteen more frames."]
-    SIXTEENFRAMES = 15,
+    Sixteenframes = 15,
 }
-impl From<TXFIW_A> for u8 {
+impl From<Txfiw> for u8 {
     #[inline(always)]
-    fn from(variant: TXFIW_A) -> Self {
+    fn from(variant: Txfiw) -> Self {
         variant as _
     }
 }
-impl TXFIW_R {
+impl crate::FieldSpec for Txfiw {
+    type Ux = u8;
+}
+impl crate::IsEnum for Txfiw {}
+#[doc = "Field `TXFIW` reader - TX FIFO Interrupt Watermark"]
+pub type TxfiwR = crate::FieldReader<Txfiw>;
+impl TxfiwR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TXFIW_A {
+    pub const fn variant(&self) -> Txfiw {
         match self.bits {
-            0 => TXFIW_A::ONEFRAME,
-            1 => TXFIW_A::TWOFRAMES,
-            2 => TXFIW_A::THREEFRAMES,
-            3 => TXFIW_A::FOURFRAMES,
-            4 => TXFIW_A::FIVEFRAMES,
-            5 => TXFIW_A::SIXFRAMES,
-            6 => TXFIW_A::SEVENFRAMES,
-            7 => TXFIW_A::EIGHTFRAMES,
-            8 => TXFIW_A::NINEFRAMES,
-            9 => TXFIW_A::TENFRAMES,
-            10 => TXFIW_A::ELEVENFRAMES,
-            11 => TXFIW_A::TWELVEFRAMES,
-            12 => TXFIW_A::THIRTEENFRAMES,
-            13 => TXFIW_A::FOURTEENFRAMES,
-            14 => TXFIW_A::FIFTEENFRAMES,
-            15 => TXFIW_A::SIXTEENFRAMES,
+            0 => Txfiw::Oneframe,
+            1 => Txfiw::Twoframes,
+            2 => Txfiw::Threeframes,
+            3 => Txfiw::Fourframes,
+            4 => Txfiw::Fiveframes,
+            5 => Txfiw::Sixframes,
+            6 => Txfiw::Sevenframes,
+            7 => Txfiw::Eightframes,
+            8 => Txfiw::Nineframes,
+            9 => Txfiw::Tenframes,
+            10 => Txfiw::Elevenframes,
+            11 => Txfiw::Twelveframes,
+            12 => Txfiw::Thirteenframes,
+            13 => Txfiw::Fourteenframes,
+            14 => Txfiw::Fifteenframes,
+            15 => Txfiw::Sixteenframes,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `ONEFRAME`"]
-    #[inline(always)]
-    pub fn is_oneframe(&self) -> bool {
-        *self == TXFIW_A::ONEFRAME
-    }
-    #[doc = "Checks if the value of the field is `TWOFRAMES`"]
-    #[inline(always)]
-    pub fn is_twoframes(&self) -> bool {
-        *self == TXFIW_A::TWOFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THREEFRAMES`"]
-    #[inline(always)]
-    pub fn is_threeframes(&self) -> bool {
-        *self == TXFIW_A::THREEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourframes(&self) -> bool {
-        *self == TXFIW_A::FOURFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_fiveframes(&self) -> bool {
-        *self == TXFIW_A::FIVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixframes(&self) -> bool {
-        *self == TXFIW_A::SIXFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sevenframes(&self) -> bool {
-        *self == TXFIW_A::SEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `EIGHTFRAMES`"]
-    #[inline(always)]
-    pub fn is_eightframes(&self) -> bool {
-        *self == TXFIW_A::EIGHTFRAMES
-    }
-    #[doc = "Checks if the value of the field is `NINEFRAMES`"]
-    #[inline(always)]
-    pub fn is_nineframes(&self) -> bool {
-        *self == TXFIW_A::NINEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TENFRAMES`"]
-    #[inline(always)]
-    pub fn is_tenframes(&self) -> bool {
-        *self == TXFIW_A::TENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `ELEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_elevenframes(&self) -> bool {
-        *self == TXFIW_A::ELEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TWELVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_twelveframes(&self) -> bool {
-        *self == TXFIW_A::TWELVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THIRTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_thirteenframes(&self) -> bool {
-        *self == TXFIW_A::THIRTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourteenframes(&self) -> bool {
-        *self == TXFIW_A::FOURTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIFTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fifteenframes(&self) -> bool {
-        *self == TXFIW_A::FIFTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixteenframes(&self) -> bool {
-        *self == TXFIW_A::SIXTEENFRAMES
-    }
-}
-#[doc = "Field `TXFIW` writer - TX FIFO Interrupt Watermark"]
-pub type TXFIW_W<'a, const O: u8> = crate::FieldWriterSafe<'a, u32, CFG1_SPEC, u8, TXFIW_A, 4, O>;
-impl<'a, const O: u8> TXFIW_W<'a, O> {
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least one more frame."]
     #[inline(always)]
-    pub fn oneframe(self) -> &'a mut W {
-        self.variant(TXFIW_A::ONEFRAME)
+    pub fn is_oneframe(&self) -> bool {
+        *self == Txfiw::Oneframe
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least two more frames."]
     #[inline(always)]
-    pub fn twoframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::TWOFRAMES)
+    pub fn is_twoframes(&self) -> bool {
+        *self == Txfiw::Twoframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least three more frames."]
     #[inline(always)]
-    pub fn threeframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::THREEFRAMES)
+    pub fn is_threeframes(&self) -> bool {
+        *self == Txfiw::Threeframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least four more frames."]
     #[inline(always)]
-    pub fn fourframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::FOURFRAMES)
+    pub fn is_fourframes(&self) -> bool {
+        *self == Txfiw::Fourframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least five more frames."]
     #[inline(always)]
-    pub fn fiveframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::FIVEFRAMES)
+    pub fn is_fiveframes(&self) -> bool {
+        *self == Txfiw::Fiveframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least six more frames."]
     #[inline(always)]
-    pub fn sixframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::SIXFRAMES)
+    pub fn is_sixframes(&self) -> bool {
+        *self == Txfiw::Sixframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least seven more frames."]
     #[inline(always)]
-    pub fn sevenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::SEVENFRAMES)
+    pub fn is_sevenframes(&self) -> bool {
+        *self == Txfiw::Sevenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least eight more frames."]
     #[inline(always)]
-    pub fn eightframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::EIGHTFRAMES)
+    pub fn is_eightframes(&self) -> bool {
+        *self == Txfiw::Eightframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least nine more frames."]
     #[inline(always)]
-    pub fn nineframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::NINEFRAMES)
+    pub fn is_nineframes(&self) -> bool {
+        *self == Txfiw::Nineframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least ten more frames."]
     #[inline(always)]
-    pub fn tenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::TENFRAMES)
+    pub fn is_tenframes(&self) -> bool {
+        *self == Txfiw::Tenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least eleven more frames."]
     #[inline(always)]
-    pub fn elevenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::ELEVENFRAMES)
+    pub fn is_elevenframes(&self) -> bool {
+        *self == Txfiw::Elevenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least twelve more frames."]
     #[inline(always)]
-    pub fn twelveframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::TWELVEFRAMES)
+    pub fn is_twelveframes(&self) -> bool {
+        *self == Txfiw::Twelveframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least thriteen more frames."]
     #[inline(always)]
-    pub fn thirteenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::THIRTEENFRAMES)
+    pub fn is_thirteenframes(&self) -> bool {
+        *self == Txfiw::Thirteenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least fourteen more frames."]
     #[inline(always)]
-    pub fn fourteenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::FOURTEENFRAMES)
+    pub fn is_fourteenframes(&self) -> bool {
+        *self == Txfiw::Fourteenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least fifteen more frames."]
     #[inline(always)]
-    pub fn fifteenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::FIFTEENFRAMES)
+    pub fn is_fifteenframes(&self) -> bool {
+        *self == Txfiw::Fifteenframes
     }
     #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least sixteen more frames."]
     #[inline(always)]
-    pub fn sixteenframes(self) -> &'a mut W {
-        self.variant(TXFIW_A::SIXTEENFRAMES)
+    pub fn is_sixteenframes(&self) -> bool {
+        *self == Txfiw::Sixteenframes
     }
 }
-#[doc = "Field `RTSRXFW` reader - Request-to-send RX FIFO Watermark"]
-pub type RTSRXFW_R = crate::FieldReader<u8, RTSRXFW_A>;
+#[doc = "Field `TXFIW` writer - TX FIFO Interrupt Watermark"]
+pub type TxfiwW<'a, REG> = crate::FieldWriter<'a, REG, 4, Txfiw, crate::Safe>;
+impl<'a, REG> TxfiwW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least one more frame."]
+    #[inline(always)]
+    pub fn oneframe(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Oneframe)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least two more frames."]
+    #[inline(always)]
+    pub fn twoframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Twoframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least three more frames."]
+    #[inline(always)]
+    pub fn threeframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Threeframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least four more frames."]
+    #[inline(always)]
+    pub fn fourframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Fourframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least five more frames."]
+    #[inline(always)]
+    pub fn fiveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Fiveframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least six more frames."]
+    #[inline(always)]
+    pub fn sixframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Sixframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least seven more frames."]
+    #[inline(always)]
+    pub fn sevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Sevenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least eight more frames."]
+    #[inline(always)]
+    pub fn eightframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Eightframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least nine more frames."]
+    #[inline(always)]
+    pub fn nineframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Nineframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least ten more frames."]
+    #[inline(always)]
+    pub fn tenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Tenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least eleven more frames."]
+    #[inline(always)]
+    pub fn elevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Elevenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least twelve more frames."]
+    #[inline(always)]
+    pub fn twelveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Twelveframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least thriteen more frames."]
+    #[inline(always)]
+    pub fn thirteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Thirteenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least fourteen more frames."]
+    #[inline(always)]
+    pub fn fourteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Fourteenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least fifteen more frames."]
+    #[inline(always)]
+    pub fn fifteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Fifteenframes)
+    }
+    #[doc = "TXFL status flag and IF are set when the TX FIFO has space for at least sixteen more frames."]
+    #[inline(always)]
+    pub fn sixteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Txfiw::Sixteenframes)
+    }
+}
 #[doc = "Request-to-send RX FIFO Watermark\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum RTSRXFW_A {
+pub enum Rtsrxfw {
     #[doc = "0: RTS is set if there is space for at least one more frame in the RX FIFO."]
-    ONEFRAME = 0,
+    Oneframe = 0,
     #[doc = "1: RTS is set if there is space for at least two more frames in the RX FIFO."]
-    TWOFRAMES = 1,
+    Twoframes = 1,
     #[doc = "2: RTS is set if there is space for at least three more frames in the RX FIFO."]
-    THREEFRAMES = 2,
+    Threeframes = 2,
     #[doc = "3: RTS is set if there is space for four more frames in the RX FIFO."]
-    FOURFRAMES = 3,
+    Fourframes = 3,
     #[doc = "4: RTS is set if there is space for five more frames in the RX FIFO."]
-    FIVEFRAMES = 4,
+    Fiveframes = 4,
     #[doc = "5: RTS is set if there is space for six more frames in the RX FIFO."]
-    SIXFRAMES = 5,
+    Sixframes = 5,
     #[doc = "6: RTS is set if there is space for seven more frames in the RX FIFO."]
-    SEVENFRAMES = 6,
+    Sevenframes = 6,
     #[doc = "7: RTS is set if there is space for eight more frames in the RX FIFO."]
-    EIGHTFRAMES = 7,
+    Eightframes = 7,
     #[doc = "8: RTS is set if there is space for nine more frames in the RX FIFO."]
-    NINEFRAMES = 8,
+    Nineframes = 8,
     #[doc = "9: RTS is set if there is space for ten more frames in the RX FIFO."]
-    TENFRAMES = 9,
+    Tenframes = 9,
     #[doc = "10: RTS is set if there is space for eleven more frames in the RX FIFO."]
-    ELEVENFRAMES = 10,
+    Elevenframes = 10,
     #[doc = "11: RTS is set if there is space for twelve more frames in the RX FIFO."]
-    TWELVEFRAMES = 11,
+    Twelveframes = 11,
     #[doc = "12: RTS is set if there is space for thirteen more frames in the RX FIFO."]
-    THIRTEENFRAMES = 12,
+    Thirteenframes = 12,
     #[doc = "13: RTS is set if there is space for fourteen more frames in the RX FIFO."]
-    FOURTEENFRAMES = 13,
+    Fourteenframes = 13,
     #[doc = "14: RTS is set if there is space for fifteen more frames in the RX FIFO."]
-    FIFTEENFRAMES = 14,
+    Fifteenframes = 14,
     #[doc = "15: RTS is set if there is space for sixteen more frames in the RX FIFO."]
-    SIXTEENFRAMES = 15,
+    Sixteenframes = 15,
 }
-impl From<RTSRXFW_A> for u8 {
+impl From<Rtsrxfw> for u8 {
     #[inline(always)]
-    fn from(variant: RTSRXFW_A) -> Self {
+    fn from(variant: Rtsrxfw) -> Self {
         variant as _
     }
 }
-impl RTSRXFW_R {
+impl crate::FieldSpec for Rtsrxfw {
+    type Ux = u8;
+}
+impl crate::IsEnum for Rtsrxfw {}
+#[doc = "Field `RTSRXFW` reader - Request-to-send RX FIFO Watermark"]
+pub type RtsrxfwR = crate::FieldReader<Rtsrxfw>;
+impl RtsrxfwR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RTSRXFW_A {
+    pub const fn variant(&self) -> Rtsrxfw {
         match self.bits {
-            0 => RTSRXFW_A::ONEFRAME,
-            1 => RTSRXFW_A::TWOFRAMES,
-            2 => RTSRXFW_A::THREEFRAMES,
-            3 => RTSRXFW_A::FOURFRAMES,
-            4 => RTSRXFW_A::FIVEFRAMES,
-            5 => RTSRXFW_A::SIXFRAMES,
-            6 => RTSRXFW_A::SEVENFRAMES,
-            7 => RTSRXFW_A::EIGHTFRAMES,
-            8 => RTSRXFW_A::NINEFRAMES,
-            9 => RTSRXFW_A::TENFRAMES,
-            10 => RTSRXFW_A::ELEVENFRAMES,
-            11 => RTSRXFW_A::TWELVEFRAMES,
-            12 => RTSRXFW_A::THIRTEENFRAMES,
-            13 => RTSRXFW_A::FOURTEENFRAMES,
-            14 => RTSRXFW_A::FIFTEENFRAMES,
-            15 => RTSRXFW_A::SIXTEENFRAMES,
+            0 => Rtsrxfw::Oneframe,
+            1 => Rtsrxfw::Twoframes,
+            2 => Rtsrxfw::Threeframes,
+            3 => Rtsrxfw::Fourframes,
+            4 => Rtsrxfw::Fiveframes,
+            5 => Rtsrxfw::Sixframes,
+            6 => Rtsrxfw::Sevenframes,
+            7 => Rtsrxfw::Eightframes,
+            8 => Rtsrxfw::Nineframes,
+            9 => Rtsrxfw::Tenframes,
+            10 => Rtsrxfw::Elevenframes,
+            11 => Rtsrxfw::Twelveframes,
+            12 => Rtsrxfw::Thirteenframes,
+            13 => Rtsrxfw::Fourteenframes,
+            14 => Rtsrxfw::Fifteenframes,
+            15 => Rtsrxfw::Sixteenframes,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `ONEFRAME`"]
-    #[inline(always)]
-    pub fn is_oneframe(&self) -> bool {
-        *self == RTSRXFW_A::ONEFRAME
-    }
-    #[doc = "Checks if the value of the field is `TWOFRAMES`"]
-    #[inline(always)]
-    pub fn is_twoframes(&self) -> bool {
-        *self == RTSRXFW_A::TWOFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THREEFRAMES`"]
-    #[inline(always)]
-    pub fn is_threeframes(&self) -> bool {
-        *self == RTSRXFW_A::THREEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourframes(&self) -> bool {
-        *self == RTSRXFW_A::FOURFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_fiveframes(&self) -> bool {
-        *self == RTSRXFW_A::FIVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixframes(&self) -> bool {
-        *self == RTSRXFW_A::SIXFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sevenframes(&self) -> bool {
-        *self == RTSRXFW_A::SEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `EIGHTFRAMES`"]
-    #[inline(always)]
-    pub fn is_eightframes(&self) -> bool {
-        *self == RTSRXFW_A::EIGHTFRAMES
-    }
-    #[doc = "Checks if the value of the field is `NINEFRAMES`"]
-    #[inline(always)]
-    pub fn is_nineframes(&self) -> bool {
-        *self == RTSRXFW_A::NINEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TENFRAMES`"]
-    #[inline(always)]
-    pub fn is_tenframes(&self) -> bool {
-        *self == RTSRXFW_A::TENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `ELEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_elevenframes(&self) -> bool {
-        *self == RTSRXFW_A::ELEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TWELVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_twelveframes(&self) -> bool {
-        *self == RTSRXFW_A::TWELVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THIRTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_thirteenframes(&self) -> bool {
-        *self == RTSRXFW_A::THIRTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourteenframes(&self) -> bool {
-        *self == RTSRXFW_A::FOURTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIFTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fifteenframes(&self) -> bool {
-        *self == RTSRXFW_A::FIFTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixteenframes(&self) -> bool {
-        *self == RTSRXFW_A::SIXTEENFRAMES
-    }
-}
-#[doc = "Field `RTSRXFW` writer - Request-to-send RX FIFO Watermark"]
-pub type RTSRXFW_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, CFG1_SPEC, u8, RTSRXFW_A, 4, O>;
-impl<'a, const O: u8> RTSRXFW_W<'a, O> {
     #[doc = "RTS is set if there is space for at least one more frame in the RX FIFO."]
     #[inline(always)]
-    pub fn oneframe(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::ONEFRAME)
+    pub fn is_oneframe(&self) -> bool {
+        *self == Rtsrxfw::Oneframe
     }
     #[doc = "RTS is set if there is space for at least two more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn twoframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::TWOFRAMES)
+    pub fn is_twoframes(&self) -> bool {
+        *self == Rtsrxfw::Twoframes
     }
     #[doc = "RTS is set if there is space for at least three more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn threeframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::THREEFRAMES)
+    pub fn is_threeframes(&self) -> bool {
+        *self == Rtsrxfw::Threeframes
     }
     #[doc = "RTS is set if there is space for four more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn fourframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::FOURFRAMES)
+    pub fn is_fourframes(&self) -> bool {
+        *self == Rtsrxfw::Fourframes
     }
     #[doc = "RTS is set if there is space for five more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn fiveframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::FIVEFRAMES)
+    pub fn is_fiveframes(&self) -> bool {
+        *self == Rtsrxfw::Fiveframes
     }
     #[doc = "RTS is set if there is space for six more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn sixframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::SIXFRAMES)
+    pub fn is_sixframes(&self) -> bool {
+        *self == Rtsrxfw::Sixframes
     }
     #[doc = "RTS is set if there is space for seven more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn sevenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::SEVENFRAMES)
+    pub fn is_sevenframes(&self) -> bool {
+        *self == Rtsrxfw::Sevenframes
     }
     #[doc = "RTS is set if there is space for eight more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn eightframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::EIGHTFRAMES)
+    pub fn is_eightframes(&self) -> bool {
+        *self == Rtsrxfw::Eightframes
     }
     #[doc = "RTS is set if there is space for nine more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn nineframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::NINEFRAMES)
+    pub fn is_nineframes(&self) -> bool {
+        *self == Rtsrxfw::Nineframes
     }
     #[doc = "RTS is set if there is space for ten more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn tenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::TENFRAMES)
+    pub fn is_tenframes(&self) -> bool {
+        *self == Rtsrxfw::Tenframes
     }
     #[doc = "RTS is set if there is space for eleven more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn elevenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::ELEVENFRAMES)
+    pub fn is_elevenframes(&self) -> bool {
+        *self == Rtsrxfw::Elevenframes
     }
     #[doc = "RTS is set if there is space for twelve more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn twelveframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::TWELVEFRAMES)
+    pub fn is_twelveframes(&self) -> bool {
+        *self == Rtsrxfw::Twelveframes
     }
     #[doc = "RTS is set if there is space for thirteen more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn thirteenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::THIRTEENFRAMES)
+    pub fn is_thirteenframes(&self) -> bool {
+        *self == Rtsrxfw::Thirteenframes
     }
     #[doc = "RTS is set if there is space for fourteen more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn fourteenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::FOURTEENFRAMES)
+    pub fn is_fourteenframes(&self) -> bool {
+        *self == Rtsrxfw::Fourteenframes
     }
     #[doc = "RTS is set if there is space for fifteen more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn fifteenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::FIFTEENFRAMES)
+    pub fn is_fifteenframes(&self) -> bool {
+        *self == Rtsrxfw::Fifteenframes
     }
     #[doc = "RTS is set if there is space for sixteen more frames in the RX FIFO."]
     #[inline(always)]
-    pub fn sixteenframes(self) -> &'a mut W {
-        self.variant(RTSRXFW_A::SIXTEENFRAMES)
+    pub fn is_sixteenframes(&self) -> bool {
+        *self == Rtsrxfw::Sixteenframes
     }
 }
-#[doc = "Field `RXFIW` reader - RX FIFO Interrupt Watermark"]
-pub type RXFIW_R = crate::FieldReader<u8, RXFIW_A>;
+#[doc = "Field `RTSRXFW` writer - Request-to-send RX FIFO Watermark"]
+pub type RtsrxfwW<'a, REG> = crate::FieldWriter<'a, REG, 4, Rtsrxfw, crate::Safe>;
+impl<'a, REG> RtsrxfwW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "RTS is set if there is space for at least one more frame in the RX FIFO."]
+    #[inline(always)]
+    pub fn oneframe(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Oneframe)
+    }
+    #[doc = "RTS is set if there is space for at least two more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn twoframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Twoframes)
+    }
+    #[doc = "RTS is set if there is space for at least three more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn threeframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Threeframes)
+    }
+    #[doc = "RTS is set if there is space for four more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn fourframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Fourframes)
+    }
+    #[doc = "RTS is set if there is space for five more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn fiveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Fiveframes)
+    }
+    #[doc = "RTS is set if there is space for six more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn sixframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Sixframes)
+    }
+    #[doc = "RTS is set if there is space for seven more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn sevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Sevenframes)
+    }
+    #[doc = "RTS is set if there is space for eight more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn eightframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Eightframes)
+    }
+    #[doc = "RTS is set if there is space for nine more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn nineframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Nineframes)
+    }
+    #[doc = "RTS is set if there is space for ten more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn tenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Tenframes)
+    }
+    #[doc = "RTS is set if there is space for eleven more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn elevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Elevenframes)
+    }
+    #[doc = "RTS is set if there is space for twelve more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn twelveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Twelveframes)
+    }
+    #[doc = "RTS is set if there is space for thirteen more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn thirteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Thirteenframes)
+    }
+    #[doc = "RTS is set if there is space for fourteen more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn fourteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Fourteenframes)
+    }
+    #[doc = "RTS is set if there is space for fifteen more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn fifteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Fifteenframes)
+    }
+    #[doc = "RTS is set if there is space for sixteen more frames in the RX FIFO."]
+    #[inline(always)]
+    pub fn sixteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rtsrxfw::Sixteenframes)
+    }
+}
 #[doc = "RX FIFO Interrupt Watermark\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum RXFIW_A {
+pub enum Rxfiw {
     #[doc = "0: RXFL status flag and IF are set when the RX FIFO has at least one frame in it."]
-    ONEFRAME = 0,
+    Oneframe = 0,
     #[doc = "1: RXFL status flag and IF are set when the RX FIFO has at least two frames in it."]
-    TWOFRAMES = 1,
+    Twoframes = 1,
     #[doc = "2: RXFL status flag and IF are set when the RX FIFO has at least three frames in it."]
-    THREEFRAMES = 2,
+    Threeframes = 2,
     #[doc = "3: RXFL status flag and IF are set when the RX FIFO has at least four frames in it."]
-    FOURFRAMES = 3,
+    Fourframes = 3,
     #[doc = "4: RXFL status flag and IF are set when the RX FIFO has at least five frames in it."]
-    FIVEFRAMES = 4,
+    Fiveframes = 4,
     #[doc = "5: RXFL status flag and IF are set when the RX FIFO has at least six frames in it."]
-    SIXFRAMES = 5,
+    Sixframes = 5,
     #[doc = "6: RXFL status flag and IF are set when the RX FIFO has at least seven frames in it."]
-    SEVENFRAMES = 6,
+    Sevenframes = 6,
     #[doc = "7: RXFL status flag and IF are set when the RX FIFO has at least eight frames in it."]
-    EIGHTFRAMES = 7,
+    Eightframes = 7,
     #[doc = "8: RXFL status flag and IF are set when the RX FIFO has at least nine frames in it."]
-    NINEFRAMES = 8,
+    Nineframes = 8,
     #[doc = "9: RXFL status flag and IF are set when the RX FIFO has at least ten frames in it."]
-    TENFRAMES = 9,
+    Tenframes = 9,
     #[doc = "10: RXFL status flag and IF are set when the RX FIFO has at least eleven frames in it."]
-    ELEVENFRAMES = 10,
+    Elevenframes = 10,
     #[doc = "11: RXFL status flag and IF are set when the RX FIFO has at least twelve frames in it."]
-    TWELVEFRAMES = 11,
+    Twelveframes = 11,
     #[doc = "12: RXFL status flag and IF are set when the RX FIFO has at least thriteen frames in it."]
-    THIRTEENFRAMES = 12,
+    Thirteenframes = 12,
     #[doc = "13: RXFL status flag and IF are set when the RX FIFO has at least fourteen frames in it."]
-    FOURTEENFRAMES = 13,
+    Fourteenframes = 13,
     #[doc = "14: RXFL status flag and IF are set when the RX FIFO has at least fifteen frames in it."]
-    FIFTEENFRAMES = 14,
+    Fifteenframes = 14,
     #[doc = "15: RXFL status flag and IF are set when the RX FIFO has at least sixteen frames in it."]
-    SIXTEENFRAMES = 15,
+    Sixteenframes = 15,
 }
-impl From<RXFIW_A> for u8 {
+impl From<Rxfiw> for u8 {
     #[inline(always)]
-    fn from(variant: RXFIW_A) -> Self {
+    fn from(variant: Rxfiw) -> Self {
         variant as _
     }
 }
-impl RXFIW_R {
+impl crate::FieldSpec for Rxfiw {
+    type Ux = u8;
+}
+impl crate::IsEnum for Rxfiw {}
+#[doc = "Field `RXFIW` reader - RX FIFO Interrupt Watermark"]
+pub type RxfiwR = crate::FieldReader<Rxfiw>;
+impl RxfiwR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RXFIW_A {
+    pub const fn variant(&self) -> Rxfiw {
         match self.bits {
-            0 => RXFIW_A::ONEFRAME,
-            1 => RXFIW_A::TWOFRAMES,
-            2 => RXFIW_A::THREEFRAMES,
-            3 => RXFIW_A::FOURFRAMES,
-            4 => RXFIW_A::FIVEFRAMES,
-            5 => RXFIW_A::SIXFRAMES,
-            6 => RXFIW_A::SEVENFRAMES,
-            7 => RXFIW_A::EIGHTFRAMES,
-            8 => RXFIW_A::NINEFRAMES,
-            9 => RXFIW_A::TENFRAMES,
-            10 => RXFIW_A::ELEVENFRAMES,
-            11 => RXFIW_A::TWELVEFRAMES,
-            12 => RXFIW_A::THIRTEENFRAMES,
-            13 => RXFIW_A::FOURTEENFRAMES,
-            14 => RXFIW_A::FIFTEENFRAMES,
-            15 => RXFIW_A::SIXTEENFRAMES,
+            0 => Rxfiw::Oneframe,
+            1 => Rxfiw::Twoframes,
+            2 => Rxfiw::Threeframes,
+            3 => Rxfiw::Fourframes,
+            4 => Rxfiw::Fiveframes,
+            5 => Rxfiw::Sixframes,
+            6 => Rxfiw::Sevenframes,
+            7 => Rxfiw::Eightframes,
+            8 => Rxfiw::Nineframes,
+            9 => Rxfiw::Tenframes,
+            10 => Rxfiw::Elevenframes,
+            11 => Rxfiw::Twelveframes,
+            12 => Rxfiw::Thirteenframes,
+            13 => Rxfiw::Fourteenframes,
+            14 => Rxfiw::Fifteenframes,
+            15 => Rxfiw::Sixteenframes,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `ONEFRAME`"]
-    #[inline(always)]
-    pub fn is_oneframe(&self) -> bool {
-        *self == RXFIW_A::ONEFRAME
-    }
-    #[doc = "Checks if the value of the field is `TWOFRAMES`"]
-    #[inline(always)]
-    pub fn is_twoframes(&self) -> bool {
-        *self == RXFIW_A::TWOFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THREEFRAMES`"]
-    #[inline(always)]
-    pub fn is_threeframes(&self) -> bool {
-        *self == RXFIW_A::THREEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourframes(&self) -> bool {
-        *self == RXFIW_A::FOURFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_fiveframes(&self) -> bool {
-        *self == RXFIW_A::FIVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixframes(&self) -> bool {
-        *self == RXFIW_A::SIXFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sevenframes(&self) -> bool {
-        *self == RXFIW_A::SEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `EIGHTFRAMES`"]
-    #[inline(always)]
-    pub fn is_eightframes(&self) -> bool {
-        *self == RXFIW_A::EIGHTFRAMES
-    }
-    #[doc = "Checks if the value of the field is `NINEFRAMES`"]
-    #[inline(always)]
-    pub fn is_nineframes(&self) -> bool {
-        *self == RXFIW_A::NINEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TENFRAMES`"]
-    #[inline(always)]
-    pub fn is_tenframes(&self) -> bool {
-        *self == RXFIW_A::TENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `ELEVENFRAMES`"]
-    #[inline(always)]
-    pub fn is_elevenframes(&self) -> bool {
-        *self == RXFIW_A::ELEVENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `TWELVEFRAMES`"]
-    #[inline(always)]
-    pub fn is_twelveframes(&self) -> bool {
-        *self == RXFIW_A::TWELVEFRAMES
-    }
-    #[doc = "Checks if the value of the field is `THIRTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_thirteenframes(&self) -> bool {
-        *self == RXFIW_A::THIRTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FOURTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fourteenframes(&self) -> bool {
-        *self == RXFIW_A::FOURTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `FIFTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_fifteenframes(&self) -> bool {
-        *self == RXFIW_A::FIFTEENFRAMES
-    }
-    #[doc = "Checks if the value of the field is `SIXTEENFRAMES`"]
-    #[inline(always)]
-    pub fn is_sixteenframes(&self) -> bool {
-        *self == RXFIW_A::SIXTEENFRAMES
-    }
-}
-#[doc = "Field `RXFIW` writer - RX FIFO Interrupt Watermark"]
-pub type RXFIW_W<'a, const O: u8> = crate::FieldWriterSafe<'a, u32, CFG1_SPEC, u8, RXFIW_A, 4, O>;
-impl<'a, const O: u8> RXFIW_W<'a, O> {
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least one frame in it."]
     #[inline(always)]
-    pub fn oneframe(self) -> &'a mut W {
-        self.variant(RXFIW_A::ONEFRAME)
+    pub fn is_oneframe(&self) -> bool {
+        *self == Rxfiw::Oneframe
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least two frames in it."]
     #[inline(always)]
-    pub fn twoframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::TWOFRAMES)
+    pub fn is_twoframes(&self) -> bool {
+        *self == Rxfiw::Twoframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least three frames in it."]
     #[inline(always)]
-    pub fn threeframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::THREEFRAMES)
+    pub fn is_threeframes(&self) -> bool {
+        *self == Rxfiw::Threeframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least four frames in it."]
     #[inline(always)]
-    pub fn fourframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::FOURFRAMES)
+    pub fn is_fourframes(&self) -> bool {
+        *self == Rxfiw::Fourframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least five frames in it."]
     #[inline(always)]
-    pub fn fiveframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::FIVEFRAMES)
+    pub fn is_fiveframes(&self) -> bool {
+        *self == Rxfiw::Fiveframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least six frames in it."]
     #[inline(always)]
-    pub fn sixframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::SIXFRAMES)
+    pub fn is_sixframes(&self) -> bool {
+        *self == Rxfiw::Sixframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least seven frames in it."]
     #[inline(always)]
-    pub fn sevenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::SEVENFRAMES)
+    pub fn is_sevenframes(&self) -> bool {
+        *self == Rxfiw::Sevenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least eight frames in it."]
     #[inline(always)]
-    pub fn eightframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::EIGHTFRAMES)
+    pub fn is_eightframes(&self) -> bool {
+        *self == Rxfiw::Eightframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least nine frames in it."]
     #[inline(always)]
-    pub fn nineframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::NINEFRAMES)
+    pub fn is_nineframes(&self) -> bool {
+        *self == Rxfiw::Nineframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least ten frames in it."]
     #[inline(always)]
-    pub fn tenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::TENFRAMES)
+    pub fn is_tenframes(&self) -> bool {
+        *self == Rxfiw::Tenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least eleven frames in it."]
     #[inline(always)]
-    pub fn elevenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::ELEVENFRAMES)
+    pub fn is_elevenframes(&self) -> bool {
+        *self == Rxfiw::Elevenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least twelve frames in it."]
     #[inline(always)]
-    pub fn twelveframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::TWELVEFRAMES)
+    pub fn is_twelveframes(&self) -> bool {
+        *self == Rxfiw::Twelveframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least thriteen frames in it."]
     #[inline(always)]
-    pub fn thirteenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::THIRTEENFRAMES)
+    pub fn is_thirteenframes(&self) -> bool {
+        *self == Rxfiw::Thirteenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least fourteen frames in it."]
     #[inline(always)]
-    pub fn fourteenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::FOURTEENFRAMES)
+    pub fn is_fourteenframes(&self) -> bool {
+        *self == Rxfiw::Fourteenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least fifteen frames in it."]
     #[inline(always)]
-    pub fn fifteenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::FIFTEENFRAMES)
+    pub fn is_fifteenframes(&self) -> bool {
+        *self == Rxfiw::Fifteenframes
     }
     #[doc = "RXFL status flag and IF are set when the RX FIFO has at least sixteen frames in it."]
     #[inline(always)]
-    pub fn sixteenframes(self) -> &'a mut W {
-        self.variant(RXFIW_A::SIXTEENFRAMES)
+    pub fn is_sixteenframes(&self) -> bool {
+        *self == Rxfiw::Sixteenframes
+    }
+}
+#[doc = "Field `RXFIW` writer - RX FIFO Interrupt Watermark"]
+pub type RxfiwW<'a, REG> = crate::FieldWriter<'a, REG, 4, Rxfiw, crate::Safe>;
+impl<'a, REG> RxfiwW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least one frame in it."]
+    #[inline(always)]
+    pub fn oneframe(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Oneframe)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least two frames in it."]
+    #[inline(always)]
+    pub fn twoframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Twoframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least three frames in it."]
+    #[inline(always)]
+    pub fn threeframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Threeframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least four frames in it."]
+    #[inline(always)]
+    pub fn fourframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Fourframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least five frames in it."]
+    #[inline(always)]
+    pub fn fiveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Fiveframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least six frames in it."]
+    #[inline(always)]
+    pub fn sixframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Sixframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least seven frames in it."]
+    #[inline(always)]
+    pub fn sevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Sevenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least eight frames in it."]
+    #[inline(always)]
+    pub fn eightframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Eightframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least nine frames in it."]
+    #[inline(always)]
+    pub fn nineframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Nineframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least ten frames in it."]
+    #[inline(always)]
+    pub fn tenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Tenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least eleven frames in it."]
+    #[inline(always)]
+    pub fn elevenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Elevenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least twelve frames in it."]
+    #[inline(always)]
+    pub fn twelveframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Twelveframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least thriteen frames in it."]
+    #[inline(always)]
+    pub fn thirteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Thirteenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least fourteen frames in it."]
+    #[inline(always)]
+    pub fn fourteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Fourteenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least fifteen frames in it."]
+    #[inline(always)]
+    pub fn fifteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Fifteenframes)
+    }
+    #[doc = "RXFL status flag and IF are set when the RX FIFO has at least sixteen frames in it."]
+    #[inline(always)]
+    pub fn sixteenframes(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxfiw::Sixteenframes)
     }
 }
 impl R {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
-    pub fn dbghalt(&self) -> DBGHALT_R {
-        DBGHALT_R::new((self.bits & 1) != 0)
+    pub fn dbghalt(&self) -> DbghaltR {
+        DbghaltR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Clear-to-send Invert Enable"]
     #[inline(always)]
-    pub fn ctsinv(&self) -> CTSINV_R {
-        CTSINV_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn ctsinv(&self) -> CtsinvR {
+        CtsinvR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Clear-to-send Enable"]
     #[inline(always)]
-    pub fn ctsen(&self) -> CTSEN_R {
-        CTSEN_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn ctsen(&self) -> CtsenR {
+        CtsenR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Request-to-send Invert Enable"]
     #[inline(always)]
-    pub fn rtsinv(&self) -> RTSINV_R {
-        RTSINV_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn rtsinv(&self) -> RtsinvR {
+        RtsinvR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bits 4:6 - RX Timeout"]
     #[inline(always)]
-    pub fn rxtimeout(&self) -> RXTIMEOUT_R {
-        RXTIMEOUT_R::new(((self.bits >> 4) & 7) as u8)
+    pub fn rxtimeout(&self) -> RxtimeoutR {
+        RxtimeoutR::new(((self.bits >> 4) & 7) as u8)
     }
     #[doc = "Bit 9 - Transmitter DMA Wakeup"]
     #[inline(always)]
-    pub fn txdmawu(&self) -> TXDMAWU_R {
-        TXDMAWU_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn txdmawu(&self) -> TxdmawuR {
+        TxdmawuR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - Receiver DMA Wakeup"]
     #[inline(always)]
-    pub fn rxdmawu(&self) -> RXDMAWU_R {
-        RXDMAWU_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn rxdmawu(&self) -> RxdmawuR {
+        RxdmawuR::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bit 11 - Start Frame Unblock Receiver"]
     #[inline(always)]
-    pub fn sfubrx(&self) -> SFUBRX_R {
-        SFUBRX_R::new(((self.bits >> 11) & 1) != 0)
+    pub fn sfubrx(&self) -> SfubrxR {
+        SfubrxR::new(((self.bits >> 11) & 1) != 0)
     }
     #[doc = "Bit 15 - PRS RX Enable"]
     #[inline(always)]
-    pub fn rxprsen(&self) -> RXPRSEN_R {
-        RXPRSEN_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn rxprsen(&self) -> RxprsenR {
+        RxprsenR::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bits 16:19 - TX FIFO Interrupt Watermark"]
     #[inline(always)]
-    pub fn txfiw(&self) -> TXFIW_R {
-        TXFIW_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn txfiw(&self) -> TxfiwR {
+        TxfiwR::new(((self.bits >> 16) & 0x0f) as u8)
     }
     #[doc = "Bits 22:25 - Request-to-send RX FIFO Watermark"]
     #[inline(always)]
-    pub fn rtsrxfw(&self) -> RTSRXFW_R {
-        RTSRXFW_R::new(((self.bits >> 22) & 0x0f) as u8)
+    pub fn rtsrxfw(&self) -> RtsrxfwR {
+        RtsrxfwR::new(((self.bits >> 22) & 0x0f) as u8)
     }
     #[doc = "Bits 27:30 - RX FIFO Interrupt Watermark"]
     #[inline(always)]
-    pub fn rxfiw(&self) -> RXFIW_R {
-        RXFIW_R::new(((self.bits >> 27) & 0x0f) as u8)
+    pub fn rxfiw(&self) -> RxfiwR {
+        RxfiwR::new(((self.bits >> 27) & 0x0f) as u8)
     }
 }
 impl W {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
-    #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<0> {
-        DBGHALT_W::new(self)
+    pub fn dbghalt(&mut self) -> DbghaltW<Cfg1Spec> {
+        DbghaltW::new(self, 0)
     }
     #[doc = "Bit 1 - Clear-to-send Invert Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn ctsinv(&mut self) -> CTSINV_W<1> {
-        CTSINV_W::new(self)
+    pub fn ctsinv(&mut self) -> CtsinvW<Cfg1Spec> {
+        CtsinvW::new(self, 1)
     }
     #[doc = "Bit 2 - Clear-to-send Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn ctsen(&mut self) -> CTSEN_W<2> {
-        CTSEN_W::new(self)
+    pub fn ctsen(&mut self) -> CtsenW<Cfg1Spec> {
+        CtsenW::new(self, 2)
     }
     #[doc = "Bit 3 - Request-to-send Invert Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn rtsinv(&mut self) -> RTSINV_W<3> {
-        RTSINV_W::new(self)
+    pub fn rtsinv(&mut self) -> RtsinvW<Cfg1Spec> {
+        RtsinvW::new(self, 3)
     }
     #[doc = "Bits 4:6 - RX Timeout"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxtimeout(&mut self) -> RXTIMEOUT_W<4> {
-        RXTIMEOUT_W::new(self)
+    pub fn rxtimeout(&mut self) -> RxtimeoutW<Cfg1Spec> {
+        RxtimeoutW::new(self, 4)
     }
     #[doc = "Bit 9 - Transmitter DMA Wakeup"]
     #[inline(always)]
-    #[must_use]
-    pub fn txdmawu(&mut self) -> TXDMAWU_W<9> {
-        TXDMAWU_W::new(self)
+    pub fn txdmawu(&mut self) -> TxdmawuW<Cfg1Spec> {
+        TxdmawuW::new(self, 9)
     }
     #[doc = "Bit 10 - Receiver DMA Wakeup"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxdmawu(&mut self) -> RXDMAWU_W<10> {
-        RXDMAWU_W::new(self)
+    pub fn rxdmawu(&mut self) -> RxdmawuW<Cfg1Spec> {
+        RxdmawuW::new(self, 10)
     }
     #[doc = "Bit 11 - Start Frame Unblock Receiver"]
     #[inline(always)]
-    #[must_use]
-    pub fn sfubrx(&mut self) -> SFUBRX_W<11> {
-        SFUBRX_W::new(self)
+    pub fn sfubrx(&mut self) -> SfubrxW<Cfg1Spec> {
+        SfubrxW::new(self, 11)
     }
     #[doc = "Bit 15 - PRS RX Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxprsen(&mut self) -> RXPRSEN_W<15> {
-        RXPRSEN_W::new(self)
+    pub fn rxprsen(&mut self) -> RxprsenW<Cfg1Spec> {
+        RxprsenW::new(self, 15)
     }
     #[doc = "Bits 16:19 - TX FIFO Interrupt Watermark"]
     #[inline(always)]
-    #[must_use]
-    pub fn txfiw(&mut self) -> TXFIW_W<16> {
-        TXFIW_W::new(self)
+    pub fn txfiw(&mut self) -> TxfiwW<Cfg1Spec> {
+        TxfiwW::new(self, 16)
     }
     #[doc = "Bits 22:25 - Request-to-send RX FIFO Watermark"]
     #[inline(always)]
-    #[must_use]
-    pub fn rtsrxfw(&mut self) -> RTSRXFW_W<22> {
-        RTSRXFW_W::new(self)
+    pub fn rtsrxfw(&mut self) -> RtsrxfwW<Cfg1Spec> {
+        RtsrxfwW::new(self, 22)
     }
     #[doc = "Bits 27:30 - RX FIFO Interrupt Watermark"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxfiw(&mut self) -> RXFIW_W<27> {
-        RXFIW_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn rxfiw(&mut self) -> RxfiwW<Cfg1Spec> {
+        RxfiwW::new(self, 27)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [cfg1](index.html) module"]
-pub struct CFG1_SPEC;
-impl crate::RegisterSpec for CFG1_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`cfg1::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`cfg1::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct Cfg1Spec;
+impl crate::RegisterSpec for Cfg1Spec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [cfg1::R](R) reader structure"]
-impl crate::Readable for CFG1_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [cfg1::W](W) writer structure"]
-impl crate::Writable for CFG1_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`cfg1::R`](R) reader structure"]
+impl crate::Readable for Cfg1Spec {}
+#[doc = "`write(|w| ..)` method takes [`cfg1::W`](W) writer structure"]
+impl crate::Writable for Cfg1Spec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CFG1 to value 0"]
-impl crate::Resettable for CFG1_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for Cfg1Spec {}

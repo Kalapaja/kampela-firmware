@@ -1,13 +1,68 @@
 //! external RAM
 
 use alloc::{format, vec::Vec, string::String};
-use primitive_types::H256;
+use alloy_primitives::{Address, ChainId};
+use kampela_ui::{ethereum_decode::{EthSignRequest, SignDataType}, messages::EthSignRequestDecodeError};
 use efm32pg23_fix::Peripherals;
 use crate::peripherals::eusart::*;
-use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
+//use substrate_parser::{cards::{Call, ExtendedData}, decode_as_call_unmarked, decode_extensions_unmarked};
 use crate::in_free;
 
-pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
+#[derive(Clone)]
+pub struct NfcEthSignRequestPsramAccess {
+    pub request_id: PsramAccess,
+    pub sign_data: PsramAccess,
+    pub data_type: PsramAccess,
+    pub chain_id: PsramAccess,
+    pub derivation_path: PsramAccess,
+    pub source_fingerprint: PsramAccess,
+    pub address: PsramAccess,
+    pub origin: PsramAccess,
+}
+
+pub fn psram_decode_eth_sign_request(eth_sign_request_psram_access: &NfcEthSignRequestPsramAccess) -> Result<EthSignRequest, EthSignRequestDecodeError> {    
+    let request_id= read_from_psram(&eth_sign_request_psram_access.request_id);
+    let request_id = if request_id.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(uuid::Builder::from_slice(&request_id).map_err(|e| EthSignRequestDecodeError::UuidError(e))?.build())
+    };
+    let sign_data = read_from_psram(&eth_sign_request_psram_access.sign_data);
+    let data_type: u8 = read_from_psram(&eth_sign_request_psram_access.data_type)[0];
+    let data_type = match data_type {
+        1 => SignDataType::EthTransactionData,
+        2 => SignDataType::EthTypedData,
+        3 => SignDataType::EthRawBytes,
+        4 => SignDataType::EthTypedTransaction,
+        _ => return Err(EthSignRequestDecodeError::UnknownSignDataType)
+    };
+    let chain_id: [u8; 8] = read_from_psram(&eth_sign_request_psram_access.chain_id).try_into().unwrap();
+    let chain_id = ChainId::from_le_bytes(chain_id);
+    let derivation_path = read_from_psram(&eth_sign_request_psram_access.derivation_path);
+    let derivation_path = String::from_utf8(derivation_path).or(Err(EthSignRequestDecodeError::InvalidDerivationPathString))?;
+
+    let mut source_fingerprint = read_from_psram(&eth_sign_request_psram_access.source_fingerprint);
+    source_fingerprint.reverse();
+    let source_fingerprint = source_fingerprint.try_into().expect("source fingerprint psram access checked");
+
+    let address = read_from_psram(&eth_sign_request_psram_access.address);
+    let address = if address.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(Address::from_slice(&address))
+    };
+
+    let origin = read_from_psram(&eth_sign_request_psram_access.origin);
+    let origin = if origin.iter().all(|&b| b == 0) {
+        None
+    } else {
+        Some(String::from_utf8(origin).unwrap())
+    };
+
+    Ok(EthSignRequest { request_id, sign_data, data_type, chain_id, derivation_path, source_fingerprint, address, origin })
+}
+
+/*pub fn psram_decode_call(call_psram_access: &PsramAccess, metadata_psram_access: &PsramAccess) -> (Call, ShortSpecs, String) {
     let call_data = read_from_psram(call_psram_access);
 
     let (
@@ -97,7 +152,7 @@ fn read_checked_metadata_metal(metadata_psram_access: &PsramAccess) -> (CheckedM
         spec_name
     )
 }
-
+*/
 pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
     let mut bytes_option = None;
     in_free(|peripherals| {
@@ -114,26 +169,46 @@ pub fn read_from_psram(psram_access: &PsramAccess) -> Vec<u8> {
 }
 
 pub fn psram_reset(peripherals: &mut Peripherals) {
-    deselect_psram(&mut peripherals.GPIO_S);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_RESET_ENABLE);
-    deselect_psram(&mut peripherals.GPIO_S);
-    select_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_RESET);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
 }
 
 pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
-    while peripherals.EUSART2_S.status.read().txfl().bit_is_clear() {}
-    peripherals.EUSART2_S.txdata.write({|w_reg|
-        w_reg
+    while peripherals.eusart2_s.status().read().txfl().bit_is_clear() {}
+    peripherals.eusart2_s.txdata().write({|w_reg|
+        unsafe {
+            w_reg
             // EUSART tx and rx are u16,
             // single byte is used here because of the commands,
             // setting used is `.databits().eight()`
-            .txdata().variant(byte as u16)
+            .txdata().bits(byte as u16)
+        }
     });
-    while peripherals.EUSART2_S.status.read().rxfl().bit_is_clear() {}
-    peripherals.EUSART2_S.rxdata.read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
+    while peripherals.eusart2_s.status().read().rxfl().bit_is_clear() {}
+    peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
+}
+
+pub fn psram_write_byte(peripherals: &mut Peripherals, byte: u8) {
+    while peripherals.eusart2_s.status().read().txfl().bit_is_clear() {}
+    peripherals.eusart2_s.txdata().write({|w_reg|
+        unsafe {
+            w_reg
+            // EUSART tx and rx are u16,
+            // single byte is used here because of the commands,
+            // setting used is `.databits().eight()`
+            .txdata().bits(byte as u16)
+        }
+    });
+}
+
+pub fn psram_read_byte(peripherals: &mut Peripherals) -> u8 {
+    while peripherals.eusart2_s.status().read().rxfl().bit_is_clear() {}
+    peripherals.eusart2_s.rxdata().read().rxdata().bits().try_into().expect("configured frame for 8 data bits")
 }
 
 /// PSRAM dummy command, to send a new item in rx.
@@ -142,7 +217,7 @@ pub fn psram_write_read_byte(peripherals: &mut Peripherals, byte: u8) -> u8 {
 pub const PSRAM_DUMMY: u8 = 0xff;
 
 pub fn psram_read_id(peripherals: &mut Peripherals) -> [u8; ID_LEN] {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_READ_ID);
     psram_write_slice(peripherals, &[PSRAM_DUMMY; ADDR_LEN]);
     psram_read_vec(peripherals, ID_LEN).try_into().expect("static length, always fits")
@@ -217,11 +292,11 @@ pub fn psram_read_at_address_native(peripherals: &mut Peripherals, address: Addr
 }
 
 fn psram_read_at_address_helper(peripherals: &mut Peripherals, address: AddressPsram, len: usize) -> Vec<u8> {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_READ);
     psram_write_slice(peripherals, &address.inner());
     let out = psram_read_vec(peripherals, len);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
     out
 }
 pub fn psram_read_at_address(peripherals: &mut Peripherals, address: AddressPsram, len: usize) -> Result<Vec<u8>, MemoryError> {
@@ -265,11 +340,11 @@ pub fn psram_write_at_address_native(peripherals: &mut Peripherals, address: Add
 ///
 /// Use only as a part of function with reset.
 fn psram_write_at_address_helper(peripherals: &mut Peripherals, address: AddressPsram, slice: &[u8]) {
-    select_psram(&mut peripherals.GPIO_S);
+    select_psram(&mut peripherals.gpio_s);
     psram_write_read_byte(peripherals, PSRAM_WRITE);
     psram_write_slice(peripherals, &address.inner());
     psram_write_slice(peripherals, slice);
-    deselect_psram(&mut peripherals.GPIO_S);
+    deselect_psram(&mut peripherals.gpio_s);
 }
 /// Write at address seamlessly, i.e. without wrapping.
 ///
@@ -311,18 +386,18 @@ pub const PSRAM_PAGE_SIZE: u32 = 1024;
 /// Limits maximum address available to `AddressPsram([0x8f, ff, ff])`.
 pub const PSRAM_TOTAL_SIZE: u32 = 67_108_864;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PsramAccess {
     pub start_address: AddressPsram,
     pub total_len: usize,
 }
-use core::{any::TypeId, fmt::{Debug, Display, Formatter, Result as FmtResult}};
-use alloc::borrow::ToOwned;
+use core::{fmt::{Debug, Display, Formatter, Result as FmtResult}};
+//use alloc::borrow::ToOwned;
 
 use external_memory_tools::{AddressableBuffer, BufferError, ExternalMemory};
-use parity_scale_codec::{Decode, DecodeAll, Encode};
-use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
-use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
+//use parity_scale_codec::{Decode, DecodeAll, Encode};
+//use substrate_parser::{AsMetadata, ResolveType, ShortSpecs, compacts::find_compact, error::{RegistryError, RegistryInternalError}, traits::{SignedExtensionMetadata, SpecNameVersion}};
+//use scale_info::{form::PortableForm, interner::UntrackedSymbol, Type};
 
 pub struct ExternalPsram<'a> {
     pub peripherals: &'a mut Peripherals,
@@ -372,7 +447,7 @@ impl <'a> AddressableBuffer<ExternalPsram<'a>> for PsramAccess {
         })}
     }
 }
-
+/*
 #[derive(Clone, Debug)]
 pub struct MetalRegistry {
     pub start_address: AddressPsram,
@@ -524,7 +599,7 @@ impl <'a> CheckedMetadataMetal {
         }
     }
 }
-
+*/
 #[derive(Clone, Debug)]
 pub enum ReceivedMetadataError {
     Format,

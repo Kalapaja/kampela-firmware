@@ -1,865 +1,835 @@
 #[doc = "Register `BUFOUTCTRL` reader"]
-pub struct R(crate::R<BUFOUTCTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<BUFOUTCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<BUFOUTCTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<BUFOUTCTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<BufoutctrlSpec>;
 #[doc = "Register `BUFOUTCTRL` writer"]
-pub struct W(crate::W<BUFOUTCTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<BUFOUTCTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<BUFOUTCTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<BUFOUTCTRL_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<BufoutctrlSpec>;
 #[doc = "Field `XOUTBIASANA` reader - Driver Bias Current"]
-pub type XOUTBIASANA_R = crate::FieldReader<u8, u8>;
+pub type XoutbiasanaR = crate::FieldReader;
 #[doc = "Field `XOUTBIASANA` writer - Driver Bias Current"]
-pub type XOUTBIASANA_W<'a, const O: u8> =
-    crate::FieldWriter<'a, u32, BUFOUTCTRL_SPEC, u8, u8, 4, O>;
+pub type XoutbiasanaW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `XOUTCFANA` reader - Buffer Gain"]
-pub type XOUTCFANA_R = crate::FieldReader<u8, u8>;
+pub type XoutcfanaR = crate::FieldReader;
 #[doc = "Field `XOUTCFANA` writer - Buffer Gain"]
-pub type XOUTCFANA_W<'a, const O: u8> = crate::FieldWriter<'a, u32, BUFOUTCTRL_SPEC, u8, u8, 4, O>;
+pub type XoutcfanaW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Field `XOUTGMANA` reader - No Description"]
-pub type XOUTGMANA_R = crate::FieldReader<u8, u8>;
+pub type XoutgmanaR = crate::FieldReader;
 #[doc = "Field `XOUTGMANA` writer - No Description"]
-pub type XOUTGMANA_W<'a, const O: u8> = crate::FieldWriter<'a, u32, BUFOUTCTRL_SPEC, u8, u8, 4, O>;
-#[doc = "Field `PEAKDETTHRESANA` reader - Peak Detector Threshold for XOUT"]
-pub type PEAKDETTHRESANA_R = crate::FieldReader<u8, PEAKDETTHRESANA_A>;
+pub type XoutgmanaW<'a, REG> = crate::FieldWriter<'a, REG, 4>;
 #[doc = "Peak Detector Threshold for XOUT\n\nValue on reset: 3"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum PEAKDETTHRESANA_A {
+pub enum Peakdetthresana {
     #[doc = "0: V105MV"]
-    V105MV = 0,
+    V105mv = 0,
     #[doc = "1: V132MV"]
-    V132MV = 1,
+    V132mv = 1,
     #[doc = "2: V157MV"]
-    V157MV = 2,
+    V157mv = 2,
     #[doc = "3: V184MV"]
-    V184MV = 3,
+    V184mv = 3,
     #[doc = "4: V210MV"]
-    V210MV = 4,
+    V210mv = 4,
     #[doc = "5: V236MV"]
-    V236MV = 5,
+    V236mv = 5,
     #[doc = "6: V262MV"]
-    V262MV = 6,
+    V262mv = 6,
     #[doc = "7: V289MV"]
-    V289MV = 7,
+    V289mv = 7,
     #[doc = "8: V315MV"]
-    V315MV = 8,
+    V315mv = 8,
     #[doc = "9: V341MV"]
-    V341MV = 9,
+    V341mv = 9,
     #[doc = "10: V367MV"]
-    V367MV = 10,
+    V367mv = 10,
     #[doc = "11: V394MV"]
-    V394MV = 11,
+    V394mv = 11,
     #[doc = "12: V420MV"]
-    V420MV = 12,
+    V420mv = 12,
     #[doc = "13: V446MV"]
-    V446MV = 13,
+    V446mv = 13,
     #[doc = "14: V472MV"]
-    V472MV = 14,
+    V472mv = 14,
     #[doc = "15: V499MV"]
-    V499MV = 15,
+    V499mv = 15,
 }
-impl From<PEAKDETTHRESANA_A> for u8 {
+impl From<Peakdetthresana> for u8 {
     #[inline(always)]
-    fn from(variant: PEAKDETTHRESANA_A) -> Self {
+    fn from(variant: Peakdetthresana) -> Self {
         variant as _
     }
 }
-impl PEAKDETTHRESANA_R {
+impl crate::FieldSpec for Peakdetthresana {
+    type Ux = u8;
+}
+impl crate::IsEnum for Peakdetthresana {}
+#[doc = "Field `PEAKDETTHRESANA` reader - Peak Detector Threshold for XOUT"]
+pub type PeakdetthresanaR = crate::FieldReader<Peakdetthresana>;
+impl PeakdetthresanaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> PEAKDETTHRESANA_A {
+    pub const fn variant(&self) -> Peakdetthresana {
         match self.bits {
-            0 => PEAKDETTHRESANA_A::V105MV,
-            1 => PEAKDETTHRESANA_A::V132MV,
-            2 => PEAKDETTHRESANA_A::V157MV,
-            3 => PEAKDETTHRESANA_A::V184MV,
-            4 => PEAKDETTHRESANA_A::V210MV,
-            5 => PEAKDETTHRESANA_A::V236MV,
-            6 => PEAKDETTHRESANA_A::V262MV,
-            7 => PEAKDETTHRESANA_A::V289MV,
-            8 => PEAKDETTHRESANA_A::V315MV,
-            9 => PEAKDETTHRESANA_A::V341MV,
-            10 => PEAKDETTHRESANA_A::V367MV,
-            11 => PEAKDETTHRESANA_A::V394MV,
-            12 => PEAKDETTHRESANA_A::V420MV,
-            13 => PEAKDETTHRESANA_A::V446MV,
-            14 => PEAKDETTHRESANA_A::V472MV,
-            15 => PEAKDETTHRESANA_A::V499MV,
+            0 => Peakdetthresana::V105mv,
+            1 => Peakdetthresana::V132mv,
+            2 => Peakdetthresana::V157mv,
+            3 => Peakdetthresana::V184mv,
+            4 => Peakdetthresana::V210mv,
+            5 => Peakdetthresana::V236mv,
+            6 => Peakdetthresana::V262mv,
+            7 => Peakdetthresana::V289mv,
+            8 => Peakdetthresana::V315mv,
+            9 => Peakdetthresana::V341mv,
+            10 => Peakdetthresana::V367mv,
+            11 => Peakdetthresana::V394mv,
+            12 => Peakdetthresana::V420mv,
+            13 => Peakdetthresana::V446mv,
+            14 => Peakdetthresana::V472mv,
+            15 => Peakdetthresana::V499mv,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `V105MV`"]
-    #[inline(always)]
-    pub fn is_v105mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V105MV
-    }
-    #[doc = "Checks if the value of the field is `V132MV`"]
-    #[inline(always)]
-    pub fn is_v132mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V132MV
-    }
-    #[doc = "Checks if the value of the field is `V157MV`"]
-    #[inline(always)]
-    pub fn is_v157mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V157MV
-    }
-    #[doc = "Checks if the value of the field is `V184MV`"]
-    #[inline(always)]
-    pub fn is_v184mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V184MV
-    }
-    #[doc = "Checks if the value of the field is `V210MV`"]
-    #[inline(always)]
-    pub fn is_v210mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V210MV
-    }
-    #[doc = "Checks if the value of the field is `V236MV`"]
-    #[inline(always)]
-    pub fn is_v236mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V236MV
-    }
-    #[doc = "Checks if the value of the field is `V262MV`"]
-    #[inline(always)]
-    pub fn is_v262mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V262MV
-    }
-    #[doc = "Checks if the value of the field is `V289MV`"]
-    #[inline(always)]
-    pub fn is_v289mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V289MV
-    }
-    #[doc = "Checks if the value of the field is `V315MV`"]
-    #[inline(always)]
-    pub fn is_v315mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V315MV
-    }
-    #[doc = "Checks if the value of the field is `V341MV`"]
-    #[inline(always)]
-    pub fn is_v341mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V341MV
-    }
-    #[doc = "Checks if the value of the field is `V367MV`"]
-    #[inline(always)]
-    pub fn is_v367mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V367MV
-    }
-    #[doc = "Checks if the value of the field is `V394MV`"]
-    #[inline(always)]
-    pub fn is_v394mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V394MV
-    }
-    #[doc = "Checks if the value of the field is `V420MV`"]
-    #[inline(always)]
-    pub fn is_v420mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V420MV
-    }
-    #[doc = "Checks if the value of the field is `V446MV`"]
-    #[inline(always)]
-    pub fn is_v446mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V446MV
-    }
-    #[doc = "Checks if the value of the field is `V472MV`"]
-    #[inline(always)]
-    pub fn is_v472mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V472MV
-    }
-    #[doc = "Checks if the value of the field is `V499MV`"]
-    #[inline(always)]
-    pub fn is_v499mv(&self) -> bool {
-        *self == PEAKDETTHRESANA_A::V499MV
-    }
-}
-#[doc = "Field `PEAKDETTHRESANA` writer - Peak Detector Threshold for XOUT"]
-pub type PEAKDETTHRESANA_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, BUFOUTCTRL_SPEC, u8, PEAKDETTHRESANA_A, 4, O>;
-impl<'a, const O: u8> PEAKDETTHRESANA_W<'a, O> {
     #[doc = "V105MV"]
     #[inline(always)]
-    pub fn v105mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V105MV)
+    pub fn is_v105mv(&self) -> bool {
+        *self == Peakdetthresana::V105mv
     }
     #[doc = "V132MV"]
     #[inline(always)]
-    pub fn v132mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V132MV)
+    pub fn is_v132mv(&self) -> bool {
+        *self == Peakdetthresana::V132mv
     }
     #[doc = "V157MV"]
     #[inline(always)]
-    pub fn v157mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V157MV)
+    pub fn is_v157mv(&self) -> bool {
+        *self == Peakdetthresana::V157mv
     }
     #[doc = "V184MV"]
     #[inline(always)]
-    pub fn v184mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V184MV)
+    pub fn is_v184mv(&self) -> bool {
+        *self == Peakdetthresana::V184mv
     }
     #[doc = "V210MV"]
     #[inline(always)]
-    pub fn v210mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V210MV)
+    pub fn is_v210mv(&self) -> bool {
+        *self == Peakdetthresana::V210mv
     }
     #[doc = "V236MV"]
     #[inline(always)]
-    pub fn v236mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V236MV)
+    pub fn is_v236mv(&self) -> bool {
+        *self == Peakdetthresana::V236mv
     }
     #[doc = "V262MV"]
     #[inline(always)]
-    pub fn v262mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V262MV)
+    pub fn is_v262mv(&self) -> bool {
+        *self == Peakdetthresana::V262mv
     }
     #[doc = "V289MV"]
     #[inline(always)]
-    pub fn v289mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V289MV)
+    pub fn is_v289mv(&self) -> bool {
+        *self == Peakdetthresana::V289mv
     }
     #[doc = "V315MV"]
     #[inline(always)]
-    pub fn v315mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V315MV)
+    pub fn is_v315mv(&self) -> bool {
+        *self == Peakdetthresana::V315mv
     }
     #[doc = "V341MV"]
     #[inline(always)]
-    pub fn v341mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V341MV)
+    pub fn is_v341mv(&self) -> bool {
+        *self == Peakdetthresana::V341mv
     }
     #[doc = "V367MV"]
     #[inline(always)]
-    pub fn v367mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V367MV)
+    pub fn is_v367mv(&self) -> bool {
+        *self == Peakdetthresana::V367mv
     }
     #[doc = "V394MV"]
     #[inline(always)]
-    pub fn v394mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V394MV)
+    pub fn is_v394mv(&self) -> bool {
+        *self == Peakdetthresana::V394mv
     }
     #[doc = "V420MV"]
     #[inline(always)]
-    pub fn v420mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V420MV)
+    pub fn is_v420mv(&self) -> bool {
+        *self == Peakdetthresana::V420mv
     }
     #[doc = "V446MV"]
     #[inline(always)]
-    pub fn v446mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V446MV)
+    pub fn is_v446mv(&self) -> bool {
+        *self == Peakdetthresana::V446mv
     }
     #[doc = "V472MV"]
     #[inline(always)]
-    pub fn v472mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V472MV)
+    pub fn is_v472mv(&self) -> bool {
+        *self == Peakdetthresana::V472mv
     }
     #[doc = "V499MV"]
     #[inline(always)]
-    pub fn v499mv(self) -> &'a mut W {
-        self.variant(PEAKDETTHRESANA_A::V499MV)
+    pub fn is_v499mv(&self) -> bool {
+        *self == Peakdetthresana::V499mv
     }
 }
-#[doc = "Field `TIMEOUTCTUNE` reader - Tuning Cap Change Timeout"]
-pub type TIMEOUTCTUNE_R = crate::FieldReader<u8, TIMEOUTCTUNE_A>;
+#[doc = "Field `PEAKDETTHRESANA` writer - Peak Detector Threshold for XOUT"]
+pub type PeakdetthresanaW<'a, REG> = crate::FieldWriter<'a, REG, 4, Peakdetthresana, crate::Safe>;
+impl<'a, REG> PeakdetthresanaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "V105MV"]
+    #[inline(always)]
+    pub fn v105mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V105mv)
+    }
+    #[doc = "V132MV"]
+    #[inline(always)]
+    pub fn v132mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V132mv)
+    }
+    #[doc = "V157MV"]
+    #[inline(always)]
+    pub fn v157mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V157mv)
+    }
+    #[doc = "V184MV"]
+    #[inline(always)]
+    pub fn v184mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V184mv)
+    }
+    #[doc = "V210MV"]
+    #[inline(always)]
+    pub fn v210mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V210mv)
+    }
+    #[doc = "V236MV"]
+    #[inline(always)]
+    pub fn v236mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V236mv)
+    }
+    #[doc = "V262MV"]
+    #[inline(always)]
+    pub fn v262mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V262mv)
+    }
+    #[doc = "V289MV"]
+    #[inline(always)]
+    pub fn v289mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V289mv)
+    }
+    #[doc = "V315MV"]
+    #[inline(always)]
+    pub fn v315mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V315mv)
+    }
+    #[doc = "V341MV"]
+    #[inline(always)]
+    pub fn v341mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V341mv)
+    }
+    #[doc = "V367MV"]
+    #[inline(always)]
+    pub fn v367mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V367mv)
+    }
+    #[doc = "V394MV"]
+    #[inline(always)]
+    pub fn v394mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V394mv)
+    }
+    #[doc = "V420MV"]
+    #[inline(always)]
+    pub fn v420mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V420mv)
+    }
+    #[doc = "V446MV"]
+    #[inline(always)]
+    pub fn v446mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V446mv)
+    }
+    #[doc = "V472MV"]
+    #[inline(always)]
+    pub fn v472mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V472mv)
+    }
+    #[doc = "V499MV"]
+    #[inline(always)]
+    pub fn v499mv(self) -> &'a mut crate::W<REG> {
+        self.variant(Peakdetthresana::V499mv)
+    }
+}
 #[doc = "Tuning Cap Change Timeout\n\nValue on reset: 4"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TIMEOUTCTUNE_A {
+pub enum Timeoutctune {
     #[doc = "0: The tuning cap change timeout is set to 2 us minimum. The maximum can be +40%."]
-    T2US = 0,
+    T2us = 0,
     #[doc = "1: The tuning cap change timeout is set to 5 us minimum. The maximum can be +40%."]
-    T5US = 1,
+    T5us = 1,
     #[doc = "2: The tuning cap change timeout is set to 10 us minimum. The maximum can be +40%."]
-    T10US = 2,
+    T10us = 2,
     #[doc = "3: The tuning cap change timeout is set to 16 us minimum. The maximum can be +40%."]
-    T16US = 3,
+    T16us = 3,
     #[doc = "4: The tuning cap change timeout is set to 21 us minimum. The maximum can be +40%."]
-    T21US = 4,
+    T21us = 4,
     #[doc = "5: The tuning cap change timeout is set to 26 us minimum. The maximum can be +40%."]
-    T26US = 5,
+    T26us = 5,
     #[doc = "6: The tuning cap change timeout is set to 31 us minimum. The maximum can be +40%."]
-    T31US = 6,
+    T31us = 6,
     #[doc = "7: The tuning cap change timeout is set to 42 us minimum. The maximum can be +40%."]
-    T42US = 7,
+    T42us = 7,
     #[doc = "8: The tuning cap change timeout is set to 52 us minimum. The maximum can be +40%."]
-    T52US = 8,
+    T52us = 8,
     #[doc = "9: The tuning cap change timeout is set to 63 us minimum. The maximum can be +40%."]
-    T63US = 9,
+    T63us = 9,
     #[doc = "10: The tuning cap change timeout is set to 83 us minimum. The maximum can be +40%."]
-    T83US = 10,
+    T83us = 10,
     #[doc = "11: The tuning cap change timeout is set to 104 us minimum. The maximum can be +40%."]
-    T104US = 11,
+    T104us = 11,
     #[doc = "12: The tuning cap change timeout is set to 208 us minimum. The maximum can be +40%."]
-    T208US = 12,
+    T208us = 12,
     #[doc = "13: The tuning cap change timeout is set to 313 us minimum. The maximum can be +40%."]
-    T313US = 13,
+    T313us = 13,
     #[doc = "14: The tuning cap change timeout is set to 521 us minimum. The maximum can be +40%."]
-    T521US = 14,
+    T521us = 14,
     #[doc = "15: The tuning cap change timeout is set to 938 us minimum. The maximum can be +40%."]
-    T938US = 15,
+    T938us = 15,
 }
-impl From<TIMEOUTCTUNE_A> for u8 {
+impl From<Timeoutctune> for u8 {
     #[inline(always)]
-    fn from(variant: TIMEOUTCTUNE_A) -> Self {
+    fn from(variant: Timeoutctune) -> Self {
         variant as _
     }
 }
-impl TIMEOUTCTUNE_R {
+impl crate::FieldSpec for Timeoutctune {
+    type Ux = u8;
+}
+impl crate::IsEnum for Timeoutctune {}
+#[doc = "Field `TIMEOUTCTUNE` reader - Tuning Cap Change Timeout"]
+pub type TimeoutctuneR = crate::FieldReader<Timeoutctune>;
+impl TimeoutctuneR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TIMEOUTCTUNE_A {
+    pub const fn variant(&self) -> Timeoutctune {
         match self.bits {
-            0 => TIMEOUTCTUNE_A::T2US,
-            1 => TIMEOUTCTUNE_A::T5US,
-            2 => TIMEOUTCTUNE_A::T10US,
-            3 => TIMEOUTCTUNE_A::T16US,
-            4 => TIMEOUTCTUNE_A::T21US,
-            5 => TIMEOUTCTUNE_A::T26US,
-            6 => TIMEOUTCTUNE_A::T31US,
-            7 => TIMEOUTCTUNE_A::T42US,
-            8 => TIMEOUTCTUNE_A::T52US,
-            9 => TIMEOUTCTUNE_A::T63US,
-            10 => TIMEOUTCTUNE_A::T83US,
-            11 => TIMEOUTCTUNE_A::T104US,
-            12 => TIMEOUTCTUNE_A::T208US,
-            13 => TIMEOUTCTUNE_A::T313US,
-            14 => TIMEOUTCTUNE_A::T521US,
-            15 => TIMEOUTCTUNE_A::T938US,
+            0 => Timeoutctune::T2us,
+            1 => Timeoutctune::T5us,
+            2 => Timeoutctune::T10us,
+            3 => Timeoutctune::T16us,
+            4 => Timeoutctune::T21us,
+            5 => Timeoutctune::T26us,
+            6 => Timeoutctune::T31us,
+            7 => Timeoutctune::T42us,
+            8 => Timeoutctune::T52us,
+            9 => Timeoutctune::T63us,
+            10 => Timeoutctune::T83us,
+            11 => Timeoutctune::T104us,
+            12 => Timeoutctune::T208us,
+            13 => Timeoutctune::T313us,
+            14 => Timeoutctune::T521us,
+            15 => Timeoutctune::T938us,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `T2US`"]
-    #[inline(always)]
-    pub fn is_t2us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T2US
-    }
-    #[doc = "Checks if the value of the field is `T5US`"]
-    #[inline(always)]
-    pub fn is_t5us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T5US
-    }
-    #[doc = "Checks if the value of the field is `T10US`"]
-    #[inline(always)]
-    pub fn is_t10us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T10US
-    }
-    #[doc = "Checks if the value of the field is `T16US`"]
-    #[inline(always)]
-    pub fn is_t16us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T16US
-    }
-    #[doc = "Checks if the value of the field is `T21US`"]
-    #[inline(always)]
-    pub fn is_t21us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T21US
-    }
-    #[doc = "Checks if the value of the field is `T26US`"]
-    #[inline(always)]
-    pub fn is_t26us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T26US
-    }
-    #[doc = "Checks if the value of the field is `T31US`"]
-    #[inline(always)]
-    pub fn is_t31us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T31US
-    }
-    #[doc = "Checks if the value of the field is `T42US`"]
-    #[inline(always)]
-    pub fn is_t42us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T42US
-    }
-    #[doc = "Checks if the value of the field is `T52US`"]
-    #[inline(always)]
-    pub fn is_t52us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T52US
-    }
-    #[doc = "Checks if the value of the field is `T63US`"]
-    #[inline(always)]
-    pub fn is_t63us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T63US
-    }
-    #[doc = "Checks if the value of the field is `T83US`"]
-    #[inline(always)]
-    pub fn is_t83us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T83US
-    }
-    #[doc = "Checks if the value of the field is `T104US`"]
-    #[inline(always)]
-    pub fn is_t104us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T104US
-    }
-    #[doc = "Checks if the value of the field is `T208US`"]
-    #[inline(always)]
-    pub fn is_t208us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T208US
-    }
-    #[doc = "Checks if the value of the field is `T313US`"]
-    #[inline(always)]
-    pub fn is_t313us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T313US
-    }
-    #[doc = "Checks if the value of the field is `T521US`"]
-    #[inline(always)]
-    pub fn is_t521us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T521US
-    }
-    #[doc = "Checks if the value of the field is `T938US`"]
-    #[inline(always)]
-    pub fn is_t938us(&self) -> bool {
-        *self == TIMEOUTCTUNE_A::T938US
-    }
-}
-#[doc = "Field `TIMEOUTCTUNE` writer - Tuning Cap Change Timeout"]
-pub type TIMEOUTCTUNE_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, BUFOUTCTRL_SPEC, u8, TIMEOUTCTUNE_A, 4, O>;
-impl<'a, const O: u8> TIMEOUTCTUNE_W<'a, O> {
     #[doc = "The tuning cap change timeout is set to 2 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t2us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T2US)
+    pub fn is_t2us(&self) -> bool {
+        *self == Timeoutctune::T2us
     }
     #[doc = "The tuning cap change timeout is set to 5 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t5us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T5US)
+    pub fn is_t5us(&self) -> bool {
+        *self == Timeoutctune::T5us
     }
     #[doc = "The tuning cap change timeout is set to 10 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t10us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T10US)
+    pub fn is_t10us(&self) -> bool {
+        *self == Timeoutctune::T10us
     }
     #[doc = "The tuning cap change timeout is set to 16 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t16us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T16US)
+    pub fn is_t16us(&self) -> bool {
+        *self == Timeoutctune::T16us
     }
     #[doc = "The tuning cap change timeout is set to 21 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t21us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T21US)
+    pub fn is_t21us(&self) -> bool {
+        *self == Timeoutctune::T21us
     }
     #[doc = "The tuning cap change timeout is set to 26 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t26us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T26US)
+    pub fn is_t26us(&self) -> bool {
+        *self == Timeoutctune::T26us
     }
     #[doc = "The tuning cap change timeout is set to 31 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t31us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T31US)
+    pub fn is_t31us(&self) -> bool {
+        *self == Timeoutctune::T31us
     }
     #[doc = "The tuning cap change timeout is set to 42 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t42us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T42US)
+    pub fn is_t42us(&self) -> bool {
+        *self == Timeoutctune::T42us
     }
     #[doc = "The tuning cap change timeout is set to 52 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t52us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T52US)
+    pub fn is_t52us(&self) -> bool {
+        *self == Timeoutctune::T52us
     }
     #[doc = "The tuning cap change timeout is set to 63 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t63us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T63US)
+    pub fn is_t63us(&self) -> bool {
+        *self == Timeoutctune::T63us
     }
     #[doc = "The tuning cap change timeout is set to 83 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t83us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T83US)
+    pub fn is_t83us(&self) -> bool {
+        *self == Timeoutctune::T83us
     }
     #[doc = "The tuning cap change timeout is set to 104 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t104us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T104US)
+    pub fn is_t104us(&self) -> bool {
+        *self == Timeoutctune::T104us
     }
     #[doc = "The tuning cap change timeout is set to 208 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t208us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T208US)
+    pub fn is_t208us(&self) -> bool {
+        *self == Timeoutctune::T208us
     }
     #[doc = "The tuning cap change timeout is set to 313 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t313us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T313US)
+    pub fn is_t313us(&self) -> bool {
+        *self == Timeoutctune::T313us
     }
     #[doc = "The tuning cap change timeout is set to 521 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t521us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T521US)
+    pub fn is_t521us(&self) -> bool {
+        *self == Timeoutctune::T521us
     }
     #[doc = "The tuning cap change timeout is set to 938 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t938us(self) -> &'a mut W {
-        self.variant(TIMEOUTCTUNE_A::T938US)
+    pub fn is_t938us(&self) -> bool {
+        *self == Timeoutctune::T938us
     }
 }
-#[doc = "Field `TIMEOUTSTARTUP` reader - Oscillator Startup Timeout"]
-pub type TIMEOUTSTARTUP_R = crate::FieldReader<u8, TIMEOUTSTARTUP_A>;
+#[doc = "Field `TIMEOUTCTUNE` writer - Tuning Cap Change Timeout"]
+pub type TimeoutctuneW<'a, REG> = crate::FieldWriter<'a, REG, 4, Timeoutctune, crate::Safe>;
+impl<'a, REG> TimeoutctuneW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "The tuning cap change timeout is set to 2 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t2us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T2us)
+    }
+    #[doc = "The tuning cap change timeout is set to 5 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t5us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T5us)
+    }
+    #[doc = "The tuning cap change timeout is set to 10 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t10us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T10us)
+    }
+    #[doc = "The tuning cap change timeout is set to 16 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t16us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T16us)
+    }
+    #[doc = "The tuning cap change timeout is set to 21 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t21us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T21us)
+    }
+    #[doc = "The tuning cap change timeout is set to 26 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t26us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T26us)
+    }
+    #[doc = "The tuning cap change timeout is set to 31 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t31us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T31us)
+    }
+    #[doc = "The tuning cap change timeout is set to 42 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t42us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T42us)
+    }
+    #[doc = "The tuning cap change timeout is set to 52 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t52us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T52us)
+    }
+    #[doc = "The tuning cap change timeout is set to 63 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t63us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T63us)
+    }
+    #[doc = "The tuning cap change timeout is set to 83 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t83us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T83us)
+    }
+    #[doc = "The tuning cap change timeout is set to 104 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t104us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T104us)
+    }
+    #[doc = "The tuning cap change timeout is set to 208 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t208us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T208us)
+    }
+    #[doc = "The tuning cap change timeout is set to 313 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t313us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T313us)
+    }
+    #[doc = "The tuning cap change timeout is set to 521 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t521us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T521us)
+    }
+    #[doc = "The tuning cap change timeout is set to 938 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t938us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutctune::T938us)
+    }
+}
 #[doc = "Oscillator Startup Timeout\n\nValue on reset: 6"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum TIMEOUTSTARTUP_A {
+pub enum Timeoutstartup {
     #[doc = "0: The oscillator startup timeout is set to 42 us minimum. The maximum can be +40%."]
-    T42US = 0,
+    T42us = 0,
     #[doc = "1: The oscillator startup timeout is set to 83 us minimum. The maximum can be +40%."]
-    T83US = 1,
+    T83us = 1,
     #[doc = "2: The oscillator startup timeout is set to 108 us minimum. The maximum can be +40%."]
-    T108US = 2,
+    T108us = 2,
     #[doc = "3: The oscillator startup timeout is set to 133 us minimum. The maximum can be +40%."]
-    T133US = 3,
+    T133us = 3,
     #[doc = "4: The oscillator startup timeout is set to 158 us minimum. The maximum can be +40%."]
-    T158US = 4,
+    T158us = 4,
     #[doc = "5: The oscillator startup timeout is set to 183 us minimum. The maximum can be +40%."]
-    T183US = 5,
+    T183us = 5,
     #[doc = "6: The oscillator startup timeout is set to 208 us minimum. The maximum can be +40%."]
-    T208US = 6,
+    T208us = 6,
     #[doc = "7: The oscillator startup timeout is set to 233 us minimum. The maximum can be +40%."]
-    T233US = 7,
+    T233us = 7,
     #[doc = "8: The oscillator startup timeout is set to 258 us minimum. The maximum can be +40%."]
-    T258US = 8,
+    T258us = 8,
     #[doc = "9: The oscillator startup timeout is set to 283 us minimum. The maximum can be +40%."]
-    T283US = 9,
+    T283us = 9,
     #[doc = "10: The oscillator startup timeout is set to 333 us minimum. The maximum can be +40%."]
-    T333US = 10,
+    T333us = 10,
     #[doc = "11: The oscillator startup timeout is set to 375 us minimum. The maximum can be +40%."]
-    T375US = 11,
+    T375us = 11,
     #[doc = "12: The oscillator startup timeout is set to 417 us minimum. The maximum can be +40%."]
-    T417US = 12,
+    T417us = 12,
     #[doc = "13: The oscillator startup timeout is set to 458 us minimum. The maximum can be +40%."]
-    T458US = 13,
+    T458us = 13,
     #[doc = "14: The oscillator startup timeout is set to 500 us minimum. The maximum can be +40%."]
-    T500US = 14,
+    T500us = 14,
     #[doc = "15: The oscillator startup timeout is set to 667 us minimum. The maximum can be +40%."]
-    T667US = 15,
+    T667us = 15,
 }
-impl From<TIMEOUTSTARTUP_A> for u8 {
+impl From<Timeoutstartup> for u8 {
     #[inline(always)]
-    fn from(variant: TIMEOUTSTARTUP_A) -> Self {
+    fn from(variant: Timeoutstartup) -> Self {
         variant as _
     }
 }
-impl TIMEOUTSTARTUP_R {
+impl crate::FieldSpec for Timeoutstartup {
+    type Ux = u8;
+}
+impl crate::IsEnum for Timeoutstartup {}
+#[doc = "Field `TIMEOUTSTARTUP` reader - Oscillator Startup Timeout"]
+pub type TimeoutstartupR = crate::FieldReader<Timeoutstartup>;
+impl TimeoutstartupR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TIMEOUTSTARTUP_A {
+    pub const fn variant(&self) -> Timeoutstartup {
         match self.bits {
-            0 => TIMEOUTSTARTUP_A::T42US,
-            1 => TIMEOUTSTARTUP_A::T83US,
-            2 => TIMEOUTSTARTUP_A::T108US,
-            3 => TIMEOUTSTARTUP_A::T133US,
-            4 => TIMEOUTSTARTUP_A::T158US,
-            5 => TIMEOUTSTARTUP_A::T183US,
-            6 => TIMEOUTSTARTUP_A::T208US,
-            7 => TIMEOUTSTARTUP_A::T233US,
-            8 => TIMEOUTSTARTUP_A::T258US,
-            9 => TIMEOUTSTARTUP_A::T283US,
-            10 => TIMEOUTSTARTUP_A::T333US,
-            11 => TIMEOUTSTARTUP_A::T375US,
-            12 => TIMEOUTSTARTUP_A::T417US,
-            13 => TIMEOUTSTARTUP_A::T458US,
-            14 => TIMEOUTSTARTUP_A::T500US,
-            15 => TIMEOUTSTARTUP_A::T667US,
+            0 => Timeoutstartup::T42us,
+            1 => Timeoutstartup::T83us,
+            2 => Timeoutstartup::T108us,
+            3 => Timeoutstartup::T133us,
+            4 => Timeoutstartup::T158us,
+            5 => Timeoutstartup::T183us,
+            6 => Timeoutstartup::T208us,
+            7 => Timeoutstartup::T233us,
+            8 => Timeoutstartup::T258us,
+            9 => Timeoutstartup::T283us,
+            10 => Timeoutstartup::T333us,
+            11 => Timeoutstartup::T375us,
+            12 => Timeoutstartup::T417us,
+            13 => Timeoutstartup::T458us,
+            14 => Timeoutstartup::T500us,
+            15 => Timeoutstartup::T667us,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `T42US`"]
-    #[inline(always)]
-    pub fn is_t42us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T42US
-    }
-    #[doc = "Checks if the value of the field is `T83US`"]
-    #[inline(always)]
-    pub fn is_t83us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T83US
-    }
-    #[doc = "Checks if the value of the field is `T108US`"]
-    #[inline(always)]
-    pub fn is_t108us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T108US
-    }
-    #[doc = "Checks if the value of the field is `T133US`"]
-    #[inline(always)]
-    pub fn is_t133us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T133US
-    }
-    #[doc = "Checks if the value of the field is `T158US`"]
-    #[inline(always)]
-    pub fn is_t158us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T158US
-    }
-    #[doc = "Checks if the value of the field is `T183US`"]
-    #[inline(always)]
-    pub fn is_t183us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T183US
-    }
-    #[doc = "Checks if the value of the field is `T208US`"]
-    #[inline(always)]
-    pub fn is_t208us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T208US
-    }
-    #[doc = "Checks if the value of the field is `T233US`"]
-    #[inline(always)]
-    pub fn is_t233us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T233US
-    }
-    #[doc = "Checks if the value of the field is `T258US`"]
-    #[inline(always)]
-    pub fn is_t258us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T258US
-    }
-    #[doc = "Checks if the value of the field is `T283US`"]
-    #[inline(always)]
-    pub fn is_t283us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T283US
-    }
-    #[doc = "Checks if the value of the field is `T333US`"]
-    #[inline(always)]
-    pub fn is_t333us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T333US
-    }
-    #[doc = "Checks if the value of the field is `T375US`"]
-    #[inline(always)]
-    pub fn is_t375us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T375US
-    }
-    #[doc = "Checks if the value of the field is `T417US`"]
-    #[inline(always)]
-    pub fn is_t417us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T417US
-    }
-    #[doc = "Checks if the value of the field is `T458US`"]
-    #[inline(always)]
-    pub fn is_t458us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T458US
-    }
-    #[doc = "Checks if the value of the field is `T500US`"]
-    #[inline(always)]
-    pub fn is_t500us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T500US
-    }
-    #[doc = "Checks if the value of the field is `T667US`"]
-    #[inline(always)]
-    pub fn is_t667us(&self) -> bool {
-        *self == TIMEOUTSTARTUP_A::T667US
-    }
-}
-#[doc = "Field `TIMEOUTSTARTUP` writer - Oscillator Startup Timeout"]
-pub type TIMEOUTSTARTUP_W<'a, const O: u8> =
-    crate::FieldWriterSafe<'a, u32, BUFOUTCTRL_SPEC, u8, TIMEOUTSTARTUP_A, 4, O>;
-impl<'a, const O: u8> TIMEOUTSTARTUP_W<'a, O> {
     #[doc = "The oscillator startup timeout is set to 42 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t42us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T42US)
+    pub fn is_t42us(&self) -> bool {
+        *self == Timeoutstartup::T42us
     }
     #[doc = "The oscillator startup timeout is set to 83 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t83us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T83US)
+    pub fn is_t83us(&self) -> bool {
+        *self == Timeoutstartup::T83us
     }
     #[doc = "The oscillator startup timeout is set to 108 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t108us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T108US)
+    pub fn is_t108us(&self) -> bool {
+        *self == Timeoutstartup::T108us
     }
     #[doc = "The oscillator startup timeout is set to 133 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t133us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T133US)
+    pub fn is_t133us(&self) -> bool {
+        *self == Timeoutstartup::T133us
     }
     #[doc = "The oscillator startup timeout is set to 158 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t158us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T158US)
+    pub fn is_t158us(&self) -> bool {
+        *self == Timeoutstartup::T158us
     }
     #[doc = "The oscillator startup timeout is set to 183 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t183us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T183US)
+    pub fn is_t183us(&self) -> bool {
+        *self == Timeoutstartup::T183us
     }
     #[doc = "The oscillator startup timeout is set to 208 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t208us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T208US)
+    pub fn is_t208us(&self) -> bool {
+        *self == Timeoutstartup::T208us
     }
     #[doc = "The oscillator startup timeout is set to 233 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t233us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T233US)
+    pub fn is_t233us(&self) -> bool {
+        *self == Timeoutstartup::T233us
     }
     #[doc = "The oscillator startup timeout is set to 258 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t258us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T258US)
+    pub fn is_t258us(&self) -> bool {
+        *self == Timeoutstartup::T258us
     }
     #[doc = "The oscillator startup timeout is set to 283 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t283us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T283US)
+    pub fn is_t283us(&self) -> bool {
+        *self == Timeoutstartup::T283us
     }
     #[doc = "The oscillator startup timeout is set to 333 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t333us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T333US)
+    pub fn is_t333us(&self) -> bool {
+        *self == Timeoutstartup::T333us
     }
     #[doc = "The oscillator startup timeout is set to 375 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t375us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T375US)
+    pub fn is_t375us(&self) -> bool {
+        *self == Timeoutstartup::T375us
     }
     #[doc = "The oscillator startup timeout is set to 417 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t417us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T417US)
+    pub fn is_t417us(&self) -> bool {
+        *self == Timeoutstartup::T417us
     }
     #[doc = "The oscillator startup timeout is set to 458 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t458us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T458US)
+    pub fn is_t458us(&self) -> bool {
+        *self == Timeoutstartup::T458us
     }
     #[doc = "The oscillator startup timeout is set to 500 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t500us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T500US)
+    pub fn is_t500us(&self) -> bool {
+        *self == Timeoutstartup::T500us
     }
     #[doc = "The oscillator startup timeout is set to 667 us minimum. The maximum can be +40%."]
     #[inline(always)]
-    pub fn t667us(self) -> &'a mut W {
-        self.variant(TIMEOUTSTARTUP_A::T667US)
+    pub fn is_t667us(&self) -> bool {
+        *self == Timeoutstartup::T667us
+    }
+}
+#[doc = "Field `TIMEOUTSTARTUP` writer - Oscillator Startup Timeout"]
+pub type TimeoutstartupW<'a, REG> = crate::FieldWriter<'a, REG, 4, Timeoutstartup, crate::Safe>;
+impl<'a, REG> TimeoutstartupW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "The oscillator startup timeout is set to 42 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t42us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T42us)
+    }
+    #[doc = "The oscillator startup timeout is set to 83 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t83us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T83us)
+    }
+    #[doc = "The oscillator startup timeout is set to 108 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t108us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T108us)
+    }
+    #[doc = "The oscillator startup timeout is set to 133 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t133us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T133us)
+    }
+    #[doc = "The oscillator startup timeout is set to 158 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t158us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T158us)
+    }
+    #[doc = "The oscillator startup timeout is set to 183 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t183us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T183us)
+    }
+    #[doc = "The oscillator startup timeout is set to 208 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t208us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T208us)
+    }
+    #[doc = "The oscillator startup timeout is set to 233 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t233us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T233us)
+    }
+    #[doc = "The oscillator startup timeout is set to 258 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t258us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T258us)
+    }
+    #[doc = "The oscillator startup timeout is set to 283 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t283us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T283us)
+    }
+    #[doc = "The oscillator startup timeout is set to 333 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t333us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T333us)
+    }
+    #[doc = "The oscillator startup timeout is set to 375 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t375us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T375us)
+    }
+    #[doc = "The oscillator startup timeout is set to 417 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t417us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T417us)
+    }
+    #[doc = "The oscillator startup timeout is set to 458 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t458us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T458us)
+    }
+    #[doc = "The oscillator startup timeout is set to 500 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t500us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T500us)
+    }
+    #[doc = "The oscillator startup timeout is set to 667 us minimum. The maximum can be +40%."]
+    #[inline(always)]
+    pub fn t667us(self) -> &'a mut crate::W<REG> {
+        self.variant(Timeoutstartup::T667us)
     }
 }
 #[doc = "Field `MINIMUMSTARTUPDELAY` reader - Minimum Startup Delay"]
-pub type MINIMUMSTARTUPDELAY_R = crate::BitReader<bool>;
+pub type MinimumstartupdelayR = crate::BitReader;
 #[doc = "Field `MINIMUMSTARTUPDELAY` writer - Minimum Startup Delay"]
-pub type MINIMUMSTARTUPDELAY_W<'a, const O: u8> =
-    crate::BitWriter<'a, u32, BUFOUTCTRL_SPEC, bool, O>;
+pub type MinimumstartupdelayW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bits 0:3 - Driver Bias Current"]
     #[inline(always)]
-    pub fn xoutbiasana(&self) -> XOUTBIASANA_R {
-        XOUTBIASANA_R::new((self.bits & 0x0f) as u8)
+    pub fn xoutbiasana(&self) -> XoutbiasanaR {
+        XoutbiasanaR::new((self.bits & 0x0f) as u8)
     }
     #[doc = "Bits 4:7 - Buffer Gain"]
     #[inline(always)]
-    pub fn xoutcfana(&self) -> XOUTCFANA_R {
-        XOUTCFANA_R::new(((self.bits >> 4) & 0x0f) as u8)
+    pub fn xoutcfana(&self) -> XoutcfanaR {
+        XoutcfanaR::new(((self.bits >> 4) & 0x0f) as u8)
     }
     #[doc = "Bits 8:11 - No Description"]
     #[inline(always)]
-    pub fn xoutgmana(&self) -> XOUTGMANA_R {
-        XOUTGMANA_R::new(((self.bits >> 8) & 0x0f) as u8)
+    pub fn xoutgmana(&self) -> XoutgmanaR {
+        XoutgmanaR::new(((self.bits >> 8) & 0x0f) as u8)
     }
     #[doc = "Bits 12:15 - Peak Detector Threshold for XOUT"]
     #[inline(always)]
-    pub fn peakdetthresana(&self) -> PEAKDETTHRESANA_R {
-        PEAKDETTHRESANA_R::new(((self.bits >> 12) & 0x0f) as u8)
+    pub fn peakdetthresana(&self) -> PeakdetthresanaR {
+        PeakdetthresanaR::new(((self.bits >> 12) & 0x0f) as u8)
     }
     #[doc = "Bits 16:19 - Tuning Cap Change Timeout"]
     #[inline(always)]
-    pub fn timeoutctune(&self) -> TIMEOUTCTUNE_R {
-        TIMEOUTCTUNE_R::new(((self.bits >> 16) & 0x0f) as u8)
+    pub fn timeoutctune(&self) -> TimeoutctuneR {
+        TimeoutctuneR::new(((self.bits >> 16) & 0x0f) as u8)
     }
     #[doc = "Bits 20:23 - Oscillator Startup Timeout"]
     #[inline(always)]
-    pub fn timeoutstartup(&self) -> TIMEOUTSTARTUP_R {
-        TIMEOUTSTARTUP_R::new(((self.bits >> 20) & 0x0f) as u8)
+    pub fn timeoutstartup(&self) -> TimeoutstartupR {
+        TimeoutstartupR::new(((self.bits >> 20) & 0x0f) as u8)
     }
     #[doc = "Bit 31 - Minimum Startup Delay"]
     #[inline(always)]
-    pub fn minimumstartupdelay(&self) -> MINIMUMSTARTUPDELAY_R {
-        MINIMUMSTARTUPDELAY_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn minimumstartupdelay(&self) -> MinimumstartupdelayR {
+        MinimumstartupdelayR::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bits 0:3 - Driver Bias Current"]
     #[inline(always)]
-    #[must_use]
-    pub fn xoutbiasana(&mut self) -> XOUTBIASANA_W<0> {
-        XOUTBIASANA_W::new(self)
+    pub fn xoutbiasana(&mut self) -> XoutbiasanaW<BufoutctrlSpec> {
+        XoutbiasanaW::new(self, 0)
     }
     #[doc = "Bits 4:7 - Buffer Gain"]
     #[inline(always)]
-    #[must_use]
-    pub fn xoutcfana(&mut self) -> XOUTCFANA_W<4> {
-        XOUTCFANA_W::new(self)
+    pub fn xoutcfana(&mut self) -> XoutcfanaW<BufoutctrlSpec> {
+        XoutcfanaW::new(self, 4)
     }
     #[doc = "Bits 8:11 - No Description"]
     #[inline(always)]
-    #[must_use]
-    pub fn xoutgmana(&mut self) -> XOUTGMANA_W<8> {
-        XOUTGMANA_W::new(self)
+    pub fn xoutgmana(&mut self) -> XoutgmanaW<BufoutctrlSpec> {
+        XoutgmanaW::new(self, 8)
     }
     #[doc = "Bits 12:15 - Peak Detector Threshold for XOUT"]
     #[inline(always)]
-    #[must_use]
-    pub fn peakdetthresana(&mut self) -> PEAKDETTHRESANA_W<12> {
-        PEAKDETTHRESANA_W::new(self)
+    pub fn peakdetthresana(&mut self) -> PeakdetthresanaW<BufoutctrlSpec> {
+        PeakdetthresanaW::new(self, 12)
     }
     #[doc = "Bits 16:19 - Tuning Cap Change Timeout"]
     #[inline(always)]
-    #[must_use]
-    pub fn timeoutctune(&mut self) -> TIMEOUTCTUNE_W<16> {
-        TIMEOUTCTUNE_W::new(self)
+    pub fn timeoutctune(&mut self) -> TimeoutctuneW<BufoutctrlSpec> {
+        TimeoutctuneW::new(self, 16)
     }
     #[doc = "Bits 20:23 - Oscillator Startup Timeout"]
     #[inline(always)]
-    #[must_use]
-    pub fn timeoutstartup(&mut self) -> TIMEOUTSTARTUP_W<20> {
-        TIMEOUTSTARTUP_W::new(self)
+    pub fn timeoutstartup(&mut self) -> TimeoutstartupW<BufoutctrlSpec> {
+        TimeoutstartupW::new(self, 20)
     }
     #[doc = "Bit 31 - Minimum Startup Delay"]
     #[inline(always)]
-    #[must_use]
-    pub fn minimumstartupdelay(&mut self) -> MINIMUMSTARTUPDELAY_W<31> {
-        MINIMUMSTARTUPDELAY_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn minimumstartupdelay(&mut self) -> MinimumstartupdelayW<BufoutctrlSpec> {
+        MinimumstartupdelayW::new(self, 31)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [bufoutctrl](index.html) module"]
-pub struct BUFOUTCTRL_SPEC;
-impl crate::RegisterSpec for BUFOUTCTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`bufoutctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`bufoutctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct BufoutctrlSpec;
+impl crate::RegisterSpec for BufoutctrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [bufoutctrl::R](R) reader structure"]
-impl crate::Readable for BUFOUTCTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [bufoutctrl::W](W) writer structure"]
-impl crate::Writable for BUFOUTCTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`bufoutctrl::R`](R) reader structure"]
+impl crate::Readable for BufoutctrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`bufoutctrl::W`](W) writer structure"]
+impl crate::Writable for BufoutctrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets BUFOUTCTRL to value 0x0064_3c15"]
-impl crate::Resettable for BUFOUTCTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0x0064_3c15;
+impl crate::Resettable for BufoutctrlSpec {
+    const RESET_VALUE: u32 = 0x0064_3c15;
 }

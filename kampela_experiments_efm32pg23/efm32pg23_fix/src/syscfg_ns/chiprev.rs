@@ -1,110 +1,145 @@
 #[doc = "Register `CHIPREV` reader"]
-pub struct R(crate::R<CHIPREV_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CHIPREV_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CHIPREV_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CHIPREV_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<ChiprevSpec>;
 #[doc = "Register `CHIPREV` writer"]
-pub struct W(crate::W<CHIPREV_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CHIPREV_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CHIPREV_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CHIPREV_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<ChiprevSpec>;
 #[doc = "Field `MAJOR` reader - Chip Revision Major value"]
-pub type MAJOR_R = crate::FieldReader<u8, u8>;
+pub type MajorR = crate::FieldReader;
 #[doc = "Field `MAJOR` writer - Chip Revision Major value"]
-pub type MAJOR_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CHIPREV_SPEC, u8, u8, 6, O>;
+pub type MajorW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
+#[doc = "Chip Family value\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum Family {
+    #[doc = "26: Product is in PG23 family"]
+    Pg23 = 26,
+    #[doc = "56: Product is in FG23 family"]
+    Fg23 = 56,
+    #[doc = "57: Product is in ZG23 family"]
+    Zg23 = 57,
+    #[doc = "58: Product is in SG23 family"]
+    Sg23 = 58,
+}
+impl From<Family> for u8 {
+    #[inline(always)]
+    fn from(variant: Family) -> Self {
+        variant as _
+    }
+}
+impl crate::FieldSpec for Family {
+    type Ux = u8;
+}
+impl crate::IsEnum for Family {}
 #[doc = "Field `FAMILY` reader - Chip Family value"]
-pub type FAMILY_R = crate::FieldReader<u8, u8>;
+pub type FamilyR = crate::FieldReader<Family>;
+impl FamilyR {
+    #[doc = "Get enumerated values variant"]
+    #[inline(always)]
+    pub const fn variant(&self) -> Option<Family> {
+        match self.bits {
+            26 => Some(Family::Pg23),
+            56 => Some(Family::Fg23),
+            57 => Some(Family::Zg23),
+            58 => Some(Family::Sg23),
+            _ => None,
+        }
+    }
+    #[doc = "Product is in PG23 family"]
+    #[inline(always)]
+    pub fn is_pg23(&self) -> bool {
+        *self == Family::Pg23
+    }
+    #[doc = "Product is in FG23 family"]
+    #[inline(always)]
+    pub fn is_fg23(&self) -> bool {
+        *self == Family::Fg23
+    }
+    #[doc = "Product is in ZG23 family"]
+    #[inline(always)]
+    pub fn is_zg23(&self) -> bool {
+        *self == Family::Zg23
+    }
+    #[doc = "Product is in SG23 family"]
+    #[inline(always)]
+    pub fn is_sg23(&self) -> bool {
+        *self == Family::Sg23
+    }
+}
 #[doc = "Field `FAMILY` writer - Chip Family value"]
-pub type FAMILY_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CHIPREV_SPEC, u8, u8, 6, O>;
+pub type FamilyW<'a, REG> = crate::FieldWriter<'a, REG, 6, Family>;
+impl<'a, REG> FamilyW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Product is in PG23 family"]
+    #[inline(always)]
+    pub fn pg23(self) -> &'a mut crate::W<REG> {
+        self.variant(Family::Pg23)
+    }
+    #[doc = "Product is in FG23 family"]
+    #[inline(always)]
+    pub fn fg23(self) -> &'a mut crate::W<REG> {
+        self.variant(Family::Fg23)
+    }
+    #[doc = "Product is in ZG23 family"]
+    #[inline(always)]
+    pub fn zg23(self) -> &'a mut crate::W<REG> {
+        self.variant(Family::Zg23)
+    }
+    #[doc = "Product is in SG23 family"]
+    #[inline(always)]
+    pub fn sg23(self) -> &'a mut crate::W<REG> {
+        self.variant(Family::Sg23)
+    }
+}
 #[doc = "Field `MINOR` reader - Chip Revision Minor value"]
-pub type MINOR_R = crate::FieldReader<u8, u8>;
+pub type MinorR = crate::FieldReader;
 #[doc = "Field `MINOR` writer - Chip Revision Minor value"]
-pub type MINOR_W<'a, const O: u8> = crate::FieldWriter<'a, u32, CHIPREV_SPEC, u8, u8, 8, O>;
+pub type MinorW<'a, REG> = crate::FieldWriter<'a, REG, 8>;
 impl R {
     #[doc = "Bits 0:5 - Chip Revision Major value"]
     #[inline(always)]
-    pub fn major(&self) -> MAJOR_R {
-        MAJOR_R::new((self.bits & 0x3f) as u8)
+    pub fn major(&self) -> MajorR {
+        MajorR::new((self.bits & 0x3f) as u8)
     }
     #[doc = "Bits 6:11 - Chip Family value"]
     #[inline(always)]
-    pub fn family(&self) -> FAMILY_R {
-        FAMILY_R::new(((self.bits >> 6) & 0x3f) as u8)
+    pub fn family(&self) -> FamilyR {
+        FamilyR::new(((self.bits >> 6) & 0x3f) as u8)
     }
     #[doc = "Bits 12:19 - Chip Revision Minor value"]
     #[inline(always)]
-    pub fn minor(&self) -> MINOR_R {
-        MINOR_R::new(((self.bits >> 12) & 0xff) as u8)
+    pub fn minor(&self) -> MinorR {
+        MinorR::new(((self.bits >> 12) & 0xff) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:5 - Chip Revision Major value"]
     #[inline(always)]
-    #[must_use]
-    pub fn major(&mut self) -> MAJOR_W<0> {
-        MAJOR_W::new(self)
+    pub fn major(&mut self) -> MajorW<ChiprevSpec> {
+        MajorW::new(self, 0)
     }
     #[doc = "Bits 6:11 - Chip Family value"]
     #[inline(always)]
-    #[must_use]
-    pub fn family(&mut self) -> FAMILY_W<6> {
-        FAMILY_W::new(self)
+    pub fn family(&mut self) -> FamilyW<ChiprevSpec> {
+        FamilyW::new(self, 6)
     }
     #[doc = "Bits 12:19 - Chip Revision Minor value"]
     #[inline(always)]
-    #[must_use]
-    pub fn minor(&mut self) -> MINOR_W<12> {
-        MINOR_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn minor(&mut self) -> MinorW<ChiprevSpec> {
+        MinorW::new(self, 12)
     }
 }
-#[doc = "Read to get the chip revision programmed by feature configuration.\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [chiprev](index.html) module"]
-pub struct CHIPREV_SPEC;
-impl crate::RegisterSpec for CHIPREV_SPEC {
+#[doc = "Read to get the chip revision programmed by feature configuration.\n\nYou can [`read`](crate::Reg::read) this register and get [`chiprev::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`chiprev::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct ChiprevSpec;
+impl crate::RegisterSpec for ChiprevSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [chiprev::R](R) reader structure"]
-impl crate::Readable for CHIPREV_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [chiprev::W](W) writer structure"]
-impl crate::Writable for CHIPREV_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`chiprev::R`](R) reader structure"]
+impl crate::Readable for ChiprevSpec {}
+#[doc = "`write(|w| ..)` method takes [`chiprev::W`](W) writer structure"]
+impl crate::Writable for ChiprevSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CHIPREV to value 0"]
-impl crate::Resettable for CHIPREV_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for ChiprevSpec {}

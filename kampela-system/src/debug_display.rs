@@ -1,4 +1,4 @@
-use alloc::string::String;
+use alloc::{boxed::Box, string::String};
 use efm32pg23_fix::Peripherals;
 use cortex_m::asm::delay;
 
@@ -20,20 +20,19 @@ use embedded_text::{
     TextBox,
 };
 
-use crate::devices::display_transmission::{
+use crate::{devices::display_transmission::{
     display_is_busy_cs,
     epaper_deep_sleep,
     epaper_hw_init_cs,
     epaper_reset,
     epaper_write_command,
-    epaper_write_data,
-    BUFSIZE
-};
-use crate::draw::FrameBuffer;
+    epaper_write_data
+}, draw::PixelBuffer, peripherals::usart::init_usart};
 //**** Debug stuff ****//
 
 /// Emergency debug function that spits out errors
 pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
+    init_usart(peripherals);
     epaper_hw_init_cs(peripherals);
     make_text(peripherals, &text);
     delay(10000000);
@@ -42,9 +41,9 @@ pub fn burning_tank(peripherals: &mut Peripherals, text: String) {
 
 /// see this <https://github.com/embedded-graphics/embedded-graphics/issues/716>
 fn make_text(peripherals: &mut Peripherals, text: &str) {
-    let mut buffer = FrameBuffer::new_white();
+    let mut buffer = Box::new(PixelBuffer::new_white());
     let to_print = TextToPrint{line: text};
-    to_print.draw(&mut buffer).unwrap();
+    to_print.draw(buffer.as_mut()).unwrap();
     buffer.apply(peripherals);
 }
 
@@ -69,7 +68,7 @@ impl Drawable for TextToPrint<'_> {
             .alignment(HorizontalAlignment::Left)
             .paragraph_spacing(5)
             .build();
-        let bounds = Rectangle::new(Point::zero(), Size::new(SCREEN_SIZE_X, 0));
+        let bounds = Rectangle::new(Point::new(0, 6), Size::new(SCREEN_SIZE_X, 0));
         TextBox::with_textbox_style(self.line, bounds, character_style, textbox_style).draw(target)?;
         Ok(())
     }
@@ -81,7 +80,7 @@ pub fn epaper_update(peripherals: &mut Peripherals) {
     delay(100000);
     while display_is_busy_cs(peripherals) {}
     epaper_write_command(peripherals, &[0x22]); // from manual, Y: "Display Update Control"
-epaper_write_data(peripherals, &[0xF7]); // ?
+    epaper_write_data(peripherals, &[0xF7]); // ?
     epaper_write_command(peripherals, &[0x20]); // from manual, Y: "Activate Display Update Sequence"
     while display_is_busy_cs(peripherals) {}
 }
@@ -99,8 +98,8 @@ pub fn epaper_update_part(peripherals: &mut Peripherals) {
 
 
 /// Normal drawing protocol, with full screen clearing
-pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
-    epaper_reset(&mut peripherals.GPIO_S);
+pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; SCREEN_BUFFER_SIZE]) {
+    epaper_reset(&mut peripherals.gpio_s);
     epaper_write_command(peripherals, &[0x4E]);
     epaper_write_data(peripherals, &[0x00]);
     epaper_write_command(peripherals, &[0x4F]);
@@ -113,8 +112,8 @@ pub fn epaper_draw_stuff_differently(peripherals: &mut Peripherals, stuff: [u8; 
 }
 
 /// Fast and dirty refresh drawing
-pub fn epaper_draw_stuff_quickly(peripherals: &mut Peripherals, stuff: [u8; BUFSIZE]) {
-    epaper_reset(&mut peripherals.GPIO_S);
+pub fn epaper_draw_stuff_quickly(peripherals: &mut Peripherals, stuff: [u8; SCREEN_BUFFER_SIZE]) {
+    epaper_reset(&mut peripherals.gpio_s);
     epaper_write_command(peripherals, &[0x4E]);
     epaper_write_data(peripherals, &[0x00]);
     epaper_write_command(peripherals, &[0x4F]);

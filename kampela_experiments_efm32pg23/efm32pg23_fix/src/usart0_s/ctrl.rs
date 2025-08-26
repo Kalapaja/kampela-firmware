@@ -1,249 +1,227 @@
 #[doc = "Register `CTRL` reader"]
-pub struct R(crate::R<CTRL_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<CTRL_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<CTRL_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<CtrlSpec>;
 #[doc = "Register `CTRL` writer"]
-pub struct W(crate::W<CTRL_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<CTRL_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
+pub type W = crate::W<CtrlSpec>;
+#[doc = "USART Synchronous Mode\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Sync {
+    #[doc = "0: The USART operates in asynchronous mode"]
+    Disable = 0,
+    #[doc = "1: The USART operates in synchronous mode"]
+    Enable = 1,
 }
-impl core::ops::DerefMut for W {
+impl From<Sync> for bool {
     #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<CTRL_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<CTRL_SPEC>) -> Self {
-        W(writer)
+    fn from(variant: Sync) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `SYNC` reader - USART Synchronous Mode"]
-pub type SYNC_R = crate::BitReader<SYNC_A>;
-#[doc = "USART Synchronous Mode\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum SYNC_A {
-    #[doc = "0: The USART operates in asynchronous mode"]
-    DISABLE = 0,
-    #[doc = "1: The USART operates in synchronous mode"]
-    ENABLE = 1,
-}
-impl From<SYNC_A> for bool {
-    #[inline(always)]
-    fn from(variant: SYNC_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl SYNC_R {
+pub type SyncR = crate::BitReader<Sync>;
+impl SyncR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> SYNC_A {
+    pub const fn variant(&self) -> Sync {
         match self.bits {
-            false => SYNC_A::DISABLE,
-            true => SYNC_A::ENABLE,
+            false => Sync::Disable,
+            true => Sync::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == SYNC_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == SYNC_A::ENABLE
-    }
-}
-#[doc = "Field `SYNC` writer - USART Synchronous Mode"]
-pub type SYNC_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, SYNC_A, O>;
-impl<'a, const O: u8> SYNC_W<'a, O> {
     #[doc = "The USART operates in asynchronous mode"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(SYNC_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Sync::Disable
     }
     #[doc = "The USART operates in synchronous mode"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(SYNC_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Sync::Enable
+    }
+}
+#[doc = "Field `SYNC` writer - USART Synchronous Mode"]
+pub type SyncW<'a, REG> = crate::BitWriter<'a, REG, Sync>;
+impl<'a, REG> SyncW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The USART operates in asynchronous mode"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Sync::Disable)
+    }
+    #[doc = "The USART operates in synchronous mode"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Sync::Enable)
+    }
+}
+#[doc = "Loopback Enable\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Loopbk {
+    #[doc = "0: The receiver is connected to and receives data from U(S)n_RX"]
+    Disable = 0,
+    #[doc = "1: The receiver is connected to and receives data from U(S)n_TX"]
+    Enable = 1,
+}
+impl From<Loopbk> for bool {
+    #[inline(always)]
+    fn from(variant: Loopbk) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `LOOPBK` reader - Loopback Enable"]
-pub type LOOPBK_R = crate::BitReader<LOOPBK_A>;
-#[doc = "Loopback Enable\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LOOPBK_A {
-    #[doc = "0: The receiver is connected to and receives data from U(S)n_RX"]
-    DISABLE = 0,
-    #[doc = "1: The receiver is connected to and receives data from U(S)n_TX"]
-    ENABLE = 1,
-}
-impl From<LOOPBK_A> for bool {
-    #[inline(always)]
-    fn from(variant: LOOPBK_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl LOOPBK_R {
+pub type LoopbkR = crate::BitReader<Loopbk>;
+impl LoopbkR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LOOPBK_A {
+    pub const fn variant(&self) -> Loopbk {
         match self.bits {
-            false => LOOPBK_A::DISABLE,
-            true => LOOPBK_A::ENABLE,
+            false => Loopbk::Disable,
+            true => Loopbk::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == LOOPBK_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == LOOPBK_A::ENABLE
-    }
-}
-#[doc = "Field `LOOPBK` writer - Loopback Enable"]
-pub type LOOPBK_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, LOOPBK_A, O>;
-impl<'a, const O: u8> LOOPBK_W<'a, O> {
     #[doc = "The receiver is connected to and receives data from U(S)n_RX"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(LOOPBK_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Loopbk::Disable
     }
     #[doc = "The receiver is connected to and receives data from U(S)n_TX"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(LOOPBK_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Loopbk::Enable
+    }
+}
+#[doc = "Field `LOOPBK` writer - Loopback Enable"]
+pub type LoopbkW<'a, REG> = crate::BitWriter<'a, REG, Loopbk>;
+impl<'a, REG> LoopbkW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The receiver is connected to and receives data from U(S)n_RX"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Loopbk::Disable)
+    }
+    #[doc = "The receiver is connected to and receives data from U(S)n_TX"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Loopbk::Enable)
+    }
+}
+#[doc = "Collision Check Enable\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Ccen {
+    #[doc = "0: Collision check is disabled"]
+    Disable = 0,
+    #[doc = "1: Collision check is enabled. The receiver must be enabled for the check to be performed"]
+    Enable = 1,
+}
+impl From<Ccen> for bool {
+    #[inline(always)]
+    fn from(variant: Ccen) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CCEN` reader - Collision Check Enable"]
-pub type CCEN_R = crate::BitReader<CCEN_A>;
-#[doc = "Collision Check Enable\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CCEN_A {
-    #[doc = "0: Collision check is disabled"]
-    DISABLE = 0,
-    #[doc = "1: Collision check is enabled. The receiver must be enabled for the check to be performed"]
-    ENABLE = 1,
-}
-impl From<CCEN_A> for bool {
-    #[inline(always)]
-    fn from(variant: CCEN_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CCEN_R {
+pub type CcenR = crate::BitReader<Ccen>;
+impl CcenR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CCEN_A {
+    pub const fn variant(&self) -> Ccen {
         match self.bits {
-            false => CCEN_A::DISABLE,
-            true => CCEN_A::ENABLE,
+            false => Ccen::Disable,
+            true => Ccen::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == CCEN_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == CCEN_A::ENABLE
-    }
-}
-#[doc = "Field `CCEN` writer - Collision Check Enable"]
-pub type CCEN_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, CCEN_A, O>;
-impl<'a, const O: u8> CCEN_W<'a, O> {
     #[doc = "Collision check is disabled"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(CCEN_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Ccen::Disable
     }
     #[doc = "Collision check is enabled. The receiver must be enabled for the check to be performed"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(CCEN_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Ccen::Enable
     }
 }
-#[doc = "Field `MPM` reader - Multi-Processor Mode"]
-pub type MPM_R = crate::BitReader<MPM_A>;
+#[doc = "Field `CCEN` writer - Collision Check Enable"]
+pub type CcenW<'a, REG> = crate::BitWriter<'a, REG, Ccen>;
+impl<'a, REG> CcenW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Collision check is disabled"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ccen::Disable)
+    }
+    #[doc = "Collision check is enabled. The receiver must be enabled for the check to be performed"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Ccen::Enable)
+    }
+}
 #[doc = "Multi-Processor Mode\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum MPM_A {
+pub enum Mpm {
     #[doc = "0: The 9th bit of incoming frames has no special function"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: An incoming frame with the 9th bit equal to MPAB will be loaded into the receive buffer regardless of RXBLOCK and will result in the MPAB interrupt flag being set"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<MPM_A> for bool {
+impl From<Mpm> for bool {
     #[inline(always)]
-    fn from(variant: MPM_A) -> Self {
+    fn from(variant: Mpm) -> Self {
         variant as u8 != 0
     }
 }
-impl MPM_R {
+#[doc = "Field `MPM` reader - Multi-Processor Mode"]
+pub type MpmR = crate::BitReader<Mpm>;
+impl MpmR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MPM_A {
+    pub const fn variant(&self) -> Mpm {
         match self.bits {
-            false => MPM_A::DISABLE,
-            true => MPM_A::ENABLE,
+            false => Mpm::Disable,
+            true => Mpm::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == MPM_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == MPM_A::ENABLE
-    }
-}
-#[doc = "Field `MPM` writer - Multi-Processor Mode"]
-pub type MPM_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, MPM_A, O>;
-impl<'a, const O: u8> MPM_W<'a, O> {
     #[doc = "The 9th bit of incoming frames has no special function"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(MPM_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Mpm::Disable
     }
     #[doc = "An incoming frame with the 9th bit equal to MPAB will be loaded into the receive buffer regardless of RXBLOCK and will result in the MPAB interrupt flag being set"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(MPM_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Mpm::Enable
+    }
+}
+#[doc = "Field `MPM` writer - Multi-Processor Mode"]
+pub type MpmW<'a, REG> = crate::BitWriter<'a, REG, Mpm>;
+impl<'a, REG> MpmW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The 9th bit of incoming frames has no special function"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Mpm::Disable)
+    }
+    #[doc = "An incoming frame with the 9th bit equal to MPAB will be loaded into the receive buffer regardless of RXBLOCK and will result in the MPAB interrupt flag being set"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Mpm::Enable)
     }
 }
 #[doc = "Field `MPAB` reader - Multi-Processor Address-Bit"]
-pub type MPAB_R = crate::BitReader<bool>;
+pub type MpabR = crate::BitReader;
 #[doc = "Field `MPAB` writer - Multi-Processor Address-Bit"]
-pub type MPAB_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `OVS` reader - Oversampling"]
-pub type OVS_R = crate::FieldReader<u8, OVS_A>;
+pub type MpabW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Oversampling\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
-pub enum OVS_A {
+pub enum Ovs {
     #[doc = "0: Regular UART mode with 16X oversampling in asynchronous mode"]
     X16 = 0,
     #[doc = "1: Double speed with 8X oversampling in asynchronous mode"]
@@ -253,1089 +231,1098 @@ pub enum OVS_A {
     #[doc = "3: Quadruple speed with 4X oversampling in asynchronous mode"]
     X4 = 3,
 }
-impl From<OVS_A> for u8 {
+impl From<Ovs> for u8 {
     #[inline(always)]
-    fn from(variant: OVS_A) -> Self {
+    fn from(variant: Ovs) -> Self {
         variant as _
     }
 }
-impl OVS_R {
+impl crate::FieldSpec for Ovs {
+    type Ux = u8;
+}
+impl crate::IsEnum for Ovs {}
+#[doc = "Field `OVS` reader - Oversampling"]
+pub type OvsR = crate::FieldReader<Ovs>;
+impl OvsR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> OVS_A {
+    pub const fn variant(&self) -> Ovs {
         match self.bits {
-            0 => OVS_A::X16,
-            1 => OVS_A::X8,
-            2 => OVS_A::X6,
-            3 => OVS_A::X4,
+            0 => Ovs::X16,
+            1 => Ovs::X8,
+            2 => Ovs::X6,
+            3 => Ovs::X4,
             _ => unreachable!(),
         }
     }
-    #[doc = "Checks if the value of the field is `X16`"]
-    #[inline(always)]
-    pub fn is_x16(&self) -> bool {
-        *self == OVS_A::X16
-    }
-    #[doc = "Checks if the value of the field is `X8`"]
-    #[inline(always)]
-    pub fn is_x8(&self) -> bool {
-        *self == OVS_A::X8
-    }
-    #[doc = "Checks if the value of the field is `X6`"]
-    #[inline(always)]
-    pub fn is_x6(&self) -> bool {
-        *self == OVS_A::X6
-    }
-    #[doc = "Checks if the value of the field is `X4`"]
-    #[inline(always)]
-    pub fn is_x4(&self) -> bool {
-        *self == OVS_A::X4
-    }
-}
-#[doc = "Field `OVS` writer - Oversampling"]
-pub type OVS_W<'a, const O: u8> = crate::FieldWriterSafe<'a, u32, CTRL_SPEC, u8, OVS_A, 2, O>;
-impl<'a, const O: u8> OVS_W<'a, O> {
     #[doc = "Regular UART mode with 16X oversampling in asynchronous mode"]
     #[inline(always)]
-    pub fn x16(self) -> &'a mut W {
-        self.variant(OVS_A::X16)
+    pub fn is_x16(&self) -> bool {
+        *self == Ovs::X16
     }
     #[doc = "Double speed with 8X oversampling in asynchronous mode"]
     #[inline(always)]
-    pub fn x8(self) -> &'a mut W {
-        self.variant(OVS_A::X8)
+    pub fn is_x8(&self) -> bool {
+        *self == Ovs::X8
     }
     #[doc = "6X oversampling in asynchronous mode"]
     #[inline(always)]
-    pub fn x6(self) -> &'a mut W {
-        self.variant(OVS_A::X6)
+    pub fn is_x6(&self) -> bool {
+        *self == Ovs::X6
     }
     #[doc = "Quadruple speed with 4X oversampling in asynchronous mode"]
     #[inline(always)]
-    pub fn x4(self) -> &'a mut W {
-        self.variant(OVS_A::X4)
+    pub fn is_x4(&self) -> bool {
+        *self == Ovs::X4
+    }
+}
+#[doc = "Field `OVS` writer - Oversampling"]
+pub type OvsW<'a, REG> = crate::FieldWriter<'a, REG, 2, Ovs, crate::Safe>;
+impl<'a, REG> OvsW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+    REG::Ux: From<u8>,
+{
+    #[doc = "Regular UART mode with 16X oversampling in asynchronous mode"]
+    #[inline(always)]
+    pub fn x16(self) -> &'a mut crate::W<REG> {
+        self.variant(Ovs::X16)
+    }
+    #[doc = "Double speed with 8X oversampling in asynchronous mode"]
+    #[inline(always)]
+    pub fn x8(self) -> &'a mut crate::W<REG> {
+        self.variant(Ovs::X8)
+    }
+    #[doc = "6X oversampling in asynchronous mode"]
+    #[inline(always)]
+    pub fn x6(self) -> &'a mut crate::W<REG> {
+        self.variant(Ovs::X6)
+    }
+    #[doc = "Quadruple speed with 4X oversampling in asynchronous mode"]
+    #[inline(always)]
+    pub fn x4(self) -> &'a mut crate::W<REG> {
+        self.variant(Ovs::X4)
+    }
+}
+#[doc = "Clock Polarity\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Clkpol {
+    #[doc = "0: The bus clock used in synchronous mode has a low base value"]
+    Idlelow = 0,
+    #[doc = "1: The bus clock used in synchronous mode has a high base value"]
+    Idlehigh = 1,
+}
+impl From<Clkpol> for bool {
+    #[inline(always)]
+    fn from(variant: Clkpol) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CLKPOL` reader - Clock Polarity"]
-pub type CLKPOL_R = crate::BitReader<CLKPOL_A>;
-#[doc = "Clock Polarity\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CLKPOL_A {
-    #[doc = "0: The bus clock used in synchronous mode has a low base value"]
-    IDLELOW = 0,
-    #[doc = "1: The bus clock used in synchronous mode has a high base value"]
-    IDLEHIGH = 1,
-}
-impl From<CLKPOL_A> for bool {
-    #[inline(always)]
-    fn from(variant: CLKPOL_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CLKPOL_R {
+pub type ClkpolR = crate::BitReader<Clkpol>;
+impl ClkpolR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CLKPOL_A {
+    pub const fn variant(&self) -> Clkpol {
         match self.bits {
-            false => CLKPOL_A::IDLELOW,
-            true => CLKPOL_A::IDLEHIGH,
+            false => Clkpol::Idlelow,
+            true => Clkpol::Idlehigh,
         }
     }
-    #[doc = "Checks if the value of the field is `IDLELOW`"]
-    #[inline(always)]
-    pub fn is_idlelow(&self) -> bool {
-        *self == CLKPOL_A::IDLELOW
-    }
-    #[doc = "Checks if the value of the field is `IDLEHIGH`"]
-    #[inline(always)]
-    pub fn is_idlehigh(&self) -> bool {
-        *self == CLKPOL_A::IDLEHIGH
-    }
-}
-#[doc = "Field `CLKPOL` writer - Clock Polarity"]
-pub type CLKPOL_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, CLKPOL_A, O>;
-impl<'a, const O: u8> CLKPOL_W<'a, O> {
     #[doc = "The bus clock used in synchronous mode has a low base value"]
     #[inline(always)]
-    pub fn idlelow(self) -> &'a mut W {
-        self.variant(CLKPOL_A::IDLELOW)
+    pub fn is_idlelow(&self) -> bool {
+        *self == Clkpol::Idlelow
     }
     #[doc = "The bus clock used in synchronous mode has a high base value"]
     #[inline(always)]
-    pub fn idlehigh(self) -> &'a mut W {
-        self.variant(CLKPOL_A::IDLEHIGH)
+    pub fn is_idlehigh(&self) -> bool {
+        *self == Clkpol::Idlehigh
+    }
+}
+#[doc = "Field `CLKPOL` writer - Clock Polarity"]
+pub type ClkpolW<'a, REG> = crate::BitWriter<'a, REG, Clkpol>;
+impl<'a, REG> ClkpolW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The bus clock used in synchronous mode has a low base value"]
+    #[inline(always)]
+    pub fn idlelow(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkpol::Idlelow)
+    }
+    #[doc = "The bus clock used in synchronous mode has a high base value"]
+    #[inline(always)]
+    pub fn idlehigh(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkpol::Idlehigh)
+    }
+}
+#[doc = "Clock Edge For Setup/Sample\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Clkpha {
+    #[doc = "0: Data is sampled on the leading edge and set-up on the trailing edge of the bus clock in synchronous mode"]
+    Sampleleading = 0,
+    #[doc = "1: Data is set-up on the leading edge and sampled on the trailing edge of the bus clock in synchronous mode"]
+    Sampletrailing = 1,
+}
+impl From<Clkpha> for bool {
+    #[inline(always)]
+    fn from(variant: Clkpha) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CLKPHA` reader - Clock Edge For Setup/Sample"]
-pub type CLKPHA_R = crate::BitReader<CLKPHA_A>;
-#[doc = "Clock Edge For Setup/Sample\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CLKPHA_A {
-    #[doc = "0: Data is sampled on the leading edge and set-up on the trailing edge of the bus clock in synchronous mode"]
-    SAMPLELEADING = 0,
-    #[doc = "1: Data is set-up on the leading edge and sampled on the trailing edge of the bus clock in synchronous mode"]
-    SAMPLETRAILING = 1,
-}
-impl From<CLKPHA_A> for bool {
-    #[inline(always)]
-    fn from(variant: CLKPHA_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CLKPHA_R {
+pub type ClkphaR = crate::BitReader<Clkpha>;
+impl ClkphaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CLKPHA_A {
+    pub const fn variant(&self) -> Clkpha {
         match self.bits {
-            false => CLKPHA_A::SAMPLELEADING,
-            true => CLKPHA_A::SAMPLETRAILING,
+            false => Clkpha::Sampleleading,
+            true => Clkpha::Sampletrailing,
         }
     }
-    #[doc = "Checks if the value of the field is `SAMPLELEADING`"]
-    #[inline(always)]
-    pub fn is_sampleleading(&self) -> bool {
-        *self == CLKPHA_A::SAMPLELEADING
-    }
-    #[doc = "Checks if the value of the field is `SAMPLETRAILING`"]
-    #[inline(always)]
-    pub fn is_sampletrailing(&self) -> bool {
-        *self == CLKPHA_A::SAMPLETRAILING
-    }
-}
-#[doc = "Field `CLKPHA` writer - Clock Edge For Setup/Sample"]
-pub type CLKPHA_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, CLKPHA_A, O>;
-impl<'a, const O: u8> CLKPHA_W<'a, O> {
     #[doc = "Data is sampled on the leading edge and set-up on the trailing edge of the bus clock in synchronous mode"]
     #[inline(always)]
-    pub fn sampleleading(self) -> &'a mut W {
-        self.variant(CLKPHA_A::SAMPLELEADING)
+    pub fn is_sampleleading(&self) -> bool {
+        *self == Clkpha::Sampleleading
     }
     #[doc = "Data is set-up on the leading edge and sampled on the trailing edge of the bus clock in synchronous mode"]
     #[inline(always)]
-    pub fn sampletrailing(self) -> &'a mut W {
-        self.variant(CLKPHA_A::SAMPLETRAILING)
+    pub fn is_sampletrailing(&self) -> bool {
+        *self == Clkpha::Sampletrailing
+    }
+}
+#[doc = "Field `CLKPHA` writer - Clock Edge For Setup/Sample"]
+pub type ClkphaW<'a, REG> = crate::BitWriter<'a, REG, Clkpha>;
+impl<'a, REG> ClkphaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Data is sampled on the leading edge and set-up on the trailing edge of the bus clock in synchronous mode"]
+    #[inline(always)]
+    pub fn sampleleading(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkpha::Sampleleading)
+    }
+    #[doc = "Data is set-up on the leading edge and sampled on the trailing edge of the bus clock in synchronous mode"]
+    #[inline(always)]
+    pub fn sampletrailing(self) -> &'a mut crate::W<REG> {
+        self.variant(Clkpha::Sampletrailing)
+    }
+}
+#[doc = "Most Significant Bit First\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Msbf {
+    #[doc = "0: Data is sent with the least significant bit first"]
+    Disable = 0,
+    #[doc = "1: Data is sent with the most significant bit first"]
+    Enable = 1,
+}
+impl From<Msbf> for bool {
+    #[inline(always)]
+    fn from(variant: Msbf) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `MSBF` reader - Most Significant Bit First"]
-pub type MSBF_R = crate::BitReader<MSBF_A>;
-#[doc = "Most Significant Bit First\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum MSBF_A {
-    #[doc = "0: Data is sent with the least significant bit first"]
-    DISABLE = 0,
-    #[doc = "1: Data is sent with the most significant bit first"]
-    ENABLE = 1,
-}
-impl From<MSBF_A> for bool {
-    #[inline(always)]
-    fn from(variant: MSBF_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl MSBF_R {
+pub type MsbfR = crate::BitReader<Msbf>;
+impl MsbfR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> MSBF_A {
+    pub const fn variant(&self) -> Msbf {
         match self.bits {
-            false => MSBF_A::DISABLE,
-            true => MSBF_A::ENABLE,
+            false => Msbf::Disable,
+            true => Msbf::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == MSBF_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == MSBF_A::ENABLE
-    }
-}
-#[doc = "Field `MSBF` writer - Most Significant Bit First"]
-pub type MSBF_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, MSBF_A, O>;
-impl<'a, const O: u8> MSBF_W<'a, O> {
     #[doc = "Data is sent with the least significant bit first"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(MSBF_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Msbf::Disable
     }
     #[doc = "Data is sent with the most significant bit first"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(MSBF_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Msbf::Enable
+    }
+}
+#[doc = "Field `MSBF` writer - Most Significant Bit First"]
+pub type MsbfW<'a, REG> = crate::BitWriter<'a, REG, Msbf>;
+impl<'a, REG> MsbfW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Data is sent with the least significant bit first"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Msbf::Disable)
+    }
+    #[doc = "Data is sent with the most significant bit first"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Msbf::Enable)
+    }
+}
+#[doc = "Action On Chip Select In Main Mode\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Csma {
+    #[doc = "0: No action taken"]
+    Noaction = 0,
+    #[doc = "1: Go to secondary mode"]
+    Gotoslavemode = 1,
+}
+impl From<Csma> for bool {
+    #[inline(always)]
+    fn from(variant: Csma) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CSMA` reader - Action On Chip Select In Main Mode"]
-pub type CSMA_R = crate::BitReader<CSMA_A>;
-#[doc = "Action On Chip Select In Main Mode\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CSMA_A {
-    #[doc = "0: No action taken"]
-    NOACTION = 0,
-    #[doc = "1: Go to secondary mode"]
-    GOTOSLAVEMODE = 1,
-}
-impl From<CSMA_A> for bool {
-    #[inline(always)]
-    fn from(variant: CSMA_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CSMA_R {
+pub type CsmaR = crate::BitReader<Csma>;
+impl CsmaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CSMA_A {
+    pub const fn variant(&self) -> Csma {
         match self.bits {
-            false => CSMA_A::NOACTION,
-            true => CSMA_A::GOTOSLAVEMODE,
+            false => Csma::Noaction,
+            true => Csma::Gotoslavemode,
         }
     }
-    #[doc = "Checks if the value of the field is `NOACTION`"]
-    #[inline(always)]
-    pub fn is_noaction(&self) -> bool {
-        *self == CSMA_A::NOACTION
-    }
-    #[doc = "Checks if the value of the field is `GOTOSLAVEMODE`"]
-    #[inline(always)]
-    pub fn is_gotoslavemode(&self) -> bool {
-        *self == CSMA_A::GOTOSLAVEMODE
-    }
-}
-#[doc = "Field `CSMA` writer - Action On Chip Select In Main Mode"]
-pub type CSMA_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, CSMA_A, O>;
-impl<'a, const O: u8> CSMA_W<'a, O> {
     #[doc = "No action taken"]
     #[inline(always)]
-    pub fn noaction(self) -> &'a mut W {
-        self.variant(CSMA_A::NOACTION)
+    pub fn is_noaction(&self) -> bool {
+        *self == Csma::Noaction
     }
     #[doc = "Go to secondary mode"]
     #[inline(always)]
-    pub fn gotoslavemode(self) -> &'a mut W {
-        self.variant(CSMA_A::GOTOSLAVEMODE)
+    pub fn is_gotoslavemode(&self) -> bool {
+        *self == Csma::Gotoslavemode
+    }
+}
+#[doc = "Field `CSMA` writer - Action On Chip Select In Main Mode"]
+pub type CsmaW<'a, REG> = crate::BitWriter<'a, REG, Csma>;
+impl<'a, REG> CsmaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "No action taken"]
+    #[inline(always)]
+    pub fn noaction(self) -> &'a mut crate::W<REG> {
+        self.variant(Csma::Noaction)
+    }
+    #[doc = "Go to secondary mode"]
+    #[inline(always)]
+    pub fn gotoslavemode(self) -> &'a mut crate::W<REG> {
+        self.variant(Csma::Gotoslavemode)
+    }
+}
+#[doc = "TX Buffer Interrupt Level\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Txbil {
+    #[doc = "0: TXBL and the TXBL interrupt flag are set when the transmit buffer becomes empty. TXBL is cleared when the buffer becomes nonempty."]
+    Empty = 0,
+    #[doc = "1: TXBL and TXBLIF are set when the transmit buffer goes from full to half-full or empty. TXBL is cleared when the buffer becomes full."]
+    Halffull = 1,
+}
+impl From<Txbil> for bool {
+    #[inline(always)]
+    fn from(variant: Txbil) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `TXBIL` reader - TX Buffer Interrupt Level"]
-pub type TXBIL_R = crate::BitReader<TXBIL_A>;
-#[doc = "TX Buffer Interrupt Level\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TXBIL_A {
-    #[doc = "0: TXBL and the TXBL interrupt flag are set when the transmit buffer becomes empty. TXBL is cleared when the buffer becomes nonempty."]
-    EMPTY = 0,
-    #[doc = "1: TXBL and TXBLIF are set when the transmit buffer goes from full to half-full or empty. TXBL is cleared when the buffer becomes full."]
-    HALFFULL = 1,
-}
-impl From<TXBIL_A> for bool {
-    #[inline(always)]
-    fn from(variant: TXBIL_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl TXBIL_R {
+pub type TxbilR = crate::BitReader<Txbil>;
+impl TxbilR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TXBIL_A {
+    pub const fn variant(&self) -> Txbil {
         match self.bits {
-            false => TXBIL_A::EMPTY,
-            true => TXBIL_A::HALFFULL,
+            false => Txbil::Empty,
+            true => Txbil::Halffull,
         }
     }
-    #[doc = "Checks if the value of the field is `EMPTY`"]
-    #[inline(always)]
-    pub fn is_empty(&self) -> bool {
-        *self == TXBIL_A::EMPTY
-    }
-    #[doc = "Checks if the value of the field is `HALFFULL`"]
-    #[inline(always)]
-    pub fn is_halffull(&self) -> bool {
-        *self == TXBIL_A::HALFFULL
-    }
-}
-#[doc = "Field `TXBIL` writer - TX Buffer Interrupt Level"]
-pub type TXBIL_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, TXBIL_A, O>;
-impl<'a, const O: u8> TXBIL_W<'a, O> {
     #[doc = "TXBL and the TXBL interrupt flag are set when the transmit buffer becomes empty. TXBL is cleared when the buffer becomes nonempty."]
     #[inline(always)]
-    pub fn empty(self) -> &'a mut W {
-        self.variant(TXBIL_A::EMPTY)
+    pub fn is_empty(&self) -> bool {
+        *self == Txbil::Empty
     }
     #[doc = "TXBL and TXBLIF are set when the transmit buffer goes from full to half-full or empty. TXBL is cleared when the buffer becomes full."]
     #[inline(always)]
-    pub fn halffull(self) -> &'a mut W {
-        self.variant(TXBIL_A::HALFFULL)
+    pub fn is_halffull(&self) -> bool {
+        *self == Txbil::Halffull
+    }
+}
+#[doc = "Field `TXBIL` writer - TX Buffer Interrupt Level"]
+pub type TxbilW<'a, REG> = crate::BitWriter<'a, REG, Txbil>;
+impl<'a, REG> TxbilW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "TXBL and the TXBL interrupt flag are set when the transmit buffer becomes empty. TXBL is cleared when the buffer becomes nonempty."]
+    #[inline(always)]
+    pub fn empty(self) -> &'a mut crate::W<REG> {
+        self.variant(Txbil::Empty)
+    }
+    #[doc = "TXBL and TXBLIF are set when the transmit buffer goes from full to half-full or empty. TXBL is cleared when the buffer becomes full."]
+    #[inline(always)]
+    pub fn halffull(self) -> &'a mut crate::W<REG> {
+        self.variant(Txbil::Halffull)
+    }
+}
+#[doc = "Receiver Input Invert\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Rxinv {
+    #[doc = "0: Input is passed directly to the receiver"]
+    Disable = 0,
+    #[doc = "1: Input is inverted before it is passed to the receiver"]
+    Enable = 1,
+}
+impl From<Rxinv> for bool {
+    #[inline(always)]
+    fn from(variant: Rxinv) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `RXINV` reader - Receiver Input Invert"]
-pub type RXINV_R = crate::BitReader<RXINV_A>;
-#[doc = "Receiver Input Invert\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum RXINV_A {
-    #[doc = "0: Input is passed directly to the receiver"]
-    DISABLE = 0,
-    #[doc = "1: Input is inverted before it is passed to the receiver"]
-    ENABLE = 1,
-}
-impl From<RXINV_A> for bool {
-    #[inline(always)]
-    fn from(variant: RXINV_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl RXINV_R {
+pub type RxinvR = crate::BitReader<Rxinv>;
+impl RxinvR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> RXINV_A {
+    pub const fn variant(&self) -> Rxinv {
         match self.bits {
-            false => RXINV_A::DISABLE,
-            true => RXINV_A::ENABLE,
+            false => Rxinv::Disable,
+            true => Rxinv::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == RXINV_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == RXINV_A::ENABLE
-    }
-}
-#[doc = "Field `RXINV` writer - Receiver Input Invert"]
-pub type RXINV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, RXINV_A, O>;
-impl<'a, const O: u8> RXINV_W<'a, O> {
     #[doc = "Input is passed directly to the receiver"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(RXINV_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Rxinv::Disable
     }
     #[doc = "Input is inverted before it is passed to the receiver"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(RXINV_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Rxinv::Enable
+    }
+}
+#[doc = "Field `RXINV` writer - Receiver Input Invert"]
+pub type RxinvW<'a, REG> = crate::BitWriter<'a, REG, Rxinv>;
+impl<'a, REG> RxinvW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Input is passed directly to the receiver"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxinv::Disable)
+    }
+    #[doc = "Input is inverted before it is passed to the receiver"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Rxinv::Enable)
+    }
+}
+#[doc = "Transmitter output Invert\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Txinv {
+    #[doc = "0: Output from the transmitter is passed unchanged to U(S)n_TX"]
+    Disable = 0,
+    #[doc = "1: Output from the transmitter is inverted before it is passed to U(S)n_TX"]
+    Enable = 1,
+}
+impl From<Txinv> for bool {
+    #[inline(always)]
+    fn from(variant: Txinv) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `TXINV` reader - Transmitter output Invert"]
-pub type TXINV_R = crate::BitReader<TXINV_A>;
-#[doc = "Transmitter output Invert\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TXINV_A {
-    #[doc = "0: Output from the transmitter is passed unchanged to U(S)n_TX"]
-    DISABLE = 0,
-    #[doc = "1: Output from the transmitter is inverted before it is passed to U(S)n_TX"]
-    ENABLE = 1,
-}
-impl From<TXINV_A> for bool {
-    #[inline(always)]
-    fn from(variant: TXINV_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl TXINV_R {
+pub type TxinvR = crate::BitReader<Txinv>;
+impl TxinvR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> TXINV_A {
+    pub const fn variant(&self) -> Txinv {
         match self.bits {
-            false => TXINV_A::DISABLE,
-            true => TXINV_A::ENABLE,
+            false => Txinv::Disable,
+            true => Txinv::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == TXINV_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == TXINV_A::ENABLE
-    }
-}
-#[doc = "Field `TXINV` writer - Transmitter output Invert"]
-pub type TXINV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, TXINV_A, O>;
-impl<'a, const O: u8> TXINV_W<'a, O> {
     #[doc = "Output from the transmitter is passed unchanged to U(S)n_TX"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(TXINV_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Txinv::Disable
     }
     #[doc = "Output from the transmitter is inverted before it is passed to U(S)n_TX"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(TXINV_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Txinv::Enable
+    }
+}
+#[doc = "Field `TXINV` writer - Transmitter output Invert"]
+pub type TxinvW<'a, REG> = crate::BitWriter<'a, REG, Txinv>;
+impl<'a, REG> TxinvW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Output from the transmitter is passed unchanged to U(S)n_TX"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Txinv::Disable)
+    }
+    #[doc = "Output from the transmitter is inverted before it is passed to U(S)n_TX"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Txinv::Enable)
+    }
+}
+#[doc = "Chip Select Invert\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Csinv {
+    #[doc = "0: Chip select is active low"]
+    Disable = 0,
+    #[doc = "1: Chip select is active high"]
+    Enable = 1,
+}
+impl From<Csinv> for bool {
+    #[inline(always)]
+    fn from(variant: Csinv) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `CSINV` reader - Chip Select Invert"]
-pub type CSINV_R = crate::BitReader<CSINV_A>;
-#[doc = "Chip Select Invert\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum CSINV_A {
-    #[doc = "0: Chip select is active low"]
-    DISABLE = 0,
-    #[doc = "1: Chip select is active high"]
-    ENABLE = 1,
-}
-impl From<CSINV_A> for bool {
-    #[inline(always)]
-    fn from(variant: CSINV_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl CSINV_R {
+pub type CsinvR = crate::BitReader<Csinv>;
+impl CsinvR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> CSINV_A {
+    pub const fn variant(&self) -> Csinv {
         match self.bits {
-            false => CSINV_A::DISABLE,
-            true => CSINV_A::ENABLE,
+            false => Csinv::Disable,
+            true => Csinv::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == CSINV_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == CSINV_A::ENABLE
-    }
-}
-#[doc = "Field `CSINV` writer - Chip Select Invert"]
-pub type CSINV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, CSINV_A, O>;
-impl<'a, const O: u8> CSINV_W<'a, O> {
     #[doc = "Chip select is active low"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(CSINV_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Csinv::Disable
     }
     #[doc = "Chip select is active high"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(CSINV_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Csinv::Enable
+    }
+}
+#[doc = "Field `CSINV` writer - Chip Select Invert"]
+pub type CsinvW<'a, REG> = crate::BitWriter<'a, REG, Csinv>;
+impl<'a, REG> CsinvW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Chip select is active low"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Csinv::Disable)
+    }
+    #[doc = "Chip select is active high"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Csinv::Enable)
     }
 }
 #[doc = "Field `AUTOCS` reader - Automatic Chip Select"]
-pub type AUTOCS_R = crate::BitReader<bool>;
+pub type AutocsR = crate::BitReader;
 #[doc = "Field `AUTOCS` writer - Automatic Chip Select"]
-pub type AUTOCS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `AUTOTRI` reader - Automatic TX Tristate"]
-pub type AUTOTRI_R = crate::BitReader<AUTOTRI_A>;
+pub type AutocsW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Automatic TX Tristate\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum AUTOTRI_A {
+pub enum Autotri {
     #[doc = "0: The output on U(S)n_TX when the transmitter is idle is defined by TXINV"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: U(S)n_TX is tristated whenever the transmitter is idle"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<AUTOTRI_A> for bool {
+impl From<Autotri> for bool {
     #[inline(always)]
-    fn from(variant: AUTOTRI_A) -> Self {
+    fn from(variant: Autotri) -> Self {
         variant as u8 != 0
     }
 }
-impl AUTOTRI_R {
+#[doc = "Field `AUTOTRI` reader - Automatic TX Tristate"]
+pub type AutotriR = crate::BitReader<Autotri>;
+impl AutotriR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> AUTOTRI_A {
+    pub const fn variant(&self) -> Autotri {
         match self.bits {
-            false => AUTOTRI_A::DISABLE,
-            true => AUTOTRI_A::ENABLE,
+            false => Autotri::Disable,
+            true => Autotri::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == AUTOTRI_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == AUTOTRI_A::ENABLE
-    }
-}
-#[doc = "Field `AUTOTRI` writer - Automatic TX Tristate"]
-pub type AUTOTRI_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, AUTOTRI_A, O>;
-impl<'a, const O: u8> AUTOTRI_W<'a, O> {
     #[doc = "The output on U(S)n_TX when the transmitter is idle is defined by TXINV"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(AUTOTRI_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Autotri::Disable
     }
     #[doc = "U(S)n_TX is tristated whenever the transmitter is idle"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(AUTOTRI_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Autotri::Enable
+    }
+}
+#[doc = "Field `AUTOTRI` writer - Automatic TX Tristate"]
+pub type AutotriW<'a, REG> = crate::BitWriter<'a, REG, Autotri>;
+impl<'a, REG> AutotriW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "The output on U(S)n_TX when the transmitter is idle is defined by TXINV"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Autotri::Disable)
+    }
+    #[doc = "U(S)n_TX is tristated whenever the transmitter is idle"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Autotri::Enable)
     }
 }
 #[doc = "Field `SCMODE` reader - SmartCard Mode"]
-pub type SCMODE_R = crate::BitReader<bool>;
+pub type ScmodeR = crate::BitReader;
 #[doc = "Field `SCMODE` writer - SmartCard Mode"]
-pub type SCMODE_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type ScmodeW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SCRETRANS` reader - SmartCard Retransmit"]
-pub type SCRETRANS_R = crate::BitReader<bool>;
+pub type ScretransR = crate::BitReader;
 #[doc = "Field `SCRETRANS` writer - SmartCard Retransmit"]
-pub type SCRETRANS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type ScretransW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SKIPPERRF` reader - Skip Parity Error Frames"]
-pub type SKIPPERRF_R = crate::BitReader<bool>;
+pub type SkipperrfR = crate::BitReader;
 #[doc = "Field `SKIPPERRF` writer - Skip Parity Error Frames"]
-pub type SKIPPERRF_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type SkipperrfW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `BIT8DV` reader - Bit 8 Default Value"]
-pub type BIT8DV_R = crate::BitReader<bool>;
+pub type Bit8dvR = crate::BitReader;
 #[doc = "Field `BIT8DV` writer - Bit 8 Default Value"]
-pub type BIT8DV_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `ERRSDMA` reader - Halt DMA On Error"]
-pub type ERRSDMA_R = crate::BitReader<ERRSDMA_A>;
+pub type Bit8dvW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Halt DMA On Error\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ERRSDMA_A {
+pub enum Errsdma {
     #[doc = "0: Framing and parity errors have no effect on DMA requests from the USART"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: DMA requests from the USART are blocked while the PERR or FERR interrupt flags are set"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<ERRSDMA_A> for bool {
+impl From<Errsdma> for bool {
     #[inline(always)]
-    fn from(variant: ERRSDMA_A) -> Self {
+    fn from(variant: Errsdma) -> Self {
         variant as u8 != 0
     }
 }
-impl ERRSDMA_R {
+#[doc = "Field `ERRSDMA` reader - Halt DMA On Error"]
+pub type ErrsdmaR = crate::BitReader<Errsdma>;
+impl ErrsdmaR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> ERRSDMA_A {
+    pub const fn variant(&self) -> Errsdma {
         match self.bits {
-            false => ERRSDMA_A::DISABLE,
-            true => ERRSDMA_A::ENABLE,
+            false => Errsdma::Disable,
+            true => Errsdma::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == ERRSDMA_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == ERRSDMA_A::ENABLE
-    }
-}
-#[doc = "Field `ERRSDMA` writer - Halt DMA On Error"]
-pub type ERRSDMA_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, ERRSDMA_A, O>;
-impl<'a, const O: u8> ERRSDMA_W<'a, O> {
     #[doc = "Framing and parity errors have no effect on DMA requests from the USART"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(ERRSDMA_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Errsdma::Disable
     }
     #[doc = "DMA requests from the USART are blocked while the PERR or FERR interrupt flags are set"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(ERRSDMA_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Errsdma::Enable
+    }
+}
+#[doc = "Field `ERRSDMA` writer - Halt DMA On Error"]
+pub type ErrsdmaW<'a, REG> = crate::BitWriter<'a, REG, Errsdma>;
+impl<'a, REG> ErrsdmaW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Framing and parity errors have no effect on DMA requests from the USART"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errsdma::Disable)
+    }
+    #[doc = "DMA requests from the USART are blocked while the PERR or FERR interrupt flags are set"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errsdma::Enable)
+    }
+}
+#[doc = "Disable RX On Error\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Errsrx {
+    #[doc = "0: Framing and parity errors have no effect on receiver"]
+    Disable = 0,
+    #[doc = "1: Framing and parity errors disable the receiver"]
+    Enable = 1,
+}
+impl From<Errsrx> for bool {
+    #[inline(always)]
+    fn from(variant: Errsrx) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `ERRSRX` reader - Disable RX On Error"]
-pub type ERRSRX_R = crate::BitReader<ERRSRX_A>;
-#[doc = "Disable RX On Error\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ERRSRX_A {
-    #[doc = "0: Framing and parity errors have no effect on receiver"]
-    DISABLE = 0,
-    #[doc = "1: Framing and parity errors disable the receiver"]
-    ENABLE = 1,
-}
-impl From<ERRSRX_A> for bool {
-    #[inline(always)]
-    fn from(variant: ERRSRX_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl ERRSRX_R {
+pub type ErrsrxR = crate::BitReader<Errsrx>;
+impl ErrsrxR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> ERRSRX_A {
+    pub const fn variant(&self) -> Errsrx {
         match self.bits {
-            false => ERRSRX_A::DISABLE,
-            true => ERRSRX_A::ENABLE,
+            false => Errsrx::Disable,
+            true => Errsrx::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == ERRSRX_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == ERRSRX_A::ENABLE
-    }
-}
-#[doc = "Field `ERRSRX` writer - Disable RX On Error"]
-pub type ERRSRX_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, ERRSRX_A, O>;
-impl<'a, const O: u8> ERRSRX_W<'a, O> {
     #[doc = "Framing and parity errors have no effect on receiver"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(ERRSRX_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Errsrx::Disable
     }
     #[doc = "Framing and parity errors disable the receiver"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(ERRSRX_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Errsrx::Enable
+    }
+}
+#[doc = "Field `ERRSRX` writer - Disable RX On Error"]
+pub type ErrsrxW<'a, REG> = crate::BitWriter<'a, REG, Errsrx>;
+impl<'a, REG> ErrsrxW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Framing and parity errors have no effect on receiver"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errsrx::Disable)
+    }
+    #[doc = "Framing and parity errors disable the receiver"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errsrx::Enable)
+    }
+}
+#[doc = "Disable TX On Error\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Errstx {
+    #[doc = "0: Received framing and parity errors have no effect on transmitter"]
+    Disable = 0,
+    #[doc = "1: Received framing and parity errors disable the transmitter"]
+    Enable = 1,
+}
+impl From<Errstx> for bool {
+    #[inline(always)]
+    fn from(variant: Errstx) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `ERRSTX` reader - Disable TX On Error"]
-pub type ERRSTX_R = crate::BitReader<ERRSTX_A>;
-#[doc = "Disable TX On Error\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ERRSTX_A {
-    #[doc = "0: Received framing and parity errors have no effect on transmitter"]
-    DISABLE = 0,
-    #[doc = "1: Received framing and parity errors disable the transmitter"]
-    ENABLE = 1,
-}
-impl From<ERRSTX_A> for bool {
-    #[inline(always)]
-    fn from(variant: ERRSTX_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl ERRSTX_R {
+pub type ErrstxR = crate::BitReader<Errstx>;
+impl ErrstxR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> ERRSTX_A {
+    pub const fn variant(&self) -> Errstx {
         match self.bits {
-            false => ERRSTX_A::DISABLE,
-            true => ERRSTX_A::ENABLE,
+            false => Errstx::Disable,
+            true => Errstx::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == ERRSTX_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == ERRSTX_A::ENABLE
-    }
-}
-#[doc = "Field `ERRSTX` writer - Disable TX On Error"]
-pub type ERRSTX_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, ERRSTX_A, O>;
-impl<'a, const O: u8> ERRSTX_W<'a, O> {
     #[doc = "Received framing and parity errors have no effect on transmitter"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(ERRSTX_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Errstx::Disable
     }
     #[doc = "Received framing and parity errors disable the transmitter"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(ERRSTX_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Errstx::Enable
+    }
+}
+#[doc = "Field `ERRSTX` writer - Disable TX On Error"]
+pub type ErrstxW<'a, REG> = crate::BitWriter<'a, REG, Errstx>;
+impl<'a, REG> ErrstxW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Received framing and parity errors have no effect on transmitter"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errstx::Disable)
+    }
+    #[doc = "Received framing and parity errors disable the transmitter"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Errstx::Enable)
     }
 }
 #[doc = "Field `SSSEARLY` reader - Synchronous Secondary Setup Early"]
-pub type SSSEARLY_R = crate::BitReader<bool>;
+pub type SssearlyR = crate::BitReader;
 #[doc = "Field `SSSEARLY` writer - Synchronous Secondary Setup Early"]
-pub type SSSEARLY_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
-#[doc = "Field `BYTESWAP` reader - Byteswap In Double Accesses"]
-pub type BYTESWAP_R = crate::BitReader<BYTESWAP_A>;
+pub type SssearlyW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Byteswap In Double Accesses\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum BYTESWAP_A {
+pub enum Byteswap {
     #[doc = "0: Normal byte order"]
-    DISABLE = 0,
+    Disable = 0,
     #[doc = "1: Byte order swapped"]
-    ENABLE = 1,
+    Enable = 1,
 }
-impl From<BYTESWAP_A> for bool {
+impl From<Byteswap> for bool {
     #[inline(always)]
-    fn from(variant: BYTESWAP_A) -> Self {
+    fn from(variant: Byteswap) -> Self {
         variant as u8 != 0
     }
 }
-impl BYTESWAP_R {
+#[doc = "Field `BYTESWAP` reader - Byteswap In Double Accesses"]
+pub type ByteswapR = crate::BitReader<Byteswap>;
+impl ByteswapR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> BYTESWAP_A {
+    pub const fn variant(&self) -> Byteswap {
         match self.bits {
-            false => BYTESWAP_A::DISABLE,
-            true => BYTESWAP_A::ENABLE,
+            false => Byteswap::Disable,
+            true => Byteswap::Enable,
         }
     }
-    #[doc = "Checks if the value of the field is `DISABLE`"]
-    #[inline(always)]
-    pub fn is_disable(&self) -> bool {
-        *self == BYTESWAP_A::DISABLE
-    }
-    #[doc = "Checks if the value of the field is `ENABLE`"]
-    #[inline(always)]
-    pub fn is_enable(&self) -> bool {
-        *self == BYTESWAP_A::ENABLE
-    }
-}
-#[doc = "Field `BYTESWAP` writer - Byteswap In Double Accesses"]
-pub type BYTESWAP_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, BYTESWAP_A, O>;
-impl<'a, const O: u8> BYTESWAP_W<'a, O> {
     #[doc = "Normal byte order"]
     #[inline(always)]
-    pub fn disable(self) -> &'a mut W {
-        self.variant(BYTESWAP_A::DISABLE)
+    pub fn is_disable(&self) -> bool {
+        *self == Byteswap::Disable
     }
     #[doc = "Byte order swapped"]
     #[inline(always)]
-    pub fn enable(self) -> &'a mut W {
-        self.variant(BYTESWAP_A::ENABLE)
+    pub fn is_enable(&self) -> bool {
+        *self == Byteswap::Enable
+    }
+}
+#[doc = "Field `BYTESWAP` writer - Byteswap In Double Accesses"]
+pub type ByteswapW<'a, REG> = crate::BitWriter<'a, REG, Byteswap>;
+impl<'a, REG> ByteswapW<'a, REG>
+where
+    REG: crate::Writable + crate::RegisterSpec,
+{
+    #[doc = "Normal byte order"]
+    #[inline(always)]
+    pub fn disable(self) -> &'a mut crate::W<REG> {
+        self.variant(Byteswap::Disable)
+    }
+    #[doc = "Byte order swapped"]
+    #[inline(always)]
+    pub fn enable(self) -> &'a mut crate::W<REG> {
+        self.variant(Byteswap::Enable)
     }
 }
 #[doc = "Field `AUTOTX` reader - Always Transmit When RX Not Full"]
-pub type AUTOTX_R = crate::BitReader<bool>;
+pub type AutotxR = crate::BitReader;
 #[doc = "Field `AUTOTX` writer - Always Transmit When RX Not Full"]
-pub type AUTOTX_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type AutotxW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `MVDIS` reader - Majority Vote Disable"]
-pub type MVDIS_R = crate::BitReader<bool>;
+pub type MvdisR = crate::BitReader;
 #[doc = "Field `MVDIS` writer - Majority Vote Disable"]
-pub type MVDIS_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type MvdisW<'a, REG> = crate::BitWriter<'a, REG>;
 #[doc = "Field `SMSDELAY` reader - Synchronous Main Sample Delay"]
-pub type SMSDELAY_R = crate::BitReader<bool>;
+pub type SmsdelayR = crate::BitReader;
 #[doc = "Field `SMSDELAY` writer - Synchronous Main Sample Delay"]
-pub type SMSDELAY_W<'a, const O: u8> = crate::BitWriter<'a, u32, CTRL_SPEC, bool, O>;
+pub type SmsdelayW<'a, REG> = crate::BitWriter<'a, REG>;
 impl R {
     #[doc = "Bit 0 - USART Synchronous Mode"]
     #[inline(always)]
-    pub fn sync(&self) -> SYNC_R {
-        SYNC_R::new((self.bits & 1) != 0)
+    pub fn sync(&self) -> SyncR {
+        SyncR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
-    pub fn loopbk(&self) -> LOOPBK_R {
-        LOOPBK_R::new(((self.bits >> 1) & 1) != 0)
+    pub fn loopbk(&self) -> LoopbkR {
+        LoopbkR::new(((self.bits >> 1) & 1) != 0)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
-    pub fn ccen(&self) -> CCEN_R {
-        CCEN_R::new(((self.bits >> 2) & 1) != 0)
+    pub fn ccen(&self) -> CcenR {
+        CcenR::new(((self.bits >> 2) & 1) != 0)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
-    pub fn mpm(&self) -> MPM_R {
-        MPM_R::new(((self.bits >> 3) & 1) != 0)
+    pub fn mpm(&self) -> MpmR {
+        MpmR::new(((self.bits >> 3) & 1) != 0)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
-    pub fn mpab(&self) -> MPAB_R {
-        MPAB_R::new(((self.bits >> 4) & 1) != 0)
+    pub fn mpab(&self) -> MpabR {
+        MpabR::new(((self.bits >> 4) & 1) != 0)
     }
     #[doc = "Bits 5:6 - Oversampling"]
     #[inline(always)]
-    pub fn ovs(&self) -> OVS_R {
-        OVS_R::new(((self.bits >> 5) & 3) as u8)
+    pub fn ovs(&self) -> OvsR {
+        OvsR::new(((self.bits >> 5) & 3) as u8)
     }
     #[doc = "Bit 8 - Clock Polarity"]
     #[inline(always)]
-    pub fn clkpol(&self) -> CLKPOL_R {
-        CLKPOL_R::new(((self.bits >> 8) & 1) != 0)
+    pub fn clkpol(&self) -> ClkpolR {
+        ClkpolR::new(((self.bits >> 8) & 1) != 0)
     }
     #[doc = "Bit 9 - Clock Edge For Setup/Sample"]
     #[inline(always)]
-    pub fn clkpha(&self) -> CLKPHA_R {
-        CLKPHA_R::new(((self.bits >> 9) & 1) != 0)
+    pub fn clkpha(&self) -> ClkphaR {
+        ClkphaR::new(((self.bits >> 9) & 1) != 0)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
-    pub fn msbf(&self) -> MSBF_R {
-        MSBF_R::new(((self.bits >> 10) & 1) != 0)
+    pub fn msbf(&self) -> MsbfR {
+        MsbfR::new(((self.bits >> 10) & 1) != 0)
     }
     #[doc = "Bit 11 - Action On Chip Select In Main Mode"]
     #[inline(always)]
-    pub fn csma(&self) -> CSMA_R {
-        CSMA_R::new(((self.bits >> 11) & 1) != 0)
+    pub fn csma(&self) -> CsmaR {
+        CsmaR::new(((self.bits >> 11) & 1) != 0)
     }
     #[doc = "Bit 12 - TX Buffer Interrupt Level"]
     #[inline(always)]
-    pub fn txbil(&self) -> TXBIL_R {
-        TXBIL_R::new(((self.bits >> 12) & 1) != 0)
+    pub fn txbil(&self) -> TxbilR {
+        TxbilR::new(((self.bits >> 12) & 1) != 0)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
-    pub fn rxinv(&self) -> RXINV_R {
-        RXINV_R::new(((self.bits >> 13) & 1) != 0)
+    pub fn rxinv(&self) -> RxinvR {
+        RxinvR::new(((self.bits >> 13) & 1) != 0)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
-    pub fn txinv(&self) -> TXINV_R {
-        TXINV_R::new(((self.bits >> 14) & 1) != 0)
+    pub fn txinv(&self) -> TxinvR {
+        TxinvR::new(((self.bits >> 14) & 1) != 0)
     }
     #[doc = "Bit 15 - Chip Select Invert"]
     #[inline(always)]
-    pub fn csinv(&self) -> CSINV_R {
-        CSINV_R::new(((self.bits >> 15) & 1) != 0)
+    pub fn csinv(&self) -> CsinvR {
+        CsinvR::new(((self.bits >> 15) & 1) != 0)
     }
     #[doc = "Bit 16 - Automatic Chip Select"]
     #[inline(always)]
-    pub fn autocs(&self) -> AUTOCS_R {
-        AUTOCS_R::new(((self.bits >> 16) & 1) != 0)
+    pub fn autocs(&self) -> AutocsR {
+        AutocsR::new(((self.bits >> 16) & 1) != 0)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
-    pub fn autotri(&self) -> AUTOTRI_R {
-        AUTOTRI_R::new(((self.bits >> 17) & 1) != 0)
+    pub fn autotri(&self) -> AutotriR {
+        AutotriR::new(((self.bits >> 17) & 1) != 0)
     }
     #[doc = "Bit 18 - SmartCard Mode"]
     #[inline(always)]
-    pub fn scmode(&self) -> SCMODE_R {
-        SCMODE_R::new(((self.bits >> 18) & 1) != 0)
+    pub fn scmode(&self) -> ScmodeR {
+        ScmodeR::new(((self.bits >> 18) & 1) != 0)
     }
     #[doc = "Bit 19 - SmartCard Retransmit"]
     #[inline(always)]
-    pub fn scretrans(&self) -> SCRETRANS_R {
-        SCRETRANS_R::new(((self.bits >> 19) & 1) != 0)
+    pub fn scretrans(&self) -> ScretransR {
+        ScretransR::new(((self.bits >> 19) & 1) != 0)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
-    pub fn skipperrf(&self) -> SKIPPERRF_R {
-        SKIPPERRF_R::new(((self.bits >> 20) & 1) != 0)
+    pub fn skipperrf(&self) -> SkipperrfR {
+        SkipperrfR::new(((self.bits >> 20) & 1) != 0)
     }
     #[doc = "Bit 21 - Bit 8 Default Value"]
     #[inline(always)]
-    pub fn bit8dv(&self) -> BIT8DV_R {
-        BIT8DV_R::new(((self.bits >> 21) & 1) != 0)
+    pub fn bit8dv(&self) -> Bit8dvR {
+        Bit8dvR::new(((self.bits >> 21) & 1) != 0)
     }
     #[doc = "Bit 22 - Halt DMA On Error"]
     #[inline(always)]
-    pub fn errsdma(&self) -> ERRSDMA_R {
-        ERRSDMA_R::new(((self.bits >> 22) & 1) != 0)
+    pub fn errsdma(&self) -> ErrsdmaR {
+        ErrsdmaR::new(((self.bits >> 22) & 1) != 0)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
-    pub fn errsrx(&self) -> ERRSRX_R {
-        ERRSRX_R::new(((self.bits >> 23) & 1) != 0)
+    pub fn errsrx(&self) -> ErrsrxR {
+        ErrsrxR::new(((self.bits >> 23) & 1) != 0)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
-    pub fn errstx(&self) -> ERRSTX_R {
-        ERRSTX_R::new(((self.bits >> 24) & 1) != 0)
+    pub fn errstx(&self) -> ErrstxR {
+        ErrstxR::new(((self.bits >> 24) & 1) != 0)
     }
     #[doc = "Bit 25 - Synchronous Secondary Setup Early"]
     #[inline(always)]
-    pub fn sssearly(&self) -> SSSEARLY_R {
-        SSSEARLY_R::new(((self.bits >> 25) & 1) != 0)
+    pub fn sssearly(&self) -> SssearlyR {
+        SssearlyR::new(((self.bits >> 25) & 1) != 0)
     }
     #[doc = "Bit 28 - Byteswap In Double Accesses"]
     #[inline(always)]
-    pub fn byteswap(&self) -> BYTESWAP_R {
-        BYTESWAP_R::new(((self.bits >> 28) & 1) != 0)
+    pub fn byteswap(&self) -> ByteswapR {
+        ByteswapR::new(((self.bits >> 28) & 1) != 0)
     }
     #[doc = "Bit 29 - Always Transmit When RX Not Full"]
     #[inline(always)]
-    pub fn autotx(&self) -> AUTOTX_R {
-        AUTOTX_R::new(((self.bits >> 29) & 1) != 0)
+    pub fn autotx(&self) -> AutotxR {
+        AutotxR::new(((self.bits >> 29) & 1) != 0)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
-    pub fn mvdis(&self) -> MVDIS_R {
-        MVDIS_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn mvdis(&self) -> MvdisR {
+        MvdisR::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - Synchronous Main Sample Delay"]
     #[inline(always)]
-    pub fn smsdelay(&self) -> SMSDELAY_R {
-        SMSDELAY_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn smsdelay(&self) -> SmsdelayR {
+        SmsdelayR::new(((self.bits >> 31) & 1) != 0)
     }
 }
 impl W {
     #[doc = "Bit 0 - USART Synchronous Mode"]
     #[inline(always)]
-    #[must_use]
-    pub fn sync(&mut self) -> SYNC_W<0> {
-        SYNC_W::new(self)
+    pub fn sync(&mut self) -> SyncW<CtrlSpec> {
+        SyncW::new(self, 0)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn loopbk(&mut self) -> LOOPBK_W<1> {
-        LOOPBK_W::new(self)
+    pub fn loopbk(&mut self) -> LoopbkW<CtrlSpec> {
+        LoopbkW::new(self, 1)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
-    #[must_use]
-    pub fn ccen(&mut self) -> CCEN_W<2> {
-        CCEN_W::new(self)
+    pub fn ccen(&mut self) -> CcenW<CtrlSpec> {
+        CcenW::new(self, 2)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
-    #[must_use]
-    pub fn mpm(&mut self) -> MPM_W<3> {
-        MPM_W::new(self)
+    pub fn mpm(&mut self) -> MpmW<CtrlSpec> {
+        MpmW::new(self, 3)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
-    #[must_use]
-    pub fn mpab(&mut self) -> MPAB_W<4> {
-        MPAB_W::new(self)
+    pub fn mpab(&mut self) -> MpabW<CtrlSpec> {
+        MpabW::new(self, 4)
     }
     #[doc = "Bits 5:6 - Oversampling"]
     #[inline(always)]
-    #[must_use]
-    pub fn ovs(&mut self) -> OVS_W<5> {
-        OVS_W::new(self)
+    pub fn ovs(&mut self) -> OvsW<CtrlSpec> {
+        OvsW::new(self, 5)
     }
     #[doc = "Bit 8 - Clock Polarity"]
     #[inline(always)]
-    #[must_use]
-    pub fn clkpol(&mut self) -> CLKPOL_W<8> {
-        CLKPOL_W::new(self)
+    pub fn clkpol(&mut self) -> ClkpolW<CtrlSpec> {
+        ClkpolW::new(self, 8)
     }
     #[doc = "Bit 9 - Clock Edge For Setup/Sample"]
     #[inline(always)]
-    #[must_use]
-    pub fn clkpha(&mut self) -> CLKPHA_W<9> {
-        CLKPHA_W::new(self)
+    pub fn clkpha(&mut self) -> ClkphaW<CtrlSpec> {
+        ClkphaW::new(self, 9)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
-    #[must_use]
-    pub fn msbf(&mut self) -> MSBF_W<10> {
-        MSBF_W::new(self)
+    pub fn msbf(&mut self) -> MsbfW<CtrlSpec> {
+        MsbfW::new(self, 10)
     }
     #[doc = "Bit 11 - Action On Chip Select In Main Mode"]
     #[inline(always)]
-    #[must_use]
-    pub fn csma(&mut self) -> CSMA_W<11> {
-        CSMA_W::new(self)
+    pub fn csma(&mut self) -> CsmaW<CtrlSpec> {
+        CsmaW::new(self, 11)
     }
     #[doc = "Bit 12 - TX Buffer Interrupt Level"]
     #[inline(always)]
-    #[must_use]
-    pub fn txbil(&mut self) -> TXBIL_W<12> {
-        TXBIL_W::new(self)
+    pub fn txbil(&mut self) -> TxbilW<CtrlSpec> {
+        TxbilW::new(self, 12)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
-    #[must_use]
-    pub fn rxinv(&mut self) -> RXINV_W<13> {
-        RXINV_W::new(self)
+    pub fn rxinv(&mut self) -> RxinvW<CtrlSpec> {
+        RxinvW::new(self, 13)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
-    #[must_use]
-    pub fn txinv(&mut self) -> TXINV_W<14> {
-        TXINV_W::new(self)
+    pub fn txinv(&mut self) -> TxinvW<CtrlSpec> {
+        TxinvW::new(self, 14)
     }
     #[doc = "Bit 15 - Chip Select Invert"]
     #[inline(always)]
-    #[must_use]
-    pub fn csinv(&mut self) -> CSINV_W<15> {
-        CSINV_W::new(self)
+    pub fn csinv(&mut self) -> CsinvW<CtrlSpec> {
+        CsinvW::new(self, 15)
     }
     #[doc = "Bit 16 - Automatic Chip Select"]
     #[inline(always)]
-    #[must_use]
-    pub fn autocs(&mut self) -> AUTOCS_W<16> {
-        AUTOCS_W::new(self)
+    pub fn autocs(&mut self) -> AutocsW<CtrlSpec> {
+        AutocsW::new(self, 16)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
-    #[must_use]
-    pub fn autotri(&mut self) -> AUTOTRI_W<17> {
-        AUTOTRI_W::new(self)
+    pub fn autotri(&mut self) -> AutotriW<CtrlSpec> {
+        AutotriW::new(self, 17)
     }
     #[doc = "Bit 18 - SmartCard Mode"]
     #[inline(always)]
-    #[must_use]
-    pub fn scmode(&mut self) -> SCMODE_W<18> {
-        SCMODE_W::new(self)
+    pub fn scmode(&mut self) -> ScmodeW<CtrlSpec> {
+        ScmodeW::new(self, 18)
     }
     #[doc = "Bit 19 - SmartCard Retransmit"]
     #[inline(always)]
-    #[must_use]
-    pub fn scretrans(&mut self) -> SCRETRANS_W<19> {
-        SCRETRANS_W::new(self)
+    pub fn scretrans(&mut self) -> ScretransW<CtrlSpec> {
+        ScretransW::new(self, 19)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
-    #[must_use]
-    pub fn skipperrf(&mut self) -> SKIPPERRF_W<20> {
-        SKIPPERRF_W::new(self)
+    pub fn skipperrf(&mut self) -> SkipperrfW<CtrlSpec> {
+        SkipperrfW::new(self, 20)
     }
     #[doc = "Bit 21 - Bit 8 Default Value"]
     #[inline(always)]
-    #[must_use]
-    pub fn bit8dv(&mut self) -> BIT8DV_W<21> {
-        BIT8DV_W::new(self)
+    pub fn bit8dv(&mut self) -> Bit8dvW<CtrlSpec> {
+        Bit8dvW::new(self, 21)
     }
     #[doc = "Bit 22 - Halt DMA On Error"]
     #[inline(always)]
-    #[must_use]
-    pub fn errsdma(&mut self) -> ERRSDMA_W<22> {
-        ERRSDMA_W::new(self)
+    pub fn errsdma(&mut self) -> ErrsdmaW<CtrlSpec> {
+        ErrsdmaW::new(self, 22)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
-    #[must_use]
-    pub fn errsrx(&mut self) -> ERRSRX_W<23> {
-        ERRSRX_W::new(self)
+    pub fn errsrx(&mut self) -> ErrsrxW<CtrlSpec> {
+        ErrsrxW::new(self, 23)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
-    #[must_use]
-    pub fn errstx(&mut self) -> ERRSTX_W<24> {
-        ERRSTX_W::new(self)
+    pub fn errstx(&mut self) -> ErrstxW<CtrlSpec> {
+        ErrstxW::new(self, 24)
     }
     #[doc = "Bit 25 - Synchronous Secondary Setup Early"]
     #[inline(always)]
-    #[must_use]
-    pub fn sssearly(&mut self) -> SSSEARLY_W<25> {
-        SSSEARLY_W::new(self)
+    pub fn sssearly(&mut self) -> SssearlyW<CtrlSpec> {
+        SssearlyW::new(self, 25)
     }
     #[doc = "Bit 28 - Byteswap In Double Accesses"]
     #[inline(always)]
-    #[must_use]
-    pub fn byteswap(&mut self) -> BYTESWAP_W<28> {
-        BYTESWAP_W::new(self)
+    pub fn byteswap(&mut self) -> ByteswapW<CtrlSpec> {
+        ByteswapW::new(self, 28)
     }
     #[doc = "Bit 29 - Always Transmit When RX Not Full"]
     #[inline(always)]
-    #[must_use]
-    pub fn autotx(&mut self) -> AUTOTX_W<29> {
-        AUTOTX_W::new(self)
+    pub fn autotx(&mut self) -> AutotxW<CtrlSpec> {
+        AutotxW::new(self, 29)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
-    #[must_use]
-    pub fn mvdis(&mut self) -> MVDIS_W<30> {
-        MVDIS_W::new(self)
+    pub fn mvdis(&mut self) -> MvdisW<CtrlSpec> {
+        MvdisW::new(self, 30)
     }
     #[doc = "Bit 31 - Synchronous Main Sample Delay"]
     #[inline(always)]
-    #[must_use]
-    pub fn smsdelay(&mut self) -> SMSDELAY_W<31> {
-        SMSDELAY_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn smsdelay(&mut self) -> SmsdelayW<CtrlSpec> {
+        SmsdelayW::new(self, 31)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [ctrl](index.html) module"]
-pub struct CTRL_SPEC;
-impl crate::RegisterSpec for CTRL_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`ctrl::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`ctrl::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct CtrlSpec;
+impl crate::RegisterSpec for CtrlSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [ctrl::R](R) reader structure"]
-impl crate::Readable for CTRL_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [ctrl::W](W) writer structure"]
-impl crate::Writable for CTRL_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`ctrl::R`](R) reader structure"]
+impl crate::Readable for CtrlSpec {}
+#[doc = "`write(|w| ..)` method takes [`ctrl::W`](W) writer structure"]
+impl crate::Writable for CtrlSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets CTRL to value 0"]
-impl crate::Resettable for CTRL_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for CtrlSpec {}

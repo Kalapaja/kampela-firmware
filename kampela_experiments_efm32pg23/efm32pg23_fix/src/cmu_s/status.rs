@@ -1,119 +1,102 @@
 #[doc = "Register `STATUS` reader"]
-pub struct R(crate::R<STATUS_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<STATUS_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<STATUS_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<STATUS_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<StatusSpec>;
 #[doc = "Field `CALRDY` reader - Calibration Ready"]
-pub type CALRDY_R = crate::BitReader<bool>;
-#[doc = "Field `WDOGLOCK` reader - Configuration Lock Status for WDOG"]
-pub type WDOGLOCK_R = crate::BitReader<WDOGLOCK_A>;
+pub type CalrdyR = crate::BitReader;
 #[doc = "Configuration Lock Status for WDOG\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum WDOGLOCK_A {
+pub enum Wdoglock {
     #[doc = "0: WDOG configuration lock is unlocked"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: WDOG configuration lock is locked"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<WDOGLOCK_A> for bool {
+impl From<Wdoglock> for bool {
     #[inline(always)]
-    fn from(variant: WDOGLOCK_A) -> Self {
+    fn from(variant: Wdoglock) -> Self {
         variant as u8 != 0
     }
 }
-impl WDOGLOCK_R {
+#[doc = "Field `WDOGLOCK` reader - Configuration Lock Status for WDOG"]
+pub type WdoglockR = crate::BitReader<Wdoglock>;
+impl WdoglockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> WDOGLOCK_A {
+    pub const fn variant(&self) -> Wdoglock {
         match self.bits {
-            false => WDOGLOCK_A::UNLOCKED,
-            true => WDOGLOCK_A::LOCKED,
+            false => Wdoglock::Unlocked,
+            true => Wdoglock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "WDOG configuration lock is unlocked"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == WDOGLOCK_A::UNLOCKED
+        *self == Wdoglock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "WDOG configuration lock is locked"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == WDOGLOCK_A::LOCKED
+        *self == Wdoglock::Locked
+    }
+}
+#[doc = "Configuration Lock Status\n\nValue on reset: 0"]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Lock {
+    #[doc = "0: Configuration lock is unlocked"]
+    Unlocked = 0,
+    #[doc = "1: Configuration lock is locked"]
+    Locked = 1,
+}
+impl From<Lock> for bool {
+    #[inline(always)]
+    fn from(variant: Lock) -> Self {
+        variant as u8 != 0
     }
 }
 #[doc = "Field `LOCK` reader - Configuration Lock Status"]
-pub type LOCK_R = crate::BitReader<LOCK_A>;
-#[doc = "Configuration Lock Status\n\nValue on reset: 0"]
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LOCK_A {
-    #[doc = "0: Configuration lock is unlocked"]
-    UNLOCKED = 0,
-    #[doc = "1: Configuration lock is locked"]
-    LOCKED = 1,
-}
-impl From<LOCK_A> for bool {
-    #[inline(always)]
-    fn from(variant: LOCK_A) -> Self {
-        variant as u8 != 0
-    }
-}
-impl LOCK_R {
+pub type LockR = crate::BitReader<Lock>;
+impl LockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LOCK_A {
+    pub const fn variant(&self) -> Lock {
         match self.bits {
-            false => LOCK_A::UNLOCKED,
-            true => LOCK_A::LOCKED,
+            false => Lock::Unlocked,
+            true => Lock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "Configuration lock is unlocked"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == LOCK_A::UNLOCKED
+        *self == Lock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "Configuration lock is locked"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == LOCK_A::LOCKED
+        *self == Lock::Locked
     }
 }
 impl R {
     #[doc = "Bit 0 - Calibration Ready"]
     #[inline(always)]
-    pub fn calrdy(&self) -> CALRDY_R {
-        CALRDY_R::new((self.bits & 1) != 0)
+    pub fn calrdy(&self) -> CalrdyR {
+        CalrdyR::new((self.bits & 1) != 0)
     }
     #[doc = "Bit 30 - Configuration Lock Status for WDOG"]
     #[inline(always)]
-    pub fn wdoglock(&self) -> WDOGLOCK_R {
-        WDOGLOCK_R::new(((self.bits >> 30) & 1) != 0)
+    pub fn wdoglock(&self) -> WdoglockR {
+        WdoglockR::new(((self.bits >> 30) & 1) != 0)
     }
     #[doc = "Bit 31 - Configuration Lock Status"]
     #[inline(always)]
-    pub fn lock(&self) -> LOCK_R {
-        LOCK_R::new(((self.bits >> 31) & 1) != 0)
+    pub fn lock(&self) -> LockR {
+        LockR::new(((self.bits >> 31) & 1) != 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [status](index.html) module"]
-pub struct STATUS_SPEC;
-impl crate::RegisterSpec for STATUS_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`status::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct StatusSpec;
+impl crate::RegisterSpec for StatusSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [status::R](R) reader structure"]
-impl crate::Readable for STATUS_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`status::R`](R) reader structure"]
+impl crate::Readable for StatusSpec {}
 #[doc = "`reset()` method sets STATUS to value 0"]
-impl crate::Resettable for STATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for StatusSpec {}

@@ -1,71 +1,54 @@
 #[doc = "Register `LOCKSTATUS` reader"]
-pub struct R(crate::R<LOCKSTATUS_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<LOCKSTATUS_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<LOCKSTATUS_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<LOCKSTATUS_SPEC>) -> Self {
-        R(reader)
-    }
-}
-#[doc = "Field `LOCK` reader - Lock Status"]
-pub type LOCK_R = crate::BitReader<LOCK_A>;
+pub type R = crate::R<LockstatusSpec>;
 #[doc = "Lock Status\n\nValue on reset: 0"]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LOCK_A {
+pub enum Lock {
     #[doc = "0: Unlocked State"]
-    UNLOCKED = 0,
+    Unlocked = 0,
     #[doc = "1: LOCKED STATE"]
-    LOCKED = 1,
+    Locked = 1,
 }
-impl From<LOCK_A> for bool {
+impl From<Lock> for bool {
     #[inline(always)]
-    fn from(variant: LOCK_A) -> Self {
+    fn from(variant: Lock) -> Self {
         variant as u8 != 0
     }
 }
-impl LOCK_R {
+#[doc = "Field `LOCK` reader - Lock Status"]
+pub type LockR = crate::BitReader<Lock>;
+impl LockR {
     #[doc = "Get enumerated values variant"]
     #[inline(always)]
-    pub fn variant(&self) -> LOCK_A {
+    pub const fn variant(&self) -> Lock {
         match self.bits {
-            false => LOCK_A::UNLOCKED,
-            true => LOCK_A::LOCKED,
+            false => Lock::Unlocked,
+            true => Lock::Locked,
         }
     }
-    #[doc = "Checks if the value of the field is `UNLOCKED`"]
+    #[doc = "Unlocked State"]
     #[inline(always)]
     pub fn is_unlocked(&self) -> bool {
-        *self == LOCK_A::UNLOCKED
+        *self == Lock::Unlocked
     }
-    #[doc = "Checks if the value of the field is `LOCKED`"]
+    #[doc = "LOCKED STATE"]
     #[inline(always)]
     pub fn is_locked(&self) -> bool {
-        *self == LOCK_A::LOCKED
+        *self == Lock::Locked
     }
 }
 impl R {
     #[doc = "Bit 0 - Lock Status"]
     #[inline(always)]
-    pub fn lock(&self) -> LOCK_R {
-        LOCK_R::new((self.bits & 1) != 0)
+    pub fn lock(&self) -> LockR {
+        LockR::new((self.bits & 1) != 0)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [lockstatus](index.html) module"]
-pub struct LOCKSTATUS_SPEC;
-impl crate::RegisterSpec for LOCKSTATUS_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`lockstatus::R`](R). See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct LockstatusSpec;
+impl crate::RegisterSpec for LockstatusSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [lockstatus::R](R) reader structure"]
-impl crate::Readable for LOCKSTATUS_SPEC {
-    type Reader = R;
-}
+#[doc = "`read()` method returns [`lockstatus::R`](R) reader structure"]
+impl crate::Readable for LockstatusSpec {}
 #[doc = "`reset()` method sets LOCKSTATUS to value 0"]
-impl crate::Resettable for LOCKSTATUS_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for LockstatusSpec {}

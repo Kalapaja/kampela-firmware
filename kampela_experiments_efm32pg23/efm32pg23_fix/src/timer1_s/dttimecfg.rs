@@ -1,110 +1,63 @@
 #[doc = "Register `DTTIMECFG` reader"]
-pub struct R(crate::R<DTTIMECFG_SPEC>);
-impl core::ops::Deref for R {
-    type Target = crate::R<DTTIMECFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl From<crate::R<DTTIMECFG_SPEC>> for R {
-    #[inline(always)]
-    fn from(reader: crate::R<DTTIMECFG_SPEC>) -> Self {
-        R(reader)
-    }
-}
+pub type R = crate::R<DttimecfgSpec>;
 #[doc = "Register `DTTIMECFG` writer"]
-pub struct W(crate::W<DTTIMECFG_SPEC>);
-impl core::ops::Deref for W {
-    type Target = crate::W<DTTIMECFG_SPEC>;
-    #[inline(always)]
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-impl core::ops::DerefMut for W {
-    #[inline(always)]
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-impl From<crate::W<DTTIMECFG_SPEC>> for W {
-    #[inline(always)]
-    fn from(writer: crate::W<DTTIMECFG_SPEC>) -> Self {
-        W(writer)
-    }
-}
+pub type W = crate::W<DttimecfgSpec>;
 #[doc = "Field `DTPRESC` reader - DTI Prescaler Setting"]
-pub type DTPRESC_R = crate::FieldReader<u16, u16>;
+pub type DtprescR = crate::FieldReader<u16>;
 #[doc = "Field `DTPRESC` writer - DTI Prescaler Setting"]
-pub type DTPRESC_W<'a, const O: u8> = crate::FieldWriter<'a, u32, DTTIMECFG_SPEC, u16, u16, 10, O>;
+pub type DtprescW<'a, REG> = crate::FieldWriter<'a, REG, 10, u16>;
 #[doc = "Field `DTRISET` reader - DTI Rise-time"]
-pub type DTRISET_R = crate::FieldReader<u8, u8>;
+pub type DtrisetR = crate::FieldReader;
 #[doc = "Field `DTRISET` writer - DTI Rise-time"]
-pub type DTRISET_W<'a, const O: u8> = crate::FieldWriter<'a, u32, DTTIMECFG_SPEC, u8, u8, 6, O>;
+pub type DtrisetW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 #[doc = "Field `DTFALLT` reader - DTI Fall-time"]
-pub type DTFALLT_R = crate::FieldReader<u8, u8>;
+pub type DtfalltR = crate::FieldReader;
 #[doc = "Field `DTFALLT` writer - DTI Fall-time"]
-pub type DTFALLT_W<'a, const O: u8> = crate::FieldWriter<'a, u32, DTTIMECFG_SPEC, u8, u8, 6, O>;
+pub type DtfalltW<'a, REG> = crate::FieldWriter<'a, REG, 6>;
 impl R {
     #[doc = "Bits 0:9 - DTI Prescaler Setting"]
     #[inline(always)]
-    pub fn dtpresc(&self) -> DTPRESC_R {
-        DTPRESC_R::new((self.bits & 0x03ff) as u16)
+    pub fn dtpresc(&self) -> DtprescR {
+        DtprescR::new((self.bits & 0x03ff) as u16)
     }
     #[doc = "Bits 10:15 - DTI Rise-time"]
     #[inline(always)]
-    pub fn dtriset(&self) -> DTRISET_R {
-        DTRISET_R::new(((self.bits >> 10) & 0x3f) as u8)
+    pub fn dtriset(&self) -> DtrisetR {
+        DtrisetR::new(((self.bits >> 10) & 0x3f) as u8)
     }
     #[doc = "Bits 16:21 - DTI Fall-time"]
     #[inline(always)]
-    pub fn dtfallt(&self) -> DTFALLT_R {
-        DTFALLT_R::new(((self.bits >> 16) & 0x3f) as u8)
+    pub fn dtfallt(&self) -> DtfalltR {
+        DtfalltR::new(((self.bits >> 16) & 0x3f) as u8)
     }
 }
 impl W {
     #[doc = "Bits 0:9 - DTI Prescaler Setting"]
     #[inline(always)]
-    #[must_use]
-    pub fn dtpresc(&mut self) -> DTPRESC_W<0> {
-        DTPRESC_W::new(self)
+    pub fn dtpresc(&mut self) -> DtprescW<DttimecfgSpec> {
+        DtprescW::new(self, 0)
     }
     #[doc = "Bits 10:15 - DTI Rise-time"]
     #[inline(always)]
-    #[must_use]
-    pub fn dtriset(&mut self) -> DTRISET_W<10> {
-        DTRISET_W::new(self)
+    pub fn dtriset(&mut self) -> DtrisetW<DttimecfgSpec> {
+        DtrisetW::new(self, 10)
     }
     #[doc = "Bits 16:21 - DTI Fall-time"]
     #[inline(always)]
-    #[must_use]
-    pub fn dtfallt(&mut self) -> DTFALLT_W<16> {
-        DTFALLT_W::new(self)
-    }
-    #[doc = "Writes raw bits to the register."]
-    #[inline(always)]
-    pub unsafe fn bits(&mut self, bits: u32) -> &mut Self {
-        self.0.bits(bits);
-        self
+    pub fn dtfallt(&mut self) -> DtfalltW<DttimecfgSpec> {
+        DtfalltW::new(self, 16)
     }
 }
-#[doc = "No Description\n\nThis register you can [`read`](crate::generic::Reg::read), [`write_with_zero`](crate::generic::Reg::write_with_zero), [`reset`](crate::generic::Reg::reset), [`write`](crate::generic::Reg::write), [`modify`](crate::generic::Reg::modify). See [API](https://docs.rs/svd2rust/#read--modify--write-api).\n\nFor information about available fields see [dttimecfg](index.html) module"]
-pub struct DTTIMECFG_SPEC;
-impl crate::RegisterSpec for DTTIMECFG_SPEC {
+#[doc = "No Description\n\nYou can [`read`](crate::Reg::read) this register and get [`dttimecfg::R`](R). You can [`reset`](crate::Reg::reset), [`write`](crate::Reg::write), [`write_with_zero`](crate::Reg::write_with_zero) this register using [`dttimecfg::W`](W). You can also [`modify`](crate::Reg::modify) this register. See [API](https://docs.rs/svd2rust/#read--modify--write-api)."]
+pub struct DttimecfgSpec;
+impl crate::RegisterSpec for DttimecfgSpec {
     type Ux = u32;
 }
-#[doc = "`read()` method returns [dttimecfg::R](R) reader structure"]
-impl crate::Readable for DTTIMECFG_SPEC {
-    type Reader = R;
-}
-#[doc = "`write(|w| ..)` method takes [dttimecfg::W](W) writer structure"]
-impl crate::Writable for DTTIMECFG_SPEC {
-    type Writer = W;
-    const ZERO_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
-    const ONE_TO_MODIFY_FIELDS_BITMAP: Self::Ux = 0;
+#[doc = "`read()` method returns [`dttimecfg::R`](R) reader structure"]
+impl crate::Readable for DttimecfgSpec {}
+#[doc = "`write(|w| ..)` method takes [`dttimecfg::W`](W) writer structure"]
+impl crate::Writable for DttimecfgSpec {
+    type Safety = crate::Unsafe;
 }
 #[doc = "`reset()` method sets DTTIMECFG to value 0"]
-impl crate::Resettable for DTTIMECFG_SPEC {
-    const RESET_VALUE: Self::Ux = 0;
-}
+impl crate::Resettable for DttimecfgSpec {}
