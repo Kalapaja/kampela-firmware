@@ -59,7 +59,7 @@ cargo build --release
 
 ### Pilkki
 
-For Pilkki flasher look [here](https://github.com/Alzymologist/pilkki).
+For Pilkki flasher look [here](https://github.com/Kalapaja/pilkki).
 
 ```sh
 ./binarize.sh --pilkki
