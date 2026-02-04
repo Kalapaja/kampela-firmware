@@ -21,7 +21,7 @@ use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
 use kampela_ui::{
     display_def::*,
-    eth_transaction::Eip1559Transaction,
+    eth_transaction::{derive_eth_address, sign_eip1559_transaction, Eip1559Transaction},
     platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate}
 };
@@ -319,7 +319,12 @@ impl Platform for Hardware {
     }
 
     fn eth_address(&self) -> Option<EthAddress> {
-        self.eth_address
+        if let Some(address) = self.eth_address {
+            Some(address)
+        } else {
+            let entropy = self.entropy()?;
+            derive_eth_address(&entropy)
+        }
     }
 
     fn eth_set_address(&mut self, addr: EthAddress) {
@@ -339,7 +344,9 @@ impl Platform for Hardware {
     }
 
     fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
-        None
+        let entropy = self.entropy()?;
+        let transaction = self.eth_transaction.as_ref()?;
+        sign_eip1559_transaction(transaction, &entropy)
     }
 
 }

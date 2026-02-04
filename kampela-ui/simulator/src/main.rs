@@ -30,7 +30,7 @@ const MAX_TOUCH_QUEUE: usize = 2;
 use kampela_ui::{
     data_state::{AppStateInit, NFCState, DataInit, StorageState},
     display_def::*,
-    eth_transaction::Eip1559Transaction,
+    eth_transaction::{derive_eth_address, sign_eip1559_transaction, Eip1559Transaction},
     platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
@@ -193,7 +193,12 @@ impl Platform for DesktopSimulator {
     }
 
     fn eth_address(&self) -> Option<EthAddress> {
-        self.eth_address
+        if let Some(address) = self.eth_address {
+            Some(address)
+        } else {
+            let entropy = self.entropy.as_ref()?;
+            derive_eth_address(entropy)
+        }
     }
 
     fn eth_set_address(&mut self, addr: EthAddress) {
@@ -213,7 +218,9 @@ impl Platform for DesktopSimulator {
     }
 
     fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
-        None
+        let transaction = self.eth_transaction.as_ref()?;
+        let entropy = self.entropy.as_ref()?;
+        sign_eip1559_transaction(transaction, entropy)
     }
 }
 
