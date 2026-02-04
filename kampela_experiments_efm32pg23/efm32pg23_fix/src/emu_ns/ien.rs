@@ -112,49 +112,49 @@ impl W {
     #[doc = "Bit 16 - AVDD BOD Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn avddbod(&mut self) -> AVDDBOD_W<16> {
+    pub fn avddbod(&mut self) -> AVDDBOD_W<'_, 16> {
         AVDDBOD_W::new(self)
     }
     #[doc = "Bit 17 - VDDIO0 BOD Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn iovdd0bod(&mut self) -> IOVDD0BOD_W<17> {
+    pub fn iovdd0bod(&mut self) -> IOVDD0BOD_W<'_, 17> {
         IOVDD0BOD_W::new(self)
     }
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn em23wakeup(&mut self) -> EM23WAKEUP_W<24> {
+    pub fn em23wakeup(&mut self) -> EM23WAKEUP_W<'_, 24> {
         EM23WAKEUP_W::new(self)
     }
     #[doc = "Bit 25 - Vscale done Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vscaledone(&mut self) -> VSCALEDONE_W<25> {
+    pub fn vscaledone(&mut self) -> VSCALEDONE_W<'_, 25> {
         VSCALEDONE_W::new(self)
     }
     #[doc = "Bit 27 - Temperature Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tempavg(&mut self) -> TEMPAVG_W<27> {
+    pub fn tempavg(&mut self) -> TEMPAVG_W<'_, 27> {
         TEMPAVG_W::new(self)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn temp(&mut self) -> TEMP_W<29> {
+    pub fn temp(&mut self) -> TEMP_W<'_, 29> {
         TEMP_W::new(self)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn templow(&mut self) -> TEMPLOW_W<30> {
+    pub fn templow(&mut self) -> TEMPLOW_W<'_, 30> {
         TEMPLOW_W::new(self)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn temphigh(&mut self) -> TEMPHIGH_W<31> {
+    pub fn temphigh(&mut self) -> TEMPHIGH_W<'_, 31> {
         TEMPHIGH_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

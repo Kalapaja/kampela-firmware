@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Source Data Address"]
     #[inline(always)]
     #[must_use]
-    pub fn srcaddr(&mut self) -> SRCADDR_W<0> {
+    pub fn srcaddr(&mut self) -> SRCADDR_W<'_, 0> {
         SRCADDR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bit 0 - Keyscan Start"]
     #[inline(always)]
     #[must_use]
-    pub fn keyscanstart(&mut self) -> KEYSCANSTART_W<0> {
+    pub fn keyscanstart(&mut self) -> KEYSCANSTART_W<'_, 0> {
         KEYSCANSTART_W::new(self)
     }
     #[doc = "Bit 1 - Keyscan Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn keyscanstop(&mut self) -> KEYSCANSTOP_W<1> {
+    pub fn keyscanstop(&mut self) -> KEYSCANSTOP_W<'_, 1> {
         KEYSCANSTOP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

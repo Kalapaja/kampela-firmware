@@ -99,13 +99,13 @@ impl W {
     #[doc = "Bit 1 - Link Next Structure"]
     #[inline(always)]
     #[must_use]
-    pub fn link(&mut self) -> LINK_W<1> {
+    pub fn link(&mut self) -> LINK_W<'_, 1> {
         LINK_W::new(self)
     }
     #[doc = "Bits 2:31 - Link Structure Address"]
     #[inline(always)]
     #[must_use]
-    pub fn linkaddr(&mut self) -> LINKADDR_W<2> {
+    pub fn linkaddr(&mut self) -> LINKADDR_W<'_, 2> {
         LINKADDR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

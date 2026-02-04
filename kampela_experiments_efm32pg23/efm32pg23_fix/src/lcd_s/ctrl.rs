@@ -323,25 +323,25 @@ impl W {
     #[doc = "Bits 1:2 - Update Data Control"]
     #[inline(always)]
     #[must_use]
-    pub fn udctrl(&mut self) -> UDCTRL_W<1> {
+    pub fn udctrl(&mut self) -> UDCTRL_W<'_, 1> {
         UDCTRL_W::new(self)
     }
     #[doc = "Bit 16 - Direct Segment Control"]
     #[inline(always)]
     #[must_use]
-    pub fn dsc(&mut self) -> DSC_W<16> {
+    pub fn dsc(&mut self) -> DSC_W<'_, 16> {
         DSC_W::new(self)
     }
     #[doc = "Bits 18:20 - Warmup Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn warmupdly(&mut self) -> WARMUPDLY_W<18> {
+    pub fn warmupdly(&mut self) -> WARMUPDLY_W<'_, 18> {
         WARMUPDLY_W::new(self)
     }
     #[doc = "Bits 24:30 - Presclae"]
     #[inline(always)]
     #[must_use]
-    pub fn prescale(&mut self) -> PRESCALE_W<24> {
+    pub fn prescale(&mut self) -> PRESCALE_W<'_, 24> {
         PRESCALE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

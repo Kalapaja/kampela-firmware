@@ -148,73 +148,73 @@ impl W {
     #[doc = "Bit 0 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0level(&mut self) -> CH0LEVEL_W<0> {
+    pub fn ch0level(&mut self) -> CH0LEVEL_W<'_, 0> {
         CH0LEVEL_W::new(self)
     }
     #[doc = "Bit 1 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1level(&mut self) -> CH1LEVEL_W<1> {
+    pub fn ch1level(&mut self) -> CH1LEVEL_W<'_, 1> {
         CH1LEVEL_W::new(self)
     }
     #[doc = "Bit 2 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch2level(&mut self) -> CH2LEVEL_W<2> {
+    pub fn ch2level(&mut self) -> CH2LEVEL_W<'_, 2> {
         CH2LEVEL_W::new(self)
     }
     #[doc = "Bit 3 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch3level(&mut self) -> CH3LEVEL_W<3> {
+    pub fn ch3level(&mut self) -> CH3LEVEL_W<'_, 3> {
         CH3LEVEL_W::new(self)
     }
     #[doc = "Bit 4 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch4level(&mut self) -> CH4LEVEL_W<4> {
+    pub fn ch4level(&mut self) -> CH4LEVEL_W<'_, 4> {
         CH4LEVEL_W::new(self)
     }
     #[doc = "Bit 5 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch5level(&mut self) -> CH5LEVEL_W<5> {
+    pub fn ch5level(&mut self) -> CH5LEVEL_W<'_, 5> {
         CH5LEVEL_W::new(self)
     }
     #[doc = "Bit 6 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch6level(&mut self) -> CH6LEVEL_W<6> {
+    pub fn ch6level(&mut self) -> CH6LEVEL_W<'_, 6> {
         CH6LEVEL_W::new(self)
     }
     #[doc = "Bit 7 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch7level(&mut self) -> CH7LEVEL_W<7> {
+    pub fn ch7level(&mut self) -> CH7LEVEL_W<'_, 7> {
         CH7LEVEL_W::new(self)
     }
     #[doc = "Bit 8 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch8level(&mut self) -> CH8LEVEL_W<8> {
+    pub fn ch8level(&mut self) -> CH8LEVEL_W<'_, 8> {
         CH8LEVEL_W::new(self)
     }
     #[doc = "Bit 9 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch9level(&mut self) -> CH9LEVEL_W<9> {
+    pub fn ch9level(&mut self) -> CH9LEVEL_W<'_, 9> {
         CH9LEVEL_W::new(self)
     }
     #[doc = "Bit 10 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch10level(&mut self) -> CH10LEVEL_W<10> {
+    pub fn ch10level(&mut self) -> CH10LEVEL_W<'_, 10> {
         CH10LEVEL_W::new(self)
     }
     #[doc = "Bit 11 - Channel Level"]
     #[inline(always)]
     #[must_use]
-    pub fn ch11level(&mut self) -> CH11LEVEL_W<11> {
+    pub fn ch11level(&mut self) -> CH11LEVEL_W<'_, 11> {
         CH11LEVEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

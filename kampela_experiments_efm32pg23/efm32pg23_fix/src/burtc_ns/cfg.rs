@@ -390,19 +390,19 @@ impl W {
     #[doc = "Bit 0 - Debug Mode Run Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<0> {
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<'_, 0> {
         DEBUGRUN_W::new(self)
     }
     #[doc = "Bit 1 - Compare Channel is Top Value"]
     #[inline(always)]
     #[must_use]
-    pub fn comptop(&mut self) -> COMPTOP_W<1> {
+    pub fn comptop(&mut self) -> COMPTOP_W<'_, 1> {
         COMPTOP_W::new(self)
     }
     #[doc = "Bits 4:7 - Counter prescaler value."]
     #[inline(always)]
     #[must_use]
-    pub fn cntpresc(&mut self) -> CNTPRESC_W<4> {
+    pub fn cntpresc(&mut self) -> CNTPRESC_W<'_, 4> {
         CNTPRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

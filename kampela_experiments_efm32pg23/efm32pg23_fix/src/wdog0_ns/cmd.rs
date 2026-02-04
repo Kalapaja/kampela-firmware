@@ -51,7 +51,7 @@ impl W {
     #[doc = "Bit 0 - WDOG Timer Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn clear(&mut self) -> CLEAR_W<0> {
+    pub fn clear(&mut self) -> CLEAR_W<'_, 0> {
         CLEAR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

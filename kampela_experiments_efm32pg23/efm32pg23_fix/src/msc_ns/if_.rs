@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - Host Erase Done Interrupt Read Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn erase(&mut self) -> ERASE_W<0> {
+    pub fn erase(&mut self) -> ERASE_W<'_, 0> {
         ERASE_W::new(self)
     }
     #[doc = "Bit 1 - Host Write Done Interrupt Read Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn write(&mut self) -> WRITE_W<1> {
+    pub fn write(&mut self) -> WRITE_W<'_, 1> {
         WRITE_W::new(self)
     }
     #[doc = "Bit 2 - Host write buffer overflow"]
     #[inline(always)]
     #[must_use]
-    pub fn wdataov(&mut self) -> WDATAOV_W<2> {
+    pub fn wdataov(&mut self) -> WDATAOV_W<'_, 2> {
         WDATAOV_W::new(self)
     }
     #[doc = "Bit 8 - Flash Power Up Sequence Complete Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn pwrupf(&mut self) -> PWRUPF_W<8> {
+    pub fn pwrupf(&mut self) -> PWRUPF_W<'_, 8> {
         PWRUPF_W::new(self)
     }
     #[doc = "Bit 9 - Flash Power Off Sequence Complete Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroff(&mut self) -> PWROFF_W<9> {
+    pub fn pwroff(&mut self) -> PWROFF_W<'_, 9> {
         PWROFF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

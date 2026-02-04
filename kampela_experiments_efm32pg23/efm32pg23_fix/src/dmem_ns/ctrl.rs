@@ -147,31 +147,31 @@ impl W {
     #[doc = "Bit 0 - Enable ECC functionality"]
     #[inline(always)]
     #[must_use]
-    pub fn eccen(&mut self) -> ECCEN_W<0> {
+    pub fn eccen(&mut self) -> ECCEN_W<'_, 0> {
         ECCEN_W::new(self)
     }
     #[doc = "Bit 1 - Enable ECC syndrome writes"]
     #[inline(always)]
     #[must_use]
-    pub fn eccwen(&mut self) -> ECCWEN_W<1> {
+    pub fn eccwen(&mut self) -> ECCWEN_W<'_, 1> {
         ECCWEN_W::new(self)
     }
     #[doc = "Bit 2 - ECC Error bus fault enable"]
     #[inline(always)]
     #[must_use]
-    pub fn eccerrfaulten(&mut self) -> ECCERRFAULTEN_W<2> {
+    pub fn eccerrfaulten(&mut self) -> ECCERRFAULTEN_W<'_, 2> {
         ECCERRFAULTEN_W::new(self)
     }
     #[doc = "Bits 3:5 - AHB port arbitration priority"]
     #[inline(always)]
     #[must_use]
-    pub fn ahbportpriority(&mut self) -> AHBPORTPRIORITY_W<3> {
+    pub fn ahbportpriority(&mut self) -> AHBPORTPRIORITY_W<'_, 3> {
         AHBPORTPRIORITY_W::new(self)
     }
     #[doc = "Bit 6 - Address fault bus fault enable"]
     #[inline(always)]
     #[must_use]
-    pub fn addrfaulten(&mut self) -> ADDRFAULTEN_W<6> {
+    pub fn addrfaulten(&mut self) -> ADDRFAULTEN_W<'_, 6> {
         ADDRFAULTEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

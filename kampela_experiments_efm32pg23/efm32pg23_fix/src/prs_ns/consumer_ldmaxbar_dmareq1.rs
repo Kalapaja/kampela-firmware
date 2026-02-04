@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:3 - DMAREQ1 async channel select"]
     #[inline(always)]
     #[must_use]
-    pub fn prssel(&mut self) -> PRSSEL_W<0> {
+    pub fn prssel(&mut self) -> PRSSEL_W<'_, 0> {
         PRSSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

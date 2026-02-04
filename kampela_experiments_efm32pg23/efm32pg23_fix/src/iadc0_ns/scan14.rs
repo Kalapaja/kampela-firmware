@@ -379,37 +379,37 @@ impl W {
     #[doc = "Bits 0:3 - Negative Pin Select"]
     #[inline(always)]
     #[must_use]
-    pub fn pinneg(&mut self) -> PINNEG_W<0> {
+    pub fn pinneg(&mut self) -> PINNEG_W<'_, 0> {
         PINNEG_W::new(self)
     }
     #[doc = "Bits 4:7 - Negative Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn portneg(&mut self) -> PORTNEG_W<4> {
+    pub fn portneg(&mut self) -> PORTNEG_W<'_, 4> {
         PORTNEG_W::new(self)
     }
     #[doc = "Bits 8:11 - Positive Pin Select"]
     #[inline(always)]
     #[must_use]
-    pub fn pinpos(&mut self) -> PINPOS_W<8> {
+    pub fn pinpos(&mut self) -> PINPOS_W<'_, 8> {
         PINPOS_W::new(self)
     }
     #[doc = "Bits 12:15 - Positive Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn portpos(&mut self) -> PORTPOS_W<12> {
+    pub fn portpos(&mut self) -> PORTPOS_W<'_, 12> {
         PORTPOS_W::new(self)
     }
     #[doc = "Bit 16 - Configuration Group Select"]
     #[inline(always)]
     #[must_use]
-    pub fn cfg(&mut self) -> CFG_W<16> {
+    pub fn cfg(&mut self) -> CFG_W<'_, 16> {
         CFG_W::new(self)
     }
     #[doc = "Bit 17 - Comparison Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp(&mut self) -> CMP_W<17> {
+    pub fn cmp(&mut self) -> CMP_W<'_, 17> {
         CMP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 12 - Region 11 Non-Secure"]
     #[inline(always)]
     #[must_use]
-    pub fn esaur11ns(&mut self) -> ESAUR11NS_W<12> {
+    pub fn esaur11ns(&mut self) -> ESAUR11NS_W<'_, 12> {
         ESAUR11NS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

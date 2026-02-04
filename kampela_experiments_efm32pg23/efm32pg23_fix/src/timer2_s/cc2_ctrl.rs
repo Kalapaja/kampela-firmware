@@ -468,37 +468,37 @@ impl W {
     #[doc = "Bit 2 - Output Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn outinv(&mut self) -> OUTINV_W<2> {
+    pub fn outinv(&mut self) -> OUTINV_W<'_, 2> {
         OUTINV_W::new(self)
     }
     #[doc = "Bits 8:9 - Compare Match Output Action"]
     #[inline(always)]
     #[must_use]
-    pub fn cmoa(&mut self) -> CMOA_W<8> {
+    pub fn cmoa(&mut self) -> CMOA_W<'_, 8> {
         CMOA_W::new(self)
     }
     #[doc = "Bits 10:11 - Counter Overflow Output Action"]
     #[inline(always)]
     #[must_use]
-    pub fn cofoa(&mut self) -> COFOA_W<10> {
+    pub fn cofoa(&mut self) -> COFOA_W<'_, 10> {
         COFOA_W::new(self)
     }
     #[doc = "Bits 12:13 - Counter Underflow Output Action"]
     #[inline(always)]
     #[must_use]
-    pub fn cufoa(&mut self) -> CUFOA_W<12> {
+    pub fn cufoa(&mut self) -> CUFOA_W<'_, 12> {
         CUFOA_W::new(self)
     }
     #[doc = "Bits 24:25 - Input Capture Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn icedge(&mut self) -> ICEDGE_W<24> {
+    pub fn icedge(&mut self) -> ICEDGE_W<'_, 24> {
         ICEDGE_W::new(self)
     }
     #[doc = "Bits 26:27 - Input Capture Event Control"]
     #[inline(always)]
     #[must_use]
-    pub fn icevctrl(&mut self) -> ICEVCTRL_W<26> {
+    pub fn icevctrl(&mut self) -> ICEVCTRL_W<'_, 26> {
         ICEVCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

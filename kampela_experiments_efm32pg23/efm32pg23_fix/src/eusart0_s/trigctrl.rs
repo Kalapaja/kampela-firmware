@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Receive Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxten(&mut self) -> RXTEN_W<0> {
+    pub fn rxten(&mut self) -> RXTEN_W<'_, 0> {
         RXTEN_W::new(self)
     }
     #[doc = "Bit 1 - Transmit Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txten(&mut self) -> TXTEN_W<1> {
+    pub fn txten(&mut self) -> TXTEN_W<'_, 1> {
         TXTEN_W::new(self)
     }
     #[doc = "Bit 2 - AUTOTX Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autotxten(&mut self) -> AUTOTXTEN_W<2> {
+    pub fn autotxten(&mut self) -> AUTOTXTEN_W<'_, 2> {
         AUTOTXTEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

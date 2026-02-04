@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 1 - Automatic Invalidate Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn afdis(&mut self) -> AFDIS_W<1> {
+    pub fn afdis(&mut self) -> AFDIS_W<'_, 1> {
         AFDIS_W::new(self)
     }
     #[doc = "Bit 12 - Flash dout pipeline buffer enable"]
     #[inline(always)]
     #[must_use]
-    pub fn doutbufen(&mut self) -> DOUTBUFEN_W<12> {
+    pub fn doutbufen(&mut self) -> DOUTBUFEN_W<'_, 12> {
         DOUTBUFEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

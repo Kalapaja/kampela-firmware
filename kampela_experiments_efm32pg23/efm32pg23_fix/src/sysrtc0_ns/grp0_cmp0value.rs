@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:31 - Compare 0 Value"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp0value(&mut self) -> CMP0VALUE_W<0> {
+    pub fn cmp0value(&mut self) -> CMP0VALUE_W<'_, 0> {
         CMP0VALUE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

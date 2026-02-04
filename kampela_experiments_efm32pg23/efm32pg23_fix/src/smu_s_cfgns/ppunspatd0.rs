@@ -328,193 +328,193 @@ impl W {
     #[doc = "Bit 0 - SCRATCHPAD Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn scratchpad(&mut self) -> SCRATCHPAD_W<0> {
+    pub fn scratchpad(&mut self) -> SCRATCHPAD_W<'_, 0> {
         SCRATCHPAD_W::new(self)
     }
     #[doc = "Bit 1 - EMU Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn emu(&mut self) -> EMU_W<1> {
+    pub fn emu(&mut self) -> EMU_W<'_, 1> {
         EMU_W::new(self)
     }
     #[doc = "Bit 2 - CMU Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn cmu(&mut self) -> CMU_W<2> {
+    pub fn cmu(&mut self) -> CMU_W<'_, 2> {
         CMU_W::new(self)
     }
     #[doc = "Bit 3 - HFRCO0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn hfrco0(&mut self) -> HFRCO0_W<3> {
+    pub fn hfrco0(&mut self) -> HFRCO0_W<'_, 3> {
         HFRCO0_W::new(self)
     }
     #[doc = "Bit 4 - FSRCO Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn fsrco(&mut self) -> FSRCO_W<4> {
+    pub fn fsrco(&mut self) -> FSRCO_W<'_, 4> {
         FSRCO_W::new(self)
     }
     #[doc = "Bit 5 - DPLL0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn dpll0(&mut self) -> DPLL0_W<5> {
+    pub fn dpll0(&mut self) -> DPLL0_W<'_, 5> {
         DPLL0_W::new(self)
     }
     #[doc = "Bit 6 - LFXO Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn lfxo(&mut self) -> LFXO_W<6> {
+    pub fn lfxo(&mut self) -> LFXO_W<'_, 6> {
         LFXO_W::new(self)
     }
     #[doc = "Bit 7 - LFRCO Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn lfrco(&mut self) -> LFRCO_W<7> {
+    pub fn lfrco(&mut self) -> LFRCO_W<'_, 7> {
         LFRCO_W::new(self)
     }
     #[doc = "Bit 8 - ULFRCO Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn ulfrco(&mut self) -> ULFRCO_W<8> {
+    pub fn ulfrco(&mut self) -> ULFRCO_W<'_, 8> {
         ULFRCO_W::new(self)
     }
     #[doc = "Bit 9 - MSC Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn msc(&mut self) -> MSC_W<9> {
+    pub fn msc(&mut self) -> MSC_W<'_, 9> {
         MSC_W::new(self)
     }
     #[doc = "Bit 10 - ICACHE0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn icache0(&mut self) -> ICACHE0_W<10> {
+    pub fn icache0(&mut self) -> ICACHE0_W<'_, 10> {
         ICACHE0_W::new(self)
     }
     #[doc = "Bit 11 - PRS Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn prs(&mut self) -> PRS_W<11> {
+    pub fn prs(&mut self) -> PRS_W<'_, 11> {
         PRS_W::new(self)
     }
     #[doc = "Bit 12 - GPIO Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn gpio(&mut self) -> GPIO_W<12> {
+    pub fn gpio(&mut self) -> GPIO_W<'_, 12> {
         GPIO_W::new(self)
     }
     #[doc = "Bit 13 - LDMA Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn ldma(&mut self) -> LDMA_W<13> {
+    pub fn ldma(&mut self) -> LDMA_W<'_, 13> {
         LDMA_W::new(self)
     }
     #[doc = "Bit 14 - LDMAXBAR Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn ldmaxbar(&mut self) -> LDMAXBAR_W<14> {
+    pub fn ldmaxbar(&mut self) -> LDMAXBAR_W<'_, 14> {
         LDMAXBAR_W::new(self)
     }
     #[doc = "Bit 15 - TIMER0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn timer0(&mut self) -> TIMER0_W<15> {
+    pub fn timer0(&mut self) -> TIMER0_W<'_, 15> {
         TIMER0_W::new(self)
     }
     #[doc = "Bit 16 - TIMER1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn timer1(&mut self) -> TIMER1_W<16> {
+    pub fn timer1(&mut self) -> TIMER1_W<'_, 16> {
         TIMER1_W::new(self)
     }
     #[doc = "Bit 17 - TIMER2 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn timer2(&mut self) -> TIMER2_W<17> {
+    pub fn timer2(&mut self) -> TIMER2_W<'_, 17> {
         TIMER2_W::new(self)
     }
     #[doc = "Bit 18 - TIMER3 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn timer3(&mut self) -> TIMER3_W<18> {
+    pub fn timer3(&mut self) -> TIMER3_W<'_, 18> {
         TIMER3_W::new(self)
     }
     #[doc = "Bit 19 - TIMER4 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn timer4(&mut self) -> TIMER4_W<19> {
+    pub fn timer4(&mut self) -> TIMER4_W<'_, 19> {
         TIMER4_W::new(self)
     }
     #[doc = "Bit 20 - USART0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn usart0(&mut self) -> USART0_W<20> {
+    pub fn usart0(&mut self) -> USART0_W<'_, 20> {
         USART0_W::new(self)
     }
     #[doc = "Bit 21 - BURTC Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn burtc(&mut self) -> BURTC_W<21> {
+    pub fn burtc(&mut self) -> BURTC_W<'_, 21> {
         BURTC_W::new(self)
     }
     #[doc = "Bit 22 - I2C1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn i2c1(&mut self) -> I2C1_W<22> {
+    pub fn i2c1(&mut self) -> I2C1_W<'_, 22> {
         I2C1_W::new(self)
     }
     #[doc = "Bit 23 - CHIPTESTCTRL Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn chiptestctrl(&mut self) -> CHIPTESTCTRL_W<23> {
+    pub fn chiptestctrl(&mut self) -> CHIPTESTCTRL_W<'_, 23> {
         CHIPTESTCTRL_W::new(self)
     }
     #[doc = "Bit 24 - SYSCFGCFGNS Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn syscfgcfgns(&mut self) -> SYSCFGCFGNS_W<24> {
+    pub fn syscfgcfgns(&mut self) -> SYSCFGCFGNS_W<'_, 24> {
         SYSCFGCFGNS_W::new(self)
     }
     #[doc = "Bit 25 - SYSCFG Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn syscfg(&mut self) -> SYSCFG_W<25> {
+    pub fn syscfg(&mut self) -> SYSCFG_W<'_, 25> {
         SYSCFG_W::new(self)
     }
     #[doc = "Bit 26 - BURAM Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn buram(&mut self) -> BURAM_W<26> {
+    pub fn buram(&mut self) -> BURAM_W<'_, 26> {
         BURAM_W::new(self)
     }
     #[doc = "Bit 27 - GPCRC Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn gpcrc(&mut self) -> GPCRC_W<27> {
+    pub fn gpcrc(&mut self) -> GPCRC_W<'_, 27> {
         GPCRC_W::new(self)
     }
     #[doc = "Bit 28 - DCDC Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn dcdc(&mut self) -> DCDC_W<28> {
+    pub fn dcdc(&mut self) -> DCDC_W<'_, 28> {
         DCDC_W::new(self)
     }
     #[doc = "Bit 29 - HOSTMAILBOX Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn hostmailbox(&mut self) -> HOSTMAILBOX_W<29> {
+    pub fn hostmailbox(&mut self) -> HOSTMAILBOX_W<'_, 29> {
         HOSTMAILBOX_W::new(self)
     }
     #[doc = "Bit 30 - EUSART1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart1(&mut self) -> EUSART1_W<30> {
+    pub fn eusart1(&mut self) -> EUSART1_W<'_, 30> {
         EUSART1_W::new(self)
     }
     #[doc = "Bit 31 - EUSART2 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart2(&mut self) -> EUSART2_W<31> {
+    pub fn eusart2(&mut self) -> EUSART2_W<'_, 31> {
         EUSART2_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

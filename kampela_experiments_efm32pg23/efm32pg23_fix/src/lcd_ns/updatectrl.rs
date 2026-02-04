@@ -218,13 +218,13 @@ impl W {
     #[doc = "Bit 8 - Auto Load"]
     #[inline(always)]
     #[must_use]
-    pub fn autoload(&mut self) -> AUTOLOAD_W<8> {
+    pub fn autoload(&mut self) -> AUTOLOAD_W<'_, 8> {
         AUTOLOAD_W::new(self)
     }
     #[doc = "Bits 13:16 - Load Address"]
     #[inline(always)]
     #[must_use]
-    pub fn loadaddr(&mut self) -> LOADADDR_W<13> {
+    pub fn loadaddr(&mut self) -> LOADADDR_W<'_, 13> {
         LOADADDR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

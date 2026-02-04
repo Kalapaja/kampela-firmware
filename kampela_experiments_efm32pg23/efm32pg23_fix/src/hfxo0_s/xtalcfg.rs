@@ -560,37 +560,37 @@ impl W {
     #[doc = "Bits 0:5 - Intermediate Startup Core Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasstartupi(&mut self) -> COREBIASSTARTUPI_W<0> {
+    pub fn corebiasstartupi(&mut self) -> COREBIASSTARTUPI_W<'_, 0> {
         COREBIASSTARTUPI_W::new(self)
     }
     #[doc = "Bits 6:11 - Startup Core Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasstartup(&mut self) -> COREBIASSTARTUP_W<6> {
+    pub fn corebiasstartup(&mut self) -> COREBIASSTARTUP_W<'_, 6> {
         COREBIASSTARTUP_W::new(self)
     }
     #[doc = "Bits 12:15 - Startup Tuning Capacitance on XI"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunexistartup(&mut self) -> CTUNEXISTARTUP_W<12> {
+    pub fn ctunexistartup(&mut self) -> CTUNEXISTARTUP_W<'_, 12> {
         CTUNEXISTARTUP_W::new(self)
     }
     #[doc = "Bits 16:19 - Startup Tuning Capacitance on XO"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunexostartup(&mut self) -> CTUNEXOSTARTUP_W<16> {
+    pub fn ctunexostartup(&mut self) -> CTUNEXOSTARTUP_W<'_, 16> {
         CTUNEXOSTARTUP_W::new(self)
     }
     #[doc = "Bits 20:23 - Steady State Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn timeoutsteady(&mut self) -> TIMEOUTSTEADY_W<20> {
+    pub fn timeoutsteady(&mut self) -> TIMEOUTSTEADY_W<'_, 20> {
         TIMEOUTSTEADY_W::new(self)
     }
     #[doc = "Bits 24:27 - Core Bias LSB Change Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn timeoutcblsb(&mut self) -> TIMEOUTCBLSB_W<24> {
+    pub fn timeoutcblsb(&mut self) -> TIMEOUTCBLSB_W<'_, 24> {
         TIMEOUTCBLSB_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

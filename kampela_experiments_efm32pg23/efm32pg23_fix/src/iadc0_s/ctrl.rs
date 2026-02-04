@@ -427,43 +427,43 @@ impl W {
     #[doc = "Bit 0 - EM23 Wakeup on Conversion"]
     #[inline(always)]
     #[must_use]
-    pub fn em23wuconvert(&mut self) -> EM23WUCONVERT_W<0> {
+    pub fn em23wuconvert(&mut self) -> EM23WUCONVERT_W<'_, 0> {
         EM23WUCONVERT_W::new(self)
     }
     #[doc = "Bit 1 - ADC_CLK Suspend - PRS0"]
     #[inline(always)]
     #[must_use]
-    pub fn adcclksuspend0(&mut self) -> ADCCLKSUSPEND0_W<1> {
+    pub fn adcclksuspend0(&mut self) -> ADCCLKSUSPEND0_W<'_, 1> {
         ADCCLKSUSPEND0_W::new(self)
     }
     #[doc = "Bit 2 - ADC_CLK Suspend - PRS1"]
     #[inline(always)]
     #[must_use]
-    pub fn adcclksuspend1(&mut self) -> ADCCLKSUSPEND1_W<2> {
+    pub fn adcclksuspend1(&mut self) -> ADCCLKSUSPEND1_W<'_, 2> {
         ADCCLKSUSPEND1_W::new(self)
     }
     #[doc = "Bit 3 - Debug Halt"]
     #[inline(always)]
     #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<3> {
+    pub fn dbghalt(&mut self) -> DBGHALT_W<'_, 3> {
         DBGHALT_W::new(self)
     }
     #[doc = "Bits 4:5 - Warmup Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn warmupmode(&mut self) -> WARMUPMODE_W<4> {
+    pub fn warmupmode(&mut self) -> WARMUPMODE_W<'_, 4> {
         WARMUPMODE_W::new(self)
     }
     #[doc = "Bits 16:22 - Time Base"]
     #[inline(always)]
     #[must_use]
-    pub fn timebase(&mut self) -> TIMEBASE_W<16> {
+    pub fn timebase(&mut self) -> TIMEBASE_W<'_, 16> {
         TIMEBASE_W::new(self)
     }
     #[doc = "Bits 28:30 - High Speed Clock Rate"]
     #[inline(always)]
     #[must_use]
-    pub fn hsclkrate(&mut self) -> HSCLKRATE_W<28> {
+    pub fn hsclkrate(&mut self) -> HSCLKRATE_W<'_, 28> {
         HSCLKRATE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

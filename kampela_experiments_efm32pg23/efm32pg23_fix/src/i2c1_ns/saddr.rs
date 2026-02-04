@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 1:7 - Follower address"]
     #[inline(always)]
     #[must_use]
-    pub fn addr(&mut self) -> ADDR_W<1> {
+    pub fn addr(&mut self) -> ADDR_W<'_, 1> {
         ADDR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

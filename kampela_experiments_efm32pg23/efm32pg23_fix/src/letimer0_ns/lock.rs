@@ -46,7 +46,7 @@ impl W {
     #[doc = "Bits 0:15 - Configuration Lock Key"]
     #[inline(always)]
     #[must_use]
-    pub fn letimerlockkey(&mut self) -> LETIMERLOCKKEY_W<0> {
+    pub fn letimerlockkey(&mut self) -> LETIMERLOCKKEY_W<'_, 0> {
         LETIMERLOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

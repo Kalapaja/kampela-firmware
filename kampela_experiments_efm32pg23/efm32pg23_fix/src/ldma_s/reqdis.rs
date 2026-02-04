@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA Request Disables"]
     #[inline(always)]
     #[must_use]
-    pub fn reqdis(&mut self) -> REQDIS_W<0> {
+    pub fn reqdis(&mut self) -> REQDIS_W<'_, 0> {
         REQDIS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

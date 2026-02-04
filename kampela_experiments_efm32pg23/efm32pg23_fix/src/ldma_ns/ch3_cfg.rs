@@ -234,19 +234,19 @@ impl W {
     #[doc = "Bits 16:17 - Arbitration Slot Number Select"]
     #[inline(always)]
     #[must_use]
-    pub fn arbslots(&mut self) -> ARBSLOTS_W<16> {
+    pub fn arbslots(&mut self) -> ARBSLOTS_W<'_, 16> {
         ARBSLOTS_W::new(self)
     }
     #[doc = "Bit 20 - Source Address Increment Sign"]
     #[inline(always)]
     #[must_use]
-    pub fn srcincsign(&mut self) -> SRCINCSIGN_W<20> {
+    pub fn srcincsign(&mut self) -> SRCINCSIGN_W<'_, 20> {
         SRCINCSIGN_W::new(self)
     }
     #[doc = "Bit 21 - Destination Address Increment Sign"]
     #[inline(always)]
     #[must_use]
-    pub fn dstincsign(&mut self) -> DSTINCSIGN_W<21> {
+    pub fn dstincsign(&mut self) -> DSTINCSIGN_W<'_, 21> {
         DSTINCSIGN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

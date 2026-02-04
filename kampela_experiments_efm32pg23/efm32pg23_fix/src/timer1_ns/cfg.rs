@@ -678,73 +678,73 @@ impl W {
     #[doc = "Bits 0:1 - Timer Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bit 3 - Timer Start/Stop/Reload Synchronization"]
     #[inline(always)]
     #[must_use]
-    pub fn sync(&mut self) -> SYNC_W<3> {
+    pub fn sync(&mut self) -> SYNC_W<'_, 3> {
         SYNC_W::new(self)
     }
     #[doc = "Bit 4 - One-shot Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn osmen(&mut self) -> OSMEN_W<4> {
+    pub fn osmen(&mut self) -> OSMEN_W<'_, 4> {
         OSMEN_W::new(self)
     }
     #[doc = "Bit 5 - Quadrature Decoder Mode Selection"]
     #[inline(always)]
     #[must_use]
-    pub fn qdm(&mut self) -> QDM_W<5> {
+    pub fn qdm(&mut self) -> QDM_W<'_, 5> {
         QDM_W::new(self)
     }
     #[doc = "Bit 6 - Debug Mode Run Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<6> {
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<'_, 6> {
         DEBUGRUN_W::new(self)
     }
     #[doc = "Bit 7 - DMA Request Clear on Active"]
     #[inline(always)]
     #[must_use]
-    pub fn dmaclract(&mut self) -> DMACLRACT_W<7> {
+    pub fn dmaclract(&mut self) -> DMACLRACT_W<'_, 7> {
         DMACLRACT_W::new(self)
     }
     #[doc = "Bits 8:9 - Clock Source Select"]
     #[inline(always)]
     #[must_use]
-    pub fn clksel(&mut self) -> CLKSEL_W<8> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, 8> {
         CLKSEL_W::new(self)
     }
     #[doc = "Bit 10 - PWM output retimed enable"]
     #[inline(always)]
     #[must_use]
-    pub fn retimeen(&mut self) -> RETIMEEN_W<10> {
+    pub fn retimeen(&mut self) -> RETIMEEN_W<'_, 10> {
         RETIMEEN_W::new(self)
     }
     #[doc = "Bit 11 - Disable Timer Start/Stop/Reload output"]
     #[inline(always)]
     #[must_use]
-    pub fn dissyncout(&mut self) -> DISSYNCOUT_W<11> {
+    pub fn dissyncout(&mut self) -> DISSYNCOUT_W<'_, 11> {
         DISSYNCOUT_W::new(self)
     }
     #[doc = "Bit 16 - Always Track Inputs"]
     #[inline(always)]
     #[must_use]
-    pub fn ati(&mut self) -> ATI_W<16> {
+    pub fn ati(&mut self) -> ATI_W<'_, 16> {
         ATI_W::new(self)
     }
     #[doc = "Bit 17 - Reload-Start Sets COIST"]
     #[inline(always)]
     #[must_use]
-    pub fn rsscoist(&mut self) -> RSSCOIST_W<17> {
+    pub fn rsscoist(&mut self) -> RSSCOIST_W<'_, 17> {
         RSSCOIST_W::new(self)
     }
     #[doc = "Bits 18:27 - Prescaler Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn presc(&mut self) -> PRESC_W<18> {
+    pub fn presc(&mut self) -> PRESC_W<'_, 18> {
         PRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

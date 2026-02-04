@@ -47,73 +47,73 @@ impl W {
     #[doc = "Bit 0 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0pulse(&mut self) -> CH0PULSE_W<0> {
+    pub fn ch0pulse(&mut self) -> CH0PULSE_W<'_, 0> {
         CH0PULSE_W::new(self)
     }
     #[doc = "Bit 1 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1pulse(&mut self) -> CH1PULSE_W<1> {
+    pub fn ch1pulse(&mut self) -> CH1PULSE_W<'_, 1> {
         CH1PULSE_W::new(self)
     }
     #[doc = "Bit 2 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch2pulse(&mut self) -> CH2PULSE_W<2> {
+    pub fn ch2pulse(&mut self) -> CH2PULSE_W<'_, 2> {
         CH2PULSE_W::new(self)
     }
     #[doc = "Bit 3 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch3pulse(&mut self) -> CH3PULSE_W<3> {
+    pub fn ch3pulse(&mut self) -> CH3PULSE_W<'_, 3> {
         CH3PULSE_W::new(self)
     }
     #[doc = "Bit 4 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch4pulse(&mut self) -> CH4PULSE_W<4> {
+    pub fn ch4pulse(&mut self) -> CH4PULSE_W<'_, 4> {
         CH4PULSE_W::new(self)
     }
     #[doc = "Bit 5 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch5pulse(&mut self) -> CH5PULSE_W<5> {
+    pub fn ch5pulse(&mut self) -> CH5PULSE_W<'_, 5> {
         CH5PULSE_W::new(self)
     }
     #[doc = "Bit 6 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch6pulse(&mut self) -> CH6PULSE_W<6> {
+    pub fn ch6pulse(&mut self) -> CH6PULSE_W<'_, 6> {
         CH6PULSE_W::new(self)
     }
     #[doc = "Bit 7 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch7pulse(&mut self) -> CH7PULSE_W<7> {
+    pub fn ch7pulse(&mut self) -> CH7PULSE_W<'_, 7> {
         CH7PULSE_W::new(self)
     }
     #[doc = "Bit 8 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch8pulse(&mut self) -> CH8PULSE_W<8> {
+    pub fn ch8pulse(&mut self) -> CH8PULSE_W<'_, 8> {
         CH8PULSE_W::new(self)
     }
     #[doc = "Bit 9 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch9pulse(&mut self) -> CH9PULSE_W<9> {
+    pub fn ch9pulse(&mut self) -> CH9PULSE_W<'_, 9> {
         CH9PULSE_W::new(self)
     }
     #[doc = "Bit 10 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch10pulse(&mut self) -> CH10PULSE_W<10> {
+    pub fn ch10pulse(&mut self) -> CH10PULSE_W<'_, 10> {
         CH10PULSE_W::new(self)
     }
     #[doc = "Bit 11 - Channel pulse"]
     #[inline(always)]
     #[must_use]
-    pub fn ch11pulse(&mut self) -> CH11PULSE_W<11> {
+    pub fn ch11pulse(&mut self) -> CH11PULSE_W<'_, 11> {
         CH11PULSE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -85,7 +85,7 @@ impl W {
     #[doc = "Bits 0:15 - Disable PD1 Partial Retention"]
     #[inline(always)]
     #[must_use]
-    pub fn pd1paretdis(&mut self) -> PD1PARETDIS_W<0> {
+    pub fn pd1paretdis(&mut self) -> PD1PARETDIS_W<'_, 0> {
         PD1PARETDIS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

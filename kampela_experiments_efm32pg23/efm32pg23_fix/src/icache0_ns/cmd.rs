@@ -29,19 +29,19 @@ impl W {
     #[doc = "Bit 0 - Flush"]
     #[inline(always)]
     #[must_use]
-    pub fn flush(&mut self) -> FLUSH_W<0> {
+    pub fn flush(&mut self) -> FLUSH_W<'_, 0> {
         FLUSH_W::new(self)
     }
     #[doc = "Bit 1 - Start Performance Counters"]
     #[inline(always)]
     #[must_use]
-    pub fn startpc(&mut self) -> STARTPC_W<1> {
+    pub fn startpc(&mut self) -> STARTPC_W<'_, 1> {
         STARTPC_W::new(self)
     }
     #[doc = "Bit 2 - Stop Performance Counters"]
     #[inline(always)]
     #[must_use]
-    pub fn stoppc(&mut self) -> STOPPC_W<2> {
+    pub fn stoppc(&mut self) -> STOPPC_W<'_, 2> {
         STOPPC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

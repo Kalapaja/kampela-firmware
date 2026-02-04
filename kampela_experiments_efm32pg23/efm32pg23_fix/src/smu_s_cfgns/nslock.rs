@@ -46,7 +46,7 @@ impl W {
     #[doc = "Bits 0:23 - No Description"]
     #[inline(always)]
     #[must_use]
-    pub fn smunslockkey(&mut self) -> SMUNSLOCKKEY_W<0> {
+    pub fn smunslockkey(&mut self) -> SMUNSLOCKKEY_W<'_, 0> {
         SMUNSLOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

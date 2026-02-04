@@ -35,37 +35,37 @@ impl W {
     #[doc = "Bit 1 - EM4 unlatch"]
     #[inline(always)]
     #[must_use]
-    pub fn em4unlatch(&mut self) -> EM4UNLATCH_W<1> {
+    pub fn em4unlatch(&mut self) -> EM4UNLATCH_W<'_, 1> {
         EM4UNLATCH_W::new(self)
     }
     #[doc = "Bit 4 - Temperature Average Request"]
     #[inline(always)]
     #[must_use]
-    pub fn tempavgreq(&mut self) -> TEMPAVGREQ_W<4> {
+    pub fn tempavgreq(&mut self) -> TEMPAVGREQ_W<'_, 4> {
         TEMPAVGREQ_W::new(self)
     }
     #[doc = "Bit 10 - Scale voltage to Vscale1"]
     #[inline(always)]
     #[must_use]
-    pub fn em01vscale1(&mut self) -> EM01VSCALE1_W<10> {
+    pub fn em01vscale1(&mut self) -> EM01VSCALE1_W<'_, 10> {
         EM01VSCALE1_W::new(self)
     }
     #[doc = "Bit 11 - Scale voltage to Vscale2"]
     #[inline(always)]
     #[must_use]
-    pub fn em01vscale2(&mut self) -> EM01VSCALE2_W<11> {
+    pub fn em01vscale2(&mut self) -> EM01VSCALE2_W<'_, 11> {
         EM01VSCALE2_W::new(self)
     }
     #[doc = "Bit 17 - Reset Cause Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn rstcauseclr(&mut self) -> RSTCAUSECLR_W<17> {
+    pub fn rstcauseclr(&mut self) -> RSTCAUSECLR_W<'_, 17> {
         RSTCAUSECLR_W::new(self)
     }
     #[doc = "Bit 18 - Tamper Reset Cause Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn tamperrcclr(&mut self) -> TAMPERRCCLR_W<18> {
+    pub fn tamperrcclr(&mut self) -> TAMPERRCCLR_W<'_, 18> {
         TAMPERRCCLR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

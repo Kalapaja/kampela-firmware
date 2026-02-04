@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Scratch Pad Register"]
     #[inline(always)]
     #[must_use]
-    pub fn scratch(&mut self) -> SCRATCH_W<0> {
+    pub fn scratch(&mut self) -> SCRATCH_W<'_, 0> {
         SCRATCH_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

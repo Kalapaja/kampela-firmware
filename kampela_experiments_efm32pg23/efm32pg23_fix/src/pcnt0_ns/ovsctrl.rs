@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:7 - Configure Filter Length for Inputs S0IN"]
     #[inline(always)]
     #[must_use]
-    pub fn filtlen(&mut self) -> FILTLEN_W<0> {
+    pub fn filtlen(&mut self) -> FILTLEN_W<'_, 0> {
         FILTLEN_W::new(self)
     }
     #[doc = "Bit 12 - Flutter Remove"]
     #[inline(always)]
     #[must_use]
-    pub fn flutterrm(&mut self) -> FLUTTERRM_W<12> {
+    pub fn flutterrm(&mut self) -> FLUTTERRM_W<'_, 12> {
         FLUTTERRM_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

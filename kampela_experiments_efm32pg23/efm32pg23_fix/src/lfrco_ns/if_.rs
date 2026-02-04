@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Ready Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rdy(&mut self) -> RDY_W<0> {
+    pub fn rdy(&mut self) -> RDY_W<'_, 0> {
         RDY_W::new(self)
     }
     #[doc = "Bit 1 - Rising Edge Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn posedge(&mut self) -> POSEDGE_W<1> {
+    pub fn posedge(&mut self) -> POSEDGE_W<'_, 1> {
         POSEDGE_W::new(self)
     }
     #[doc = "Bit 2 - Falling Edge Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn negedge(&mut self) -> NEGEDGE_W<2> {
+    pub fn negedge(&mut self) -> NEGEDGE_W<'_, 2> {
         NEGEDGE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

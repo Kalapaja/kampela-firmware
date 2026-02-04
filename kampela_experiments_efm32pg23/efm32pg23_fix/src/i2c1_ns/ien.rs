@@ -229,127 +229,127 @@ impl W {
     #[doc = "Bit 0 - START condition Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn start(&mut self) -> START_W<0> {
+    pub fn start(&mut self) -> START_W<'_, 0> {
         START_W::new(self)
     }
     #[doc = "Bit 1 - Repeated START condition Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rstart(&mut self) -> RSTART_W<1> {
+    pub fn rstart(&mut self) -> RSTART_W<'_, 1> {
         RSTART_W::new(self)
     }
     #[doc = "Bit 2 - Address Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn addr(&mut self) -> ADDR_W<2> {
+    pub fn addr(&mut self) -> ADDR_W<'_, 2> {
         ADDR_W::new(self)
     }
     #[doc = "Bit 3 - Transfer Completed Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txc(&mut self) -> TXC_W<3> {
+    pub fn txc(&mut self) -> TXC_W<'_, 3> {
         TXC_W::new(self)
     }
     #[doc = "Bit 4 - Transmit Buffer Level Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txbl(&mut self) -> TXBL_W<4> {
+    pub fn txbl(&mut self) -> TXBL_W<'_, 4> {
         TXBL_W::new(self)
     }
     #[doc = "Bit 5 - Receive Data Valid Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxdatav(&mut self) -> RXDATAV_W<5> {
+    pub fn rxdatav(&mut self) -> RXDATAV_W<'_, 5> {
         RXDATAV_W::new(self)
     }
     #[doc = "Bit 6 - Acknowledge Received Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ack(&mut self) -> ACK_W<6> {
+    pub fn ack(&mut self) -> ACK_W<'_, 6> {
         ACK_W::new(self)
     }
     #[doc = "Bit 7 - Not Acknowledge Received Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn nack(&mut self) -> NACK_W<7> {
+    pub fn nack(&mut self) -> NACK_W<'_, 7> {
         NACK_W::new(self)
     }
     #[doc = "Bit 8 - Leader STOP Condition Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn mstop(&mut self) -> MSTOP_W<8> {
+    pub fn mstop(&mut self) -> MSTOP_W<'_, 8> {
         MSTOP_W::new(self)
     }
     #[doc = "Bit 9 - Arbitration Lost Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn arblost(&mut self) -> ARBLOST_W<9> {
+    pub fn arblost(&mut self) -> ARBLOST_W<'_, 9> {
         ARBLOST_W::new(self)
     }
     #[doc = "Bit 10 - Bus Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn buserr(&mut self) -> BUSERR_W<10> {
+    pub fn buserr(&mut self) -> BUSERR_W<'_, 10> {
         BUSERR_W::new(self)
     }
     #[doc = "Bit 11 - Bus Held Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn bushold(&mut self) -> BUSHOLD_W<11> {
+    pub fn bushold(&mut self) -> BUSHOLD_W<'_, 11> {
         BUSHOLD_W::new(self)
     }
     #[doc = "Bit 12 - Transmit Buffer Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txof(&mut self) -> TXOF_W<12> {
+    pub fn txof(&mut self) -> TXOF_W<'_, 12> {
         TXOF_W::new(self)
     }
     #[doc = "Bit 13 - Receive Buffer Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxuf(&mut self) -> RXUF_W<13> {
+    pub fn rxuf(&mut self) -> RXUF_W<'_, 13> {
         RXUF_W::new(self)
     }
     #[doc = "Bit 14 - Bus Idle Timeout Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn bito(&mut self) -> BITO_W<14> {
+    pub fn bito(&mut self) -> BITO_W<'_, 14> {
         BITO_W::new(self)
     }
     #[doc = "Bit 15 - Clock Low Timeout Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn clto(&mut self) -> CLTO_W<15> {
+    pub fn clto(&mut self) -> CLTO_W<'_, 15> {
         CLTO_W::new(self)
     }
     #[doc = "Bit 16 - Follower STOP condition Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn sstop(&mut self) -> SSTOP_W<16> {
+    pub fn sstop(&mut self) -> SSTOP_W<'_, 16> {
         SSTOP_W::new(self)
     }
     #[doc = "Bit 17 - Receive Buffer Full Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfull(&mut self) -> RXFULL_W<17> {
+    pub fn rxfull(&mut self) -> RXFULL_W<'_, 17> {
         RXFULL_W::new(self)
     }
     #[doc = "Bit 18 - Clock Low Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn clerr(&mut self) -> CLERR_W<18> {
+    pub fn clerr(&mut self) -> CLERR_W<'_, 18> {
         CLERR_W::new(self)
     }
     #[doc = "Bit 19 - SCL Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn sclerr(&mut self) -> SCLERR_W<19> {
+    pub fn sclerr(&mut self) -> SCLERR_W<'_, 19> {
         SCLERR_W::new(self)
     }
     #[doc = "Bit 20 - SDA Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn sdaerr(&mut self) -> SDAERR_W<20> {
+    pub fn sdaerr(&mut self) -> SDAERR_W<'_, 20> {
         SDAERR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

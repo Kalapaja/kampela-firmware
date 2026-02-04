@@ -1148,169 +1148,169 @@ impl W {
     #[doc = "Bit 0 - USART Synchronous Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn sync(&mut self) -> SYNC_W<0> {
+    pub fn sync(&mut self) -> SYNC_W<'_, 0> {
         SYNC_W::new(self)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn loopbk(&mut self) -> LOOPBK_W<1> {
+    pub fn loopbk(&mut self) -> LOOPBK_W<'_, 1> {
         LOOPBK_W::new(self)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ccen(&mut self) -> CCEN_W<2> {
+    pub fn ccen(&mut self) -> CCEN_W<'_, 2> {
         CCEN_W::new(self)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mpm(&mut self) -> MPM_W<3> {
+    pub fn mpm(&mut self) -> MPM_W<'_, 3> {
         MPM_W::new(self)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
     #[must_use]
-    pub fn mpab(&mut self) -> MPAB_W<4> {
+    pub fn mpab(&mut self) -> MPAB_W<'_, 4> {
         MPAB_W::new(self)
     }
     #[doc = "Bits 5:6 - Oversampling"]
     #[inline(always)]
     #[must_use]
-    pub fn ovs(&mut self) -> OVS_W<5> {
+    pub fn ovs(&mut self) -> OVS_W<'_, 5> {
         OVS_W::new(self)
     }
     #[doc = "Bit 8 - Clock Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn clkpol(&mut self) -> CLKPOL_W<8> {
+    pub fn clkpol(&mut self) -> CLKPOL_W<'_, 8> {
         CLKPOL_W::new(self)
     }
     #[doc = "Bit 9 - Clock Edge For Setup/Sample"]
     #[inline(always)]
     #[must_use]
-    pub fn clkpha(&mut self) -> CLKPHA_W<9> {
+    pub fn clkpha(&mut self) -> CLKPHA_W<'_, 9> {
         CLKPHA_W::new(self)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
     #[must_use]
-    pub fn msbf(&mut self) -> MSBF_W<10> {
+    pub fn msbf(&mut self) -> MSBF_W<'_, 10> {
         MSBF_W::new(self)
     }
     #[doc = "Bit 11 - Action On Chip Select In Main Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn csma(&mut self) -> CSMA_W<11> {
+    pub fn csma(&mut self) -> CSMA_W<'_, 11> {
         CSMA_W::new(self)
     }
     #[doc = "Bit 12 - TX Buffer Interrupt Level"]
     #[inline(always)]
     #[must_use]
-    pub fn txbil(&mut self) -> TXBIL_W<12> {
+    pub fn txbil(&mut self) -> TXBIL_W<'_, 12> {
         TXBIL_W::new(self)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn rxinv(&mut self) -> RXINV_W<13> {
+    pub fn rxinv(&mut self) -> RXINV_W<'_, 13> {
         RXINV_W::new(self)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn txinv(&mut self) -> TXINV_W<14> {
+    pub fn txinv(&mut self) -> TXINV_W<'_, 14> {
         TXINV_W::new(self)
     }
     #[doc = "Bit 15 - Chip Select Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn csinv(&mut self) -> CSINV_W<15> {
+    pub fn csinv(&mut self) -> CSINV_W<'_, 15> {
         CSINV_W::new(self)
     }
     #[doc = "Bit 16 - Automatic Chip Select"]
     #[inline(always)]
     #[must_use]
-    pub fn autocs(&mut self) -> AUTOCS_W<16> {
+    pub fn autocs(&mut self) -> AUTOCS_W<'_, 16> {
         AUTOCS_W::new(self)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
     #[must_use]
-    pub fn autotri(&mut self) -> AUTOTRI_W<17> {
+    pub fn autotri(&mut self) -> AUTOTRI_W<'_, 17> {
         AUTOTRI_W::new(self)
     }
     #[doc = "Bit 18 - SmartCard Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn scmode(&mut self) -> SCMODE_W<18> {
+    pub fn scmode(&mut self) -> SCMODE_W<'_, 18> {
         SCMODE_W::new(self)
     }
     #[doc = "Bit 19 - SmartCard Retransmit"]
     #[inline(always)]
     #[must_use]
-    pub fn scretrans(&mut self) -> SCRETRANS_W<19> {
+    pub fn scretrans(&mut self) -> SCRETRANS_W<'_, 19> {
         SCRETRANS_W::new(self)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
     #[must_use]
-    pub fn skipperrf(&mut self) -> SKIPPERRF_W<20> {
+    pub fn skipperrf(&mut self) -> SKIPPERRF_W<'_, 20> {
         SKIPPERRF_W::new(self)
     }
     #[doc = "Bit 21 - Bit 8 Default Value"]
     #[inline(always)]
     #[must_use]
-    pub fn bit8dv(&mut self) -> BIT8DV_W<21> {
+    pub fn bit8dv(&mut self) -> BIT8DV_W<'_, 21> {
         BIT8DV_W::new(self)
     }
     #[doc = "Bit 22 - Halt DMA On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errsdma(&mut self) -> ERRSDMA_W<22> {
+    pub fn errsdma(&mut self) -> ERRSDMA_W<'_, 22> {
         ERRSDMA_W::new(self)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errsrx(&mut self) -> ERRSRX_W<23> {
+    pub fn errsrx(&mut self) -> ERRSRX_W<'_, 23> {
         ERRSRX_W::new(self)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errstx(&mut self) -> ERRSTX_W<24> {
+    pub fn errstx(&mut self) -> ERRSTX_W<'_, 24> {
         ERRSTX_W::new(self)
     }
     #[doc = "Bit 25 - Synchronous Secondary Setup Early"]
     #[inline(always)]
     #[must_use]
-    pub fn sssearly(&mut self) -> SSSEARLY_W<25> {
+    pub fn sssearly(&mut self) -> SSSEARLY_W<'_, 25> {
         SSSEARLY_W::new(self)
     }
     #[doc = "Bit 28 - Byteswap In Double Accesses"]
     #[inline(always)]
     #[must_use]
-    pub fn byteswap(&mut self) -> BYTESWAP_W<28> {
+    pub fn byteswap(&mut self) -> BYTESWAP_W<'_, 28> {
         BYTESWAP_W::new(self)
     }
     #[doc = "Bit 29 - Always Transmit When RX Not Full"]
     #[inline(always)]
     #[must_use]
-    pub fn autotx(&mut self) -> AUTOTX_W<29> {
+    pub fn autotx(&mut self) -> AUTOTX_W<'_, 29> {
         AUTOTX_W::new(self)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn mvdis(&mut self) -> MVDIS_W<30> {
+    pub fn mvdis(&mut self) -> MVDIS_W<'_, 30> {
         MVDIS_W::new(self)
     }
     #[doc = "Bit 31 - Synchronous Main Sample Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn smsdelay(&mut self) -> SMSDELAY_W<31> {
+    pub fn smsdelay(&mut self) -> SMSDELAY_W<'_, 31> {
         SMSDELAY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

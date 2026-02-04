@@ -712,49 +712,49 @@ impl W {
     #[doc = "Bits 0:1 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel0(&mut self) -> EXTIPINSEL0_W<0> {
+    pub fn extipinsel0(&mut self) -> EXTIPINSEL0_W<'_, 0> {
         EXTIPINSEL0_W::new(self)
     }
     #[doc = "Bits 4:5 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel1(&mut self) -> EXTIPINSEL1_W<4> {
+    pub fn extipinsel1(&mut self) -> EXTIPINSEL1_W<'_, 4> {
         EXTIPINSEL1_W::new(self)
     }
     #[doc = "Bits 8:9 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel2(&mut self) -> EXTIPINSEL2_W<8> {
+    pub fn extipinsel2(&mut self) -> EXTIPINSEL2_W<'_, 8> {
         EXTIPINSEL2_W::new(self)
     }
     #[doc = "Bits 12:13 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel3(&mut self) -> EXTIPINSEL3_W<12> {
+    pub fn extipinsel3(&mut self) -> EXTIPINSEL3_W<'_, 12> {
         EXTIPINSEL3_W::new(self)
     }
     #[doc = "Bits 16:17 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel4(&mut self) -> EXTIPINSEL4_W<16> {
+    pub fn extipinsel4(&mut self) -> EXTIPINSEL4_W<'_, 16> {
         EXTIPINSEL4_W::new(self)
     }
     #[doc = "Bits 20:21 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel5(&mut self) -> EXTIPINSEL5_W<20> {
+    pub fn extipinsel5(&mut self) -> EXTIPINSEL5_W<'_, 20> {
         EXTIPINSEL5_W::new(self)
     }
     #[doc = "Bits 24:25 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel6(&mut self) -> EXTIPINSEL6_W<24> {
+    pub fn extipinsel6(&mut self) -> EXTIPINSEL6_W<'_, 24> {
         EXTIPINSEL6_W::new(self)
     }
     #[doc = "Bits 28:29 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel7(&mut self) -> EXTIPINSEL7_W<28> {
+    pub fn extipinsel7(&mut self) -> EXTIPINSEL7_W<'_, 28> {
         EXTIPINSEL7_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

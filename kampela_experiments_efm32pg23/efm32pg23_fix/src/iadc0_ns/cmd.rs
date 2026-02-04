@@ -39,49 +39,49 @@ impl W {
     #[doc = "Bit 0 - Single Queue Start"]
     #[inline(always)]
     #[must_use]
-    pub fn singlestart(&mut self) -> SINGLESTART_W<0> {
+    pub fn singlestart(&mut self) -> SINGLESTART_W<'_, 0> {
         SINGLESTART_W::new(self)
     }
     #[doc = "Bit 1 - Single Queue Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn singlestop(&mut self) -> SINGLESTOP_W<1> {
+    pub fn singlestop(&mut self) -> SINGLESTOP_W<'_, 1> {
         SINGLESTOP_W::new(self)
     }
     #[doc = "Bit 3 - Scan Queue Start"]
     #[inline(always)]
     #[must_use]
-    pub fn scanstart(&mut self) -> SCANSTART_W<3> {
+    pub fn scanstart(&mut self) -> SCANSTART_W<'_, 3> {
         SCANSTART_W::new(self)
     }
     #[doc = "Bit 4 - Scan Queue Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn scanstop(&mut self) -> SCANSTOP_W<4> {
+    pub fn scanstop(&mut self) -> SCANSTOP_W<'_, 4> {
         SCANSTOP_W::new(self)
     }
     #[doc = "Bit 16 - Timer Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn timeren(&mut self) -> TIMEREN_W<16> {
+    pub fn timeren(&mut self) -> TIMEREN_W<'_, 16> {
         TIMEREN_W::new(self)
     }
     #[doc = "Bit 17 - Timer Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn timerdis(&mut self) -> TIMERDIS_W<17> {
+    pub fn timerdis(&mut self) -> TIMERDIS_W<'_, 17> {
         TIMERDIS_W::new(self)
     }
     #[doc = "Bit 24 - Flush the Single FIFO"]
     #[inline(always)]
     #[must_use]
-    pub fn singlefifoflush(&mut self) -> SINGLEFIFOFLUSH_W<24> {
+    pub fn singlefifoflush(&mut self) -> SINGLEFIFOFLUSH_W<'_, 24> {
         SINGLEFIFOFLUSH_W::new(self)
     }
     #[doc = "Bit 25 - Flush the Scan FIFO"]
     #[inline(always)]
     #[must_use]
-    pub fn scanfifoflush(&mut self) -> SCANFIFOFLUSH_W<25> {
+    pub fn scanfifoflush(&mut self) -> SCANFIFOFLUSH_W<'_, 25> {
         SCANFIFOFLUSH_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

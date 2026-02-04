@@ -283,25 +283,25 @@ impl W {
     #[doc = "Bits 0:7 - Timer comparator 2."]
     #[inline(always)]
     #[must_use]
-    pub fn tcmpval(&mut self) -> TCMPVAL_W<0> {
+    pub fn tcmpval(&mut self) -> TCMPVAL_W<'_, 0> {
         TCMPVAL_W::new(self)
     }
     #[doc = "Bits 16:18 - Timer start source"]
     #[inline(always)]
     #[must_use]
-    pub fn tstart(&mut self) -> TSTART_W<16> {
+    pub fn tstart(&mut self) -> TSTART_W<'_, 16> {
         TSTART_W::new(self)
     }
     #[doc = "Bits 20:22 - Source used to disable comparator 2"]
     #[inline(always)]
     #[must_use]
-    pub fn tstop(&mut self) -> TSTOP_W<20> {
+    pub fn tstop(&mut self) -> TSTOP_W<'_, 20> {
         TSTOP_W::new(self)
     }
     #[doc = "Bit 24 - Restart Timer on TCMP2"]
     #[inline(always)]
     #[must_use]
-    pub fn restarten(&mut self) -> RESTARTEN_W<24> {
+    pub fn restarten(&mut self) -> RESTARTEN_W<'_, 24> {
         RESTARTEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

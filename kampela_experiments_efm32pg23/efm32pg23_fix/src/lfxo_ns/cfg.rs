@@ -264,25 +264,25 @@ impl W {
     #[doc = "Bit 0 - LFXO AGC Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn agc(&mut self) -> AGC_W<0> {
+    pub fn agc(&mut self) -> AGC_W<'_, 0> {
         AGC_W::new(self)
     }
     #[doc = "Bit 1 - LFXO High Amplitude Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn highampl(&mut self) -> HIGHAMPL_W<1> {
+    pub fn highampl(&mut self) -> HIGHAMPL_W<'_, 1> {
         HIGHAMPL_W::new(self)
     }
     #[doc = "Bits 4:5 - LFXO Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<4> {
+    pub fn mode(&mut self) -> MODE_W<'_, 4> {
         MODE_W::new(self)
     }
     #[doc = "Bits 8:10 - LFXO Start-up Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn timeout(&mut self) -> TIMEOUT_W<8> {
+    pub fn timeout(&mut self) -> TIMEOUT_W<'_, 8> {
         TIMEOUT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

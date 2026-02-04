@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:7 - Linked Structure Sequence Loop Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn loopcnt(&mut self) -> LOOPCNT_W<0> {
+    pub fn loopcnt(&mut self) -> LOOPCNT_W<'_, 0> {
         LOOPCNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

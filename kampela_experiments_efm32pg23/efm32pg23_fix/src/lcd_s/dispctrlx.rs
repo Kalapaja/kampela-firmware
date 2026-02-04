@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:9 - Display Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn displaydiv(&mut self) -> DISPLAYDIV_W<0> {
+    pub fn displaydiv(&mut self) -> DISPLAYDIV_W<'_, 0> {
         DISPLAYDIV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -119,13 +119,13 @@ impl W {
     #[doc = "Bits 0:1 - Low Power Level"]
     #[inline(always)]
     #[must_use]
-    pub fn lplevel(&mut self) -> LPLEVEL_W<0> {
+    pub fn lplevel(&mut self) -> LPLEVEL_W<'_, 0> {
         LPLEVEL_W::new(self)
     }
     #[doc = "Bits 4:7 - Low Power Nest Factor"]
     #[inline(always)]
     #[must_use]
-    pub fn nestfactor(&mut self) -> NESTFACTOR_W<4> {
+    pub fn nestfactor(&mut self) -> NESTFACTOR_W<'_, 4> {
         NESTFACTOR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

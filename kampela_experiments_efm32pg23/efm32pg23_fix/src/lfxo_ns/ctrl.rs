@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - LFXO Force Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn forceen(&mut self) -> FORCEEN_W<0> {
+    pub fn forceen(&mut self) -> FORCEEN_W<'_, 0> {
         FORCEEN_W::new(self)
     }
     #[doc = "Bit 1 - LFXO Disable On-demand requests"]
     #[inline(always)]
     #[must_use]
-    pub fn disondemand(&mut self) -> DISONDEMAND_W<1> {
+    pub fn disondemand(&mut self) -> DISONDEMAND_W<'_, 1> {
         DISONDEMAND_W::new(self)
     }
     #[doc = "Bit 4 - LFXO Failure Detection Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn faildeten(&mut self) -> FAILDETEN_W<4> {
+    pub fn faildeten(&mut self) -> FAILDETEN_W<'_, 4> {
         FAILDETEN_W::new(self)
     }
     #[doc = "Bit 5 - LFXO Failure Detection EM4WU Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn faildetem4wuen(&mut self) -> FAILDETEM4WUEN_W<5> {
+    pub fn faildetem4wuen(&mut self) -> FAILDETEM4WUEN_W<'_, 5> {
         FAILDETEM4WUEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

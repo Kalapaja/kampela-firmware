@@ -306,61 +306,61 @@ impl W {
     #[doc = "Bit 0 - CH0 Main Output Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mainoutench0(&mut self) -> MAINOUTENCH0_W<0> {
+    pub fn mainoutench0(&mut self) -> MAINOUTENCH0_W<'_, 0> {
         MAINOUTENCH0_W::new(self)
     }
     #[doc = "Bit 1 - CH1 Main Output Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mainoutench1(&mut self) -> MAINOUTENCH1_W<1> {
+    pub fn mainoutench1(&mut self) -> MAINOUTENCH1_W<'_, 1> {
         MAINOUTENCH1_W::new(self)
     }
     #[doc = "Bit 4 - CH0 Alternative Output Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn auxoutench0(&mut self) -> AUXOUTENCH0_W<4> {
+    pub fn auxoutench0(&mut self) -> AUXOUTENCH0_W<'_, 4> {
         AUXOUTENCH0_W::new(self)
     }
     #[doc = "Bit 5 - CH1 Alternative Output Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn auxoutench1(&mut self) -> AUXOUTENCH1_W<5> {
+    pub fn auxoutench1(&mut self) -> AUXOUTENCH1_W<'_, 5> {
         AUXOUTENCH1_W::new(self)
     }
     #[doc = "Bit 8 - CH1 Main and Alternative Output Short"]
     #[inline(always)]
     #[must_use]
-    pub fn shortch0(&mut self) -> SHORTCH0_W<8> {
+    pub fn shortch0(&mut self) -> SHORTCH0_W<'_, 8> {
         SHORTCH0_W::new(self)
     }
     #[doc = "Bit 9 - CH0 Main and Alternative Output Short"]
     #[inline(always)]
     #[must_use]
-    pub fn shortch1(&mut self) -> SHORTCH1_W<9> {
+    pub fn shortch1(&mut self) -> SHORTCH1_W<'_, 9> {
         SHORTCH1_W::new(self)
     }
     #[doc = "Bits 12:14 - CH0 ABUS Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn abusportselch0(&mut self) -> ABUSPORTSELCH0_W<12> {
+    pub fn abusportselch0(&mut self) -> ABUSPORTSELCH0_W<'_, 12> {
         ABUSPORTSELCH0_W::new(self)
     }
     #[doc = "Bits 15:20 - CH0 ABUS Pin Select"]
     #[inline(always)]
     #[must_use]
-    pub fn abuspinselch0(&mut self) -> ABUSPINSELCH0_W<15> {
+    pub fn abuspinselch0(&mut self) -> ABUSPINSELCH0_W<'_, 15> {
         ABUSPINSELCH0_W::new(self)
     }
     #[doc = "Bits 22:24 - CH1 ABUS Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn abusportselch1(&mut self) -> ABUSPORTSELCH1_W<22> {
+    pub fn abusportselch1(&mut self) -> ABUSPORTSELCH1_W<'_, 22> {
         ABUSPORTSELCH1_W::new(self)
     }
     #[doc = "Bits 25:30 - CH1 ABUS Pin Select"]
     #[inline(always)]
     #[must_use]
-    pub fn abuspinselch1(&mut self) -> ABUSPINSELCH1_W<25> {
+    pub fn abuspinselch1(&mut self) -> ABUSPINSELCH1_W<'_, 25> {
         ABUSPINSELCH1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bit 0 - Flash Power Up Command"]
     #[inline(always)]
     #[must_use]
-    pub fn pwrup(&mut self) -> PWRUP_W<0> {
+    pub fn pwrup(&mut self) -> PWRUP_W<'_, 0> {
         PWRUP_W::new(self)
     }
     #[doc = "Bit 4 - Flash power off/sleep command"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroff(&mut self) -> PWROFF_W<4> {
+    pub fn pwroff(&mut self) -> PWROFF_W<'_, 4> {
         PWROFF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

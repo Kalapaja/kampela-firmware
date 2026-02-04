@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:23 - Compare Value 0"]
     #[inline(always)]
     #[must_use]
-    pub fn comp0(&mut self) -> COMP0_W<0> {
+    pub fn comp0(&mut self) -> COMP0_W<'_, 0> {
         COMP0_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn syncseten(&mut self) -> SYNCSETEN_W<0> {
+    pub fn syncseten(&mut self) -> SYNCSETEN_W<'_, 0> {
         SYNCSETEN_W::new(self)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn syncclren(&mut self) -> SYNCCLREN_W<16> {
+    pub fn syncclren(&mut self) -> SYNCCLREN_W<'_, 16> {
         SYNCCLREN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -33,31 +33,31 @@ impl W {
     #[doc = "Bit 0 - Start LETIMER"]
     #[inline(always)]
     #[must_use]
-    pub fn start(&mut self) -> START_W<0> {
+    pub fn start(&mut self) -> START_W<'_, 0> {
         START_W::new(self)
     }
     #[doc = "Bit 1 - Stop LETIMER"]
     #[inline(always)]
     #[must_use]
-    pub fn stop(&mut self) -> STOP_W<1> {
+    pub fn stop(&mut self) -> STOP_W<'_, 1> {
         STOP_W::new(self)
     }
     #[doc = "Bit 2 - Clear LETIMER"]
     #[inline(always)]
     #[must_use]
-    pub fn clear(&mut self) -> CLEAR_W<2> {
+    pub fn clear(&mut self) -> CLEAR_W<'_, 2> {
         CLEAR_W::new(self)
     }
     #[doc = "Bit 3 - Clear Toggle Output 0"]
     #[inline(always)]
     #[must_use]
-    pub fn cto0(&mut self) -> CTO0_W<3> {
+    pub fn cto0(&mut self) -> CTO0_W<'_, 3> {
         CTO0_W::new(self)
     }
     #[doc = "Bit 4 - Clear Toggle Output 1"]
     #[inline(always)]
     #[must_use]
-    pub fn cto1(&mut self) -> CTO1_W<4> {
+    pub fn cto1(&mut self) -> CTO1_W<'_, 4> {
         CTO1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

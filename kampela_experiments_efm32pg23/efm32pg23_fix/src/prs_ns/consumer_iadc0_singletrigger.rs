@@ -60,13 +60,13 @@ impl W {
     #[doc = "Bits 0:3 - SINGLE async channel select"]
     #[inline(always)]
     #[must_use]
-    pub fn prssel(&mut self) -> PRSSEL_W<0> {
+    pub fn prssel(&mut self) -> PRSSEL_W<'_, 0> {
         PRSSEL_W::new(self)
     }
     #[doc = "Bits 8:9 - SINGLE sync channel select"]
     #[inline(always)]
     #[must_use]
-    pub fn sprssel(&mut self) -> SPRSSEL_W<8> {
+    pub fn sprssel(&mut self) -> SPRSSEL_W<'_, 8> {
         SPRSSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -335,37 +335,37 @@ impl W {
     #[doc = "Bits 0:1 - CC Channel Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bit 4 - Compare Output Initial State"]
     #[inline(always)]
     #[must_use]
-    pub fn coist(&mut self) -> COIST_W<4> {
+    pub fn coist(&mut self) -> COIST_W<'_, 4> {
         COIST_W::new(self)
     }
     #[doc = "Bits 17:18 - Input Selection"]
     #[inline(always)]
     #[must_use]
-    pub fn insel(&mut self) -> INSEL_W<17> {
+    pub fn insel(&mut self) -> INSEL_W<'_, 17> {
         INSEL_W::new(self)
     }
     #[doc = "Bit 19 - PRS Configuration"]
     #[inline(always)]
     #[must_use]
-    pub fn prsconf(&mut self) -> PRSCONF_W<19> {
+    pub fn prsconf(&mut self) -> PRSCONF_W<'_, 19> {
         PRSCONF_W::new(self)
     }
     #[doc = "Bit 20 - Digital Filter"]
     #[inline(always)]
     #[must_use]
-    pub fn filt(&mut self) -> FILT_W<20> {
+    pub fn filt(&mut self) -> FILT_W<'_, 20> {
         FILT_W::new(self)
     }
     #[doc = "Bit 21 - Input Capture FIFO watermark level"]
     #[inline(always)]
     #[must_use]
-    pub fn icfwl(&mut self) -> ICFWL_W<21> {
+    pub fn icfwl(&mut self) -> ICFWL_W<'_, 21> {
         ICFWL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

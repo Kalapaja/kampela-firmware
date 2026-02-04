@@ -17,7 +17,7 @@ arm-none-eabi-objcopy -O binary "$EXECUTABLE" "$FIRMWARE"
 echo "Flashing..."
 
 if [[ -z "$1" || "$1" == "--pilkki" ]]; then
-pilkki write -i "$FIRMWARE"
+pilkki -p /dev/cu.usbmodem20743668524E1 write -i "$FIRMWARE"
 elif [ "$1" == "--segger" ]; then
 commander flash "$FIRMWARE" --device EFM32PG23B200F512IM40 --address 0x08000000
 else

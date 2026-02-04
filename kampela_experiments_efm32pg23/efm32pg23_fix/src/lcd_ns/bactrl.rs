@@ -428,55 +428,55 @@ impl W {
     #[doc = "Bit 0 - Blink Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn blinken(&mut self) -> BLINKEN_W<0> {
+    pub fn blinken(&mut self) -> BLINKEN_W<'_, 0> {
         BLINKEN_W::new(self)
     }
     #[doc = "Bit 1 - Blank Display"]
     #[inline(always)]
     #[must_use]
-    pub fn blank(&mut self) -> BLANK_W<1> {
+    pub fn blank(&mut self) -> BLANK_W<'_, 1> {
         BLANK_W::new(self)
     }
     #[doc = "Bit 2 - Animation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn aen(&mut self) -> AEN_W<2> {
+    pub fn aen(&mut self) -> AEN_W<'_, 2> {
         AEN_W::new(self)
     }
     #[doc = "Bits 3:4 - Animate Register A Shift Control"]
     #[inline(always)]
     #[must_use]
-    pub fn aregasc(&mut self) -> AREGASC_W<3> {
+    pub fn aregasc(&mut self) -> AREGASC_W<'_, 3> {
         AREGASC_W::new(self)
     }
     #[doc = "Bits 5:6 - Animate Register B Shift Control"]
     #[inline(always)]
     #[must_use]
-    pub fn aregbsc(&mut self) -> AREGBSC_W<5> {
+    pub fn aregbsc(&mut self) -> AREGBSC_W<'_, 5> {
         AREGBSC_W::new(self)
     }
     #[doc = "Bit 7 - Animate Logic Function Select"]
     #[inline(always)]
     #[must_use]
-    pub fn alogsel(&mut self) -> ALOGSEL_W<7> {
+    pub fn alogsel(&mut self) -> ALOGSEL_W<'_, 7> {
         ALOGSEL_W::new(self)
     }
     #[doc = "Bit 8 - Frame Counter Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fcen(&mut self) -> FCEN_W<8> {
+    pub fn fcen(&mut self) -> FCEN_W<'_, 8> {
         FCEN_W::new(self)
     }
     #[doc = "Bit 9 - Display Counter Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn displaycnten(&mut self) -> DISPLAYCNTEN_W<9> {
+    pub fn displaycnten(&mut self) -> DISPLAYCNTEN_W<'_, 9> {
         DISPLAYCNTEN_W::new(self)
     }
     #[doc = "Bit 28 - Animation Location"]
     #[inline(always)]
     #[must_use]
-    pub fn aloc(&mut self) -> ALOC_W<28> {
+    pub fn aloc(&mut self) -> ALOC_W<'_, 28> {
         ALOC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

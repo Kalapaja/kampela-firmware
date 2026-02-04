@@ -157,79 +157,79 @@ impl W {
     #[doc = "Bit 0 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif0(&mut self) -> EXTIF0_W<0> {
+    pub fn extif0(&mut self) -> EXTIF0_W<'_, 0> {
         EXTIF0_W::new(self)
     }
     #[doc = "Bit 1 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif1(&mut self) -> EXTIF1_W<1> {
+    pub fn extif1(&mut self) -> EXTIF1_W<'_, 1> {
         EXTIF1_W::new(self)
     }
     #[doc = "Bit 2 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif2(&mut self) -> EXTIF2_W<2> {
+    pub fn extif2(&mut self) -> EXTIF2_W<'_, 2> {
         EXTIF2_W::new(self)
     }
     #[doc = "Bit 3 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif3(&mut self) -> EXTIF3_W<3> {
+    pub fn extif3(&mut self) -> EXTIF3_W<'_, 3> {
         EXTIF3_W::new(self)
     }
     #[doc = "Bit 4 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif4(&mut self) -> EXTIF4_W<4> {
+    pub fn extif4(&mut self) -> EXTIF4_W<'_, 4> {
         EXTIF4_W::new(self)
     }
     #[doc = "Bit 5 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif5(&mut self) -> EXTIF5_W<5> {
+    pub fn extif5(&mut self) -> EXTIF5_W<'_, 5> {
         EXTIF5_W::new(self)
     }
     #[doc = "Bit 6 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif6(&mut self) -> EXTIF6_W<6> {
+    pub fn extif6(&mut self) -> EXTIF6_W<'_, 6> {
         EXTIF6_W::new(self)
     }
     #[doc = "Bit 7 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif7(&mut self) -> EXTIF7_W<7> {
+    pub fn extif7(&mut self) -> EXTIF7_W<'_, 7> {
         EXTIF7_W::new(self)
     }
     #[doc = "Bit 8 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif8(&mut self) -> EXTIF8_W<8> {
+    pub fn extif8(&mut self) -> EXTIF8_W<'_, 8> {
         EXTIF8_W::new(self)
     }
     #[doc = "Bit 9 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif9(&mut self) -> EXTIF9_W<9> {
+    pub fn extif9(&mut self) -> EXTIF9_W<'_, 9> {
         EXTIF9_W::new(self)
     }
     #[doc = "Bit 10 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif10(&mut self) -> EXTIF10_W<10> {
+    pub fn extif10(&mut self) -> EXTIF10_W<'_, 10> {
         EXTIF10_W::new(self)
     }
     #[doc = "Bit 11 - External Pin Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn extif11(&mut self) -> EXTIF11_W<11> {
+    pub fn extif11(&mut self) -> EXTIF11_W<'_, 11> {
         EXTIF11_W::new(self)
     }
     #[doc = "Bits 16:27 - EM4 wake up"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wu(&mut self) -> EM4WU_W<16> {
+    pub fn em4wu(&mut self) -> EM4WU_W<'_, 16> {
         EM4WU_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

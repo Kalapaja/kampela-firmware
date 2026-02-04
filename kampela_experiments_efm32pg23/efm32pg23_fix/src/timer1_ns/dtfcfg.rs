@@ -168,37 +168,37 @@ impl W {
     #[doc = "Bits 16:17 - DTI Fault Action"]
     #[inline(always)]
     #[must_use]
-    pub fn dtfa(&mut self) -> DTFA_W<16> {
+    pub fn dtfa(&mut self) -> DTFA_W<'_, 16> {
         DTFA_W::new(self)
     }
     #[doc = "Bit 24 - DTI PRS 0 Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprs0fen(&mut self) -> DTPRS0FEN_W<24> {
+    pub fn dtprs0fen(&mut self) -> DTPRS0FEN_W<'_, 24> {
         DTPRS0FEN_W::new(self)
     }
     #[doc = "Bit 25 - DTI PRS 1 Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprs1fen(&mut self) -> DTPRS1FEN_W<25> {
+    pub fn dtprs1fen(&mut self) -> DTPRS1FEN_W<'_, 25> {
         DTPRS1FEN_W::new(self)
     }
     #[doc = "Bit 26 - DTI Debugger Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtdbgfen(&mut self) -> DTDBGFEN_W<26> {
+    pub fn dtdbgfen(&mut self) -> DTDBGFEN_W<'_, 26> {
         DTDBGFEN_W::new(self)
     }
     #[doc = "Bit 27 - DTI Lockup Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtlockupfen(&mut self) -> DTLOCKUPFEN_W<27> {
+    pub fn dtlockupfen(&mut self) -> DTLOCKUPFEN_W<'_, 27> {
         DTLOCKUPFEN_W::new(self)
     }
     #[doc = "Bit 28 - DTI EM23 Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtem23fen(&mut self) -> DTEM23FEN_W<28> {
+    pub fn dtem23fen(&mut self) -> DTEM23FEN_W<'_, 28> {
         DTEM23FEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - WDOG Timeout Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn tout(&mut self) -> TOUT_W<0> {
+    pub fn tout(&mut self) -> TOUT_W<'_, 0> {
         TOUT_W::new(self)
     }
     #[doc = "Bit 1 - WDOG Warning Timeout Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn warn(&mut self) -> WARN_W<1> {
+    pub fn warn(&mut self) -> WARN_W<'_, 1> {
         WARN_W::new(self)
     }
     #[doc = "Bit 2 - WDOG Window Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn win(&mut self) -> WIN_W<2> {
+    pub fn win(&mut self) -> WIN_W<'_, 2> {
         WIN_W::new(self)
     }
     #[doc = "Bit 3 - PRS Src0 Event Missing Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn pem0(&mut self) -> PEM0_W<3> {
+    pub fn pem0(&mut self) -> PEM0_W<'_, 3> {
         PEM0_W::new(self)
     }
     #[doc = "Bit 4 - PRS Src1 Event Missing Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn pem1(&mut self) -> PEM1_W<4> {
+    pub fn pem1(&mut self) -> PEM1_W<'_, 4> {
         PEM1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

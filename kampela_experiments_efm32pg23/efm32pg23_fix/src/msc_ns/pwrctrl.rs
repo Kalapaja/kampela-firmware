@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Power down Flash macro when enter EM1"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroffonem1entry(&mut self) -> PWROFFONEM1ENTRY_W<0> {
+    pub fn pwroffonem1entry(&mut self) -> PWROFFONEM1ENTRY_W<'_, 0> {
         PWROFFONEM1ENTRY_W::new(self)
     }
     #[doc = "Bit 1 - Power down Flash macro when enter EM1P"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroffonem1pentry(&mut self) -> PWROFFONEM1PENTRY_W<1> {
+    pub fn pwroffonem1pentry(&mut self) -> PWROFFONEM1PENTRY_W<'_, 1> {
         PWROFFONEM1PENTRY_W::new(self)
     }
     #[doc = "Bit 4 - POWER down flash again in EM1/EM1p"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroffentryagain(&mut self) -> PWROFFENTRYAGAIN_W<4> {
+    pub fn pwroffentryagain(&mut self) -> PWROFFENTRYAGAIN_W<'_, 4> {
         PWROFFENTRYAGAIN_W::new(self)
     }
     #[doc = "Bits 16:23 - Power down delay"]
     #[inline(always)]
     #[must_use]
-    pub fn pwroffdly(&mut self) -> PWROFFDLY_W<16> {
+    pub fn pwroffdly(&mut self) -> PWROFFDLY_W<'_, 16> {
         PWROFFDLY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

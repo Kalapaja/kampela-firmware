@@ -415,31 +415,31 @@ impl W {
     #[doc = "Bits 0:2 - Scan Trigger Select"]
     #[inline(always)]
     #[must_use]
-    pub fn scantrigsel(&mut self) -> SCANTRIGSEL_W<0> {
+    pub fn scantrigsel(&mut self) -> SCANTRIGSEL_W<'_, 0> {
         SCANTRIGSEL_W::new(self)
     }
     #[doc = "Bit 4 - Scan Trigger Action"]
     #[inline(always)]
     #[must_use]
-    pub fn scantrigaction(&mut self) -> SCANTRIGACTION_W<4> {
+    pub fn scantrigaction(&mut self) -> SCANTRIGACTION_W<'_, 4> {
         SCANTRIGACTION_W::new(self)
     }
     #[doc = "Bits 8:10 - Single Trigger Select"]
     #[inline(always)]
     #[must_use]
-    pub fn singletrigsel(&mut self) -> SINGLETRIGSEL_W<8> {
+    pub fn singletrigsel(&mut self) -> SINGLETRIGSEL_W<'_, 8> {
         SINGLETRIGSEL_W::new(self)
     }
     #[doc = "Bit 12 - Single Trigger Action"]
     #[inline(always)]
     #[must_use]
-    pub fn singletrigaction(&mut self) -> SINGLETRIGACTION_W<12> {
+    pub fn singletrigaction(&mut self) -> SINGLETRIGACTION_W<'_, 12> {
         SINGLETRIGACTION_W::new(self)
     }
     #[doc = "Bit 16 - Single Tailgate Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn singletailgate(&mut self) -> SINGLETAILGATE_W<16> {
+    pub fn singletailgate(&mut self) -> SINGLETAILGATE_W<'_, 16> {
         SINGLETAILGATE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

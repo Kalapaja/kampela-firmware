@@ -688,43 +688,43 @@ impl W {
     #[doc = "Bits 0:1 - ADC Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn adcmode(&mut self) -> ADCMODE_W<0> {
+    pub fn adcmode(&mut self) -> ADCMODE_W<'_, 0> {
         ADCMODE_W::new(self)
     }
     #[doc = "Bits 2:4 - High Speed OSR"]
     #[inline(always)]
     #[must_use]
-    pub fn osrhs(&mut self) -> OSRHS_W<2> {
+    pub fn osrhs(&mut self) -> OSRHS_W<'_, 2> {
         OSRHS_W::new(self)
     }
     #[doc = "Bits 5:7 - High Accuracy OSR"]
     #[inline(always)]
     #[must_use]
-    pub fn osrha(&mut self) -> OSRHA_W<5> {
+    pub fn osrha(&mut self) -> OSRHA_W<'_, 5> {
         OSRHA_W::new(self)
     }
     #[doc = "Bits 12:14 - Analog Gain"]
     #[inline(always)]
     #[must_use]
-    pub fn analoggain(&mut self) -> ANALOGGAIN_W<12> {
+    pub fn analoggain(&mut self) -> ANALOGGAIN_W<'_, 12> {
         ANALOGGAIN_W::new(self)
     }
     #[doc = "Bits 16:18 - Reference Select"]
     #[inline(always)]
     #[must_use]
-    pub fn refsel(&mut self) -> REFSEL_W<16> {
+    pub fn refsel(&mut self) -> REFSEL_W<'_, 16> {
         REFSEL_W::new(self)
     }
     #[doc = "Bits 21:23 - Digital Averaging"]
     #[inline(always)]
     #[must_use]
-    pub fn digavg(&mut self) -> DIGAVG_W<21> {
+    pub fn digavg(&mut self) -> DIGAVG_W<'_, 21> {
         DIGAVG_W::new(self)
     }
     #[doc = "Bits 28:29 - Two's Complement"]
     #[inline(always)]
     #[must_use]
-    pub fn twoscompl(&mut self) -> TWOSCOMPL_W<28> {
+    pub fn twoscompl(&mut self) -> TWOSCOMPL_W<'_, 28> {
         TWOSCOMPL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

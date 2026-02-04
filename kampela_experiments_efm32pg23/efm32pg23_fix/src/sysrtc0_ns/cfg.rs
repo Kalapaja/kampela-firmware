@@ -95,7 +95,7 @@ impl W {
     #[doc = "Bit 0 - Debug Mode Run Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<0> {
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<'_, 0> {
         DEBUGRUN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

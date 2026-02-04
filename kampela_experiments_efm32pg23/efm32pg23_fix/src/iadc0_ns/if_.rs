@@ -166,85 +166,85 @@ impl W {
     #[doc = "Bit 0 - Single FIFO Data Valid Level"]
     #[inline(always)]
     #[must_use]
-    pub fn singlefifodvl(&mut self) -> SINGLEFIFODVL_W<0> {
+    pub fn singlefifodvl(&mut self) -> SINGLEFIFODVL_W<'_, 0> {
         SINGLEFIFODVL_W::new(self)
     }
     #[doc = "Bit 1 - Scan FIFO Data Valid Level"]
     #[inline(always)]
     #[must_use]
-    pub fn scanfifodvl(&mut self) -> SCANFIFODVL_W<1> {
+    pub fn scanfifodvl(&mut self) -> SCANFIFODVL_W<'_, 1> {
         SCANFIFODVL_W::new(self)
     }
     #[doc = "Bit 2 - Single Result Window Compare"]
     #[inline(always)]
     #[must_use]
-    pub fn singlecmp(&mut self) -> SINGLECMP_W<2> {
+    pub fn singlecmp(&mut self) -> SINGLECMP_W<'_, 2> {
         SINGLECMP_W::new(self)
     }
     #[doc = "Bit 3 - Scan Result Window Compare"]
     #[inline(always)]
     #[must_use]
-    pub fn scancmp(&mut self) -> SCANCMP_W<3> {
+    pub fn scancmp(&mut self) -> SCANCMP_W<'_, 3> {
         SCANCMP_W::new(self)
     }
     #[doc = "Bit 7 - Scan Entry Done"]
     #[inline(always)]
     #[must_use]
-    pub fn scanentrydone(&mut self) -> SCANENTRYDONE_W<7> {
+    pub fn scanentrydone(&mut self) -> SCANENTRYDONE_W<'_, 7> {
         SCANENTRYDONE_W::new(self)
     }
     #[doc = "Bit 8 - Scan Table Done"]
     #[inline(always)]
     #[must_use]
-    pub fn scantabledone(&mut self) -> SCANTABLEDONE_W<8> {
+    pub fn scantabledone(&mut self) -> SCANTABLEDONE_W<'_, 8> {
         SCANTABLEDONE_W::new(self)
     }
     #[doc = "Bit 9 - Single Conversion Done"]
     #[inline(always)]
     #[must_use]
-    pub fn singledone(&mut self) -> SINGLEDONE_W<9> {
+    pub fn singledone(&mut self) -> SINGLEDONE_W<'_, 9> {
         SINGLEDONE_W::new(self)
     }
     #[doc = "Bit 12 - Polarity Error"]
     #[inline(always)]
     #[must_use]
-    pub fn polarityerr(&mut self) -> POLARITYERR_W<12> {
+    pub fn polarityerr(&mut self) -> POLARITYERR_W<'_, 12> {
         POLARITYERR_W::new(self)
     }
     #[doc = "Bit 13 - Port Allocation Error"]
     #[inline(always)]
     #[must_use]
-    pub fn portallocerr(&mut self) -> PORTALLOCERR_W<13> {
+    pub fn portallocerr(&mut self) -> PORTALLOCERR_W<'_, 13> {
         PORTALLOCERR_W::new(self)
     }
     #[doc = "Bit 16 - Single FIFO Overflow"]
     #[inline(always)]
     #[must_use]
-    pub fn singlefifoof(&mut self) -> SINGLEFIFOOF_W<16> {
+    pub fn singlefifoof(&mut self) -> SINGLEFIFOOF_W<'_, 16> {
         SINGLEFIFOOF_W::new(self)
     }
     #[doc = "Bit 17 - Scan FIFO Overflow"]
     #[inline(always)]
     #[must_use]
-    pub fn scanfifoof(&mut self) -> SCANFIFOOF_W<17> {
+    pub fn scanfifoof(&mut self) -> SCANFIFOOF_W<'_, 17> {
         SCANFIFOOF_W::new(self)
     }
     #[doc = "Bit 18 - Single FIFO Underflow"]
     #[inline(always)]
     #[must_use]
-    pub fn singlefifouf(&mut self) -> SINGLEFIFOUF_W<18> {
+    pub fn singlefifouf(&mut self) -> SINGLEFIFOUF_W<'_, 18> {
         SINGLEFIFOUF_W::new(self)
     }
     #[doc = "Bit 19 - Scan FIFO Underflow"]
     #[inline(always)]
     #[must_use]
-    pub fn scanfifouf(&mut self) -> SCANFIFOUF_W<19> {
+    pub fn scanfifouf(&mut self) -> SCANFIFOUF_W<'_, 19> {
         SCANFIFOUF_W::new(self)
     }
     #[doc = "Bit 31 - EM2/3 Abort Error"]
     #[inline(always)]
     #[must_use]
-    pub fn em23aborterror(&mut self) -> EM23ABORTERROR_W<31> {
+    pub fn em23aborterror(&mut self) -> EM23ABORTERROR_W<'_, 31> {
         EM23ABORTERROR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Page Erase or Write Address Buffer"]
     #[inline(always)]
     #[must_use]
-    pub fn addrb(&mut self) -> ADDRB_W<0> {
+    pub fn addrb(&mut self) -> ADDRB_W<'_, 0> {
         ADDRB_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

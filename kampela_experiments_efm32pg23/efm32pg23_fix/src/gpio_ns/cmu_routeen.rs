@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - CLKOUT0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn clkout0pen(&mut self) -> CLKOUT0PEN_W<0> {
+    pub fn clkout0pen(&mut self) -> CLKOUT0PEN_W<'_, 0> {
         CLKOUT0PEN_W::new(self)
     }
     #[doc = "Bit 1 - CLKOUT1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn clkout1pen(&mut self) -> CLKOUT1PEN_W<1> {
+    pub fn clkout1pen(&mut self) -> CLKOUT1PEN_W<'_, 1> {
         CLKOUT1PEN_W::new(self)
     }
     #[doc = "Bit 2 - CLKOUT2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn clkout2pen(&mut self) -> CLKOUT2PEN_W<2> {
+    pub fn clkout2pen(&mut self) -> CLKOUT2PEN_W<'_, 2> {
         CLKOUT2PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

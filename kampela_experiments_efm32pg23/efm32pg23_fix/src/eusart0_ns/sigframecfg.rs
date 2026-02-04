@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:8 - Signal Frame Value"]
     #[inline(always)]
     #[must_use]
-    pub fn sigframe(&mut self) -> SIGFRAME_W<0> {
+    pub fn sigframe(&mut self) -> SIGFRAME_W<'_, 0> {
         SIGFRAME_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

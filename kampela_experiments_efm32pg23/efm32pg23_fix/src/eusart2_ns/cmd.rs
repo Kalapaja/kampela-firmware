@@ -41,55 +41,55 @@ impl W {
     #[doc = "Bit 0 - Receiver Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxen(&mut self) -> RXEN_W<0> {
+    pub fn rxen(&mut self) -> RXEN_W<'_, 0> {
         RXEN_W::new(self)
     }
     #[doc = "Bit 1 - Receiver Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxdis(&mut self) -> RXDIS_W<1> {
+    pub fn rxdis(&mut self) -> RXDIS_W<'_, 1> {
         RXDIS_W::new(self)
     }
     #[doc = "Bit 2 - Transmitter Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txen(&mut self) -> TXEN_W<2> {
+    pub fn txen(&mut self) -> TXEN_W<'_, 2> {
         TXEN_W::new(self)
     }
     #[doc = "Bit 3 - Transmitter Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn txdis(&mut self) -> TXDIS_W<3> {
+    pub fn txdis(&mut self) -> TXDIS_W<'_, 3> {
         TXDIS_W::new(self)
     }
     #[doc = "Bit 4 - Receiver Block Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxblocken(&mut self) -> RXBLOCKEN_W<4> {
+    pub fn rxblocken(&mut self) -> RXBLOCKEN_W<'_, 4> {
         RXBLOCKEN_W::new(self)
     }
     #[doc = "Bit 5 - Receiver Block Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxblockdis(&mut self) -> RXBLOCKDIS_W<5> {
+    pub fn rxblockdis(&mut self) -> RXBLOCKDIS_W<'_, 5> {
         RXBLOCKDIS_W::new(self)
     }
     #[doc = "Bit 6 - Transmitter Tristate Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txtrien(&mut self) -> TXTRIEN_W<6> {
+    pub fn txtrien(&mut self) -> TXTRIEN_W<'_, 6> {
         TXTRIEN_W::new(self)
     }
     #[doc = "Bit 7 - Transmitter Tristate Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn txtridis(&mut self) -> TXTRIDIS_W<7> {
+    pub fn txtridis(&mut self) -> TXTRIDIS_W<'_, 7> {
         TXTRIDIS_W::new(self)
     }
     #[doc = "Bit 8 - Clear TX FIFO"]
     #[inline(always)]
     #[must_use]
-    pub fn cleartx(&mut self) -> CLEARTX_W<8> {
+    pub fn cleartx(&mut self) -> CLEARTX_W<'_, 8> {
         CLEARTX_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

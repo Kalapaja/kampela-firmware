@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Overflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ovf(&mut self) -> OVF_W<0> {
+    pub fn ovf(&mut self) -> OVF_W<'_, 0> {
         OVF_W::new(self)
     }
     #[doc = "Bit 1 - Compare 0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp0(&mut self) -> CMP0_W<1> {
+    pub fn cmp0(&mut self) -> CMP0_W<'_, 1> {
         CMP0_W::new(self)
     }
     #[doc = "Bit 2 - Compare 1 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp1(&mut self) -> CMP1_W<2> {
+    pub fn cmp1(&mut self) -> CMP1_W<'_, 2> {
         CMP1_W::new(self)
     }
     #[doc = "Bit 3 - Capture 0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cap0(&mut self) -> CAP0_W<3> {
+    pub fn cap0(&mut self) -> CAP0_W<'_, 3> {
         CAP0_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

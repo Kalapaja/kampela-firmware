@@ -96,7 +96,7 @@ impl W {
     #[doc = "Bit 0 - ICACHERAM Retention control"]
     #[inline(always)]
     #[must_use]
-    pub fn ramretnctrl(&mut self) -> RAMRETNCTRL_W<0> {
+    pub fn ramretnctrl(&mut self) -> RAMRETNCTRL_W<'_, 0> {
         RAMRETNCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:19 - LCD Segment Allocation"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdsegalloc(&mut self) -> LCDSEGALLOC_W<0> {
+    pub fn lcdsegalloc(&mut self) -> LCDSEGALLOC_W<'_, 0> {
         LCDSEGALLOC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

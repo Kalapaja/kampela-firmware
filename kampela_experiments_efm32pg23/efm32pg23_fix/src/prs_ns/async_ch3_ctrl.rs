@@ -344,25 +344,25 @@ impl W {
     #[doc = "Bits 0:2 - Signal Select"]
     #[inline(always)]
     #[must_use]
-    pub fn sigsel(&mut self) -> SIGSEL_W<0> {
+    pub fn sigsel(&mut self) -> SIGSEL_W<'_, 0> {
         SIGSEL_W::new(self)
     }
     #[doc = "Bits 8:14 - Source Select"]
     #[inline(always)]
     #[must_use]
-    pub fn sourcesel(&mut self) -> SOURCESEL_W<8> {
+    pub fn sourcesel(&mut self) -> SOURCESEL_W<'_, 8> {
         SOURCESEL_W::new(self)
     }
     #[doc = "Bits 16:19 - Function Select"]
     #[inline(always)]
     #[must_use]
-    pub fn fnsel(&mut self) -> FNSEL_W<16> {
+    pub fn fnsel(&mut self) -> FNSEL_W<'_, 16> {
         FNSEL_W::new(self)
     }
     #[doc = "Bits 24:27 - Aux Select"]
     #[inline(always)]
     #[must_use]
-    pub fn auxsel(&mut self) -> AUXSEL_W<24> {
+    pub fn auxsel(&mut self) -> AUXSEL_W<'_, 24> {
         AUXSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

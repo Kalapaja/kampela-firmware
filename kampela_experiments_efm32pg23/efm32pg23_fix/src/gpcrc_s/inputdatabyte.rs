@@ -26,7 +26,7 @@ impl W {
     #[doc = "Bits 0:7 - Input Data for 8-bit"]
     #[inline(always)]
     #[must_use]
-    pub fn inputdatabyte(&mut self) -> INPUTDATABYTE_W<0> {
+    pub fn inputdatabyte(&mut self) -> INPUTDATABYTE_W<'_, 0> {
         INPUTDATABYTE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

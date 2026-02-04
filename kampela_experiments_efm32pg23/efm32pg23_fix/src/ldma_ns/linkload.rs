@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA Link Loads"]
     #[inline(always)]
     #[must_use]
-    pub fn linkload(&mut self) -> LINKLOAD_W<0> {
+    pub fn linkload(&mut self) -> LINKLOAD_W<'_, 0> {
         LINKLOAD_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -148,73 +148,73 @@ impl W {
     #[doc = "Bit 0 - Digital Clock Ready Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn rdy(&mut self) -> RDY_W<0> {
+    pub fn rdy(&mut self) -> RDY_W<'_, 0> {
         RDY_W::new(self)
     }
     #[doc = "Bit 1 - Core Bias Optimization Ready Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasoptrdy(&mut self) -> COREBIASOPTRDY_W<1> {
+    pub fn corebiasoptrdy(&mut self) -> COREBIASOPTRDY_W<'_, 1> {
         COREBIASOPTRDY_W::new(self)
     }
     #[doc = "Bit 2 - PRS Ready Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn prsrdy(&mut self) -> PRSRDY_W<2> {
+    pub fn prsrdy(&mut self) -> PRSRDY_W<'_, 2> {
         PRSRDY_W::new(self)
     }
     #[doc = "Bit 3 - BUFOUT Ready Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn bufoutrdy(&mut self) -> BUFOUTRDY_W<3> {
+    pub fn bufoutrdy(&mut self) -> BUFOUTRDY_W<'_, 3> {
         BUFOUTRDY_W::new(self)
     }
     #[doc = "Bit 15 - BUFOUT FROZEN Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn bufoutfrozen(&mut self) -> BUFOUTFROZEN_W<15> {
+    pub fn bufoutfrozen(&mut self) -> BUFOUTFROZEN_W<'_, 15> {
         BUFOUTFROZEN_W::new(self)
     }
     #[doc = "Bit 20 - PRS Requset Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn prserr(&mut self) -> PRSERR_W<20> {
+    pub fn prserr(&mut self) -> PRSERR_W<'_, 20> {
         PRSERR_W::new(self)
     }
     #[doc = "Bit 21 - BUFOUT Request Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn bufouterr(&mut self) -> BUFOUTERR_W<21> {
+    pub fn bufouterr(&mut self) -> BUFOUTERR_W<'_, 21> {
         BUFOUTERR_W::new(self)
     }
     #[doc = "Bit 27 - BUFOUT Freeze Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn bufoutfreezeerr(&mut self) -> BUFOUTFREEZEERR_W<27> {
+    pub fn bufoutfreezeerr(&mut self) -> BUFOUTFREEZEERR_W<'_, 27> {
         BUFOUTFREEZEERR_W::new(self)
     }
     #[doc = "Bit 28 - BUFOUT Did Not Start Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn bufoutdnserr(&mut self) -> BUFOUTDNSERR_W<28> {
+    pub fn bufoutdnserr(&mut self) -> BUFOUTDNSERR_W<'_, 28> {
         BUFOUTDNSERR_W::new(self)
     }
     #[doc = "Bit 29 - Did Not Start Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn dnserr(&mut self) -> DNSERR_W<29> {
+    pub fn dnserr(&mut self) -> DNSERR_W<'_, 29> {
         DNSERR_W::new(self)
     }
     #[doc = "Bit 30 - Low Frequency Timeout Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn lftimeouterr(&mut self) -> LFTIMEOUTERR_W<30> {
+    pub fn lftimeouterr(&mut self) -> LFTIMEOUTERR_W<'_, 30> {
         LFTIMEOUTERR_W::new(self)
     }
     #[doc = "Bit 31 - Core Bias Optimization Error Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasopterr(&mut self) -> COREBIASOPTERR_W<31> {
+    pub fn corebiasopterr(&mut self) -> COREBIASOPTERR_W<'_, 31> {
         COREBIASOPTERR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

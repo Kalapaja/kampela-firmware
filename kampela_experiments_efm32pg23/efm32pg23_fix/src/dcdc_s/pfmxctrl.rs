@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:3 - PFMX mode Peak Current Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn ipkval(&mut self) -> IPKVAL_W<0> {
+    pub fn ipkval(&mut self) -> IPKVAL_W<'_, 0> {
         IPKVAL_W::new(self)
     }
     #[doc = "Bits 8:12 - Ton_max timeout control"]
     #[inline(always)]
     #[must_use]
-    pub fn ipktmaxctrl(&mut self) -> IPKTMAXCTRL_W<8> {
+    pub fn ipktmaxctrl(&mut self) -> IPKTMAXCTRL_W<'_, 8> {
         IPKTMAXCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

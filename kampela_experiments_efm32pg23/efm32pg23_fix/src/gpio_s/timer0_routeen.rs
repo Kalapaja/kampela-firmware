@@ -94,37 +94,37 @@ impl W {
     #[doc = "Bit 0 - CC0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn cc0pen(&mut self) -> CC0PEN_W<0> {
+    pub fn cc0pen(&mut self) -> CC0PEN_W<'_, 0> {
         CC0PEN_W::new(self)
     }
     #[doc = "Bit 1 - CC1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn cc1pen(&mut self) -> CC1PEN_W<1> {
+    pub fn cc1pen(&mut self) -> CC1PEN_W<'_, 1> {
         CC1PEN_W::new(self)
     }
     #[doc = "Bit 2 - CC2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn cc2pen(&mut self) -> CC2PEN_W<2> {
+    pub fn cc2pen(&mut self) -> CC2PEN_W<'_, 2> {
         CC2PEN_W::new(self)
     }
     #[doc = "Bit 3 - CDTI0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ccc0pen(&mut self) -> CCC0PEN_W<3> {
+    pub fn ccc0pen(&mut self) -> CCC0PEN_W<'_, 3> {
         CCC0PEN_W::new(self)
     }
     #[doc = "Bit 4 - CDTI1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ccc1pen(&mut self) -> CCC1PEN_W<4> {
+    pub fn ccc1pen(&mut self) -> CCC1PEN_W<'_, 4> {
         CCC1PEN_W::new(self)
     }
     #[doc = "Bit 5 - CDTI2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ccc2pen(&mut self) -> CCC2PEN_W<5> {
+    pub fn ccc2pen(&mut self) -> CCC2PEN_W<'_, 5> {
         CCC2PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

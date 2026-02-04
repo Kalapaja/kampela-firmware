@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - FIFO"]
     #[inline(always)]
     #[must_use]
-    pub fn fifo(&mut self) -> FIFO_W<0> {
+    pub fn fifo(&mut self) -> FIFO_W<'_, 0> {
         FIFO_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

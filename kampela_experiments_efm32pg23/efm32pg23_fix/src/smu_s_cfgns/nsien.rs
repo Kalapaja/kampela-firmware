@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - PPUNS Privilege Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppunspriv(&mut self) -> PPUNSPRIV_W<0> {
+    pub fn ppunspriv(&mut self) -> PPUNSPRIV_W<'_, 0> {
         PPUNSPRIV_W::new(self)
     }
     #[doc = "Bit 2 - PPUNS Instruction Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppunsinst(&mut self) -> PPUNSINST_W<2> {
+    pub fn ppunsinst(&mut self) -> PPUNSINST_W<'_, 2> {
         PPUNSINST_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

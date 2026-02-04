@@ -777,97 +777,97 @@ impl W {
     #[doc = "Bit 0 - Synchronous Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn sync(&mut self) -> SYNC_W<0> {
+    pub fn sync(&mut self) -> SYNC_W<'_, 0> {
         SYNC_W::new(self)
     }
     #[doc = "Bit 1 - Loopback Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn loopbk(&mut self) -> LOOPBK_W<1> {
+    pub fn loopbk(&mut self) -> LOOPBK_W<'_, 1> {
         LOOPBK_W::new(self)
     }
     #[doc = "Bit 2 - Collision Check Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ccen(&mut self) -> CCEN_W<2> {
+    pub fn ccen(&mut self) -> CCEN_W<'_, 2> {
         CCEN_W::new(self)
     }
     #[doc = "Bit 3 - Multi-Processor Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mpm(&mut self) -> MPM_W<3> {
+    pub fn mpm(&mut self) -> MPM_W<'_, 3> {
         MPM_W::new(self)
     }
     #[doc = "Bit 4 - Multi-Processor Address-Bit"]
     #[inline(always)]
     #[must_use]
-    pub fn mpab(&mut self) -> MPAB_W<4> {
+    pub fn mpab(&mut self) -> MPAB_W<'_, 4> {
         MPAB_W::new(self)
     }
     #[doc = "Bits 5:7 - Oversampling"]
     #[inline(always)]
     #[must_use]
-    pub fn ovs(&mut self) -> OVS_W<5> {
+    pub fn ovs(&mut self) -> OVS_W<'_, 5> {
         OVS_W::new(self)
     }
     #[doc = "Bit 10 - Most Significant Bit First"]
     #[inline(always)]
     #[must_use]
-    pub fn msbf(&mut self) -> MSBF_W<10> {
+    pub fn msbf(&mut self) -> MSBF_W<'_, 10> {
         MSBF_W::new(self)
     }
     #[doc = "Bit 13 - Receiver Input Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn rxinv(&mut self) -> RXINV_W<13> {
+    pub fn rxinv(&mut self) -> RXINV_W<'_, 13> {
         RXINV_W::new(self)
     }
     #[doc = "Bit 14 - Transmitter output Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn txinv(&mut self) -> TXINV_W<14> {
+    pub fn txinv(&mut self) -> TXINV_W<'_, 14> {
         TXINV_W::new(self)
     }
     #[doc = "Bit 17 - Automatic TX Tristate"]
     #[inline(always)]
     #[must_use]
-    pub fn autotri(&mut self) -> AUTOTRI_W<17> {
+    pub fn autotri(&mut self) -> AUTOTRI_W<'_, 17> {
         AUTOTRI_W::new(self)
     }
     #[doc = "Bit 20 - Skip Parity Error Frames"]
     #[inline(always)]
     #[must_use]
-    pub fn skipperrf(&mut self) -> SKIPPERRF_W<20> {
+    pub fn skipperrf(&mut self) -> SKIPPERRF_W<'_, 20> {
         SKIPPERRF_W::new(self)
     }
     #[doc = "Bit 22 - Halt DMA Read On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errsdma(&mut self) -> ERRSDMA_W<22> {
+    pub fn errsdma(&mut self) -> ERRSDMA_W<'_, 22> {
         ERRSDMA_W::new(self)
     }
     #[doc = "Bit 23 - Disable RX On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errsrx(&mut self) -> ERRSRX_W<23> {
+    pub fn errsrx(&mut self) -> ERRSRX_W<'_, 23> {
         ERRSRX_W::new(self)
     }
     #[doc = "Bit 24 - Disable TX On Error"]
     #[inline(always)]
     #[must_use]
-    pub fn errstx(&mut self) -> ERRSTX_W<24> {
+    pub fn errstx(&mut self) -> ERRSTX_W<'_, 24> {
         ERRSTX_W::new(self)
     }
     #[doc = "Bit 30 - Majority Vote Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn mvdis(&mut self) -> MVDIS_W<30> {
+    pub fn mvdis(&mut self) -> MVDIS_W<'_, 30> {
         MVDIS_W::new(self)
     }
     #[doc = "Bit 31 - AUTOBAUD detection enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autobauden(&mut self) -> AUTOBAUDEN_W<31> {
+    pub fn autobauden(&mut self) -> AUTOBAUDEN_W<'_, 31> {
         AUTOBAUDEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

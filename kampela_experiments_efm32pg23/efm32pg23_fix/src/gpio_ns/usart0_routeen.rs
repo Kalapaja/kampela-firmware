@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - CS pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn cspen(&mut self) -> CSPEN_W<0> {
+    pub fn cspen(&mut self) -> CSPEN_W<'_, 0> {
         CSPEN_W::new(self)
     }
     #[doc = "Bit 1 - RTS pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn rtspen(&mut self) -> RTSPEN_W<1> {
+    pub fn rtspen(&mut self) -> RTSPEN_W<'_, 1> {
         RTSPEN_W::new(self)
     }
     #[doc = "Bit 2 - RX pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn rxpen(&mut self) -> RXPEN_W<2> {
+    pub fn rxpen(&mut self) -> RXPEN_W<'_, 2> {
         RXPEN_W::new(self)
     }
     #[doc = "Bit 3 - SCLK pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn clkpen(&mut self) -> CLKPEN_W<3> {
+    pub fn clkpen(&mut self) -> CLKPEN_W<'_, 3> {
         CLKPEN_W::new(self)
     }
     #[doc = "Bit 4 - TX pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn txpen(&mut self) -> TXPEN_W<4> {
+    pub fn txpen(&mut self) -> TXPEN_W<'_, 4> {
         TXPEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:14 - Pre-Counter Value"]
     #[inline(always)]
     #[must_use]
-    pub fn precnt(&mut self) -> PRECNT_W<0> {
+    pub fn precnt(&mut self) -> PRECNT_W<'_, 0> {
         PRECNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

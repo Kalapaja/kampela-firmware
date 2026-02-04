@@ -540,85 +540,85 @@ impl W {
     #[doc = "Bit 0 - Freeze BUFOUT Controls"]
     #[inline(always)]
     #[must_use]
-    pub fn bufoutfreeze(&mut self) -> BUFOUTFREEZE_W<0> {
+    pub fn bufoutfreeze(&mut self) -> BUFOUTFREEZE_W<'_, 0> {
         BUFOUTFREEZE_W::new(self)
     }
     #[doc = "Bit 2 - Keep Warm"]
     #[inline(always)]
     #[must_use]
-    pub fn keepwarm(&mut self) -> KEEPWARM_W<2> {
+    pub fn keepwarm(&mut self) -> KEEPWARM_W<'_, 2> {
         KEEPWARM_W::new(self)
     }
     #[doc = "Bit 3 - On-demand During EM23"]
     #[inline(always)]
     #[must_use]
-    pub fn em23ondemand(&mut self) -> EM23ONDEMAND_W<3> {
+    pub fn em23ondemand(&mut self) -> EM23ONDEMAND_W<'_, 3> {
         EM23ONDEMAND_W::new(self)
     }
     #[doc = "Bit 4 - Force XI Pin to Ground"]
     #[inline(always)]
     #[must_use]
-    pub fn forcexi2gndana(&mut self) -> FORCEXI2GNDANA_W<4> {
+    pub fn forcexi2gndana(&mut self) -> FORCEXI2GNDANA_W<'_, 4> {
         FORCEXI2GNDANA_W::new(self)
     }
     #[doc = "Bit 5 - Force XO Pin to Ground"]
     #[inline(always)]
     #[must_use]
-    pub fn forcexo2gndana(&mut self) -> FORCEXO2GNDANA_W<5> {
+    pub fn forcexo2gndana(&mut self) -> FORCEXO2GNDANA_W<'_, 5> {
         FORCEXO2GNDANA_W::new(self)
     }
     #[doc = "Bit 6 - Force Tuning Cap to Max Value"]
     #[inline(always)]
     #[must_use]
-    pub fn forcectunemax(&mut self) -> FORCECTUNEMAX_W<6> {
+    pub fn forcectunemax(&mut self) -> FORCECTUNEMAX_W<'_, 6> {
         FORCECTUNEMAX_W::new(self)
     }
     #[doc = "Bits 8:11 - PRS Status 0 Output Select"]
     #[inline(always)]
     #[must_use]
-    pub fn prsstatussel0(&mut self) -> PRSSTATUSSEL0_W<8> {
+    pub fn prsstatussel0(&mut self) -> PRSSTATUSSEL0_W<'_, 8> {
         PRSSTATUSSEL0_W::new(self)
     }
     #[doc = "Bits 12:15 - PRS Status 1 Output Select"]
     #[inline(always)]
     #[must_use]
-    pub fn prsstatussel1(&mut self) -> PRSSTATUSSEL1_W<12> {
+    pub fn prsstatussel1(&mut self) -> PRSSTATUSSEL1_W<'_, 12> {
         PRSSTATUSSEL1_W::new(self)
     }
     #[doc = "Bit 16 - Force Digital Clock Request"]
     #[inline(always)]
     #[must_use]
-    pub fn forceen(&mut self) -> FORCEEN_W<16> {
+    pub fn forceen(&mut self) -> FORCEEN_W<'_, 16> {
         FORCEEN_W::new(self)
     }
     #[doc = "Bit 17 - Force PRS Oscillator Request"]
     #[inline(always)]
     #[must_use]
-    pub fn forceenprs(&mut self) -> FORCEENPRS_W<17> {
+    pub fn forceenprs(&mut self) -> FORCEENPRS_W<'_, 17> {
         FORCEENPRS_W::new(self)
     }
     #[doc = "Bit 18 - Force BUFOUT Request"]
     #[inline(always)]
     #[must_use]
-    pub fn forceenbufout(&mut self) -> FORCEENBUFOUT_W<18> {
+    pub fn forceenbufout(&mut self) -> FORCEENBUFOUT_W<'_, 18> {
         FORCEENBUFOUT_W::new(self)
     }
     #[doc = "Bit 24 - Disable On-demand For Digital Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn disondemand(&mut self) -> DISONDEMAND_W<24> {
+    pub fn disondemand(&mut self) -> DISONDEMAND_W<'_, 24> {
         DISONDEMAND_W::new(self)
     }
     #[doc = "Bit 25 - Disable On-demand For PRS"]
     #[inline(always)]
     #[must_use]
-    pub fn disondemandprs(&mut self) -> DISONDEMANDPRS_W<25> {
+    pub fn disondemandprs(&mut self) -> DISONDEMANDPRS_W<'_, 25> {
         DISONDEMANDPRS_W::new(self)
     }
     #[doc = "Bit 26 - Disable On-demand For BUFOUT"]
     #[inline(always)]
     #[must_use]
-    pub fn disondemandbufout(&mut self) -> DISONDEMANDBUFOUT_W<26> {
+    pub fn disondemandbufout(&mut self) -> DISONDEMANDBUFOUT_W<'_, 26> {
         DISONDEMANDBUFOUT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - DECBOD enable"]
     #[inline(always)]
     #[must_use]
-    pub fn decboden(&mut self) -> DECBODEN_W<0> {
+    pub fn decboden(&mut self) -> DECBODEN_W<'_, 0> {
         DECBODEN_W::new(self)
     }
     #[doc = "Bit 1 - DECBOD Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn decbodmask(&mut self) -> DECBODMASK_W<1> {
+    pub fn decbodmask(&mut self) -> DECBODMASK_W<'_, 1> {
         DECBODMASK_W::new(self)
     }
     #[doc = "Bit 4 - Over Voltage Monitor enable"]
     #[inline(always)]
     #[must_use]
-    pub fn decovmboden(&mut self) -> DECOVMBODEN_W<4> {
+    pub fn decovmboden(&mut self) -> DECOVMBODEN_W<'_, 4> {
         DECOVMBODEN_W::new(self)
     }
     #[doc = "Bit 5 - Over Voltage Monitor Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn decovmbodmask(&mut self) -> DECOVMBODMASK_W<5> {
+    pub fn decovmbodmask(&mut self) -> DECOVMBODMASK_W<'_, 5> {
         DECOVMBODMASK_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

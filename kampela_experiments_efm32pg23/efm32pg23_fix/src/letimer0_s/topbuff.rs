@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:23 - Buffered Counter TOP Value"]
     #[inline(always)]
     #[must_use]
-    pub fn topbuff(&mut self) -> TOPBUFF_W<0> {
+    pub fn topbuff(&mut self) -> TOPBUFF_W<'_, 0> {
         TOPBUFF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

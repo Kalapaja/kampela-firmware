@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Output Compare Value Buffer"]
     #[inline(always)]
     #[must_use]
-    pub fn ocb(&mut self) -> OCB_W<0> {
+    pub fn ocb(&mut self) -> OCB_W<'_, 0> {
         OCB_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

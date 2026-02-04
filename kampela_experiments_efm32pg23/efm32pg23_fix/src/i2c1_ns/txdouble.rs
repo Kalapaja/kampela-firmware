@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bits 0:7 - TX Data"]
     #[inline(always)]
     #[must_use]
-    pub fn txdata0(&mut self) -> TXDATA0_W<0> {
+    pub fn txdata0(&mut self) -> TXDATA0_W<'_, 0> {
         TXDATA0_W::new(self)
     }
     #[doc = "Bits 8:15 - TX Data"]
     #[inline(always)]
     #[must_use]
-    pub fn txdata1(&mut self) -> TXDATA1_W<8> {
+    pub fn txdata1(&mut self) -> TXDATA1_W<'_, 8> {
         TXDATA1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

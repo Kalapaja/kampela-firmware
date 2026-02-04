@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:15 - Counter Top Buffer Register"]
     #[inline(always)]
     #[must_use]
-    pub fn topb(&mut self) -> TOPB_W<0> {
+    pub fn topb(&mut self) -> TOPB_W<'_, 0> {
         TOPB_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

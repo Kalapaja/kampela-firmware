@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 1:7 - Follower Address Mask"]
     #[inline(always)]
     #[must_use]
-    pub fn saddrmask(&mut self) -> SADDRMASK_W<1> {
+    pub fn saddrmask(&mut self) -> SADDRMASK_W<'_, 1> {
         SADDRMASK_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

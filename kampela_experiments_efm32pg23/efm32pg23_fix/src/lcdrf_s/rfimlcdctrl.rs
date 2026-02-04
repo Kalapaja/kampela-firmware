@@ -179,31 +179,31 @@ impl W {
     #[doc = "Bit 0 - LCD Charge Pump XO Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdcpxoen(&mut self) -> LCDCPXOEN_W<0> {
+    pub fn lcdcpxoen(&mut self) -> LCDCPXOEN_W<'_, 0> {
         LCDCPXOEN_W::new(self)
     }
     #[doc = "Bit 1 - LCD Charge Pump XO Select"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdcpxosel(&mut self) -> LCDCPXOSEL_W<1> {
+    pub fn lcdcpxosel(&mut self) -> LCDCPXOSEL_W<'_, 1> {
         LCDCPXOSEL_W::new(self)
     }
     #[doc = "Bit 2 - LCD Charge Pump XO Retime Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdcpxoretimeen(&mut self) -> LCDCPXORETIMEEN_W<2> {
+    pub fn lcdcpxoretimeen(&mut self) -> LCDCPXORETIMEEN_W<'_, 2> {
         LCDCPXORETIMEEN_W::new(self)
     }
     #[doc = "Bit 3 - LCD Low Noise"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdlownoise(&mut self) -> LCDLOWNOISE_W<3> {
+    pub fn lcdlownoise(&mut self) -> LCDLOWNOISE_W<'_, 3> {
         LCDLOWNOISE_W::new(self)
     }
     #[doc = "Bit 4 - LCD Comparator Dout"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdcmpdout(&mut self) -> LCDCMPDOUT_W<4> {
+    pub fn lcdcmpdout(&mut self) -> LCDCMPDOUT_W<'_, 4> {
         LCDCMPDOUT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

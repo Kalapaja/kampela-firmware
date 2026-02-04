@@ -223,31 +223,31 @@ impl W {
     #[doc = "Bit 4 - Polynomial Select"]
     #[inline(always)]
     #[must_use]
-    pub fn polysel(&mut self) -> POLYSEL_W<4> {
+    pub fn polysel(&mut self) -> POLYSEL_W<'_, 4> {
         POLYSEL_W::new(self)
     }
     #[doc = "Bit 8 - Byte Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn bytemode(&mut self) -> BYTEMODE_W<8> {
+    pub fn bytemode(&mut self) -> BYTEMODE_W<'_, 8> {
         BYTEMODE_W::new(self)
     }
     #[doc = "Bit 9 - Byte-level Bit Reverse Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn bitreverse(&mut self) -> BITREVERSE_W<9> {
+    pub fn bitreverse(&mut self) -> BITREVERSE_W<'_, 9> {
         BITREVERSE_W::new(self)
     }
     #[doc = "Bit 10 - Byte Reverse Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn bytereverse(&mut self) -> BYTEREVERSE_W<10> {
+    pub fn bytereverse(&mut self) -> BYTEREVERSE_W<'_, 10> {
         BYTEREVERSE_W::new(self)
     }
     #[doc = "Bit 13 - Auto Init Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autoinit(&mut self) -> AUTOINIT_W<13> {
+    pub fn autoinit(&mut self) -> AUTOINIT_W<'_, 13> {
         AUTOINIT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:7 - BUFOUT Tuning Capacitance on XI"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunexibufoutana(&mut self) -> CTUNEXIBUFOUTANA_W<0> {
+    pub fn ctunexibufoutana(&mut self) -> CTUNEXIBUFOUTANA_W<'_, 0> {
         CTUNEXIBUFOUTANA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

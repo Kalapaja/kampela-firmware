@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:6 - Internal Capacitance Tuning"]
     #[inline(always)]
     #[must_use]
-    pub fn captune(&mut self) -> CAPTUNE_W<0> {
+    pub fn captune(&mut self) -> CAPTUNE_W<'_, 0> {
         CAPTUNE_W::new(self)
     }
     #[doc = "Bits 8:9 - LFXO Startup Gain"]
     #[inline(always)]
     #[must_use]
-    pub fn gain(&mut self) -> GAIN_W<8> {
+    pub fn gain(&mut self) -> GAIN_W<'_, 8> {
         GAIN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

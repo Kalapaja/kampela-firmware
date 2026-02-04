@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 8:9 - SYNCTRIG sync channel select"]
     #[inline(always)]
     #[must_use]
-    pub fn sprssel(&mut self) -> SPRSSEL_W<8> {
+    pub fn sprssel(&mut self) -> SPRSSEL_W<'_, 8> {
         SPRSSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 3:22 - Fractional Clock Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn div(&mut self) -> DIV_W<3> {
+    pub fn div(&mut self) -> DIV_W<'_, 3> {
         DIV_W::new(self)
     }
     #[doc = "Bit 31 - AUTOBAUD detection enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autobauden(&mut self) -> AUTOBAUDEN_W<31> {
+    pub fn autobauden(&mut self) -> AUTOBAUDEN_W<'_, 31> {
         AUTOBAUDEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

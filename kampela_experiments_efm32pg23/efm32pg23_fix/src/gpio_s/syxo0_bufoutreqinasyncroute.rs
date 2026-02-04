@@ -60,13 +60,13 @@ impl W {
     #[doc = "Bits 0:1 - BUFOUTREQINASYNC port select register"]
     #[inline(always)]
     #[must_use]
-    pub fn port(&mut self) -> PORT_W<0> {
+    pub fn port(&mut self) -> PORT_W<'_, 0> {
         PORT_W::new(self)
     }
     #[doc = "Bits 16:19 - BUFOUTREQINASYNC pin select register"]
     #[inline(always)]
     #[must_use]
-    pub fn pin(&mut self) -> PIN_W<16> {
+    pub fn pin(&mut self) -> PIN_W<'_, 16> {
         PIN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

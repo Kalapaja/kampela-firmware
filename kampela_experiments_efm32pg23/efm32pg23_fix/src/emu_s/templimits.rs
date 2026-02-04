@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:8 - Temp Low limit"]
     #[inline(always)]
     #[must_use]
-    pub fn templow(&mut self) -> TEMPLOW_W<0> {
+    pub fn templow(&mut self) -> TEMPLOW_W<'_, 0> {
         TEMPLOW_W::new(self)
     }
     #[doc = "Bits 16:24 - Temp High limit"]
     #[inline(always)]
     #[must_use]
-    pub fn temphigh(&mut self) -> TEMPHIGH_W<16> {
+    pub fn temphigh(&mut self) -> TEMPHIGH_W<'_, 16> {
         TEMPHIGH_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

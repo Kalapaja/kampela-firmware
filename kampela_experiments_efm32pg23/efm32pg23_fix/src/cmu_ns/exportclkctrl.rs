@@ -535,25 +535,25 @@ impl W {
     #[doc = "Bits 0:3 - Clock Output Select 0"]
     #[inline(always)]
     #[must_use]
-    pub fn clkoutsel0(&mut self) -> CLKOUTSEL0_W<0> {
+    pub fn clkoutsel0(&mut self) -> CLKOUTSEL0_W<'_, 0> {
         CLKOUTSEL0_W::new(self)
     }
     #[doc = "Bits 8:11 - Clock Output Select 1"]
     #[inline(always)]
     #[must_use]
-    pub fn clkoutsel1(&mut self) -> CLKOUTSEL1_W<8> {
+    pub fn clkoutsel1(&mut self) -> CLKOUTSEL1_W<'_, 8> {
         CLKOUTSEL1_W::new(self)
     }
     #[doc = "Bits 16:19 - Clock Output Select 2"]
     #[inline(always)]
     #[must_use]
-    pub fn clkoutsel2(&mut self) -> CLKOUTSEL2_W<16> {
+    pub fn clkoutsel2(&mut self) -> CLKOUTSEL2_W<'_, 16> {
         CLKOUTSEL2_W::new(self)
     }
     #[doc = "Bits 24:28 - EXPORTCLK Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn presc(&mut self) -> PRESC_W<24> {
+    pub fn presc(&mut self) -> PRESC_W<'_, 24> {
         PRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

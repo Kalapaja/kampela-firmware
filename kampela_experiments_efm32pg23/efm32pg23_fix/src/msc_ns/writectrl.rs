@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Enable Write/Erase Controller"]
     #[inline(always)]
     #[must_use]
-    pub fn wren(&mut self) -> WREN_W<0> {
+    pub fn wren(&mut self) -> WREN_W<'_, 0> {
         WREN_W::new(self)
     }
     #[doc = "Bit 1 - Abort Page Erase on Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn irqeraseabort(&mut self) -> IRQERASEABORT_W<1> {
+    pub fn irqeraseabort(&mut self) -> IRQERASEABORT_W<'_, 1> {
         IRQERASEABORT_W::new(self)
     }
     #[doc = "Bit 3 - Low-Power Write"]
     #[inline(always)]
     #[must_use]
-    pub fn lpwrite(&mut self) -> LPWRITE_W<3> {
+    pub fn lpwrite(&mut self) -> LPWRITE_W<'_, 3> {
         LPWRITE_W::new(self)
     }
     #[doc = "Bits 16:23 - EraseRange Count"]
     #[inline(always)]
     #[must_use]
-    pub fn rangecount(&mut self) -> RANGECOUNT_W<16> {
+    pub fn rangecount(&mut self) -> RANGECOUNT_W<'_, 16> {
         RANGECOUNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

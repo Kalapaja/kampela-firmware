@@ -184,97 +184,97 @@ impl W {
     #[doc = "Bit 8 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn hostmailbox(&mut self) -> HOSTMAILBOX_W<8> {
+    pub fn hostmailbox(&mut self) -> HOSTMAILBOX_W<'_, 8> {
         HOSTMAILBOX_W::new(self)
     }
     #[doc = "Bit 10 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn semailboxhost(&mut self) -> SEMAILBOXHOST_W<10> {
+    pub fn semailboxhost(&mut self) -> SEMAILBOXHOST_W<'_, 10> {
         SEMAILBOXHOST_W::new(self)
     }
     #[doc = "Bit 12 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn lcd(&mut self) -> LCD_W<12> {
+    pub fn lcd(&mut self) -> LCD_W<'_, 12> {
         LCD_W::new(self)
     }
     #[doc = "Bit 13 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn keyscan(&mut self) -> KEYSCAN_W<13> {
+    pub fn keyscan(&mut self) -> KEYSCAN_W<'_, 13> {
         KEYSCAN_W::new(self)
     }
     #[doc = "Bit 14 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn smu(&mut self) -> SMU_W<14> {
+    pub fn smu(&mut self) -> SMU_W<'_, 14> {
         SMU_W::new(self)
     }
     #[doc = "Bit 15 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn icache0(&mut self) -> ICACHE0_W<15> {
+    pub fn icache0(&mut self) -> ICACHE0_W<'_, 15> {
         ICACHE0_W::new(self)
     }
     #[doc = "Bit 16 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn msc(&mut self) -> MSC_W<16> {
+    pub fn msc(&mut self) -> MSC_W<'_, 16> {
         MSC_W::new(self)
     }
     #[doc = "Bit 17 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn wdog1(&mut self) -> WDOG1_W<17> {
+    pub fn wdog1(&mut self) -> WDOG1_W<'_, 17> {
         WDOG1_W::new(self)
     }
     #[doc = "Bit 18 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn acmp0(&mut self) -> ACMP0_W<18> {
+    pub fn acmp0(&mut self) -> ACMP0_W<'_, 18> {
         ACMP0_W::new(self)
     }
     #[doc = "Bit 19 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn acmp1(&mut self) -> ACMP1_W<19> {
+    pub fn acmp1(&mut self) -> ACMP1_W<'_, 19> {
         ACMP1_W::new(self)
     }
     #[doc = "Bit 20 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn vdac0(&mut self) -> VDAC0_W<20> {
+    pub fn vdac0(&mut self) -> VDAC0_W<'_, 20> {
         VDAC0_W::new(self)
     }
     #[doc = "Bit 21 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn pcnt0(&mut self) -> PCNT0_W<21> {
+    pub fn pcnt0(&mut self) -> PCNT0_W<'_, 21> {
         PCNT0_W::new(self)
     }
     #[doc = "Bit 22 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart0(&mut self) -> EUSART0_W<22> {
+    pub fn eusart0(&mut self) -> EUSART0_W<'_, 22> {
         EUSART0_W::new(self)
     }
     #[doc = "Bit 23 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart1(&mut self) -> EUSART1_W<23> {
+    pub fn eusart1(&mut self) -> EUSART1_W<'_, 23> {
         EUSART1_W::new(self)
     }
     #[doc = "Bit 24 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart2(&mut self) -> EUSART2_W<24> {
+    pub fn eusart2(&mut self) -> EUSART2_W<'_, 24> {
         EUSART2_W::new(self)
     }
     #[doc = "Bit 27 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn dmem(&mut self) -> DMEM_W<27> {
+    pub fn dmem(&mut self) -> DMEM_W<'_, 27> {
         DMEM_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

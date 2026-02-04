@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:11 - EXT Int FALL"]
     #[inline(always)]
     #[must_use]
-    pub fn extifall(&mut self) -> EXTIFALL_W<0> {
+    pub fn extifall(&mut self) -> EXTIFALL_W<'_, 0> {
         EXTIFALL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA Debug Halt"]
     #[inline(always)]
     #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<0> {
+    pub fn dbghalt(&mut self) -> DBGHALT_W<'_, 0> {
         DBGHALT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

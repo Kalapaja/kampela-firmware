@@ -33,31 +33,31 @@ impl W {
     #[doc = "Bit 0 - DTI PRS0 Fault Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprs0fc(&mut self) -> DTPRS0FC_W<0> {
+    pub fn dtprs0fc(&mut self) -> DTPRS0FC_W<'_, 0> {
         DTPRS0FC_W::new(self)
     }
     #[doc = "Bit 1 - DTI PRS1 Fault Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprs1fc(&mut self) -> DTPRS1FC_W<1> {
+    pub fn dtprs1fc(&mut self) -> DTPRS1FC_W<'_, 1> {
         DTPRS1FC_W::new(self)
     }
     #[doc = "Bit 2 - DTI Debugger Fault Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn dtdbgfc(&mut self) -> DTDBGFC_W<2> {
+    pub fn dtdbgfc(&mut self) -> DTDBGFC_W<'_, 2> {
         DTDBGFC_W::new(self)
     }
     #[doc = "Bit 3 - DTI Lockup Fault Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn dtlockupfc(&mut self) -> DTLOCKUPFC_W<3> {
+    pub fn dtlockupfc(&mut self) -> DTLOCKUPFC_W<'_, 3> {
         DTLOCKUPFC_W::new(self)
     }
     #[doc = "Bit 4 - DTI EM23 Fault Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn dtem23fc(&mut self) -> DTEM23FC_W<4> {
+    pub fn dtem23fc(&mut self) -> DTEM23FC_W<'_, 4> {
         DTEM23FC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:7 - Enable or disable the done interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone(&mut self) -> CHDONE_W<0> {
+    pub fn chdone(&mut self) -> CHDONE_W<'_, 0> {
         CHDONE_W::new(self)
     }
     #[doc = "Bit 31 - Enable or disable the error interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn error(&mut self) -> ERROR_W<31> {
+    pub fn error(&mut self) -> ERROR_W<'_, 31> {
         ERROR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -292,19 +292,19 @@ impl W {
     #[doc = "Bits 18:19 - PRS Start Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn prsstartmode(&mut self) -> PRSSTARTMODE_W<18> {
+    pub fn prsstartmode(&mut self) -> PRSSTARTMODE_W<'_, 18> {
         PRSSTARTMODE_W::new(self)
     }
     #[doc = "Bits 22:23 - PRS Stop Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn prsstopmode(&mut self) -> PRSSTOPMODE_W<22> {
+    pub fn prsstopmode(&mut self) -> PRSSTOPMODE_W<'_, 22> {
         PRSSTOPMODE_W::new(self)
     }
     #[doc = "Bits 26:27 - PRS Clear Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn prsclearmode(&mut self) -> PRSCLEARMODE_W<26> {
+    pub fn prsclearmode(&mut self) -> PRSCLEARMODE_W<'_, 26> {
         PRSCLEARMODE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

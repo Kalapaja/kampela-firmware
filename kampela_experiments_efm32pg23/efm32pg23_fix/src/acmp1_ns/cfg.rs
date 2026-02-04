@@ -320,25 +320,25 @@ impl W {
     #[doc = "Bits 0:2 - Bias Configuration"]
     #[inline(always)]
     #[must_use]
-    pub fn bias(&mut self) -> BIAS_W<0> {
+    pub fn bias(&mut self) -> BIAS_W<'_, 0> {
         BIAS_W::new(self)
     }
     #[doc = "Bits 8:11 - Hysteresis mode"]
     #[inline(always)]
     #[must_use]
-    pub fn hyst(&mut self) -> HYST_W<8> {
+    pub fn hyst(&mut self) -> HYST_W<'_, 8> {
         HYST_W::new(self)
     }
     #[doc = "Bit 16 - Input Range"]
     #[inline(always)]
     #[must_use]
-    pub fn inputrange(&mut self) -> INPUTRANGE_W<16> {
+    pub fn inputrange(&mut self) -> INPUTRANGE_W<'_, 16> {
         INPUTRANGE_W::new(self)
     }
     #[doc = "Bit 17 - ACMP accuracy mode"]
     #[inline(always)]
     #[must_use]
-    pub fn accuracy(&mut self) -> ACCURACY_W<17> {
+    pub fn accuracy(&mut self) -> ACCURACY_W<'_, 17> {
         ACCURACY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

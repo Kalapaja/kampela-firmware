@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:8 - Frame Rate Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn frdiv(&mut self) -> FRDIV_W<0> {
+    pub fn frdiv(&mut self) -> FRDIV_W<'_, 0> {
         FRDIV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -113,19 +113,19 @@ impl W {
     #[doc = "Bits 0:23 - Ten Milliseconds"]
     #[inline(always)]
     #[must_use]
-    pub fn tenms(&mut self) -> TENMS_W<0> {
+    pub fn tenms(&mut self) -> TENMS_W<'_, 0> {
         TENMS_W::new(self)
     }
     #[doc = "Bit 24 - Skew"]
     #[inline(always)]
     #[must_use]
-    pub fn skew(&mut self) -> SKEW_W<24> {
+    pub fn skew(&mut self) -> SKEW_W<'_, 24> {
         SKEW_W::new(self)
     }
     #[doc = "Bit 25 - No Reference"]
     #[inline(always)]
     #[must_use]
-    pub fn noref(&mut self) -> NOREF_W<25> {
+    pub fn noref(&mut self) -> NOREF_W<'_, 25> {
         NOREF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

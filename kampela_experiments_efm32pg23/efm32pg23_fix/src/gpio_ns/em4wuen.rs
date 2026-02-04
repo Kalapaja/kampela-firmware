@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 16:27 - EM4 wake up enable"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuen(&mut self) -> EM4WUEN_W<16> {
+    pub fn em4wuen(&mut self) -> EM4WUEN_W<'_, 16> {
         EM4WUEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

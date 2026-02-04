@@ -46,7 +46,7 @@ impl W {
     #[doc = "Bits 0:23 - No Description"]
     #[inline(always)]
     #[must_use]
-    pub fn smulockkey(&mut self) -> SMULOCKKEY_W<0> {
+    pub fn smulockkey(&mut self) -> SMULOCKKEY_W<'_, 0> {
         SMULOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -351,25 +351,25 @@ impl W {
     #[doc = "Bits 0:2 - Alignment"]
     #[inline(always)]
     #[must_use]
-    pub fn alignment(&mut self) -> ALIGNMENT_W<0> {
+    pub fn alignment(&mut self) -> ALIGNMENT_W<'_, 0> {
         ALIGNMENT_W::new(self)
     }
     #[doc = "Bit 3 - Show ID"]
     #[inline(always)]
     #[must_use]
-    pub fn showid(&mut self) -> SHOWID_W<3> {
+    pub fn showid(&mut self) -> SHOWID_W<'_, 3> {
         SHOWID_W::new(self)
     }
     #[doc = "Bits 4:6 - Data Valid Level"]
     #[inline(always)]
     #[must_use]
-    pub fn dvl(&mut self) -> DVL_W<4> {
+    pub fn dvl(&mut self) -> DVL_W<'_, 4> {
         DVL_W::new(self)
     }
     #[doc = "Bit 8 - Single FIFO DMA wakeup."]
     #[inline(always)]
     #[must_use]
-    pub fn dmawufifosingle(&mut self) -> DMAWUFIFOSINGLE_W<8> {
+    pub fn dmawufifosingle(&mut self) -> DMAWUFIFOSINGLE_W<'_, 8> {
         DMAWUFIFOSINGLE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Cache Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn cachedis(&mut self) -> CACHEDIS_W<0> {
+    pub fn cachedis(&mut self) -> CACHEDIS_W<'_, 0> {
         CACHEDIS_W::new(self)
     }
     #[doc = "Bit 1 - Use MPU"]
     #[inline(always)]
     #[must_use]
-    pub fn usempu(&mut self) -> USEMPU_W<1> {
+    pub fn usempu(&mut self) -> USEMPU_W<'_, 1> {
         USEMPU_W::new(self)
     }
     #[doc = "Bit 2 - Automatic Flushing Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn autoflushdis(&mut self) -> AUTOFLUSHDIS_W<2> {
+    pub fn autoflushdis(&mut self) -> AUTOFLUSHDIS_W<'_, 2> {
         AUTOFLUSHDIS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -907,85 +907,85 @@ impl W {
     #[doc = "Bit 0 - Soft Reset the internal state registers"]
     #[inline(always)]
     #[must_use]
-    pub fn corerst(&mut self) -> CORERST_W<0> {
+    pub fn corerst(&mut self) -> CORERST_W<'_, 0> {
         CORERST_W::new(self)
     }
     #[doc = "Bit 1 - Addressable as Follower"]
     #[inline(always)]
     #[must_use]
-    pub fn slave(&mut self) -> SLAVE_W<1> {
+    pub fn slave(&mut self) -> SLAVE_W<'_, 1> {
         SLAVE_W::new(self)
     }
     #[doc = "Bit 2 - Automatic Acknowledge"]
     #[inline(always)]
     #[must_use]
-    pub fn autoack(&mut self) -> AUTOACK_W<2> {
+    pub fn autoack(&mut self) -> AUTOACK_W<'_, 2> {
         AUTOACK_W::new(self)
     }
     #[doc = "Bit 3 - Automatic STOP when Empty"]
     #[inline(always)]
     #[must_use]
-    pub fn autose(&mut self) -> AUTOSE_W<3> {
+    pub fn autose(&mut self) -> AUTOSE_W<'_, 3> {
         AUTOSE_W::new(self)
     }
     #[doc = "Bit 4 - Automatic STOP on NACK"]
     #[inline(always)]
     #[must_use]
-    pub fn autosn(&mut self) -> AUTOSN_W<4> {
+    pub fn autosn(&mut self) -> AUTOSN_W<'_, 4> {
         AUTOSN_W::new(self)
     }
     #[doc = "Bit 5 - Arbitration Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn arbdis(&mut self) -> ARBDIS_W<5> {
+    pub fn arbdis(&mut self) -> ARBDIS_W<'_, 5> {
         ARBDIS_W::new(self)
     }
     #[doc = "Bit 6 - General Call Address Match Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn gcamen(&mut self) -> GCAMEN_W<6> {
+    pub fn gcamen(&mut self) -> GCAMEN_W<'_, 6> {
         GCAMEN_W::new(self)
     }
     #[doc = "Bit 7 - TX Buffer Interrupt Level"]
     #[inline(always)]
     #[must_use]
-    pub fn txbil(&mut self) -> TXBIL_W<7> {
+    pub fn txbil(&mut self) -> TXBIL_W<'_, 7> {
         TXBIL_W::new(self)
     }
     #[doc = "Bits 8:9 - Clock Low High Ratio"]
     #[inline(always)]
     #[must_use]
-    pub fn clhr(&mut self) -> CLHR_W<8> {
+    pub fn clhr(&mut self) -> CLHR_W<'_, 8> {
         CLHR_W::new(self)
     }
     #[doc = "Bits 12:13 - Bus Idle Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn bito(&mut self) -> BITO_W<12> {
+    pub fn bito(&mut self) -> BITO_W<'_, 12> {
         BITO_W::new(self)
     }
     #[doc = "Bit 15 - Go Idle on Bus Idle Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn gibito(&mut self) -> GIBITO_W<15> {
+    pub fn gibito(&mut self) -> GIBITO_W<'_, 15> {
         GIBITO_W::new(self)
     }
     #[doc = "Bits 16:18 - Clock Low Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn clto(&mut self) -> CLTO_W<16> {
+    pub fn clto(&mut self) -> CLTO_W<'_, 16> {
         CLTO_W::new(self)
     }
     #[doc = "Bit 20 - SCL Monitor Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sclmonen(&mut self) -> SCLMONEN_W<20> {
+    pub fn sclmonen(&mut self) -> SCLMONEN_W<'_, 20> {
         SCLMONEN_W::new(self)
     }
     #[doc = "Bit 21 - SDA Monitor Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sdamonen(&mut self) -> SDAMONEN_W<21> {
+    pub fn sdamonen(&mut self) -> SDAMONEN_W<'_, 21> {
         SDAMONEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

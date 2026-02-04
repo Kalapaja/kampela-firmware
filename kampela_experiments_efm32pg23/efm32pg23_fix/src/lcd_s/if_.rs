@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Frame Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn fc(&mut self) -> FC_W<0> {
+    pub fn fc(&mut self) -> FC_W<'_, 0> {
         FC_W::new(self)
     }
     #[doc = "Bit 1 - Display Update Event"]
     #[inline(always)]
     #[must_use]
-    pub fn display(&mut self) -> DISPLAY_W<1> {
+    pub fn display(&mut self) -> DISPLAY_W<'_, 1> {
         DISPLAY_W::new(self)
     }
     #[doc = "Bit 2 - Synchronization is Done"]
     #[inline(always)]
     #[must_use]
-    pub fn syncbusydone(&mut self) -> SYNCBUSYDONE_W<2> {
+    pub fn syncbusydone(&mut self) -> SYNCBUSYDONE_W<'_, 2> {
         SYNCBUSYDONE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -94,37 +94,37 @@ impl W {
     #[doc = "Bit 0 - Serial Wire Viewer Output Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn swvpen(&mut self) -> SWVPEN_W<0> {
+    pub fn swvpen(&mut self) -> SWVPEN_W<'_, 0> {
         SWVPEN_W::new(self)
     }
     #[doc = "Bit 1 - Trace Clk Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn traceclkpen(&mut self) -> TRACECLKPEN_W<1> {
+    pub fn traceclkpen(&mut self) -> TRACECLKPEN_W<'_, 1> {
         TRACECLKPEN_W::new(self)
     }
     #[doc = "Bit 2 - Trace Data0 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tracedata0pen(&mut self) -> TRACEDATA0PEN_W<2> {
+    pub fn tracedata0pen(&mut self) -> TRACEDATA0PEN_W<'_, 2> {
         TRACEDATA0PEN_W::new(self)
     }
     #[doc = "Bit 3 - Trace Data1 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tracedata1pen(&mut self) -> TRACEDATA1PEN_W<3> {
+    pub fn tracedata1pen(&mut self) -> TRACEDATA1PEN_W<'_, 3> {
         TRACEDATA1PEN_W::new(self)
     }
     #[doc = "Bit 4 - Trace Data2 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tracedata2pen(&mut self) -> TRACEDATA2PEN_W<4> {
+    pub fn tracedata2pen(&mut self) -> TRACEDATA2PEN_W<'_, 4> {
         TRACEDATA2PEN_W::new(self)
     }
     #[doc = "Bit 5 - Trace Data3 Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tracedata3pen(&mut self) -> TRACEDATA3PEN_W<5> {
+    pub fn tracedata3pen(&mut self) -> TRACEDATA3PEN_W<'_, 5> {
         TRACEDATA3PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

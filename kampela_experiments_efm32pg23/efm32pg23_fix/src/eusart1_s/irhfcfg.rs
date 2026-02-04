@@ -188,19 +188,19 @@ impl W {
     #[doc = "Bit 0 - Enable IrDA Module"]
     #[inline(always)]
     #[must_use]
-    pub fn irhfen(&mut self) -> IRHFEN_W<0> {
+    pub fn irhfen(&mut self) -> IRHFEN_W<'_, 0> {
         IRHFEN_W::new(self)
     }
     #[doc = "Bits 1:2 - IrDA TX Pulse Width"]
     #[inline(always)]
     #[must_use]
-    pub fn irhfpw(&mut self) -> IRHFPW_W<1> {
+    pub fn irhfpw(&mut self) -> IRHFPW_W<'_, 1> {
         IRHFPW_W::new(self)
     }
     #[doc = "Bit 3 - IrDA RX Filter"]
     #[inline(always)]
     #[must_use]
-    pub fn irhffilt(&mut self) -> IRHFFILT_W<3> {
+    pub fn irhffilt(&mut self) -> IRHFFILT_W<'_, 3> {
         IRHFFILT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

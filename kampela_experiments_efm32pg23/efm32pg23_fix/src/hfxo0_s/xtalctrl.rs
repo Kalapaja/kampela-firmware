@@ -244,37 +244,37 @@ impl W {
     #[doc = "Bits 0:7 - Core Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasana(&mut self) -> COREBIASANA_W<0> {
+    pub fn corebiasana(&mut self) -> COREBIASANA_W<'_, 0> {
         COREBIASANA_W::new(self)
     }
     #[doc = "Bits 8:15 - Tuning Capacitance on XI"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunexiana(&mut self) -> CTUNEXIANA_W<8> {
+    pub fn ctunexiana(&mut self) -> CTUNEXIANA_W<'_, 8> {
         CTUNEXIANA_W::new(self)
     }
     #[doc = "Bits 16:23 - Tuning Capacitance on XO"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunexoana(&mut self) -> CTUNEXOANA_W<16> {
+    pub fn ctunexoana(&mut self) -> CTUNEXOANA_W<'_, 16> {
         CTUNEXOANA_W::new(self)
     }
     #[doc = "Bits 24:25 - Fixed Tuning Capacitance"]
     #[inline(always)]
     #[must_use]
-    pub fn ctunefixana(&mut self) -> CTUNEFIXANA_W<24> {
+    pub fn ctunefixana(&mut self) -> CTUNEFIXANA_W<'_, 24> {
         CTUNEFIXANA_W::new(self)
     }
     #[doc = "Bits 26:27 - Core Degeneration"]
     #[inline(always)]
     #[must_use]
-    pub fn coredgenana(&mut self) -> COREDGENANA_W<26> {
+    pub fn coredgenana(&mut self) -> COREDGENANA_W<'_, 26> {
         COREDGENANA_W::new(self)
     }
     #[doc = "Bit 31 - Skip Core Bias Optimization"]
     #[inline(always)]
     #[must_use]
-    pub fn skipcorebiasopt(&mut self) -> SKIPCOREBIASOPT_W<31> {
+    pub fn skipcorebiasopt(&mut self) -> SKIPCOREBIASOPT_W<'_, 31> {
         SKIPCOREBIASOPT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

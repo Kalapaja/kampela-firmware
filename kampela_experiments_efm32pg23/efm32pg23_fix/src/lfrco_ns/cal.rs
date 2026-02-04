@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:7 - Frequency Trim"]
     #[inline(always)]
     #[must_use]
-    pub fn freqtrim(&mut self) -> FREQTRIM_W<0> {
+    pub fn freqtrim(&mut self) -> FREQTRIM_W<'_, 0> {
         FREQTRIM_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

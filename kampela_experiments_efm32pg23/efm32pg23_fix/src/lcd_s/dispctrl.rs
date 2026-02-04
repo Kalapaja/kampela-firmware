@@ -358,25 +358,25 @@ impl W {
     #[doc = "Bits 0:2 - Mux Configuration"]
     #[inline(always)]
     #[must_use]
-    pub fn mux(&mut self) -> MUX_W<0> {
+    pub fn mux(&mut self) -> MUX_W<'_, 0> {
         MUX_W::new(self)
     }
     #[doc = "Bit 4 - Waveform Selection"]
     #[inline(always)]
     #[must_use]
-    pub fn wave(&mut self) -> WAVE_W<4> {
+    pub fn wave(&mut self) -> WAVE_W<'_, 4> {
         WAVE_W::new(self)
     }
     #[doc = "Bits 20:22 - Charge Redistribution Cycles"]
     #[inline(always)]
     #[must_use]
-    pub fn chgrdst(&mut self) -> CHGRDST_W<20> {
+    pub fn chgrdst(&mut self) -> CHGRDST_W<'_, 20> {
         CHGRDST_W::new(self)
     }
     #[doc = "Bits 24:25 - Bias Configuration"]
     #[inline(always)]
     #[must_use]
-    pub fn bias(&mut self) -> BIAS_W<24> {
+    pub fn bias(&mut self) -> BIAS_W<'_, 24> {
         BIAS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

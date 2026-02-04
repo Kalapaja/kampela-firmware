@@ -277,31 +277,31 @@ impl W {
     #[doc = "Bits 0:17 - Clock Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn clkdiv(&mut self) -> CLKDIV_W<0> {
+    pub fn clkdiv(&mut self) -> CLKDIV_W<'_, 0> {
         CLKDIV_W::new(self)
     }
     #[doc = "Bit 20 - Single Press"]
     #[inline(always)]
     #[must_use]
-    pub fn singlepress(&mut self) -> SINGLEPRESS_W<20> {
+    pub fn singlepress(&mut self) -> SINGLEPRESS_W<'_, 20> {
         SINGLEPRESS_W::new(self)
     }
     #[doc = "Bit 22 - Automatically Start"]
     #[inline(always)]
     #[must_use]
-    pub fn autostart(&mut self) -> AUTOSTART_W<22> {
+    pub fn autostart(&mut self) -> AUTOSTART_W<'_, 22> {
         AUTOSTART_W::new(self)
     }
     #[doc = "Bits 24:26 - Number of Rows"]
     #[inline(always)]
     #[must_use]
-    pub fn numrows(&mut self) -> NUMROWS_W<24> {
+    pub fn numrows(&mut self) -> NUMROWS_W<'_, 24> {
         NUMROWS_W::new(self)
     }
     #[doc = "Bits 28:30 - Number of Columns"]
     #[inline(always)]
     #[must_use]
-    pub fn numcols(&mut self) -> NUMCOLS_W<28> {
+    pub fn numcols(&mut self) -> NUMCOLS_W<'_, 28> {
         NUMCOLS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

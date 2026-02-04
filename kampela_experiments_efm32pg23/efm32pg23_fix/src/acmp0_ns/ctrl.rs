@@ -150,13 +150,13 @@ impl W {
     #[doc = "Bit 0 - Not Ready Value"]
     #[inline(always)]
     #[must_use]
-    pub fn notrdyval(&mut self) -> NOTRDYVAL_W<0> {
+    pub fn notrdyval(&mut self) -> NOTRDYVAL_W<'_, 0> {
         NOTRDYVAL_W::new(self)
     }
     #[doc = "Bit 1 - Comparator GPIO Output Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn gpioinv(&mut self) -> GPIOINV_W<1> {
+    pub fn gpioinv(&mut self) -> GPIOINV_W<'_, 1> {
         GPIOINV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

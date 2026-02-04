@@ -712,49 +712,49 @@ impl W {
     #[doc = "Bits 0:1 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel0(&mut self) -> EXTIPSEL0_W<0> {
+    pub fn extipsel0(&mut self) -> EXTIPSEL0_W<'_, 0> {
         EXTIPSEL0_W::new(self)
     }
     #[doc = "Bits 4:5 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel1(&mut self) -> EXTIPSEL1_W<4> {
+    pub fn extipsel1(&mut self) -> EXTIPSEL1_W<'_, 4> {
         EXTIPSEL1_W::new(self)
     }
     #[doc = "Bits 8:9 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel2(&mut self) -> EXTIPSEL2_W<8> {
+    pub fn extipsel2(&mut self) -> EXTIPSEL2_W<'_, 8> {
         EXTIPSEL2_W::new(self)
     }
     #[doc = "Bits 12:13 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel3(&mut self) -> EXTIPSEL3_W<12> {
+    pub fn extipsel3(&mut self) -> EXTIPSEL3_W<'_, 12> {
         EXTIPSEL3_W::new(self)
     }
     #[doc = "Bits 16:17 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel4(&mut self) -> EXTIPSEL4_W<16> {
+    pub fn extipsel4(&mut self) -> EXTIPSEL4_W<'_, 16> {
         EXTIPSEL4_W::new(self)
     }
     #[doc = "Bits 20:21 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel5(&mut self) -> EXTIPSEL5_W<20> {
+    pub fn extipsel5(&mut self) -> EXTIPSEL5_W<'_, 20> {
         EXTIPSEL5_W::new(self)
     }
     #[doc = "Bits 24:25 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel6(&mut self) -> EXTIPSEL6_W<24> {
+    pub fn extipsel6(&mut self) -> EXTIPSEL6_W<'_, 24> {
         EXTIPSEL6_W::new(self)
     }
     #[doc = "Bits 28:29 - External Interrupt Port Select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipsel7(&mut self) -> EXTIPSEL7_W<28> {
+    pub fn extipsel7(&mut self) -> EXTIPSEL7_W<'_, 28> {
         EXTIPSEL7_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

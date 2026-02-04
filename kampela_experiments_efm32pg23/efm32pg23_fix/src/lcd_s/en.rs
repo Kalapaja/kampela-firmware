@@ -102,7 +102,7 @@ impl W {
     #[doc = "Bit 0 - Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn en(&mut self) -> EN_W<0> {
+    pub fn en(&mut self) -> EN_W<'_, 0> {
         EN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

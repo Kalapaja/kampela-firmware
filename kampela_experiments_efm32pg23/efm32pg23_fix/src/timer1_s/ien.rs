@@ -175,91 +175,91 @@ impl W {
     #[doc = "Bit 0 - Overflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn of(&mut self) -> OF_W<0> {
+    pub fn of(&mut self) -> OF_W<'_, 0> {
         OF_W::new(self)
     }
     #[doc = "Bit 1 - Underflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn uf(&mut self) -> UF_W<1> {
+    pub fn uf(&mut self) -> UF_W<'_, 1> {
         UF_W::new(self)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dirchg(&mut self) -> DIRCHG_W<2> {
+    pub fn dirchg(&mut self) -> DIRCHG_W<'_, 2> {
         DIRCHG_W::new(self)
     }
     #[doc = "Bit 4 - CC0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cc0(&mut self) -> CC0_W<4> {
+    pub fn cc0(&mut self) -> CC0_W<'_, 4> {
         CC0_W::new(self)
     }
     #[doc = "Bit 5 - CC1 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cc1(&mut self) -> CC1_W<5> {
+    pub fn cc1(&mut self) -> CC1_W<'_, 5> {
         CC1_W::new(self)
     }
     #[doc = "Bit 6 - CC2 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cc2(&mut self) -> CC2_W<6> {
+    pub fn cc2(&mut self) -> CC2_W<'_, 6> {
         CC2_W::new(self)
     }
     #[doc = "Bit 16 - ICFWLFULL0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfwlfull0(&mut self) -> ICFWLFULL0_W<16> {
+    pub fn icfwlfull0(&mut self) -> ICFWLFULL0_W<'_, 16> {
         ICFWLFULL0_W::new(self)
     }
     #[doc = "Bit 17 - ICFWLFULL1 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfwlfull1(&mut self) -> ICFWLFULL1_W<17> {
+    pub fn icfwlfull1(&mut self) -> ICFWLFULL1_W<'_, 17> {
         ICFWLFULL1_W::new(self)
     }
     #[doc = "Bit 18 - ICFWLFULL2 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfwlfull2(&mut self) -> ICFWLFULL2_W<18> {
+    pub fn icfwlfull2(&mut self) -> ICFWLFULL2_W<'_, 18> {
         ICFWLFULL2_W::new(self)
     }
     #[doc = "Bit 20 - ICFOF0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfof0(&mut self) -> ICFOF0_W<20> {
+    pub fn icfof0(&mut self) -> ICFOF0_W<'_, 20> {
         ICFOF0_W::new(self)
     }
     #[doc = "Bit 21 - ICFOF1 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfof1(&mut self) -> ICFOF1_W<21> {
+    pub fn icfof1(&mut self) -> ICFOF1_W<'_, 21> {
         ICFOF1_W::new(self)
     }
     #[doc = "Bit 22 - ICFOF2 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfof2(&mut self) -> ICFOF2_W<22> {
+    pub fn icfof2(&mut self) -> ICFOF2_W<'_, 22> {
         ICFOF2_W::new(self)
     }
     #[doc = "Bit 24 - ICFUF0 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfuf0(&mut self) -> ICFUF0_W<24> {
+    pub fn icfuf0(&mut self) -> ICFUF0_W<'_, 24> {
         ICFUF0_W::new(self)
     }
     #[doc = "Bit 25 - ICFUF1 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfuf1(&mut self) -> ICFUF1_W<25> {
+    pub fn icfuf1(&mut self) -> ICFUF1_W<'_, 25> {
         ICFUF1_W::new(self)
     }
     #[doc = "Bit 26 - ICFUF2 Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn icfuf2(&mut self) -> ICFUF2_W<26> {
+    pub fn icfuf2(&mut self) -> ICFUF2_W<'_, 26> {
         ICFUF2_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

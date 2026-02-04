@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Route Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn swclktckpen(&mut self) -> SWCLKTCKPEN_W<0> {
+    pub fn swclktckpen(&mut self) -> SWCLKTCKPEN_W<'_, 0> {
         SWCLKTCKPEN_W::new(self)
     }
     #[doc = "Bit 1 - Route Location 0"]
     #[inline(always)]
     #[must_use]
-    pub fn swdiotmspen(&mut self) -> SWDIOTMSPEN_W<1> {
+    pub fn swdiotmspen(&mut self) -> SWDIOTMSPEN_W<'_, 1> {
         SWDIOTMSPEN_W::new(self)
     }
     #[doc = "Bit 2 - JTAG Test Debug Output Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tdopen(&mut self) -> TDOPEN_W<2> {
+    pub fn tdopen(&mut self) -> TDOPEN_W<'_, 2> {
         TDOPEN_W::new(self)
     }
     #[doc = "Bit 3 - JTAG Test Debug Input Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tdipen(&mut self) -> TDIPEN_W<3> {
+    pub fn tdipen(&mut self) -> TDIPEN_W<'_, 3> {
         TDIPEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

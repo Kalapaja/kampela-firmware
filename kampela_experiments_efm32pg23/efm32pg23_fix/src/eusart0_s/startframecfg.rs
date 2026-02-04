@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 0:8 - Start Frame"]
     #[inline(always)]
     #[must_use]
-    pub fn startframe(&mut self) -> STARTFRAME_W<0> {
+    pub fn startframe(&mut self) -> STARTFRAME_W<'_, 0> {
         STARTFRAME_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

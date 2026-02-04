@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Lock Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn lock(&mut self) -> LOCK_W<0> {
+    pub fn lock(&mut self) -> LOCK_W<'_, 0> {
         LOCK_W::new(self)
     }
     #[doc = "Bit 1 - Lock Failure Low Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn lockfaillow(&mut self) -> LOCKFAILLOW_W<1> {
+    pub fn lockfaillow(&mut self) -> LOCKFAILLOW_W<'_, 1> {
         LOCKFAILLOW_W::new(self)
     }
     #[doc = "Bit 2 - Lock Failure High Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn lockfailhigh(&mut self) -> LOCKFAILHIGH_W<2> {
+    pub fn lockfailhigh(&mut self) -> LOCKFAILHIGH_W<'_, 2> {
         LOCKFAILHIGH_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

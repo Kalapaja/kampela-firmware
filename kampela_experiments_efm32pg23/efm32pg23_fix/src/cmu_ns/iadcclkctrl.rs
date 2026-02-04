@@ -111,7 +111,7 @@ impl W {
     #[doc = "Bits 0:1 - Clock Select"]
     #[inline(always)]
     #[must_use]
-    pub fn clksel(&mut self) -> CLKSEL_W<0> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, 0> {
         CLKSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -238,133 +238,133 @@ impl W {
     #[doc = "Bit 0 - SYSRTC Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn sysrtc(&mut self) -> SYSRTC_W<0> {
+    pub fn sysrtc(&mut self) -> SYSRTC_W<'_, 0> {
         SYSRTC_W::new(self)
     }
     #[doc = "Bit 1 - LCD Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn lcd(&mut self) -> LCD_W<1> {
+    pub fn lcd(&mut self) -> LCD_W<'_, 1> {
         LCD_W::new(self)
     }
     #[doc = "Bit 2 - KEYSCAN Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn keyscan(&mut self) -> KEYSCAN_W<2> {
+    pub fn keyscan(&mut self) -> KEYSCAN_W<'_, 2> {
         KEYSCAN_W::new(self)
     }
     #[doc = "Bit 3 - DMEM Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn dmem(&mut self) -> DMEM_W<3> {
+    pub fn dmem(&mut self) -> DMEM_W<'_, 3> {
         DMEM_W::new(self)
     }
     #[doc = "Bit 4 - LCDRF Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdrf(&mut self) -> LCDRF_W<4> {
+    pub fn lcdrf(&mut self) -> LCDRF_W<'_, 4> {
         LCDRF_W::new(self)
     }
     #[doc = "Bit 7 - SMU Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn smu(&mut self) -> SMU_W<7> {
+    pub fn smu(&mut self) -> SMU_W<'_, 7> {
         SMU_W::new(self)
     }
     #[doc = "Bit 8 - SMUCFGNS Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn smucfgns(&mut self) -> SMUCFGNS_W<8> {
+    pub fn smucfgns(&mut self) -> SMUCFGNS_W<'_, 8> {
         SMUCFGNS_W::new(self)
     }
     #[doc = "Bit 9 - LETIMER0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn letimer0(&mut self) -> LETIMER0_W<9> {
+    pub fn letimer0(&mut self) -> LETIMER0_W<'_, 9> {
         LETIMER0_W::new(self)
     }
     #[doc = "Bit 10 - IADC0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn iadc0(&mut self) -> IADC0_W<10> {
+    pub fn iadc0(&mut self) -> IADC0_W<'_, 10> {
         IADC0_W::new(self)
     }
     #[doc = "Bit 11 - ACMP0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn acmp0(&mut self) -> ACMP0_W<11> {
+    pub fn acmp0(&mut self) -> ACMP0_W<'_, 11> {
         ACMP0_W::new(self)
     }
     #[doc = "Bit 12 - ACMP1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn acmp1(&mut self) -> ACMP1_W<12> {
+    pub fn acmp1(&mut self) -> ACMP1_W<'_, 12> {
         ACMP1_W::new(self)
     }
     #[doc = "Bit 13 - AMUXCP0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn amuxcp0(&mut self) -> AMUXCP0_W<13> {
+    pub fn amuxcp0(&mut self) -> AMUXCP0_W<'_, 13> {
         AMUXCP0_W::new(self)
     }
     #[doc = "Bit 14 - VDAC0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn vdac0(&mut self) -> VDAC0_W<14> {
+    pub fn vdac0(&mut self) -> VDAC0_W<'_, 14> {
         VDAC0_W::new(self)
     }
     #[doc = "Bit 15 - PCNT Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn pcnt(&mut self) -> PCNT_W<15> {
+    pub fn pcnt(&mut self) -> PCNT_W<'_, 15> {
         PCNT_W::new(self)
     }
     #[doc = "Bit 16 - LESENSE Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn lesense(&mut self) -> LESENSE_W<16> {
+    pub fn lesense(&mut self) -> LESENSE_W<'_, 16> {
         LESENSE_W::new(self)
     }
     #[doc = "Bit 17 - HFRCO1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn hfrco1(&mut self) -> HFRCO1_W<17> {
+    pub fn hfrco1(&mut self) -> HFRCO1_W<'_, 17> {
         HFRCO1_W::new(self)
     }
     #[doc = "Bit 18 - HFXO0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn hfxo0(&mut self) -> HFXO0_W<18> {
+    pub fn hfxo0(&mut self) -> HFXO0_W<'_, 18> {
         HFXO0_W::new(self)
     }
     #[doc = "Bit 19 - I2C0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn i2c0(&mut self) -> I2C0_W<19> {
+    pub fn i2c0(&mut self) -> I2C0_W<'_, 19> {
         I2C0_W::new(self)
     }
     #[doc = "Bit 20 - WDOG0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn wdog0(&mut self) -> WDOG0_W<20> {
+    pub fn wdog0(&mut self) -> WDOG0_W<'_, 20> {
         WDOG0_W::new(self)
     }
     #[doc = "Bit 21 - WDOG1 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn wdog1(&mut self) -> WDOG1_W<21> {
+    pub fn wdog1(&mut self) -> WDOG1_W<'_, 21> {
         WDOG1_W::new(self)
     }
     #[doc = "Bit 22 - EUSART0 Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn eusart0(&mut self) -> EUSART0_W<22> {
+    pub fn eusart0(&mut self) -> EUSART0_W<'_, 22> {
         EUSART0_W::new(self)
     }
     #[doc = "Bit 23 - SEMAILBOX Privileged Access"]
     #[inline(always)]
     #[must_use]
-    pub fn semailbox(&mut self) -> SEMAILBOX_W<23> {
+    pub fn semailbox(&mut self) -> SEMAILBOX_W<'_, 23> {
         SEMAILBOX_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

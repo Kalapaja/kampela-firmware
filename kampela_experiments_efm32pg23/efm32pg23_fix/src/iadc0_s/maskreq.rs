@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:15 - Scan Queue Mask Request"]
     #[inline(always)]
     #[must_use]
-    pub fn maskreq(&mut self) -> MASKREQ_W<0> {
+    pub fn maskreq(&mut self) -> MASKREQ_W<'_, 0> {
         MASKREQ_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

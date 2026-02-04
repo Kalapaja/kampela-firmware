@@ -89,31 +89,31 @@ impl W {
     #[doc = "Bit 0 - LDMA portmap selection"]
     #[inline(always)]
     #[must_use]
-    pub fn ldmaportsel(&mut self) -> LDMAPORTSEL_W<0> {
+    pub fn ldmaportsel(&mut self) -> LDMAPORTSEL_W<'_, 0> {
         LDMAPORTSEL_W::new(self)
     }
     #[doc = "Bit 1 - SRWAES portmap selection"]
     #[inline(always)]
     #[must_use]
-    pub fn srwaesportsel(&mut self) -> SRWAESPORTSEL_W<1> {
+    pub fn srwaesportsel(&mut self) -> SRWAESPORTSEL_W<'_, 1> {
         SRWAESPORTSEL_W::new(self)
     }
     #[doc = "Bit 2 - AHBSRW portmap selection"]
     #[inline(always)]
     #[must_use]
-    pub fn ahbsrwportsel(&mut self) -> AHBSRWPORTSEL_W<2> {
+    pub fn ahbsrwportsel(&mut self) -> AHBSRWPORTSEL_W<'_, 2> {
         AHBSRWPORTSEL_W::new(self)
     }
     #[doc = "Bit 3 - SRWECA0 portmap selection"]
     #[inline(always)]
     #[must_use]
-    pub fn srweca0portsel(&mut self) -> SRWECA0PORTSEL_W<3> {
+    pub fn srweca0portsel(&mut self) -> SRWECA0PORTSEL_W<'_, 3> {
         SRWECA0PORTSEL_W::new(self)
     }
     #[doc = "Bit 4 - SRWECA1 portmap selection"]
     #[inline(always)]
     #[must_use]
-    pub fn srweca1portsel(&mut self) -> SRWECA1PORTSEL_W<4> {
+    pub fn srweca1portsel(&mut self) -> SRWECA1PORTSEL_W<'_, 4> {
         SRWECA1PORTSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

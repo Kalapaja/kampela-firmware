@@ -395,19 +395,19 @@ impl W {
     #[doc = "Bits 0:3 - Data-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn databits(&mut self) -> DATABITS_W<0> {
+    pub fn databits(&mut self) -> DATABITS_W<'_, 0> {
         DATABITS_W::new(self)
     }
     #[doc = "Bits 8:9 - Parity-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn parity(&mut self) -> PARITY_W<8> {
+    pub fn parity(&mut self) -> PARITY_W<'_, 8> {
         PARITY_W::new(self)
     }
     #[doc = "Bits 12:13 - Stop-Bit Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn stopbits(&mut self) -> STOPBITS_W<12> {
+    pub fn stopbits(&mut self) -> STOPBITS_W<'_, 12> {
         STOPBITS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

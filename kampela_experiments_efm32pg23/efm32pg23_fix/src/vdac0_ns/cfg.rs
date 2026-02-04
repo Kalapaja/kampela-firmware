@@ -644,79 +644,79 @@ impl W {
     #[doc = "Bit 0 - Differential Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn diff(&mut self) -> DIFF_W<0> {
+    pub fn diff(&mut self) -> DIFF_W<'_, 0> {
         DIFF_W::new(self)
     }
     #[doc = "Bit 1 - Sine Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn sinemode(&mut self) -> SINEMODE_W<1> {
+    pub fn sinemode(&mut self) -> SINEMODE_W<'_, 1> {
         SINEMODE_W::new(self)
     }
     #[doc = "Bit 2 - Sine Wave Reset When inactive"]
     #[inline(always)]
     #[must_use]
-    pub fn sinereset(&mut self) -> SINERESET_W<2> {
+    pub fn sinereset(&mut self) -> SINERESET_W<'_, 2> {
         SINERESET_W::new(self)
     }
     #[doc = "Bit 3 - Channel 0 Start Reset Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0prescrst(&mut self) -> CH0PRESCRST_W<3> {
+    pub fn ch0prescrst(&mut self) -> CH0PRESCRST_W<'_, 3> {
         CH0PRESCRST_W::new(self)
     }
     #[doc = "Bits 4:5 - Reference Selection"]
     #[inline(always)]
     #[must_use]
-    pub fn refrsel(&mut self) -> REFRSEL_W<4> {
+    pub fn refrsel(&mut self) -> REFRSEL_W<'_, 4> {
         REFRSEL_W::new(self)
     }
     #[doc = "Bits 7:13 - Prescaler Setting for DAC clock"]
     #[inline(always)]
     #[must_use]
-    pub fn presc(&mut self) -> PRESC_W<7> {
+    pub fn presc(&mut self) -> PRESC_W<'_, 7> {
         PRESC_W::new(self)
     }
     #[doc = "Bits 16:18 - Internal Timer Overflow Period"]
     #[inline(always)]
     #[must_use]
-    pub fn timerovrflowperiod(&mut self) -> TIMEROVRFLOWPERIOD_W<16> {
+    pub fn timerovrflowperiod(&mut self) -> TIMEROVRFLOWPERIOD_W<'_, 16> {
         TIMEROVRFLOWPERIOD_W::new(self)
     }
     #[doc = "Bits 20:22 - Refresh Timer Overflow Period"]
     #[inline(always)]
     #[must_use]
-    pub fn refreshperiod(&mut self) -> REFRESHPERIOD_W<20> {
+    pub fn refreshperiod(&mut self) -> REFRESHPERIOD_W<'_, 20> {
         REFRESHPERIOD_W::new(self)
     }
     #[doc = "Bit 24 - Bias Keepwarm Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn biaskeepwarm(&mut self) -> BIASKEEPWARM_W<24> {
+    pub fn biaskeepwarm(&mut self) -> BIASKEEPWARM_W<'_, 24> {
         BIASKEEPWARM_W::new(self)
     }
     #[doc = "Bit 25 - VDAC DMA Wakeup"]
     #[inline(always)]
     #[must_use]
-    pub fn dmawu(&mut self) -> DMAWU_W<25> {
+    pub fn dmawu(&mut self) -> DMAWU_W<'_, 25> {
         DMAWU_W::new(self)
     }
     #[doc = "Bit 26 - Always allow clk_dac"]
     #[inline(always)]
     #[must_use]
-    pub fn ondemandclk(&mut self) -> ONDEMANDCLK_W<26> {
+    pub fn ondemandclk(&mut self) -> ONDEMANDCLK_W<'_, 26> {
         ONDEMANDCLK_W::new(self)
     }
     #[doc = "Bit 27 - Debug Halt"]
     #[inline(always)]
     #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<27> {
+    pub fn dbghalt(&mut self) -> DBGHALT_W<'_, 27> {
         DBGHALT_W::new(self)
     }
     #[doc = "Bits 28:30 - DAC Warmup Time"]
     #[inline(always)]
     #[must_use]
-    pub fn warmuptime(&mut self) -> WARMUPTIME_W<28> {
+    pub fn warmuptime(&mut self) -> WARMUPTIME_W<'_, 28> {
         WARMUPTIME_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

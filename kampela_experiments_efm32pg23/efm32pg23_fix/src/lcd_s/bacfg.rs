@@ -142,19 +142,19 @@ impl W {
     #[doc = "Bits 0:2 - ASTATE top cnt"]
     #[inline(always)]
     #[must_use]
-    pub fn astatetop(&mut self) -> ASTATETOP_W<0> {
+    pub fn astatetop(&mut self) -> ASTATETOP_W<'_, 0> {
         ASTATETOP_W::new(self)
     }
     #[doc = "Bits 16:17 - Frame Counter Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn fcpresc(&mut self) -> FCPRESC_W<16> {
+    pub fn fcpresc(&mut self) -> FCPRESC_W<'_, 16> {
         FCPRESC_W::new(self)
     }
     #[doc = "Bits 18:23 - Frame Counter Top"]
     #[inline(always)]
     #[must_use]
-    pub fn fctop(&mut self) -> FCTOP_W<18> {
+    pub fn fctop(&mut self) -> FCTOP_W<'_, 18> {
         FCTOP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

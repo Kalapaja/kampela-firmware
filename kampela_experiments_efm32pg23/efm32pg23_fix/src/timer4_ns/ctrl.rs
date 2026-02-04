@@ -215,19 +215,19 @@ impl W {
     #[doc = "Bits 0:1 - Timer Rising Input Edge Action"]
     #[inline(always)]
     #[must_use]
-    pub fn risea(&mut self) -> RISEA_W<0> {
+    pub fn risea(&mut self) -> RISEA_W<'_, 0> {
         RISEA_W::new(self)
     }
     #[doc = "Bits 2:3 - Timer Falling Input Edge Action"]
     #[inline(always)]
     #[must_use]
-    pub fn falla(&mut self) -> FALLA_W<2> {
+    pub fn falla(&mut self) -> FALLA_W<'_, 2> {
         FALLA_W::new(self)
     }
     #[doc = "Bit 4 - 2x Count Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn x2cnt(&mut self) -> X2CNT_W<4> {
+    pub fn x2cnt(&mut self) -> X2CNT_W<'_, 4> {
         X2CNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

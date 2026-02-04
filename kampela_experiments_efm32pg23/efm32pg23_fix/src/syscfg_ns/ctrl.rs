@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Invalid Address Bus Fault Response Enabl"]
     #[inline(always)]
     #[must_use]
-    pub fn addrfaulten(&mut self) -> ADDRFAULTEN_W<0> {
+    pub fn addrfaulten(&mut self) -> ADDRFAULTEN_W<'_, 0> {
         ADDRFAULTEN_W::new(self)
     }
     #[doc = "Bit 1 - Disabled Clkbus Bus Fault Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn clkdisfaulten(&mut self) -> CLKDISFAULTEN_W<1> {
+    pub fn clkdisfaulten(&mut self) -> CLKDISFAULTEN_W<'_, 1> {
         CLKDISFAULTEN_W::new(self)
     }
     #[doc = "Bit 5 - Two bit ECC error bus fault response ena"]
     #[inline(always)]
     #[must_use]
-    pub fn rameccerrfaulten(&mut self) -> RAMECCERRFAULTEN_W<5> {
+    pub fn rameccerrfaulten(&mut self) -> RAMECCERRFAULTEN_W<'_, 5> {
         RAMECCERRFAULTEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

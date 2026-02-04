@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - AHB0 1-bit ECC Error Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ahb0err1b(&mut self) -> AHB0ERR1B_W<0> {
+    pub fn ahb0err1b(&mut self) -> AHB0ERR1B_W<'_, 0> {
         AHB0ERR1B_W::new(self)
     }
     #[doc = "Bit 1 - AHB1 1-bit ECC Error Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ahb1err1b(&mut self) -> AHB1ERR1B_W<1> {
+    pub fn ahb1err1b(&mut self) -> AHB1ERR1B_W<'_, 1> {
         AHB1ERR1B_W::new(self)
     }
     #[doc = "Bit 4 - AHB0 2-bit ECC Error Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ahb0err2b(&mut self) -> AHB0ERR2B_W<4> {
+    pub fn ahb0err2b(&mut self) -> AHB0ERR2B_W<'_, 4> {
         AHB0ERR2B_W::new(self)
     }
     #[doc = "Bit 5 - AHB1 2-bit ECC Error Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ahb1err2b(&mut self) -> AHB1ERR2B_W<5> {
+    pub fn ahb1err2b(&mut self) -> AHB1ERR2B_W<'_, 5> {
         AHB1ERR2B_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

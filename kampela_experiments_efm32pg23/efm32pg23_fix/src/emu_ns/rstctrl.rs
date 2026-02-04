@@ -372,37 +372,37 @@ impl W {
     #[doc = "Bit 0 - Enable WDOG0 reset"]
     #[inline(always)]
     #[must_use]
-    pub fn wdog0rmode(&mut self) -> WDOG0RMODE_W<0> {
+    pub fn wdog0rmode(&mut self) -> WDOG0RMODE_W<'_, 0> {
         WDOG0RMODE_W::new(self)
     }
     #[doc = "Bit 2 - Enable M33 System reset"]
     #[inline(always)]
     #[must_use]
-    pub fn sysrmode(&mut self) -> SYSRMODE_W<2> {
+    pub fn sysrmode(&mut self) -> SYSRMODE_W<'_, 2> {
         SYSRMODE_W::new(self)
     }
     #[doc = "Bit 3 - Enable M33 Lockup reset"]
     #[inline(always)]
     #[must_use]
-    pub fn lockuprmode(&mut self) -> LOCKUPRMODE_W<3> {
+    pub fn lockuprmode(&mut self) -> LOCKUPRMODE_W<'_, 3> {
         LOCKUPRMODE_W::new(self)
     }
     #[doc = "Bit 6 - Enable AVDD BOD reset"]
     #[inline(always)]
     #[must_use]
-    pub fn avddbodrmode(&mut self) -> AVDDBODRMODE_W<6> {
+    pub fn avddbodrmode(&mut self) -> AVDDBODRMODE_W<'_, 6> {
         AVDDBODRMODE_W::new(self)
     }
     #[doc = "Bit 7 - Enable VDDIO0 BOD reset"]
     #[inline(always)]
     #[must_use]
-    pub fn iovdd0bodrmode(&mut self) -> IOVDD0BODRMODE_W<7> {
+    pub fn iovdd0bodrmode(&mut self) -> IOVDD0BODRMODE_W<'_, 7> {
         IOVDD0BODRMODE_W::new(self)
     }
     #[doc = "Bit 10 - Enable DECBOD reset"]
     #[inline(always)]
     #[must_use]
-    pub fn decbodrmode(&mut self) -> DECBODRMODE_W<10> {
+    pub fn decbodrmode(&mut self) -> DECBODRMODE_W<'_, 10> {
         DECBODRMODE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

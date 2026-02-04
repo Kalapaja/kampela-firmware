@@ -1960,49 +1960,49 @@ impl W {
     #[doc = "Bits 0:3 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode0(&mut self) -> MODE0_W<0> {
+    pub fn mode0(&mut self) -> MODE0_W<'_, 0> {
         MODE0_W::new(self)
     }
     #[doc = "Bits 4:7 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode1(&mut self) -> MODE1_W<4> {
+    pub fn mode1(&mut self) -> MODE1_W<'_, 4> {
         MODE1_W::new(self)
     }
     #[doc = "Bits 8:11 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode2(&mut self) -> MODE2_W<8> {
+    pub fn mode2(&mut self) -> MODE2_W<'_, 8> {
         MODE2_W::new(self)
     }
     #[doc = "Bits 12:15 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode3(&mut self) -> MODE3_W<12> {
+    pub fn mode3(&mut self) -> MODE3_W<'_, 12> {
         MODE3_W::new(self)
     }
     #[doc = "Bits 16:19 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode4(&mut self) -> MODE4_W<16> {
+    pub fn mode4(&mut self) -> MODE4_W<'_, 16> {
         MODE4_W::new(self)
     }
     #[doc = "Bits 20:23 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode5(&mut self) -> MODE5_W<20> {
+    pub fn mode5(&mut self) -> MODE5_W<'_, 20> {
         MODE5_W::new(self)
     }
     #[doc = "Bits 24:27 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode6(&mut self) -> MODE6_W<24> {
+    pub fn mode6(&mut self) -> MODE6_W<'_, 24> {
         MODE6_W::new(self)
     }
     #[doc = "Bits 28:31 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode7(&mut self) -> MODE7_W<28> {
+    pub fn mode7(&mut self) -> MODE7_W<'_, 28> {
         MODE7_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

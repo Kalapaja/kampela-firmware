@@ -798,43 +798,43 @@ impl W {
     #[doc = "Bits 0:3 - Driver Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn xoutbiasana(&mut self) -> XOUTBIASANA_W<0> {
+    pub fn xoutbiasana(&mut self) -> XOUTBIASANA_W<'_, 0> {
         XOUTBIASANA_W::new(self)
     }
     #[doc = "Bits 4:7 - Buffer Gain"]
     #[inline(always)]
     #[must_use]
-    pub fn xoutcfana(&mut self) -> XOUTCFANA_W<4> {
+    pub fn xoutcfana(&mut self) -> XOUTCFANA_W<'_, 4> {
         XOUTCFANA_W::new(self)
     }
     #[doc = "Bits 8:11 - No Description"]
     #[inline(always)]
     #[must_use]
-    pub fn xoutgmana(&mut self) -> XOUTGMANA_W<8> {
+    pub fn xoutgmana(&mut self) -> XOUTGMANA_W<'_, 8> {
         XOUTGMANA_W::new(self)
     }
     #[doc = "Bits 12:15 - Peak Detector Threshold for XOUT"]
     #[inline(always)]
     #[must_use]
-    pub fn peakdetthresana(&mut self) -> PEAKDETTHRESANA_W<12> {
+    pub fn peakdetthresana(&mut self) -> PEAKDETTHRESANA_W<'_, 12> {
         PEAKDETTHRESANA_W::new(self)
     }
     #[doc = "Bits 16:19 - Tuning Cap Change Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn timeoutctune(&mut self) -> TIMEOUTCTUNE_W<16> {
+    pub fn timeoutctune(&mut self) -> TIMEOUTCTUNE_W<'_, 16> {
         TIMEOUTCTUNE_W::new(self)
     }
     #[doc = "Bits 20:23 - Oscillator Startup Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn timeoutstartup(&mut self) -> TIMEOUTSTARTUP_W<20> {
+    pub fn timeoutstartup(&mut self) -> TIMEOUTSTARTUP_W<'_, 20> {
         TIMEOUTSTARTUP_W::new(self)
     }
     #[doc = "Bit 31 - Minimum Startup Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn minimumstartupdelay(&mut self) -> MINIMUMSTARTUPDELAY_W<31> {
+    pub fn minimumstartupdelay(&mut self) -> MINIMUMSTARTUPDELAY_W<'_, 31> {
         MINIMUMSTARTUPDELAY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

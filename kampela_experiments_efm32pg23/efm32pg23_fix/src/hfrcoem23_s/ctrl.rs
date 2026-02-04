@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - Force Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn forceen(&mut self) -> FORCEEN_W<0> {
+    pub fn forceen(&mut self) -> FORCEEN_W<'_, 0> {
         FORCEEN_W::new(self)
     }
     #[doc = "Bit 1 - Disable On-demand"]
     #[inline(always)]
     #[must_use]
-    pub fn disondemand(&mut self) -> DISONDEMAND_W<1> {
+    pub fn disondemand(&mut self) -> DISONDEMAND_W<'_, 1> {
         DISONDEMAND_W::new(self)
     }
     #[doc = "Bit 2 - EM23 On-demand"]
     #[inline(always)]
     #[must_use]
-    pub fn em23ondemand(&mut self) -> EM23ONDEMAND_W<2> {
+    pub fn em23ondemand(&mut self) -> EM23ONDEMAND_W<'_, 2> {
         EM23ONDEMAND_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

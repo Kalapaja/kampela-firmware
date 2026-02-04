@@ -760,19 +760,19 @@ impl W {
     #[doc = "Bits 0:3 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode0(&mut self) -> MODE0_W<0> {
+    pub fn mode0(&mut self) -> MODE0_W<'_, 0> {
         MODE0_W::new(self)
     }
     #[doc = "Bits 4:7 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode1(&mut self) -> MODE1_W<4> {
+    pub fn mode1(&mut self) -> MODE1_W<'_, 4> {
         MODE1_W::new(self)
     }
     #[doc = "Bits 8:11 - MODE n"]
     #[inline(always)]
     #[must_use]
-    pub fn mode2(&mut self) -> MODE2_W<8> {
+    pub fn mode2(&mut self) -> MODE2_W<'_, 8> {
         MODE2_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

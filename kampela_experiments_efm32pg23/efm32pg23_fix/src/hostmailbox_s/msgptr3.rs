@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Pointer"]
     #[inline(always)]
     #[must_use]
-    pub fn ptr(&mut self) -> PTR_W<0> {
+    pub fn ptr(&mut self) -> PTR_W<'_, 0> {
         PTR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

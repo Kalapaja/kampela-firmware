@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - CRC Initialization Value"]
     #[inline(always)]
     #[must_use]
-    pub fn init(&mut self) -> INIT_W<0> {
+    pub fn init(&mut self) -> INIT_W<'_, 0> {
         INIT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

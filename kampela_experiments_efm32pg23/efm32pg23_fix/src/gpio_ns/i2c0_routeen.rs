@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - SCL pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn sclpen(&mut self) -> SCLPEN_W<0> {
+    pub fn sclpen(&mut self) -> SCLPEN_W<'_, 0> {
         SCLPEN_W::new(self)
     }
     #[doc = "Bit 1 - SDA pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn sdapen(&mut self) -> SDAPEN_W<1> {
+    pub fn sdapen(&mut self) -> SDAPEN_W<'_, 1> {
         SDAPEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

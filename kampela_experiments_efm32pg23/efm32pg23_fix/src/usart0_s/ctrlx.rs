@@ -278,37 +278,37 @@ impl W {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
     #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<0> {
+    pub fn dbghalt(&mut self) -> DBGHALT_W<'_, 0> {
         DBGHALT_W::new(self)
     }
     #[doc = "Bit 1 - CTS Pin Inversion"]
     #[inline(always)]
     #[must_use]
-    pub fn ctsinv(&mut self) -> CTSINV_W<1> {
+    pub fn ctsinv(&mut self) -> CTSINV_W<'_, 1> {
         CTSINV_W::new(self)
     }
     #[doc = "Bit 2 - CTS Function enabled"]
     #[inline(always)]
     #[must_use]
-    pub fn ctsen(&mut self) -> CTSEN_W<2> {
+    pub fn ctsen(&mut self) -> CTSEN_W<'_, 2> {
         CTSEN_W::new(self)
     }
     #[doc = "Bit 3 - RTS Pin Inversion"]
     #[inline(always)]
     #[must_use]
-    pub fn rtsinv(&mut self) -> RTSINV_W<3> {
+    pub fn rtsinv(&mut self) -> RTSINV_W<'_, 3> {
         RTSINV_W::new(self)
     }
     #[doc = "Bit 7 - PRS RX Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxprsen(&mut self) -> RXPRSEN_W<7> {
+    pub fn rxprsen(&mut self) -> RXPRSEN_W<'_, 7> {
         RXPRSEN_W::new(self)
     }
     #[doc = "Bit 15 - PRS CLK Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn clkprsen(&mut self) -> CLKPRSEN_W<15> {
+    pub fn clkprsen(&mut self) -> CLKPRSEN_W<'_, 15> {
         CLKPRSEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

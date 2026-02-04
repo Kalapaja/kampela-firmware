@@ -137,7 +137,7 @@ impl W {
     #[doc = "Bits 0:3 - RAM Bias Control"]
     #[inline(always)]
     #[must_use]
-    pub fn rambiasctrl(&mut self) -> RAMBIASCTRL_W<0> {
+    pub fn rambiasctrl(&mut self) -> RAMBIASCTRL_W<'_, 0> {
         RAMBIASCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

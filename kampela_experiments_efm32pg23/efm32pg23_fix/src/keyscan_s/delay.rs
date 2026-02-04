@@ -760,19 +760,19 @@ impl W {
     #[doc = "Bits 8:11 - Scan Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn scandly(&mut self) -> SCANDLY_W<8> {
+    pub fn scandly(&mut self) -> SCANDLY_W<'_, 8> {
         SCANDLY_W::new(self)
     }
     #[doc = "Bits 16:19 - Debounce Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn debdly(&mut self) -> DEBDLY_W<16> {
+    pub fn debdly(&mut self) -> DEBDLY_W<'_, 16> {
         DEBDLY_W::new(self)
     }
     #[doc = "Bits 24:27 - Row stable Delay"]
     #[inline(always)]
     #[must_use]
-    pub fn stabdly(&mut self) -> STABDLY_W<24> {
+    pub fn stabdly(&mut self) -> STABDLY_W<'_, 24> {
         STABDLY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

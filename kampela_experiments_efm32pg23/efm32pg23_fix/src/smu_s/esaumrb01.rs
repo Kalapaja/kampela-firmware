@@ -50,7 +50,7 @@ impl W {
     #[doc = "Bits 12:27 - Moveable Region Boundary"]
     #[inline(always)]
     #[must_use]
-    pub fn esaumrb01(&mut self) -> ESAUMRB01_W<12> {
+    pub fn esaumrb01(&mut self) -> ESAUMRB01_W<'_, 12> {
         ESAUMRB01_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

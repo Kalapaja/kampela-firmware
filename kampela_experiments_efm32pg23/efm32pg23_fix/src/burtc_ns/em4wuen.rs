@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - Overflow EM4 Wakeup Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ofem4wuen(&mut self) -> OFEM4WUEN_W<0> {
+    pub fn ofem4wuen(&mut self) -> OFEM4WUEN_W<'_, 0> {
         OFEM4WUEN_W::new(self)
     }
     #[doc = "Bit 1 - Compare Match EM4 Wakeup Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn compem4wuen(&mut self) -> COMPEM4WUEN_W<1> {
+    pub fn compem4wuen(&mut self) -> COMPEM4WUEN_W<'_, 1> {
         COMPEM4WUEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

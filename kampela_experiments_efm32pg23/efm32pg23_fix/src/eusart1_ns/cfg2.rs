@@ -305,55 +305,55 @@ impl W {
     #[doc = "Bit 0 - Main mode"]
     #[inline(always)]
     #[must_use]
-    pub fn master(&mut self) -> MASTER_W<0> {
+    pub fn master(&mut self) -> MASTER_W<'_, 0> {
         MASTER_W::new(self)
     }
     #[doc = "Bit 1 - Clock Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn clkpol(&mut self) -> CLKPOL_W<1> {
+    pub fn clkpol(&mut self) -> CLKPOL_W<'_, 1> {
         CLKPOL_W::new(self)
     }
     #[doc = "Bit 2 - Clock Edge for Setup/Sample"]
     #[inline(always)]
     #[must_use]
-    pub fn clkpha(&mut self) -> CLKPHA_W<2> {
+    pub fn clkpha(&mut self) -> CLKPHA_W<'_, 2> {
         CLKPHA_W::new(self)
     }
     #[doc = "Bit 3 - Chip Select Invert"]
     #[inline(always)]
     #[must_use]
-    pub fn csinv(&mut self) -> CSINV_W<3> {
+    pub fn csinv(&mut self) -> CSINV_W<'_, 3> {
         CSINV_W::new(self)
     }
     #[doc = "Bit 4 - Always Transmit When RXFIFO Not Full"]
     #[inline(always)]
     #[must_use]
-    pub fn autotx(&mut self) -> AUTOTX_W<4> {
+    pub fn autotx(&mut self) -> AUTOTX_W<'_, 4> {
         AUTOTX_W::new(self)
     }
     #[doc = "Bit 5 - Automatic Chip Select"]
     #[inline(always)]
     #[must_use]
-    pub fn autocs(&mut self) -> AUTOCS_W<5> {
+    pub fn autocs(&mut self) -> AUTOCS_W<'_, 5> {
         AUTOCS_W::new(self)
     }
     #[doc = "Bit 6 - PRS CLK Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn clkprsen(&mut self) -> CLKPRSEN_W<6> {
+    pub fn clkprsen(&mut self) -> CLKPRSEN_W<'_, 6> {
         CLKPRSEN_W::new(self)
     }
     #[doc = "Bit 7 - Force Load to Shift Register"]
     #[inline(always)]
     #[must_use]
-    pub fn forceload(&mut self) -> FORCELOAD_W<7> {
+    pub fn forceload(&mut self) -> FORCELOAD_W<'_, 7> {
         FORCELOAD_W::new(self)
     }
     #[doc = "Bits 24:31 - Sync Clock Div"]
     #[inline(always)]
     #[must_use]
-    pub fn sdiv(&mut self) -> SDIV_W<24> {
+    pub fn sdiv(&mut self) -> SDIV_W<'_, 24> {
         SDIV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

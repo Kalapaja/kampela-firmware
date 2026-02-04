@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bit 0 - Calibration Start"]
     #[inline(always)]
     #[must_use]
-    pub fn calstart(&mut self) -> CALSTART_W<0> {
+    pub fn calstart(&mut self) -> CALSTART_W<'_, 0> {
         CALSTART_W::new(self)
     }
     #[doc = "Bit 1 - Calibration Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn calstop(&mut self) -> CALSTOP_W<1> {
+    pub fn calstop(&mut self) -> CALSTOP_W<'_, 1> {
         CALSTOP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

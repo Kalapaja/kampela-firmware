@@ -247,13 +247,13 @@ impl W {
     #[doc = "Bits 0:3 - EM23 Peak Current Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn ipkval(&mut self) -> IPKVAL_W<0> {
+    pub fn ipkval(&mut self) -> IPKVAL_W<'_, 0> {
         IPKVAL_W::new(self)
     }
     #[doc = "Bits 8:9 - EM23 Drive Speed Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn drvspeed(&mut self) -> DRVSPEED_W<8> {
+    pub fn drvspeed(&mut self) -> DRVSPEED_W<'_, 8> {
         DRVSPEED_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

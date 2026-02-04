@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:11 - EXT Int Rise"]
     #[inline(always)]
     #[must_use]
-    pub fn extirise(&mut self) -> EXTIRISE_W<0> {
+    pub fn extirise(&mut self) -> EXTIRISE_W<'_, 0> {
         EXTIRISE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

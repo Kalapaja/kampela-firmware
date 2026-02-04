@@ -60,13 +60,13 @@ impl W {
     #[doc = "Bits 0:9 - CH0 Output Hold Time"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0outholdtime(&mut self) -> CH0OUTHOLDTIME_W<0> {
+    pub fn ch0outholdtime(&mut self) -> CH0OUTHOLDTIME_W<'_, 0> {
         CH0OUTHOLDTIME_W::new(self)
     }
     #[doc = "Bits 15:24 - CH1 Output Hold Time"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1outholdtime(&mut self) -> CH1OUTHOLDTIME_W<15> {
+    pub fn ch1outholdtime(&mut self) -> CH1OUTHOLDTIME_W<'_, 15> {
         CH1OUTHOLDTIME_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

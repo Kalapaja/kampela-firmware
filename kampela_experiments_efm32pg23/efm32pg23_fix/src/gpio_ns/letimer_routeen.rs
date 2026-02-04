@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - OUT0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn out0pen(&mut self) -> OUT0PEN_W<0> {
+    pub fn out0pen(&mut self) -> OUT0PEN_W<'_, 0> {
         OUT0PEN_W::new(self)
     }
     #[doc = "Bit 1 - OUT1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn out1pen(&mut self) -> OUT1PEN_W<1> {
+    pub fn out1pen(&mut self) -> OUT1PEN_W<'_, 1> {
         OUT1PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

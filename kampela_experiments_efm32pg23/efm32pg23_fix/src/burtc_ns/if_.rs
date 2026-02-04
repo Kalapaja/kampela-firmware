@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn of(&mut self) -> OF_W<0> {
+    pub fn of(&mut self) -> OF_W<'_, 0> {
         OF_W::new(self)
     }
     #[doc = "Bit 1 - Compare Match Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn comp(&mut self) -> COMP_W<1> {
+    pub fn comp(&mut self) -> COMP_W<'_, 1> {
         COMP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

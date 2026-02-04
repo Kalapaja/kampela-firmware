@@ -240,37 +240,37 @@ impl W {
     #[doc = "Bits 0:2 - Mode Select"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bit 4 - Debug Mode Halt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debughalt(&mut self) -> DEBUGHALT_W<4> {
+    pub fn debughalt(&mut self) -> DEBUGHALT_W<'_, 4> {
         DEBUGHALT_W::new(self)
     }
     #[doc = "Bit 5 - Enable Digital Pulse Width Filter"]
     #[inline(always)]
     #[must_use]
-    pub fn filten(&mut self) -> FILTEN_W<5> {
+    pub fn filten(&mut self) -> FILTEN_W<'_, 5> {
         FILTEN_W::new(self)
     }
     #[doc = "Bit 6 - Enable Hysteresis"]
     #[inline(always)]
     #[must_use]
-    pub fn hyst(&mut self) -> HYST_W<6> {
+    pub fn hyst(&mut self) -> HYST_W<'_, 6> {
         HYST_W::new(self)
     }
     #[doc = "Bit 8 - S0IN PRS Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn s0prsen(&mut self) -> S0PRSEN_W<8> {
+    pub fn s0prsen(&mut self) -> S0PRSEN_W<'_, 8> {
         S0PRSEN_W::new(self)
     }
     #[doc = "Bit 9 - S1IN PRS Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn s1prsen(&mut self) -> S1PRSEN_W<9> {
+    pub fn s1prsen(&mut self) -> S1PRSEN_W<'_, 9> {
         S1PRSEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

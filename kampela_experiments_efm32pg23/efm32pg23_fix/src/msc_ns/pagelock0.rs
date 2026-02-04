@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - page lock bit"]
     #[inline(always)]
     #[must_use]
-    pub fn lockbit(&mut self) -> LOCKBIT_W<0> {
+    pub fn lockbit(&mut self) -> LOCKBIT_W<'_, 0> {
         LOCKBIT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

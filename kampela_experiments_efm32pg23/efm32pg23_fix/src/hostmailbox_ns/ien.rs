@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Mailbox Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxien0(&mut self) -> MBOXIEN0_W<0> {
+    pub fn mboxien0(&mut self) -> MBOXIEN0_W<'_, 0> {
         MBOXIEN0_W::new(self)
     }
     #[doc = "Bit 1 - Mailbox Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxien1(&mut self) -> MBOXIEN1_W<1> {
+    pub fn mboxien1(&mut self) -> MBOXIEN1_W<'_, 1> {
         MBOXIEN1_W::new(self)
     }
     #[doc = "Bit 2 - Mailbox Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxien2(&mut self) -> MBOXIEN2_W<2> {
+    pub fn mboxien2(&mut self) -> MBOXIEN2_W<'_, 2> {
         MBOXIEN2_W::new(self)
     }
     #[doc = "Bit 3 - Mailbox Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxien3(&mut self) -> MBOXIEN3_W<3> {
+    pub fn mboxien3(&mut self) -> MBOXIEN3_W<'_, 3> {
         MBOXIEN3_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

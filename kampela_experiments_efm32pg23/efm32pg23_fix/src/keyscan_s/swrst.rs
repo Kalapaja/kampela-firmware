@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 0 - Software reset command"]
     #[inline(always)]
     #[must_use]
-    pub fn swrst(&mut self) -> SWRST_W<0> {
+    pub fn swrst(&mut self) -> SWRST_W<'_, 0> {
         SWRST_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

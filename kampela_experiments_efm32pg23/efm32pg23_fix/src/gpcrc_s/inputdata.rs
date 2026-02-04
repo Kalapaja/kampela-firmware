@@ -26,7 +26,7 @@ impl W {
     #[doc = "Bits 0:31 - Input Data for 32-bit"]
     #[inline(always)]
     #[must_use]
-    pub fn inputdata(&mut self) -> INPUTDATA_W<0> {
+    pub fn inputdata(&mut self) -> INPUTDATA_W<'_, 0> {
         INPUTDATA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

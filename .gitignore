@@ -6,3 +6,4 @@
 **/*.rs.bk
 **/*.code-workspace
 .vscode
+.idea

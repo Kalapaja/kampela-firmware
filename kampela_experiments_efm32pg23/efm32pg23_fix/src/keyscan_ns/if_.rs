@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - No key was pressed"]
     #[inline(always)]
     #[must_use]
-    pub fn nokey(&mut self) -> NOKEY_W<0> {
+    pub fn nokey(&mut self) -> NOKEY_W<'_, 0> {
         NOKEY_W::new(self)
     }
     #[doc = "Bit 1 - A key was pressed"]
     #[inline(always)]
     #[must_use]
-    pub fn key(&mut self) -> KEY_W<1> {
+    pub fn key(&mut self) -> KEY_W<'_, 1> {
         KEY_W::new(self)
     }
     #[doc = "Bit 2 - Completed scan"]
     #[inline(always)]
     #[must_use]
-    pub fn scanned(&mut self) -> SCANNED_W<2> {
+    pub fn scanned(&mut self) -> SCANNED_W<'_, 2> {
         SCANNED_W::new(self)
     }
     #[doc = "Bit 3 - Wake up"]
     #[inline(always)]
     #[must_use]
-    pub fn wakeup(&mut self) -> WAKEUP_W<3> {
+    pub fn wakeup(&mut self) -> WAKEUP_W<'_, 3> {
         WAKEUP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

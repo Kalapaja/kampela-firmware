@@ -193,103 +193,103 @@ impl W {
     #[doc = "Bit 0 - TX Complete Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txc(&mut self) -> TXC_W<0> {
+    pub fn txc(&mut self) -> TXC_W<'_, 0> {
         TXC_W::new(self)
     }
     #[doc = "Bit 1 - TX Buffer Level Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txbl(&mut self) -> TXBL_W<1> {
+    pub fn txbl(&mut self) -> TXBL_W<'_, 1> {
         TXBL_W::new(self)
     }
     #[doc = "Bit 2 - RX Data Valid Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxdatav(&mut self) -> RXDATAV_W<2> {
+    pub fn rxdatav(&mut self) -> RXDATAV_W<'_, 2> {
         RXDATAV_W::new(self)
     }
     #[doc = "Bit 3 - RX Buffer Full Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfull(&mut self) -> RXFULL_W<3> {
+    pub fn rxfull(&mut self) -> RXFULL_W<'_, 3> {
         RXFULL_W::new(self)
     }
     #[doc = "Bit 4 - RX Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxof(&mut self) -> RXOF_W<4> {
+    pub fn rxof(&mut self) -> RXOF_W<'_, 4> {
         RXOF_W::new(self)
     }
     #[doc = "Bit 5 - RX Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rxuf(&mut self) -> RXUF_W<5> {
+    pub fn rxuf(&mut self) -> RXUF_W<'_, 5> {
         RXUF_W::new(self)
     }
     #[doc = "Bit 6 - TX Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txof(&mut self) -> TXOF_W<6> {
+    pub fn txof(&mut self) -> TXOF_W<'_, 6> {
         TXOF_W::new(self)
     }
     #[doc = "Bit 7 - TX Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txuf(&mut self) -> TXUF_W<7> {
+    pub fn txuf(&mut self) -> TXUF_W<'_, 7> {
         TXUF_W::new(self)
     }
     #[doc = "Bit 8 - Parity Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn perr(&mut self) -> PERR_W<8> {
+    pub fn perr(&mut self) -> PERR_W<'_, 8> {
         PERR_W::new(self)
     }
     #[doc = "Bit 9 - Framing Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ferr(&mut self) -> FERR_W<9> {
+    pub fn ferr(&mut self) -> FERR_W<'_, 9> {
         FERR_W::new(self)
     }
     #[doc = "Bit 10 - Multi-Processor Address Frame Interrupt"]
     #[inline(always)]
     #[must_use]
-    pub fn mpaf(&mut self) -> MPAF_W<10> {
+    pub fn mpaf(&mut self) -> MPAF_W<'_, 10> {
         MPAF_W::new(self)
     }
     #[doc = "Bit 11 - Chip-Select In Main Mode Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ssm(&mut self) -> SSM_W<11> {
+    pub fn ssm(&mut self) -> SSM_W<'_, 11> {
         SSM_W::new(self)
     }
     #[doc = "Bit 12 - Collision Check Fail Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ccf(&mut self) -> CCF_W<12> {
+    pub fn ccf(&mut self) -> CCF_W<'_, 12> {
         CCF_W::new(self)
     }
     #[doc = "Bit 13 - TX Idle Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn txidle(&mut self) -> TXIDLE_W<13> {
+    pub fn txidle(&mut self) -> TXIDLE_W<'_, 13> {
         TXIDLE_W::new(self)
     }
     #[doc = "Bit 14 - Timer comparator 0 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn tcmp0(&mut self) -> TCMP0_W<14> {
+    pub fn tcmp0(&mut self) -> TCMP0_W<'_, 14> {
         TCMP0_W::new(self)
     }
     #[doc = "Bit 15 - Timer comparator 1 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn tcmp1(&mut self) -> TCMP1_W<15> {
+    pub fn tcmp1(&mut self) -> TCMP1_W<'_, 15> {
         TCMP1_W::new(self)
     }
     #[doc = "Bit 16 - Timer comparator 2 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn tcmp2(&mut self) -> TCMP2_W<16> {
+    pub fn tcmp2(&mut self) -> TCMP2_W<'_, 16> {
         TCMP2_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

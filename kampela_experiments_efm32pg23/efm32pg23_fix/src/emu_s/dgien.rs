@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 24 - EM23 Wake up Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn em23wakeupdgien(&mut self) -> EM23WAKEUPDGIEN_W<24> {
+    pub fn em23wakeupdgien(&mut self) -> EM23WAKEUPDGIEN_W<'_, 24> {
         EM23WAKEUPDGIEN_W::new(self)
     }
     #[doc = "Bit 29 - Temperature Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tempdgien(&mut self) -> TEMPDGIEN_W<29> {
+    pub fn tempdgien(&mut self) -> TEMPDGIEN_W<'_, 29> {
         TEMPDGIEN_W::new(self)
     }
     #[doc = "Bit 30 - Temperature low Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn templowdgien(&mut self) -> TEMPLOWDGIEN_W<30> {
+    pub fn templowdgien(&mut self) -> TEMPLOWDGIEN_W<'_, 30> {
         TEMPLOWDGIEN_W::new(self)
     }
     #[doc = "Bit 31 - Temperature high Interrupt enable"]
     #[inline(always)]
     #[must_use]
-    pub fn temphighdgien(&mut self) -> TEMPHIGHDGIEN_W<31> {
+    pub fn temphighdgien(&mut self) -> TEMPHIGHDGIEN_W<'_, 31> {
         TEMPHIGHDGIEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -276,19 +276,19 @@ impl W {
     #[doc = "Bits 0:2 - Clock Select"]
     #[inline(always)]
     #[must_use]
-    pub fn clksel(&mut self) -> CLKSEL_W<0> {
+    pub fn clksel(&mut self) -> CLKSEL_W<'_, 0> {
         CLKSEL_W::new(self)
     }
     #[doc = "Bit 10 - PCLK Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn pclkpresc(&mut self) -> PCLKPRESC_W<10> {
+    pub fn pclkpresc(&mut self) -> PCLKPRESC_W<'_, 10> {
         PCLKPRESC_W::new(self)
     }
     #[doc = "Bits 12:15 - HCLK Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn hclkpresc(&mut self) -> HCLKPRESC_W<12> {
+    pub fn hclkpresc(&mut self) -> HCLKPRESC_W<'_, 12> {
         HCLKPRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

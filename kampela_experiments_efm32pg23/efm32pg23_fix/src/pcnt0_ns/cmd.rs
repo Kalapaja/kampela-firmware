@@ -39,49 +39,49 @@ impl W {
     #[doc = "Bit 0 - PCNT Clock Domain Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn corerst(&mut self) -> CORERST_W<0> {
+    pub fn corerst(&mut self) -> CORERST_W<'_, 0> {
         CORERST_W::new(self)
     }
     #[doc = "Bit 1 - CNT Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn cntrst(&mut self) -> CNTRST_W<1> {
+    pub fn cntrst(&mut self) -> CNTRST_W<'_, 1> {
         CNTRST_W::new(self)
     }
     #[doc = "Bit 2 - AUXCNT Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn auxcntrst(&mut self) -> AUXCNTRST_W<2> {
+    pub fn auxcntrst(&mut self) -> AUXCNTRST_W<'_, 2> {
         AUXCNTRST_W::new(self)
     }
     #[doc = "Bit 4 - Load CNT Immediately"]
     #[inline(always)]
     #[must_use]
-    pub fn lcntim(&mut self) -> LCNTIM_W<4> {
+    pub fn lcntim(&mut self) -> LCNTIM_W<'_, 4> {
         LCNTIM_W::new(self)
     }
     #[doc = "Bit 8 - Start Main Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn startcnt(&mut self) -> STARTCNT_W<8> {
+    pub fn startcnt(&mut self) -> STARTCNT_W<'_, 8> {
         STARTCNT_W::new(self)
     }
     #[doc = "Bit 9 - Start Aux Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn startauxcnt(&mut self) -> STARTAUXCNT_W<9> {
+    pub fn startauxcnt(&mut self) -> STARTAUXCNT_W<'_, 9> {
         STARTAUXCNT_W::new(self)
     }
     #[doc = "Bit 10 - Stop Main Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn stopcnt(&mut self) -> STOPCNT_W<10> {
+    pub fn stopcnt(&mut self) -> STOPCNT_W<'_, 10> {
         STOPCNT_W::new(self)
     }
     #[doc = "Bit 11 - Stop Aux Counter"]
     #[inline(always)]
     #[must_use]
-    pub fn stopauxcnt(&mut self) -> STOPAUXCNT_W<11> {
+    pub fn stopauxcnt(&mut self) -> STOPAUXCNT_W<'_, 11> {
         STOPAUXCNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

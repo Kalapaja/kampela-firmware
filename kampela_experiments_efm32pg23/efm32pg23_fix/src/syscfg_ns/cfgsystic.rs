@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 0 - SysTick External Clock Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn systicextclken(&mut self) -> SYSTICEXTCLKEN_W<0> {
+    pub fn systicextclken(&mut self) -> SYSTICEXTCLKEN_W<'_, 0> {
         SYSTICEXTCLKEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

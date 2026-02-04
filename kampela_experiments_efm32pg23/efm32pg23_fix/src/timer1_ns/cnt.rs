@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:15 - Counter Value"]
     #[inline(always)]
     #[must_use]
-    pub fn cnt(&mut self) -> CNT_W<0> {
+    pub fn cnt(&mut self) -> CNT_W<'_, 0> {
         CNT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

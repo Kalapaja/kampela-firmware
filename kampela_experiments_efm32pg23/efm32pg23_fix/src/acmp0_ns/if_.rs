@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - Rising Edge Triggered Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rise(&mut self) -> RISE_W<0> {
+    pub fn rise(&mut self) -> RISE_W<'_, 0> {
         RISE_W::new(self)
     }
     #[doc = "Bit 1 - Falling Edge Triggered Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn fall(&mut self) -> FALL_W<1> {
+    pub fn fall(&mut self) -> FALL_W<'_, 1> {
         FALL_W::new(self)
     }
     #[doc = "Bit 2 - ACMP ready Interrupt flag"]
     #[inline(always)]
     #[must_use]
-    pub fn acmprdy(&mut self) -> ACMPRDY_W<2> {
+    pub fn acmprdy(&mut self) -> ACMPRDY_W<'_, 2> {
         ACMPRDY_W::new(self)
     }
     #[doc = "Bit 3 - Input conflict"]
     #[inline(always)]
     #[must_use]
-    pub fn inputconflict(&mut self) -> INPUTCONFLICT_W<3> {
+    pub fn inputconflict(&mut self) -> INPUTCONFLICT_W<'_, 3> {
         INPUTCONFLICT_W::new(self)
     }
     #[doc = "Bit 4 - Port allocation error"]
     #[inline(always)]
     #[must_use]
-    pub fn portallocerr(&mut self) -> PORTALLOCERR_W<4> {
+    pub fn portallocerr(&mut self) -> PORTALLOCERR_W<'_, 4> {
         PORTALLOCERR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

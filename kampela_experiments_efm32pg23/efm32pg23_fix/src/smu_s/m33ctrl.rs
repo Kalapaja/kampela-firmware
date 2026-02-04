@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - New BitField"]
     #[inline(always)]
     #[must_use]
-    pub fn locksvtaircr(&mut self) -> LOCKSVTAIRCR_W<0> {
+    pub fn locksvtaircr(&mut self) -> LOCKSVTAIRCR_W<'_, 0> {
         LOCKSVTAIRCR_W::new(self)
     }
     #[doc = "Bit 1 - New BitField"]
     #[inline(always)]
     #[must_use]
-    pub fn locknsvtor(&mut self) -> LOCKNSVTOR_W<1> {
+    pub fn locknsvtor(&mut self) -> LOCKNSVTOR_W<'_, 1> {
         LOCKNSVTOR_W::new(self)
     }
     #[doc = "Bit 2 - New BitField"]
     #[inline(always)]
     #[must_use]
-    pub fn locksmpu(&mut self) -> LOCKSMPU_W<2> {
+    pub fn locksmpu(&mut self) -> LOCKSMPU_W<'_, 2> {
         LOCKSMPU_W::new(self)
     }
     #[doc = "Bit 3 - New BitField"]
     #[inline(always)]
     #[must_use]
-    pub fn locknsmpu(&mut self) -> LOCKNSMPU_W<3> {
+    pub fn locknsmpu(&mut self) -> LOCKNSMPU_W<'_, 3> {
         LOCKNSMPU_W::new(self)
     }
     #[doc = "Bit 4 - New BitField"]
     #[inline(always)]
     #[must_use]
-    pub fn locksau(&mut self) -> LOCKSAU_W<4> {
+    pub fn locksau(&mut self) -> LOCKSAU_W<'_, 4> {
         LOCKSAU_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Data"]
     #[inline(always)]
     #[must_use]
-    pub fn data(&mut self) -> DATA_W<0> {
+    pub fn data(&mut self) -> DATA_W<'_, 0> {
         DATA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -112,49 +112,49 @@ impl W {
     #[doc = "Bit 0 - COLOUT0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout0pen(&mut self) -> COLOUT0PEN_W<0> {
+    pub fn colout0pen(&mut self) -> COLOUT0PEN_W<'_, 0> {
         COLOUT0PEN_W::new(self)
     }
     #[doc = "Bit 1 - COLOUT1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout1pen(&mut self) -> COLOUT1PEN_W<1> {
+    pub fn colout1pen(&mut self) -> COLOUT1PEN_W<'_, 1> {
         COLOUT1PEN_W::new(self)
     }
     #[doc = "Bit 2 - COLOUT2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout2pen(&mut self) -> COLOUT2PEN_W<2> {
+    pub fn colout2pen(&mut self) -> COLOUT2PEN_W<'_, 2> {
         COLOUT2PEN_W::new(self)
     }
     #[doc = "Bit 3 - COLOUT3 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout3pen(&mut self) -> COLOUT3PEN_W<3> {
+    pub fn colout3pen(&mut self) -> COLOUT3PEN_W<'_, 3> {
         COLOUT3PEN_W::new(self)
     }
     #[doc = "Bit 4 - COLOUT4 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout4pen(&mut self) -> COLOUT4PEN_W<4> {
+    pub fn colout4pen(&mut self) -> COLOUT4PEN_W<'_, 4> {
         COLOUT4PEN_W::new(self)
     }
     #[doc = "Bit 5 - COLOUT5 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout5pen(&mut self) -> COLOUT5PEN_W<5> {
+    pub fn colout5pen(&mut self) -> COLOUT5PEN_W<'_, 5> {
         COLOUT5PEN_W::new(self)
     }
     #[doc = "Bit 6 - COLOUT6 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout6pen(&mut self) -> COLOUT6PEN_W<6> {
+    pub fn colout6pen(&mut self) -> COLOUT6PEN_W<'_, 6> {
         COLOUT6PEN_W::new(self)
     }
     #[doc = "Bit 7 - COLOUT7 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn colout7pen(&mut self) -> COLOUT7PEN_W<7> {
+    pub fn colout7pen(&mut self) -> COLOUT7PEN_W<'_, 7> {
         COLOUT7PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

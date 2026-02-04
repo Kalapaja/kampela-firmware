@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:6 - Data output"]
     #[inline(always)]
     #[must_use]
-    pub fn dout(&mut self) -> DOUT_W<0> {
+    pub fn dout(&mut self) -> DOUT_W<'_, 0> {
         DOUT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

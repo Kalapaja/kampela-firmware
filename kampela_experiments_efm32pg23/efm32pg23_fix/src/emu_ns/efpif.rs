@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 0 - EFP Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn efpif(&mut self) -> EFPIF_W<0> {
+    pub fn efpif(&mut self) -> EFPIF_W<'_, 0> {
         EFPIF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

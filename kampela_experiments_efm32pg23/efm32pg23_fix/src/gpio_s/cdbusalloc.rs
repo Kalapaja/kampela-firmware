@@ -428,25 +428,25 @@ impl W {
     #[doc = "Bits 0:3 - CD Bus Even 0"]
     #[inline(always)]
     #[must_use]
-    pub fn cdeven0(&mut self) -> CDEVEN0_W<0> {
+    pub fn cdeven0(&mut self) -> CDEVEN0_W<'_, 0> {
         CDEVEN0_W::new(self)
     }
     #[doc = "Bits 8:11 - CD Bus Even 1"]
     #[inline(always)]
     #[must_use]
-    pub fn cdeven1(&mut self) -> CDEVEN1_W<8> {
+    pub fn cdeven1(&mut self) -> CDEVEN1_W<'_, 8> {
         CDEVEN1_W::new(self)
     }
     #[doc = "Bits 16:19 - CD Bus Odd 0"]
     #[inline(always)]
     #[must_use]
-    pub fn cdodd0(&mut self) -> CDODD0_W<16> {
+    pub fn cdodd0(&mut self) -> CDODD0_W<'_, 16> {
         CDODD0_W::new(self)
     }
     #[doc = "Bits 24:27 - CD Bus Odd 1"]
     #[inline(always)]
     #[must_use]
-    pub fn cdodd1(&mut self) -> CDODD1_W<24> {
+    pub fn cdodd1(&mut self) -> CDODD1_W<'_, 24> {
         CDODD1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

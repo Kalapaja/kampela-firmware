@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:15 - Default TX DATA"]
     #[inline(always)]
     #[must_use]
-    pub fn dtxdat(&mut self) -> DTXDAT_W<0> {
+    pub fn dtxdat(&mut self) -> DTXDAT_W<'_, 0> {
         DTXDAT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

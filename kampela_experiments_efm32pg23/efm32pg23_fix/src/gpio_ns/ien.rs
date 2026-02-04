@@ -256,145 +256,145 @@ impl W {
     #[doc = "Bit 0 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien0(&mut self) -> EXTIEN0_W<0> {
+    pub fn extien0(&mut self) -> EXTIEN0_W<'_, 0> {
         EXTIEN0_W::new(self)
     }
     #[doc = "Bit 1 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien1(&mut self) -> EXTIEN1_W<1> {
+    pub fn extien1(&mut self) -> EXTIEN1_W<'_, 1> {
         EXTIEN1_W::new(self)
     }
     #[doc = "Bit 2 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien2(&mut self) -> EXTIEN2_W<2> {
+    pub fn extien2(&mut self) -> EXTIEN2_W<'_, 2> {
         EXTIEN2_W::new(self)
     }
     #[doc = "Bit 3 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien3(&mut self) -> EXTIEN3_W<3> {
+    pub fn extien3(&mut self) -> EXTIEN3_W<'_, 3> {
         EXTIEN3_W::new(self)
     }
     #[doc = "Bit 4 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien4(&mut self) -> EXTIEN4_W<4> {
+    pub fn extien4(&mut self) -> EXTIEN4_W<'_, 4> {
         EXTIEN4_W::new(self)
     }
     #[doc = "Bit 5 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien5(&mut self) -> EXTIEN5_W<5> {
+    pub fn extien5(&mut self) -> EXTIEN5_W<'_, 5> {
         EXTIEN5_W::new(self)
     }
     #[doc = "Bit 6 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien6(&mut self) -> EXTIEN6_W<6> {
+    pub fn extien6(&mut self) -> EXTIEN6_W<'_, 6> {
         EXTIEN6_W::new(self)
     }
     #[doc = "Bit 7 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien7(&mut self) -> EXTIEN7_W<7> {
+    pub fn extien7(&mut self) -> EXTIEN7_W<'_, 7> {
         EXTIEN7_W::new(self)
     }
     #[doc = "Bit 8 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien8(&mut self) -> EXTIEN8_W<8> {
+    pub fn extien8(&mut self) -> EXTIEN8_W<'_, 8> {
         EXTIEN8_W::new(self)
     }
     #[doc = "Bit 9 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien9(&mut self) -> EXTIEN9_W<9> {
+    pub fn extien9(&mut self) -> EXTIEN9_W<'_, 9> {
         EXTIEN9_W::new(self)
     }
     #[doc = "Bit 10 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien10(&mut self) -> EXTIEN10_W<10> {
+    pub fn extien10(&mut self) -> EXTIEN10_W<'_, 10> {
         EXTIEN10_W::new(self)
     }
     #[doc = "Bit 11 - External Pin Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn extien11(&mut self) -> EXTIEN11_W<11> {
+    pub fn extien11(&mut self) -> EXTIEN11_W<'_, 11> {
         EXTIEN11_W::new(self)
     }
     #[doc = "Bit 16 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien0(&mut self) -> EM4WUIEN0_W<16> {
+    pub fn em4wuien0(&mut self) -> EM4WUIEN0_W<'_, 16> {
         EM4WUIEN0_W::new(self)
     }
     #[doc = "Bit 17 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien1(&mut self) -> EM4WUIEN1_W<17> {
+    pub fn em4wuien1(&mut self) -> EM4WUIEN1_W<'_, 17> {
         EM4WUIEN1_W::new(self)
     }
     #[doc = "Bit 18 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien2(&mut self) -> EM4WUIEN2_W<18> {
+    pub fn em4wuien2(&mut self) -> EM4WUIEN2_W<'_, 18> {
         EM4WUIEN2_W::new(self)
     }
     #[doc = "Bit 19 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien3(&mut self) -> EM4WUIEN3_W<19> {
+    pub fn em4wuien3(&mut self) -> EM4WUIEN3_W<'_, 19> {
         EM4WUIEN3_W::new(self)
     }
     #[doc = "Bit 20 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien4(&mut self) -> EM4WUIEN4_W<20> {
+    pub fn em4wuien4(&mut self) -> EM4WUIEN4_W<'_, 20> {
         EM4WUIEN4_W::new(self)
     }
     #[doc = "Bit 21 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien5(&mut self) -> EM4WUIEN5_W<21> {
+    pub fn em4wuien5(&mut self) -> EM4WUIEN5_W<'_, 21> {
         EM4WUIEN5_W::new(self)
     }
     #[doc = "Bit 22 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien6(&mut self) -> EM4WUIEN6_W<22> {
+    pub fn em4wuien6(&mut self) -> EM4WUIEN6_W<'_, 22> {
         EM4WUIEN6_W::new(self)
     }
     #[doc = "Bit 23 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien7(&mut self) -> EM4WUIEN7_W<23> {
+    pub fn em4wuien7(&mut self) -> EM4WUIEN7_W<'_, 23> {
         EM4WUIEN7_W::new(self)
     }
     #[doc = "Bit 24 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien8(&mut self) -> EM4WUIEN8_W<24> {
+    pub fn em4wuien8(&mut self) -> EM4WUIEN8_W<'_, 24> {
         EM4WUIEN8_W::new(self)
     }
     #[doc = "Bit 25 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien9(&mut self) -> EM4WUIEN9_W<25> {
+    pub fn em4wuien9(&mut self) -> EM4WUIEN9_W<'_, 25> {
         EM4WUIEN9_W::new(self)
     }
     #[doc = "Bit 26 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien10(&mut self) -> EM4WUIEN10_W<26> {
+    pub fn em4wuien10(&mut self) -> EM4WUIEN10_W<'_, 26> {
         EM4WUIEN10_W::new(self)
     }
     #[doc = "Bit 27 - EM4 Wake Up Interrupt En"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wuien11(&mut self) -> EM4WUIEN11_W<27> {
+    pub fn em4wuien11(&mut self) -> EM4WUIEN11_W<'_, 27> {
         EM4WUIEN11_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

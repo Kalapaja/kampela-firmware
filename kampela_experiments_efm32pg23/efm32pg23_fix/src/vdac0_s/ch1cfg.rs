@@ -358,43 +358,43 @@ impl W {
     #[doc = "Bit 0 - Channel 1 Conversion Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn convmode(&mut self) -> CONVMODE_W<0> {
+    pub fn convmode(&mut self) -> CONVMODE_W<'_, 0> {
         CONVMODE_W::new(self)
     }
     #[doc = "Bit 2 - Channel 1 Power Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn powermode(&mut self) -> POWERMODE_W<2> {
+    pub fn powermode(&mut self) -> POWERMODE_W<'_, 2> {
         POWERMODE_W::new(self)
     }
     #[doc = "Bits 4:6 - Channel 1 Trigger Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn trigmode(&mut self) -> TRIGMODE_W<4> {
+    pub fn trigmode(&mut self) -> TRIGMODE_W<'_, 4> {
         TRIGMODE_W::new(self)
     }
     #[doc = "Bits 8:9 - Channel 1 Refresh Source"]
     #[inline(always)]
     #[must_use]
-    pub fn refreshsource(&mut self) -> REFRESHSOURCE_W<8> {
+    pub fn refreshsource(&mut self) -> REFRESHSOURCE_W<'_, 8> {
         REFRESHSOURCE_W::new(self)
     }
     #[doc = "Bits 11:12 - Channel 1 FIFO Low Watermark"]
     #[inline(always)]
     #[must_use]
-    pub fn fifodvl(&mut self) -> FIFODVL_W<11> {
+    pub fn fifodvl(&mut self) -> FIFODVL_W<'_, 11> {
         FIFODVL_W::new(self)
     }
     #[doc = "Bit 14 - Channel 1 High Cap Load Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn highcaploaden(&mut self) -> HIGHCAPLOADEN_W<14> {
+    pub fn highcaploaden(&mut self) -> HIGHCAPLOADEN_W<'_, 14> {
         HIGHCAPLOADEN_W::new(self)
     }
     #[doc = "Bit 16 - Channel 1 Keepwarm Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn keepwarm(&mut self) -> KEEPWARM_W<16> {
+    pub fn keepwarm(&mut self) -> KEEPWARM_W<'_, 16> {
         KEEPWARM_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

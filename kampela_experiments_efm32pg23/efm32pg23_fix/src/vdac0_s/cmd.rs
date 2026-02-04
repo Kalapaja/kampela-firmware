@@ -39,49 +39,49 @@ impl W {
     #[doc = "Bit 0 - DAC Channel 0 Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0en(&mut self) -> CH0EN_W<0> {
+    pub fn ch0en(&mut self) -> CH0EN_W<'_, 0> {
         CH0EN_W::new(self)
     }
     #[doc = "Bit 1 - DAC Channel 0 Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0dis(&mut self) -> CH0DIS_W<1> {
+    pub fn ch0dis(&mut self) -> CH0DIS_W<'_, 1> {
         CH0DIS_W::new(self)
     }
     #[doc = "Bit 4 - DAC Channel 1 Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1en(&mut self) -> CH1EN_W<4> {
+    pub fn ch1en(&mut self) -> CH1EN_W<'_, 4> {
         CH1EN_W::new(self)
     }
     #[doc = "Bit 5 - DAC Channel 1 Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1dis(&mut self) -> CH1DIS_W<5> {
+    pub fn ch1dis(&mut self) -> CH1DIS_W<'_, 5> {
         CH1DIS_W::new(self)
     }
     #[doc = "Bit 8 - CH0 WFIFO Flush"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0fifoflush(&mut self) -> CH0FIFOFLUSH_W<8> {
+    pub fn ch0fifoflush(&mut self) -> CH0FIFOFLUSH_W<'_, 8> {
         CH0FIFOFLUSH_W::new(self)
     }
     #[doc = "Bit 9 - CH1 WFIFO Flush"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1fifoflush(&mut self) -> CH1FIFOFLUSH_W<9> {
+    pub fn ch1fifoflush(&mut self) -> CH1FIFOFLUSH_W<'_, 9> {
         CH1FIFOFLUSH_W::new(self)
     }
     #[doc = "Bit 10 - Start Sine Wave Generation"]
     #[inline(always)]
     #[must_use]
-    pub fn sinemodestart(&mut self) -> SINEMODESTART_W<10> {
+    pub fn sinemodestart(&mut self) -> SINEMODESTART_W<'_, 10> {
         SINEMODESTART_W::new(self)
     }
     #[doc = "Bit 11 - Stop Sine Wave Generation"]
     #[inline(always)]
     #[must_use]
-    pub fn sinemodestop(&mut self) -> SINEMODESTOP_W<11> {
+    pub fn sinemodestop(&mut self) -> SINEMODESTOP_W<'_, 11> {
         SINEMODESTOP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -77,25 +77,25 @@ impl W {
     #[doc = "Bits 4:6 - Slew Rate"]
     #[inline(always)]
     #[must_use]
-    pub fn slewrate(&mut self) -> SLEWRATE_W<4> {
+    pub fn slewrate(&mut self) -> SLEWRATE_W<'_, 4> {
         SLEWRATE_W::new(self)
     }
     #[doc = "Bit 12 - Data In Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn dindis(&mut self) -> DINDIS_W<12> {
+    pub fn dindis(&mut self) -> DINDIS_W<'_, 12> {
         DINDIS_W::new(self)
     }
     #[doc = "Bits 20:22 - Slew Rate Alt"]
     #[inline(always)]
     #[must_use]
-    pub fn slewratealt(&mut self) -> SLEWRATEALT_W<20> {
+    pub fn slewratealt(&mut self) -> SLEWRATEALT_W<'_, 20> {
         SLEWRATEALT_W::new(self)
     }
     #[doc = "Bit 28 - Data In Disable Alt"]
     #[inline(always)]
     #[must_use]
-    pub fn dindisalt(&mut self) -> DINDISALT_W<28> {
+    pub fn dindisalt(&mut self) -> DINDISALT_W<'_, 28> {
         DINDISALT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

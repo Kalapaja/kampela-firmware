@@ -621,55 +621,55 @@ impl W {
     #[doc = "Bits 0:1 - Repeat Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn repmode(&mut self) -> REPMODE_W<0> {
+    pub fn repmode(&mut self) -> REPMODE_W<'_, 0> {
         REPMODE_W::new(self)
     }
     #[doc = "Bits 2:3 - Underflow Output Action 0"]
     #[inline(always)]
     #[must_use]
-    pub fn ufoa0(&mut self) -> UFOA0_W<2> {
+    pub fn ufoa0(&mut self) -> UFOA0_W<'_, 2> {
         UFOA0_W::new(self)
     }
     #[doc = "Bits 4:5 - Underflow Output Action 1"]
     #[inline(always)]
     #[must_use]
-    pub fn ufoa1(&mut self) -> UFOA1_W<4> {
+    pub fn ufoa1(&mut self) -> UFOA1_W<'_, 4> {
         UFOA1_W::new(self)
     }
     #[doc = "Bit 6 - Output 0 Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn opol0(&mut self) -> OPOL0_W<6> {
+    pub fn opol0(&mut self) -> OPOL0_W<'_, 6> {
         OPOL0_W::new(self)
     }
     #[doc = "Bit 7 - Output 1 Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn opol1(&mut self) -> OPOL1_W<7> {
+    pub fn opol1(&mut self) -> OPOL1_W<'_, 7> {
         OPOL1_W::new(self)
     }
     #[doc = "Bit 8 - Buffered Top"]
     #[inline(always)]
     #[must_use]
-    pub fn buftop(&mut self) -> BUFTOP_W<8> {
+    pub fn buftop(&mut self) -> BUFTOP_W<'_, 8> {
         BUFTOP_W::new(self)
     }
     #[doc = "Bit 9 - Compare Value 0 Is Top Value"]
     #[inline(always)]
     #[must_use]
-    pub fn cnttopen(&mut self) -> CNTTOPEN_W<9> {
+    pub fn cnttopen(&mut self) -> CNTTOPEN_W<'_, 9> {
         CNTTOPEN_W::new(self)
     }
     #[doc = "Bit 12 - Debug Mode Run Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<12> {
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<'_, 12> {
         DEBUGRUN_W::new(self)
     }
     #[doc = "Bits 16:19 - Counter prescaler value"]
     #[inline(always)]
     #[must_use]
-    pub fn cntpresc(&mut self) -> CNTPRESC_W<16> {
+    pub fn cntpresc(&mut self) -> CNTPRESC_W<'_, 16> {
         CNTPRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

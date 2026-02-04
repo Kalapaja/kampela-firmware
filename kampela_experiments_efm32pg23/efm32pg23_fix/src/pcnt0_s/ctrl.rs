@@ -299,31 +299,31 @@ impl W {
     #[doc = "Bit 0 - Count Direction Determined By S1"]
     #[inline(always)]
     #[must_use]
-    pub fn s1cdir(&mut self) -> S1CDIR_W<0> {
+    pub fn s1cdir(&mut self) -> S1CDIR_W<'_, 0> {
         S1CDIR_W::new(self)
     }
     #[doc = "Bit 1 - Non-Quadrature Mode Counter Direction Co"]
     #[inline(always)]
     #[must_use]
-    pub fn cntdir(&mut self) -> CNTDIR_W<1> {
+    pub fn cntdir(&mut self) -> CNTDIR_W<'_, 1> {
         CNTDIR_W::new(self)
     }
     #[doc = "Bit 2 - Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn edge(&mut self) -> EDGE_W<2> {
+    pub fn edge(&mut self) -> EDGE_W<'_, 2> {
         EDGE_W::new(self)
     }
     #[doc = "Bits 4:5 - Controls When the Counter Counts"]
     #[inline(always)]
     #[must_use]
-    pub fn cntev(&mut self) -> CNTEV_W<4> {
+    pub fn cntev(&mut self) -> CNTEV_W<'_, 4> {
         CNTEV_W::new(self)
     }
     #[doc = "Bits 6:7 - Controls When the Aux Counter Counts"]
     #[inline(always)]
     #[must_use]
-    pub fn auxcntev(&mut self) -> AUXCNTEV_W<6> {
+    pub fn auxcntev(&mut self) -> AUXCNTEV_W<'_, 6> {
         AUXCNTEV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

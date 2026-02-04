@@ -184,97 +184,97 @@ impl W {
     #[doc = "Bit 0 - ASYNCH0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch0pen(&mut self) -> ASYNCH0PEN_W<0> {
+    pub fn asynch0pen(&mut self) -> ASYNCH0PEN_W<'_, 0> {
         ASYNCH0PEN_W::new(self)
     }
     #[doc = "Bit 1 - ASYNCH1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch1pen(&mut self) -> ASYNCH1PEN_W<1> {
+    pub fn asynch1pen(&mut self) -> ASYNCH1PEN_W<'_, 1> {
         ASYNCH1PEN_W::new(self)
     }
     #[doc = "Bit 2 - ASYNCH2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch2pen(&mut self) -> ASYNCH2PEN_W<2> {
+    pub fn asynch2pen(&mut self) -> ASYNCH2PEN_W<'_, 2> {
         ASYNCH2PEN_W::new(self)
     }
     #[doc = "Bit 3 - ASYNCH3 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch3pen(&mut self) -> ASYNCH3PEN_W<3> {
+    pub fn asynch3pen(&mut self) -> ASYNCH3PEN_W<'_, 3> {
         ASYNCH3PEN_W::new(self)
     }
     #[doc = "Bit 4 - ASYNCH4 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch4pen(&mut self) -> ASYNCH4PEN_W<4> {
+    pub fn asynch4pen(&mut self) -> ASYNCH4PEN_W<'_, 4> {
         ASYNCH4PEN_W::new(self)
     }
     #[doc = "Bit 5 - ASYNCH5 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch5pen(&mut self) -> ASYNCH5PEN_W<5> {
+    pub fn asynch5pen(&mut self) -> ASYNCH5PEN_W<'_, 5> {
         ASYNCH5PEN_W::new(self)
     }
     #[doc = "Bit 6 - ASYNCH6 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch6pen(&mut self) -> ASYNCH6PEN_W<6> {
+    pub fn asynch6pen(&mut self) -> ASYNCH6PEN_W<'_, 6> {
         ASYNCH6PEN_W::new(self)
     }
     #[doc = "Bit 7 - ASYNCH7 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch7pen(&mut self) -> ASYNCH7PEN_W<7> {
+    pub fn asynch7pen(&mut self) -> ASYNCH7PEN_W<'_, 7> {
         ASYNCH7PEN_W::new(self)
     }
     #[doc = "Bit 8 - ASYNCH8 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch8pen(&mut self) -> ASYNCH8PEN_W<8> {
+    pub fn asynch8pen(&mut self) -> ASYNCH8PEN_W<'_, 8> {
         ASYNCH8PEN_W::new(self)
     }
     #[doc = "Bit 9 - ASYNCH9 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch9pen(&mut self) -> ASYNCH9PEN_W<9> {
+    pub fn asynch9pen(&mut self) -> ASYNCH9PEN_W<'_, 9> {
         ASYNCH9PEN_W::new(self)
     }
     #[doc = "Bit 10 - ASYNCH10 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch10pen(&mut self) -> ASYNCH10PEN_W<10> {
+    pub fn asynch10pen(&mut self) -> ASYNCH10PEN_W<'_, 10> {
         ASYNCH10PEN_W::new(self)
     }
     #[doc = "Bit 11 - ASYNCH11 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn asynch11pen(&mut self) -> ASYNCH11PEN_W<11> {
+    pub fn asynch11pen(&mut self) -> ASYNCH11PEN_W<'_, 11> {
         ASYNCH11PEN_W::new(self)
     }
     #[doc = "Bit 12 - SYNCH0 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn synch0pen(&mut self) -> SYNCH0PEN_W<12> {
+    pub fn synch0pen(&mut self) -> SYNCH0PEN_W<'_, 12> {
         SYNCH0PEN_W::new(self)
     }
     #[doc = "Bit 13 - SYNCH1 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn synch1pen(&mut self) -> SYNCH1PEN_W<13> {
+    pub fn synch1pen(&mut self) -> SYNCH1PEN_W<'_, 13> {
         SYNCH1PEN_W::new(self)
     }
     #[doc = "Bit 14 - SYNCH2 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn synch2pen(&mut self) -> SYNCH2PEN_W<14> {
+    pub fn synch2pen(&mut self) -> SYNCH2PEN_W<'_, 14> {
         SYNCH2PEN_W::new(self)
     }
     #[doc = "Bit 15 - SYNCH3 pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn synch3pen(&mut self) -> SYNCH3PEN_W<15> {
+    pub fn synch3pen(&mut self) -> SYNCH3PEN_W<'_, 15> {
         SYNCH3PEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

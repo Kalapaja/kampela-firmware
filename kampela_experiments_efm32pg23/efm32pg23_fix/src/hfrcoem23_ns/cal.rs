@@ -173,49 +173,49 @@ impl W {
     #[doc = "Bits 0:6 - Tuning Value"]
     #[inline(always)]
     #[must_use]
-    pub fn tuning(&mut self) -> TUNING_W<0> {
+    pub fn tuning(&mut self) -> TUNING_W<'_, 0> {
         TUNING_W::new(self)
     }
     #[doc = "Bits 8:13 - Fine Tuning Value"]
     #[inline(always)]
     #[must_use]
-    pub fn finetuning(&mut self) -> FINETUNING_W<8> {
+    pub fn finetuning(&mut self) -> FINETUNING_W<'_, 8> {
         FINETUNING_W::new(self)
     }
     #[doc = "Bit 15 - LDO High Power Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn ldohp(&mut self) -> LDOHP_W<15> {
+    pub fn ldohp(&mut self) -> LDOHP_W<'_, 15> {
         LDOHP_W::new(self)
     }
     #[doc = "Bits 16:20 - Frequency Range"]
     #[inline(always)]
     #[must_use]
-    pub fn freqrange(&mut self) -> FREQRANGE_W<16> {
+    pub fn freqrange(&mut self) -> FREQRANGE_W<'_, 16> {
         FREQRANGE_W::new(self)
     }
     #[doc = "Bits 21:23 - Comparator Bias Current"]
     #[inline(always)]
     #[must_use]
-    pub fn cmpbias(&mut self) -> CMPBIAS_W<21> {
+    pub fn cmpbias(&mut self) -> CMPBIAS_W<'_, 21> {
         CMPBIAS_W::new(self)
     }
     #[doc = "Bits 24:25 - Locally Divide HFRCO Clock Output"]
     #[inline(always)]
     #[must_use]
-    pub fn clkdiv(&mut self) -> CLKDIV_W<24> {
+    pub fn clkdiv(&mut self) -> CLKDIV_W<'_, 24> {
         CLKDIV_W::new(self)
     }
     #[doc = "Bits 26:27 - Comparator Load Select"]
     #[inline(always)]
     #[must_use]
-    pub fn cmpsel(&mut self) -> CMPSEL_W<26> {
+    pub fn cmpsel(&mut self) -> CMPSEL_W<'_, 26> {
         CMPSEL_W::new(self)
     }
     #[doc = "Bits 28:31 - Tempco Trim on Comparator Current"]
     #[inline(always)]
     #[must_use]
-    pub fn ireftc(&mut self) -> IREFTC_W<28> {
+    pub fn ireftc(&mut self) -> IREFTC_W<'_, 28> {
         IREFTC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

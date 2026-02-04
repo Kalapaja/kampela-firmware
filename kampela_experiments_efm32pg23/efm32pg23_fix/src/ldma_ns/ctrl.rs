@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 24:28 - Number of Fixed Priority Channels"]
     #[inline(always)]
     #[must_use]
-    pub fn numfixed(&mut self) -> NUMFIXED_W<24> {
+    pub fn numfixed(&mut self) -> NUMFIXED_W<'_, 24> {
         NUMFIXED_W::new(self)
     }
     #[doc = "Bit 31 - Reset DMA controller"]
     #[inline(always)]
     #[must_use]
-    pub fn corerst(&mut self) -> CORERST_W<31> {
+    pub fn corerst(&mut self) -> CORERST_W<'_, 31> {
         CORERST_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

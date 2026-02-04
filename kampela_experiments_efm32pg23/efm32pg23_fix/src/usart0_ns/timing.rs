@@ -583,25 +583,25 @@ impl W {
     #[doc = "Bits 16:18 - TX frame start delay"]
     #[inline(always)]
     #[must_use]
-    pub fn txdelay(&mut self) -> TXDELAY_W<16> {
+    pub fn txdelay(&mut self) -> TXDELAY_W<'_, 16> {
         TXDELAY_W::new(self)
     }
     #[doc = "Bits 20:22 - Chip Select Setup"]
     #[inline(always)]
     #[must_use]
-    pub fn cssetup(&mut self) -> CSSETUP_W<20> {
+    pub fn cssetup(&mut self) -> CSSETUP_W<'_, 20> {
         CSSETUP_W::new(self)
     }
     #[doc = "Bits 24:26 - Inter-character spacing"]
     #[inline(always)]
     #[must_use]
-    pub fn ics(&mut self) -> ICS_W<24> {
+    pub fn ics(&mut self) -> ICS_W<'_, 24> {
         ICS_W::new(self)
     }
     #[doc = "Bits 28:30 - Chip Select Hold"]
     #[inline(always)]
     #[must_use]
-    pub fn cshold(&mut self) -> CSHOLD_W<28> {
+    pub fn cshold(&mut self) -> CSHOLD_W<'_, 28> {
         CSHOLD_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

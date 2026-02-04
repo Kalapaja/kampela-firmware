@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bits 0:5 - Chip Revision Major value"]
     #[inline(always)]
     #[must_use]
-    pub fn major(&mut self) -> MAJOR_W<0> {
+    pub fn major(&mut self) -> MAJOR_W<'_, 0> {
         MAJOR_W::new(self)
     }
     #[doc = "Bits 6:11 - Chip Family value"]
     #[inline(always)]
     #[must_use]
-    pub fn family(&mut self) -> FAMILY_W<6> {
+    pub fn family(&mut self) -> FAMILY_W<'_, 6> {
         FAMILY_W::new(self)
     }
     #[doc = "Bits 12:19 - Chip Revision Minor value"]
     #[inline(always)]
     #[must_use]
-    pub fn minor(&mut self) -> MINOR_W<12> {
+    pub fn minor(&mut self) -> MINOR_W<'_, 12> {
         MINOR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

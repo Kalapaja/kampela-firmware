@@ -46,7 +46,7 @@ impl W {
     #[doc = "Bits 0:15 - DTI Lock Key"]
     #[inline(always)]
     #[must_use]
-    pub fn dtilockkey(&mut self) -> DTILOCKKEY_W<0> {
+    pub fn dtilockkey(&mut self) -> DTILOCKKEY_W<'_, 0> {
         DTILOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

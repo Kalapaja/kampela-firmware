@@ -901,73 +901,73 @@ impl W {
     #[doc = "Bit 0 - WDOG Clear Source"]
     #[inline(always)]
     #[must_use]
-    pub fn clrsrc(&mut self) -> CLRSRC_W<0> {
+    pub fn clrsrc(&mut self) -> CLRSRC_W<'_, 0> {
         CLRSRC_W::new(self)
     }
     #[doc = "Bit 1 - EM1 Run"]
     #[inline(always)]
     #[must_use]
-    pub fn em1run(&mut self) -> EM1RUN_W<1> {
+    pub fn em1run(&mut self) -> EM1RUN_W<'_, 1> {
         EM1RUN_W::new(self)
     }
     #[doc = "Bit 2 - EM2 Run"]
     #[inline(always)]
     #[must_use]
-    pub fn em2run(&mut self) -> EM2RUN_W<2> {
+    pub fn em2run(&mut self) -> EM2RUN_W<'_, 2> {
         EM2RUN_W::new(self)
     }
     #[doc = "Bit 3 - EM3 Run"]
     #[inline(always)]
     #[must_use]
-    pub fn em3run(&mut self) -> EM3RUN_W<3> {
+    pub fn em3run(&mut self) -> EM3RUN_W<'_, 3> {
         EM3RUN_W::new(self)
     }
     #[doc = "Bit 4 - EM4 Block"]
     #[inline(always)]
     #[must_use]
-    pub fn em4block(&mut self) -> EM4BLOCK_W<4> {
+    pub fn em4block(&mut self) -> EM4BLOCK_W<'_, 4> {
         EM4BLOCK_W::new(self)
     }
     #[doc = "Bit 5 - Debug Mode Run"]
     #[inline(always)]
     #[must_use]
-    pub fn debugrun(&mut self) -> DEBUGRUN_W<5> {
+    pub fn debugrun(&mut self) -> DEBUGRUN_W<'_, 5> {
         DEBUGRUN_W::new(self)
     }
     #[doc = "Bit 8 - WDOG Reset Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn wdogrstdis(&mut self) -> WDOGRSTDIS_W<8> {
+    pub fn wdogrstdis(&mut self) -> WDOGRSTDIS_W<'_, 8> {
         WDOGRSTDIS_W::new(self)
     }
     #[doc = "Bit 9 - PRS Src0 Missing Event WDOG Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn prs0missrsten(&mut self) -> PRS0MISSRSTEN_W<9> {
+    pub fn prs0missrsten(&mut self) -> PRS0MISSRSTEN_W<'_, 9> {
         PRS0MISSRSTEN_W::new(self)
     }
     #[doc = "Bit 10 - PRS Src1 Missing Event WDOG Reset"]
     #[inline(always)]
     #[must_use]
-    pub fn prs1missrsten(&mut self) -> PRS1MISSRSTEN_W<10> {
+    pub fn prs1missrsten(&mut self) -> PRS1MISSRSTEN_W<'_, 10> {
         PRS1MISSRSTEN_W::new(self)
     }
     #[doc = "Bits 16:19 - WDOG Timeout Period Select"]
     #[inline(always)]
     #[must_use]
-    pub fn persel(&mut self) -> PERSEL_W<16> {
+    pub fn persel(&mut self) -> PERSEL_W<'_, 16> {
         PERSEL_W::new(self)
     }
     #[doc = "Bits 24:25 - WDOG Warning Period Select"]
     #[inline(always)]
     #[must_use]
-    pub fn warnsel(&mut self) -> WARNSEL_W<24> {
+    pub fn warnsel(&mut self) -> WARNSEL_W<'_, 24> {
         WARNSEL_W::new(self)
     }
     #[doc = "Bits 28:30 - WDOG Illegal Window Select"]
     #[inline(always)]
     #[must_use]
-    pub fn winsel(&mut self) -> WINSEL_W<28> {
+    pub fn winsel(&mut self) -> WINSEL_W<'_, 28> {
         WINSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

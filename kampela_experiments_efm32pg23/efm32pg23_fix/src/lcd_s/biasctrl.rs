@@ -314,49 +314,49 @@ impl W {
     #[doc = "Bits 0:3 - Resistor strength"]
     #[inline(always)]
     #[must_use]
-    pub fn resistor(&mut self) -> RESISTOR_W<0> {
+    pub fn resistor(&mut self) -> RESISTOR_W<'_, 0> {
         RESISTOR_W::new(self)
     }
     #[doc = "Bits 4:6 - Buffer Drive Strength"]
     #[inline(always)]
     #[must_use]
-    pub fn bufdrv(&mut self) -> BUFDRV_W<4> {
+    pub fn bufdrv(&mut self) -> BUFDRV_W<'_, 4> {
         BUFDRV_W::new(self)
     }
     #[doc = "Bits 8:9 - Buffer Bias Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn bufbias(&mut self) -> BUFBIAS_W<8> {
+    pub fn bufbias(&mut self) -> BUFBIAS_W<'_, 8> {
         BUFBIAS_W::new(self)
     }
     #[doc = "Bit 12 - Mode Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<12> {
+    pub fn mode(&mut self) -> MODE_W<'_, 12> {
         MODE_W::new(self)
     }
     #[doc = "Bits 16:20 - VLCD voltage level"]
     #[inline(always)]
     #[must_use]
-    pub fn vlcd(&mut self) -> VLCD_W<16> {
+    pub fn vlcd(&mut self) -> VLCD_W<'_, 16> {
         VLCD_W::new(self)
     }
     #[doc = "Bit 22 - VDDX select"]
     #[inline(always)]
     #[must_use]
-    pub fn vddxsel(&mut self) -> VDDXSEL_W<22> {
+    pub fn vddxsel(&mut self) -> VDDXSEL_W<'_, 22> {
         VDDXSEL_W::new(self)
     }
     #[doc = "Bit 26 - LCD Gate"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdgate(&mut self) -> LCDGATE_W<26> {
+    pub fn lcdgate(&mut self) -> LCDGATE_W<'_, 26> {
         LCDGATE_W::new(self)
     }
     #[doc = "Bits 30:31 - DMA Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn dmamode(&mut self) -> DMAMODE_W<30> {
+    pub fn dmamode(&mut self) -> DMAMODE_W<'_, 30> {
         DMAMODE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

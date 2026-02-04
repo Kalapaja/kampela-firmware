@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bit 0 - AVDD BOD enable"]
     #[inline(always)]
     #[must_use]
-    pub fn avddboden(&mut self) -> AVDDBODEN_W<0> {
+    pub fn avddboden(&mut self) -> AVDDBODEN_W<'_, 0> {
         AVDDBODEN_W::new(self)
     }
     #[doc = "Bit 1 - VDDIO0 BOD enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vddio0boden(&mut self) -> VDDIO0BODEN_W<1> {
+    pub fn vddio0boden(&mut self) -> VDDIO0BODEN_W<'_, 1> {
         VDDIO0BODEN_W::new(self)
     }
     #[doc = "Bit 2 - VDDIO1 BOD enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vddio1boden(&mut self) -> VDDIO1BODEN_W<2> {
+    pub fn vddio1boden(&mut self) -> VDDIO1BODEN_W<'_, 2> {
         VDDIO1BODEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

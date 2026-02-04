@@ -184,97 +184,97 @@ impl W {
     #[doc = "Bit 0 - CH0OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0outpen(&mut self) -> CH0OUTPEN_W<0> {
+    pub fn ch0outpen(&mut self) -> CH0OUTPEN_W<'_, 0> {
         CH0OUTPEN_W::new(self)
     }
     #[doc = "Bit 1 - CH1OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1outpen(&mut self) -> CH1OUTPEN_W<1> {
+    pub fn ch1outpen(&mut self) -> CH1OUTPEN_W<'_, 1> {
         CH1OUTPEN_W::new(self)
     }
     #[doc = "Bit 2 - CH2OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch2outpen(&mut self) -> CH2OUTPEN_W<2> {
+    pub fn ch2outpen(&mut self) -> CH2OUTPEN_W<'_, 2> {
         CH2OUTPEN_W::new(self)
     }
     #[doc = "Bit 3 - CH3OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch3outpen(&mut self) -> CH3OUTPEN_W<3> {
+    pub fn ch3outpen(&mut self) -> CH3OUTPEN_W<'_, 3> {
         CH3OUTPEN_W::new(self)
     }
     #[doc = "Bit 4 - CH4OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch4outpen(&mut self) -> CH4OUTPEN_W<4> {
+    pub fn ch4outpen(&mut self) -> CH4OUTPEN_W<'_, 4> {
         CH4OUTPEN_W::new(self)
     }
     #[doc = "Bit 5 - CH5OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch5outpen(&mut self) -> CH5OUTPEN_W<5> {
+    pub fn ch5outpen(&mut self) -> CH5OUTPEN_W<'_, 5> {
         CH5OUTPEN_W::new(self)
     }
     #[doc = "Bit 6 - CH6OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch6outpen(&mut self) -> CH6OUTPEN_W<6> {
+    pub fn ch6outpen(&mut self) -> CH6OUTPEN_W<'_, 6> {
         CH6OUTPEN_W::new(self)
     }
     #[doc = "Bit 7 - CH7OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch7outpen(&mut self) -> CH7OUTPEN_W<7> {
+    pub fn ch7outpen(&mut self) -> CH7OUTPEN_W<'_, 7> {
         CH7OUTPEN_W::new(self)
     }
     #[doc = "Bit 8 - CH8OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch8outpen(&mut self) -> CH8OUTPEN_W<8> {
+    pub fn ch8outpen(&mut self) -> CH8OUTPEN_W<'_, 8> {
         CH8OUTPEN_W::new(self)
     }
     #[doc = "Bit 9 - CH9OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch9outpen(&mut self) -> CH9OUTPEN_W<9> {
+    pub fn ch9outpen(&mut self) -> CH9OUTPEN_W<'_, 9> {
         CH9OUTPEN_W::new(self)
     }
     #[doc = "Bit 10 - CH10OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch10outpen(&mut self) -> CH10OUTPEN_W<10> {
+    pub fn ch10outpen(&mut self) -> CH10OUTPEN_W<'_, 10> {
         CH10OUTPEN_W::new(self)
     }
     #[doc = "Bit 11 - CH11OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch11outpen(&mut self) -> CH11OUTPEN_W<11> {
+    pub fn ch11outpen(&mut self) -> CH11OUTPEN_W<'_, 11> {
         CH11OUTPEN_W::new(self)
     }
     #[doc = "Bit 12 - CH12OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch12outpen(&mut self) -> CH12OUTPEN_W<12> {
+    pub fn ch12outpen(&mut self) -> CH12OUTPEN_W<'_, 12> {
         CH12OUTPEN_W::new(self)
     }
     #[doc = "Bit 13 - CH13OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch13outpen(&mut self) -> CH13OUTPEN_W<13> {
+    pub fn ch13outpen(&mut self) -> CH13OUTPEN_W<'_, 13> {
         CH13OUTPEN_W::new(self)
     }
     #[doc = "Bit 14 - CH14OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch14outpen(&mut self) -> CH14OUTPEN_W<14> {
+    pub fn ch14outpen(&mut self) -> CH14OUTPEN_W<'_, 14> {
         CH14OUTPEN_W::new(self)
     }
     #[doc = "Bit 15 - CH15OUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn ch15outpen(&mut self) -> CH15OUTPEN_W<15> {
+    pub fn ch15outpen(&mut self) -> CH15OUTPEN_W<'_, 15> {
         CH15OUTPEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

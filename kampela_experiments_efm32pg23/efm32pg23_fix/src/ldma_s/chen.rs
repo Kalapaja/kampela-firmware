@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bits 0:7 - Channel Enables"]
     #[inline(always)]
     #[must_use]
-    pub fn chen(&mut self) -> CHEN_W<0> {
+    pub fn chen(&mut self) -> CHEN_W<'_, 0> {
         CHEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

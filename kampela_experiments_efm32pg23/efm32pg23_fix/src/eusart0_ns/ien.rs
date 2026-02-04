@@ -211,115 +211,115 @@ impl W {
     #[doc = "Bit 0 - TX Complete Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txc(&mut self) -> TXC_W<0> {
+    pub fn txc(&mut self) -> TXC_W<'_, 0> {
         TXC_W::new(self)
     }
     #[doc = "Bit 1 - TX FIFO Level Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txfl(&mut self) -> TXFL_W<1> {
+    pub fn txfl(&mut self) -> TXFL_W<'_, 1> {
         TXFL_W::new(self)
     }
     #[doc = "Bit 2 - RX FIFO Level Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfl(&mut self) -> RXFL_W<2> {
+    pub fn rxfl(&mut self) -> RXFL_W<'_, 2> {
         RXFL_W::new(self)
     }
     #[doc = "Bit 3 - RX FIFO Full Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfull(&mut self) -> RXFULL_W<3> {
+    pub fn rxfull(&mut self) -> RXFULL_W<'_, 3> {
         RXFULL_W::new(self)
     }
     #[doc = "Bit 4 - RX FIFO Overflow Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxof(&mut self) -> RXOF_W<4> {
+    pub fn rxof(&mut self) -> RXOF_W<'_, 4> {
         RXOF_W::new(self)
     }
     #[doc = "Bit 5 - RX FIFO Underflow Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxuf(&mut self) -> RXUF_W<5> {
+    pub fn rxuf(&mut self) -> RXUF_W<'_, 5> {
         RXUF_W::new(self)
     }
     #[doc = "Bit 6 - TX FIFO Overflow Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txof(&mut self) -> TXOF_W<6> {
+    pub fn txof(&mut self) -> TXOF_W<'_, 6> {
         TXOF_W::new(self)
     }
     #[doc = "Bit 7 - TX FIFO Underflow Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txuf(&mut self) -> TXUF_W<7> {
+    pub fn txuf(&mut self) -> TXUF_W<'_, 7> {
         TXUF_W::new(self)
     }
     #[doc = "Bit 8 - Parity Error Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn perr(&mut self) -> PERR_W<8> {
+    pub fn perr(&mut self) -> PERR_W<'_, 8> {
         PERR_W::new(self)
     }
     #[doc = "Bit 9 - Framing Error Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ferr(&mut self) -> FERR_W<9> {
+    pub fn ferr(&mut self) -> FERR_W<'_, 9> {
         FERR_W::new(self)
     }
     #[doc = "Bit 10 - Multi-Processor Addr Frame Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn mpaf(&mut self) -> MPAF_W<10> {
+    pub fn mpaf(&mut self) -> MPAF_W<'_, 10> {
         MPAF_W::new(self)
     }
     #[doc = "Bit 11 - Load Error Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn loaderr(&mut self) -> LOADERR_W<11> {
+    pub fn loaderr(&mut self) -> LOADERR_W<'_, 11> {
         LOADERR_W::new(self)
     }
     #[doc = "Bit 12 - Collision Check Fail Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ccf(&mut self) -> CCF_W<12> {
+    pub fn ccf(&mut self) -> CCF_W<'_, 12> {
         CCF_W::new(self)
     }
     #[doc = "Bit 13 - TX IDLE Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txidle(&mut self) -> TXIDLE_W<13> {
+    pub fn txidle(&mut self) -> TXIDLE_W<'_, 13> {
         TXIDLE_W::new(self)
     }
     #[doc = "Bit 16 - CS Wake-up Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cswu(&mut self) -> CSWU_W<16> {
+    pub fn cswu(&mut self) -> CSWU_W<'_, 16> {
         CSWU_W::new(self)
     }
     #[doc = "Bit 18 - Start Frame Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn startf(&mut self) -> STARTF_W<18> {
+    pub fn startf(&mut self) -> STARTF_W<'_, 18> {
         STARTF_W::new(self)
     }
     #[doc = "Bit 19 - Signal Frame Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sigf(&mut self) -> SIGF_W<19> {
+    pub fn sigf(&mut self) -> SIGF_W<'_, 19> {
         SIGF_W::new(self)
     }
     #[doc = "Bit 24 - Auto Baud Complete Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autobauddone(&mut self) -> AUTOBAUDDONE_W<24> {
+    pub fn autobauddone(&mut self) -> AUTOBAUDDONE_W<'_, 24> {
         AUTOBAUDDONE_W::new(self)
     }
     #[doc = "Bit 25 - RX Timeout Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxto(&mut self) -> RXTO_W<25> {
+    pub fn rxto(&mut self) -> RXTO_W<'_, 25> {
         RXTO_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

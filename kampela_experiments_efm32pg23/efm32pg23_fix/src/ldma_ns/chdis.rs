@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA Channel disable"]
     #[inline(always)]
     #[must_use]
-    pub fn chdis(&mut self) -> CHDIS_W<0> {
+    pub fn chdis(&mut self) -> CHDIS_W<'_, 0> {
         CHDIS_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

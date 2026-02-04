@@ -368,25 +368,25 @@ impl W {
     #[doc = "Bits 0:19 - Calibration Counter Top Value"]
     #[inline(always)]
     #[must_use]
-    pub fn caltop(&mut self) -> CALTOP_W<0> {
+    pub fn caltop(&mut self) -> CALTOP_W<'_, 0> {
         CALTOP_W::new(self)
     }
     #[doc = "Bit 23 - Continuous Calibration"]
     #[inline(always)]
     #[must_use]
-    pub fn cont(&mut self) -> CONT_W<23> {
+    pub fn cont(&mut self) -> CONT_W<'_, 23> {
         CONT_W::new(self)
     }
     #[doc = "Bits 24:27 - Calibration Up-counter Select"]
     #[inline(always)]
     #[must_use]
-    pub fn upsel(&mut self) -> UPSEL_W<24> {
+    pub fn upsel(&mut self) -> UPSEL_W<'_, 24> {
         UPSEL_W::new(self)
     }
     #[doc = "Bits 28:31 - Calibration Down-counter Select"]
     #[inline(always)]
     #[must_use]
-    pub fn downsel(&mut self) -> DOWNSEL_W<28> {
+    pub fn downsel(&mut self) -> DOWNSEL_W<'_, 28> {
         DOWNSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

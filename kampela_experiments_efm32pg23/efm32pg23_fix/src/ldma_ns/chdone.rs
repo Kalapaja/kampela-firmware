@@ -112,49 +112,49 @@ impl W {
     #[doc = "Bit 0 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone0(&mut self) -> CHDONE0_W<0> {
+    pub fn chdone0(&mut self) -> CHDONE0_W<'_, 0> {
         CHDONE0_W::new(self)
     }
     #[doc = "Bit 1 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone1(&mut self) -> CHDONE1_W<1> {
+    pub fn chdone1(&mut self) -> CHDONE1_W<'_, 1> {
         CHDONE1_W::new(self)
     }
     #[doc = "Bit 2 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone2(&mut self) -> CHDONE2_W<2> {
+    pub fn chdone2(&mut self) -> CHDONE2_W<'_, 2> {
         CHDONE2_W::new(self)
     }
     #[doc = "Bit 3 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone3(&mut self) -> CHDONE3_W<3> {
+    pub fn chdone3(&mut self) -> CHDONE3_W<'_, 3> {
         CHDONE3_W::new(self)
     }
     #[doc = "Bit 4 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone4(&mut self) -> CHDONE4_W<4> {
+    pub fn chdone4(&mut self) -> CHDONE4_W<'_, 4> {
         CHDONE4_W::new(self)
     }
     #[doc = "Bit 5 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone5(&mut self) -> CHDONE5_W<5> {
+    pub fn chdone5(&mut self) -> CHDONE5_W<'_, 5> {
         CHDONE5_W::new(self)
     }
     #[doc = "Bit 6 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone6(&mut self) -> CHDONE6_W<6> {
+    pub fn chdone6(&mut self) -> CHDONE6_W<'_, 6> {
         CHDONE6_W::new(self)
     }
     #[doc = "Bit 7 - DMA Channel Link done intr flag"]
     #[inline(always)]
     #[must_use]
-    pub fn chdone7(&mut self) -> CHDONE7_W<7> {
+    pub fn chdone7(&mut self) -> CHDONE7_W<'_, 7> {
         CHDONE7_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -94,37 +94,37 @@ impl W {
     #[doc = "Bit 0 - DTI CCn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcc0en(&mut self) -> DTOGCC0EN_W<0> {
+    pub fn dtogcc0en(&mut self) -> DTOGCC0EN_W<'_, 0> {
         DTOGCC0EN_W::new(self)
     }
     #[doc = "Bit 1 - DTI CCn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcc1en(&mut self) -> DTOGCC1EN_W<1> {
+    pub fn dtogcc1en(&mut self) -> DTOGCC1EN_W<'_, 1> {
         DTOGCC1EN_W::new(self)
     }
     #[doc = "Bit 2 - DTI CCn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcc2en(&mut self) -> DTOGCC2EN_W<2> {
+    pub fn dtogcc2en(&mut self) -> DTOGCC2EN_W<'_, 2> {
         DTOGCC2EN_W::new(self)
     }
     #[doc = "Bit 3 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcdti0en(&mut self) -> DTOGCDTI0EN_W<3> {
+    pub fn dtogcdti0en(&mut self) -> DTOGCDTI0EN_W<'_, 3> {
         DTOGCDTI0EN_W::new(self)
     }
     #[doc = "Bit 4 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcdti1en(&mut self) -> DTOGCDTI1EN_W<4> {
+    pub fn dtogcdti1en(&mut self) -> DTOGCDTI1EN_W<'_, 4> {
         DTOGCDTI1EN_W::new(self)
     }
     #[doc = "Bit 5 - DTI CDTIn Output Generation Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtogcdti2en(&mut self) -> DTOGCDTI2EN_W<5> {
+    pub fn dtogcdti2en(&mut self) -> DTOGCDTI2EN_W<'_, 5> {
         DTOGCDTI2EN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

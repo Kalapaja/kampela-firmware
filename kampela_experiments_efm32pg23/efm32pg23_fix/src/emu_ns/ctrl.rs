@@ -211,43 +211,43 @@ impl W {
     #[doc = "Bit 0 - Enable debugging in EM2"]
     #[inline(always)]
     #[must_use]
-    pub fn em2dbgen(&mut self) -> EM2DBGEN_W<0> {
+    pub fn em2dbgen(&mut self) -> EM2DBGEN_W<'_, 0> {
         EM2DBGEN_W::new(self)
     }
     #[doc = "Bit 3 - Averaged Temperature samples num"]
     #[inline(always)]
     #[must_use]
-    pub fn tempavgnum(&mut self) -> TEMPAVGNUM_W<3> {
+    pub fn tempavgnum(&mut self) -> TEMPAVGNUM_W<'_, 3> {
         TEMPAVGNUM_W::new(self)
     }
     #[doc = "Bits 8:9 - EM2/EM3 Vscale"]
     #[inline(always)]
     #[must_use]
-    pub fn em23vscale(&mut self) -> EM23VSCALE_W<8> {
+    pub fn em23vscale(&mut self) -> EM23VSCALE_W<'_, 8> {
         EM23VSCALE_W::new(self)
     }
     #[doc = "Bit 16 - Enable flash on demand wakeup"]
     #[inline(always)]
     #[must_use]
-    pub fn flashpwrupondemand(&mut self) -> FLASHPWRUPONDEMAND_W<16> {
+    pub fn flashpwrupondemand(&mut self) -> FLASHPWRUPONDEMAND_W<'_, 16> {
         FLASHPWRUPONDEMAND_W::new(self)
     }
     #[doc = "Bit 29 - EFP Direct Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn efpdirectmodeen(&mut self) -> EFPDIRECTMODEEN_W<29> {
+    pub fn efpdirectmodeen(&mut self) -> EFPDIRECTMODEEN_W<'_, 29> {
         EFPDIRECTMODEEN_W::new(self)
     }
     #[doc = "Bit 30 - EFP drives DECOUPLE"]
     #[inline(always)]
     #[must_use]
-    pub fn efpdrvdecouple(&mut self) -> EFPDRVDECOUPLE_W<30> {
+    pub fn efpdrvdecouple(&mut self) -> EFPDRVDECOUPLE_W<'_, 30> {
         EFPDRVDECOUPLE_W::new(self)
     }
     #[doc = "Bit 31 - EFP drives DVDD"]
     #[inline(always)]
     #[must_use]
-    pub fn efpdrvdvdd(&mut self) -> EFPDRVDVDD_W<31> {
+    pub fn efpdrvdvdd(&mut self) -> EFPDRVDVDD_W<'_, 31> {
         EFPDRVDVDD_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

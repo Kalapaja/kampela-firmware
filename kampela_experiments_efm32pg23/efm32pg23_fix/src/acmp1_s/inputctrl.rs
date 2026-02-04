@@ -2303,25 +2303,25 @@ impl W {
     #[doc = "Bits 0:7 - Positive Input Select"]
     #[inline(always)]
     #[must_use]
-    pub fn possel(&mut self) -> POSSEL_W<0> {
+    pub fn possel(&mut self) -> POSSEL_W<'_, 0> {
         POSSEL_W::new(self)
     }
     #[doc = "Bits 8:15 - Negative Input Select"]
     #[inline(always)]
     #[must_use]
-    pub fn negsel(&mut self) -> NEGSEL_W<8> {
+    pub fn negsel(&mut self) -> NEGSEL_W<'_, 8> {
         NEGSEL_W::new(self)
     }
     #[doc = "Bits 16:21 - VREF division"]
     #[inline(always)]
     #[must_use]
-    pub fn vrefdiv(&mut self) -> VREFDIV_W<16> {
+    pub fn vrefdiv(&mut self) -> VREFDIV_W<'_, 16> {
         VREFDIV_W::new(self)
     }
     #[doc = "Bits 28:30 - Capacitive Sense Mode Internal Resistor"]
     #[inline(always)]
     #[must_use]
-    pub fn csressel(&mut self) -> CSRESSEL_W<28> {
+    pub fn csressel(&mut self) -> CSRESSEL_W<'_, 28> {
         CSRESSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:8 - Clock Divider"]
     #[inline(always)]
     #[must_use]
-    pub fn div(&mut self) -> DIV_W<0> {
+    pub fn div(&mut self) -> DIV_W<'_, 0> {
         DIV_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

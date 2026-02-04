@@ -67,19 +67,19 @@ impl W {
     #[doc = "Bits 0:9 - DTI Prescaler Setting"]
     #[inline(always)]
     #[must_use]
-    pub fn dtpresc(&mut self) -> DTPRESC_W<0> {
+    pub fn dtpresc(&mut self) -> DTPRESC_W<'_, 0> {
         DTPRESC_W::new(self)
     }
     #[doc = "Bits 10:15 - DTI Rise-time"]
     #[inline(always)]
     #[must_use]
-    pub fn dtriset(&mut self) -> DTRISET_W<10> {
+    pub fn dtriset(&mut self) -> DTRISET_W<'_, 10> {
         DTRISET_W::new(self)
     }
     #[doc = "Bits 16:21 - DTI Fall-time"]
     #[inline(always)]
     #[must_use]
-    pub fn dtfallt(&mut self) -> DTFALLT_W<16> {
+    pub fn dtfallt(&mut self) -> DTFALLT_W<'_, 16> {
         DTFALLT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

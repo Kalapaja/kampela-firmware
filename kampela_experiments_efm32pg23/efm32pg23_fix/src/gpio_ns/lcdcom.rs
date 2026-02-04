@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:3 - LCD Common Allocation"]
     #[inline(always)]
     #[must_use]
-    pub fn lcdcomalloc(&mut self) -> LCDCOMALLOC_W<0> {
+    pub fn lcdcomalloc(&mut self) -> LCDCOMALLOC_W<'_, 0> {
         LCDCOMALLOC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

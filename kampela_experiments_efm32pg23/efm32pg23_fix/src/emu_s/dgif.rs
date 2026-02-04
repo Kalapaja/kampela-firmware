@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 24 - EM23 Wake up Interrupt flag"]
     #[inline(always)]
     #[must_use]
-    pub fn em23wakeupdgif(&mut self) -> EM23WAKEUPDGIF_W<24> {
+    pub fn em23wakeupdgif(&mut self) -> EM23WAKEUPDGIF_W<'_, 24> {
         EM23WAKEUPDGIF_W::new(self)
     }
     #[doc = "Bit 29 - Temperature Interrupt flag"]
     #[inline(always)]
     #[must_use]
-    pub fn tempdgif(&mut self) -> TEMPDGIF_W<29> {
+    pub fn tempdgif(&mut self) -> TEMPDGIF_W<'_, 29> {
         TEMPDGIF_W::new(self)
     }
     #[doc = "Bit 30 - Temperature low Interrupt flag"]
     #[inline(always)]
     #[must_use]
-    pub fn templowdgif(&mut self) -> TEMPLOWDGIF_W<30> {
+    pub fn templowdgif(&mut self) -> TEMPLOWDGIF_W<'_, 30> {
         TEMPLOWDGIF_W::new(self)
     }
     #[doc = "Bit 31 - Temperature high Interrupt flag"]
     #[inline(always)]
     #[must_use]
-    pub fn temphighdgif(&mut self) -> TEMPHIGHDGIF_W<31> {
+    pub fn temphighdgif(&mut self) -> TEMPHIGHDGIF_W<'_, 31> {
         TEMPHIGHDGIF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -42,7 +42,7 @@ impl UI {
         let hardware = Hardware::new();
         let display = FrameBuffer::new_white();
         let state = UIState::new(hardware, display, &mut ());
-        return Self {
+        Self {
             state,
             status: UIStatus::DisplayOrListen(UIStatusDisplay::Listen),
             touches: VecDeque::new(),
@@ -57,7 +57,7 @@ impl UI {
             UIStatus::DisplayOrListen(ref mut status) => {
                 // read input if possible
                 if touch_detected().unwrap_or(false) {
-                    if self.touched == false && !matches!(status, UIStatusDisplay::DisplayOperation(UpdateRequest::Slow)) {
+                    if !self.touched && !matches!(status, UIStatusDisplay::DisplayOperation(UpdateRequest::Slow)) {
                         self.touched = true;
                         self.status = UIStatus::TouchOperation(Read::new(()), core::mem::take( status));
                         return None
@@ -145,14 +145,13 @@ impl UI {
 /// There is no sense in reading input while screen processes last event, nor refreshing the screen
 /// before touch was parsed
 
+#[derive(Default)]
 enum UIStatusDisplay {
     /// Event listening state, default
+    #[default]
     Listen,
     /// Screen update started
     DisplayOperation(UpdateRequest),
-}
-impl Default for UIStatusDisplay {
-    fn default() -> Self { UIStatusDisplay::Listen }
 }
 enum UIStatus {
     DisplayOrListen(UIStatusDisplay),
@@ -169,7 +168,7 @@ pub struct Hardware {
 impl Hardware {
     pub fn new() -> Self {
         let protected = None;
-        let pin_set = false; // TODO query storage
+        let _pin_set = false; // TODO query storage
         let pin = [0; 4];
         Self {
             pin,
@@ -190,7 +189,7 @@ impl Platform for Hardware {
         FlashWordList::new()
     }
 
-    fn rng<'b>(_: &'b mut ()) -> Self::Rng<'static> {
+    fn rng(_: &mut ()) -> Self::Rng<'static> {
         se_rng::SeRng{}
     }
 
@@ -203,7 +202,7 @@ impl Platform for Hardware {
     }
 
     fn store_entropy(&mut self, e: &[u8]) {
-        self.protected = if e.len() != 0 {
+        self.protected = if !e.is_empty() {
             let protected = encode_entropy(e);
             store_encoded_entopy(&protected);
             Some(protected)
@@ -217,19 +216,11 @@ impl Platform for Hardware {
     }
 
     fn public(&self) -> Option<Public> {
-        if let Some(e) = self.entropy() {
-            Some(Pair::from_entropy_and_pwd(&e, "").unwrap().public())
-        } else {
-            None
-        }
+        self.entropy().map(|e| Pair::from_entropy_and_pwd(&e, "").unwrap().public())
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
-        if let Some(p) = &self.protected {
-            Some(decode_entropy(&p))
-        } else {
-            None
-        }
+        self.protected.as_ref().map(|p| decode_entropy(p))
     }
 
     fn set_address(&mut self, addr: [u8; 76]) {
@@ -300,7 +291,7 @@ impl Platform for Hardware {
             start_address: transaction_psram_access.call_psram_access.start_address,
             total_len:
                 transaction_psram_access.call_psram_access.total_len
-                + &transaction_psram_access.extension_psram_access.total_len
+                + transaction_psram_access.extension_psram_access.total_len
         };
         let data_to_sign = read_from_psram(&data_to_sign_psram_access);
 
@@ -310,12 +301,12 @@ impl Platform for Hardware {
 
         let mut signature_with_id: [u8; 65] = [1; 65];
         signature_with_id[1..].copy_from_slice(&signature.0);
-        let signature_with_id_bytes = hex::encode(signature_with_id)
+        
+
+        hex::encode(signature_with_id)
             .into_bytes()
             .try_into()
-            .expect("static length");
-
-        signature_with_id_bytes
+            .expect("static length")
     }
 
     fn address(&mut self) -> &[u8; 76] {

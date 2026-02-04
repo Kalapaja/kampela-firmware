@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bit 0 - Core Bias Optimizaton"]
     #[inline(always)]
     #[must_use]
-    pub fn corebiasopt(&mut self) -> COREBIASOPT_W<0> {
+    pub fn corebiasopt(&mut self) -> COREBIASOPT_W<'_, 0> {
         COREBIASOPT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

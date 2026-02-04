@@ -47,73 +47,73 @@ impl W {
     #[doc = "Bit 0 - Receiver Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxen(&mut self) -> RXEN_W<0> {
+    pub fn rxen(&mut self) -> RXEN_W<'_, 0> {
         RXEN_W::new(self)
     }
     #[doc = "Bit 1 - Receiver Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxdis(&mut self) -> RXDIS_W<1> {
+    pub fn rxdis(&mut self) -> RXDIS_W<'_, 1> {
         RXDIS_W::new(self)
     }
     #[doc = "Bit 2 - Transmitter Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txen(&mut self) -> TXEN_W<2> {
+    pub fn txen(&mut self) -> TXEN_W<'_, 2> {
         TXEN_W::new(self)
     }
     #[doc = "Bit 3 - Transmitter Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn txdis(&mut self) -> TXDIS_W<3> {
+    pub fn txdis(&mut self) -> TXDIS_W<'_, 3> {
         TXDIS_W::new(self)
     }
     #[doc = "Bit 4 - Main Mode Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn masteren(&mut self) -> MASTEREN_W<4> {
+    pub fn masteren(&mut self) -> MASTEREN_W<'_, 4> {
         MASTEREN_W::new(self)
     }
     #[doc = "Bit 5 - Main Mode Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn masterdis(&mut self) -> MASTERDIS_W<5> {
+    pub fn masterdis(&mut self) -> MASTERDIS_W<'_, 5> {
         MASTERDIS_W::new(self)
     }
     #[doc = "Bit 6 - Receiver Block Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxblocken(&mut self) -> RXBLOCKEN_W<6> {
+    pub fn rxblocken(&mut self) -> RXBLOCKEN_W<'_, 6> {
         RXBLOCKEN_W::new(self)
     }
     #[doc = "Bit 7 - Receiver Block Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxblockdis(&mut self) -> RXBLOCKDIS_W<7> {
+    pub fn rxblockdis(&mut self) -> RXBLOCKDIS_W<'_, 7> {
         RXBLOCKDIS_W::new(self)
     }
     #[doc = "Bit 8 - Transmitter Tristate Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txtrien(&mut self) -> TXTRIEN_W<8> {
+    pub fn txtrien(&mut self) -> TXTRIEN_W<'_, 8> {
         TXTRIEN_W::new(self)
     }
     #[doc = "Bit 9 - Transmitter Tristate Disable"]
     #[inline(always)]
     #[must_use]
-    pub fn txtridis(&mut self) -> TXTRIDIS_W<9> {
+    pub fn txtridis(&mut self) -> TXTRIDIS_W<'_, 9> {
         TXTRIDIS_W::new(self)
     }
     #[doc = "Bit 10 - Clear TX"]
     #[inline(always)]
     #[must_use]
-    pub fn cleartx(&mut self) -> CLEARTX_W<10> {
+    pub fn cleartx(&mut self) -> CLEARTX_W<'_, 10> {
         CLEARTX_W::new(self)
     }
     #[doc = "Bit 11 - Clear RX"]
     #[inline(always)]
     #[must_use]
-    pub fn clearrx(&mut self) -> CLEARRX_W<11> {
+    pub fn clearrx(&mut self) -> CLEARRX_W<'_, 11> {
         CLEARRX_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

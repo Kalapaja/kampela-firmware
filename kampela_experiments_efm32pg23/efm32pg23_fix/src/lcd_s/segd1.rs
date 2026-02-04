@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:19 - COM1 Segment Data Low"]
     #[inline(always)]
     #[must_use]
-    pub fn segd1(&mut self) -> SEGD1_W<0> {
+    pub fn segd1(&mut self) -> SEGD1_W<'_, 0> {
         SEGD1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

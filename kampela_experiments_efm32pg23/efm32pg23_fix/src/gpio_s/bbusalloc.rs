@@ -426,25 +426,25 @@ impl W {
     #[doc = "Bits 0:3 - B Bus Even 0"]
     #[inline(always)]
     #[must_use]
-    pub fn beven0(&mut self) -> BEVEN0_W<0> {
+    pub fn beven0(&mut self) -> BEVEN0_W<'_, 0> {
         BEVEN0_W::new(self)
     }
     #[doc = "Bits 8:11 - B Bus Even 1"]
     #[inline(always)]
     #[must_use]
-    pub fn beven1(&mut self) -> BEVEN1_W<8> {
+    pub fn beven1(&mut self) -> BEVEN1_W<'_, 8> {
         BEVEN1_W::new(self)
     }
     #[doc = "Bits 16:19 - B Bus Odd 0"]
     #[inline(always)]
     #[must_use]
-    pub fn bodd0(&mut self) -> BODD0_W<16> {
+    pub fn bodd0(&mut self) -> BODD0_W<'_, 16> {
         BODD0_W::new(self)
     }
     #[doc = "Bits 24:27 - B Bus Odd 1"]
     #[inline(always)]
     #[must_use]
-    pub fn bodd1(&mut self) -> BODD1_W<24> {
+    pub fn bodd1(&mut self) -> BODD1_W<'_, 24> {
         BODD1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

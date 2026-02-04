@@ -376,25 +376,25 @@ impl W {
     #[doc = "Bits 0:1 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel0(&mut self) -> EXTIPINSEL0_W<0> {
+    pub fn extipinsel0(&mut self) -> EXTIPINSEL0_W<'_, 0> {
         EXTIPINSEL0_W::new(self)
     }
     #[doc = "Bits 4:5 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel1(&mut self) -> EXTIPINSEL1_W<4> {
+    pub fn extipinsel1(&mut self) -> EXTIPINSEL1_W<'_, 4> {
         EXTIPINSEL1_W::new(self)
     }
     #[doc = "Bits 8:9 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel2(&mut self) -> EXTIPINSEL2_W<8> {
+    pub fn extipinsel2(&mut self) -> EXTIPINSEL2_W<'_, 8> {
         EXTIPINSEL2_W::new(self)
     }
     #[doc = "Bits 12:13 - External Interrupt Pin select"]
     #[inline(always)]
     #[must_use]
-    pub fn extipinsel3(&mut self) -> EXTIPINSEL3_W<12> {
+    pub fn extipinsel3(&mut self) -> EXTIPINSEL3_W<'_, 12> {
         EXTIPINSEL3_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

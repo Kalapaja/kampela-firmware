@@ -184,25 +184,25 @@ impl W {
     #[doc = "Bits 0:1 - Crystal Oscillator Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bit 2 - Enable XI Internal DC Bias"]
     #[inline(always)]
     #[must_use]
-    pub fn enxidcbiasana(&mut self) -> ENXIDCBIASANA_W<2> {
+    pub fn enxidcbiasana(&mut self) -> ENXIDCBIASANA_W<'_, 2> {
         ENXIDCBIASANA_W::new(self)
     }
     #[doc = "Bit 3 - Squaring Buffer Schmitt Trigger"]
     #[inline(always)]
     #[must_use]
-    pub fn sqbufschtrgana(&mut self) -> SQBUFSCHTRGANA_W<3> {
+    pub fn sqbufschtrgana(&mut self) -> SQBUFSCHTRGANA_W<'_, 3> {
         SQBUFSCHTRGANA_W::new(self)
     }
     #[doc = "Bit 28 - Force Low Frequency Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn forcelftimeout(&mut self) -> FORCELFTIMEOUT_W<28> {
+    pub fn forcelftimeout(&mut self) -> FORCELFTIMEOUT_W<'_, 28> {
         FORCELFTIMEOUT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

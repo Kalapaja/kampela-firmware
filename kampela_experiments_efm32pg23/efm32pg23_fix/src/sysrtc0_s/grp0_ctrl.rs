@@ -332,37 +332,37 @@ impl W {
     #[doc = "Bit 0 - Compare 0 Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp0en(&mut self) -> CMP0EN_W<0> {
+    pub fn cmp0en(&mut self) -> CMP0EN_W<'_, 0> {
         CMP0EN_W::new(self)
     }
     #[doc = "Bit 1 - Compare 1 Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp1en(&mut self) -> CMP1EN_W<1> {
+    pub fn cmp1en(&mut self) -> CMP1EN_W<'_, 1> {
         CMP1EN_W::new(self)
     }
     #[doc = "Bit 2 - Capture 0 Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn cap0en(&mut self) -> CAP0EN_W<2> {
+    pub fn cap0en(&mut self) -> CAP0EN_W<'_, 2> {
         CAP0EN_W::new(self)
     }
     #[doc = "Bits 3:5 - Compare 0 Compare Match Output Action"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp0cmoa(&mut self) -> CMP0CMOA_W<3> {
+    pub fn cmp0cmoa(&mut self) -> CMP0CMOA_W<'_, 3> {
         CMP0CMOA_W::new(self)
     }
     #[doc = "Bits 6:8 - Compare 1 Compare Match Output Action"]
     #[inline(always)]
     #[must_use]
-    pub fn cmp1cmoa(&mut self) -> CMP1CMOA_W<6> {
+    pub fn cmp1cmoa(&mut self) -> CMP1CMOA_W<'_, 6> {
         CMP1CMOA_W::new(self)
     }
     #[doc = "Bits 9:10 - Capture 0 Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn cap0edge(&mut self) -> CAP0EDGE_W<9> {
+    pub fn cap0edge(&mut self) -> CAP0EDGE_W<'_, 9> {
         CAP0EDGE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

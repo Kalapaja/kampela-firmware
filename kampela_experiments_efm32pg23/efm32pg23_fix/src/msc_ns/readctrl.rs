@@ -123,7 +123,7 @@ impl W {
     #[doc = "Bits 20:21 - Read Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<20> {
+    pub fn mode(&mut self) -> MODE_W<'_, 20> {
         MODE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -121,55 +121,55 @@ impl W {
     #[doc = "Bit 0 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done0(&mut self) -> DONE0_W<0> {
+    pub fn done0(&mut self) -> DONE0_W<'_, 0> {
         DONE0_W::new(self)
     }
     #[doc = "Bit 1 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done1(&mut self) -> DONE1_W<1> {
+    pub fn done1(&mut self) -> DONE1_W<'_, 1> {
         DONE1_W::new(self)
     }
     #[doc = "Bit 2 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done2(&mut self) -> DONE2_W<2> {
+    pub fn done2(&mut self) -> DONE2_W<'_, 2> {
         DONE2_W::new(self)
     }
     #[doc = "Bit 3 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done3(&mut self) -> DONE3_W<3> {
+    pub fn done3(&mut self) -> DONE3_W<'_, 3> {
         DONE3_W::new(self)
     }
     #[doc = "Bit 4 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done4(&mut self) -> DONE4_W<4> {
+    pub fn done4(&mut self) -> DONE4_W<'_, 4> {
         DONE4_W::new(self)
     }
     #[doc = "Bit 5 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done5(&mut self) -> DONE5_W<5> {
+    pub fn done5(&mut self) -> DONE5_W<'_, 5> {
         DONE5_W::new(self)
     }
     #[doc = "Bit 6 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done6(&mut self) -> DONE6_W<6> {
+    pub fn done6(&mut self) -> DONE6_W<'_, 6> {
         DONE6_W::new(self)
     }
     #[doc = "Bit 7 - DMA Structure Operation Done"]
     #[inline(always)]
     #[must_use]
-    pub fn done7(&mut self) -> DONE7_W<7> {
+    pub fn done7(&mut self) -> DONE7_W<'_, 7> {
         DONE7_W::new(self)
     }
     #[doc = "Bit 31 - Error Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn error(&mut self) -> ERROR_W<31> {
+    pub fn error(&mut self) -> ERROR_W<'_, 31> {
         ERROR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

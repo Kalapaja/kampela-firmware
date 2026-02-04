@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA Request Clear"]
     #[inline(always)]
     #[must_use]
-    pub fn reqclear(&mut self) -> REQCLEAR_W<0> {
+    pub fn reqclear(&mut self) -> REQCLEAR_W<'_, 0> {
         REQCLEAR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

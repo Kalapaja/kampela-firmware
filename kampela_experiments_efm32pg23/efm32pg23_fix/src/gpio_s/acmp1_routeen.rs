@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 0 - ACMPOUT pin enable control bit"]
     #[inline(always)]
     #[must_use]
-    pub fn acmpoutpen(&mut self) -> ACMPOUTPEN_W<0> {
+    pub fn acmpoutpen(&mut self) -> ACMPOUTPEN_W<'_, 0> {
         ACMPOUTPEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -25,7 +25,7 @@ impl W {
     #[doc = "Bits 0:7 - DMA SYNC Software Trigger Set"]
     #[inline(always)]
     #[must_use]
-    pub fn syncswset(&mut self) -> SYNCSWSET_W<0> {
+    pub fn syncswset(&mut self) -> SYNCSWSET_W<'_, 0> {
         SYNCSWSET_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

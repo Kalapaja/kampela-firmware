@@ -131,31 +131,31 @@ impl W {
     #[doc = "Bit 0 - DTI Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dten(&mut self) -> DTEN_W<0> {
+    pub fn dten(&mut self) -> DTEN_W<'_, 0> {
         DTEN_W::new(self)
     }
     #[doc = "Bit 1 - DTI Automatic Start-up Functionality"]
     #[inline(always)]
     #[must_use]
-    pub fn dtdas(&mut self) -> DTDAS_W<1> {
+    pub fn dtdas(&mut self) -> DTDAS_W<'_, 1> {
         DTDAS_W::new(self)
     }
     #[doc = "Bit 9 - DTI Always Run"]
     #[inline(always)]
     #[must_use]
-    pub fn dtar(&mut self) -> DTAR_W<9> {
+    pub fn dtar(&mut self) -> DTAR_W<'_, 9> {
         DTAR_W::new(self)
     }
     #[doc = "Bit 10 - DTI Fault Action on Timer Stop"]
     #[inline(always)]
     #[must_use]
-    pub fn dtfats(&mut self) -> DTFATS_W<10> {
+    pub fn dtfats(&mut self) -> DTFATS_W<'_, 10> {
         DTFATS_W::new(self)
     }
     #[doc = "Bit 11 - DTI PRS Source Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn dtprsen(&mut self) -> DTPRSEN_W<11> {
+    pub fn dtprsen(&mut self) -> DTPRSEN_W<'_, 11> {
         DTPRSEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

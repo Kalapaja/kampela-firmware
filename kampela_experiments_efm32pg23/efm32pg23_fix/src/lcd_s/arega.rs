@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:7 - Animation Register A Data"]
     #[inline(always)]
     #[must_use]
-    pub fn arega(&mut self) -> AREGA_W<0> {
+    pub fn arega(&mut self) -> AREGA_W<'_, 0> {
         AREGA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

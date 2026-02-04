@@ -113,19 +113,19 @@ impl W {
     #[doc = "Bits 0:17 - Offset"]
     #[inline(always)]
     #[must_use]
-    pub fn offset(&mut self) -> OFFSET_W<0> {
+    pub fn offset(&mut self) -> OFFSET_W<'_, 0> {
         OFFSET_W::new(self)
     }
     #[doc = "Bits 18:30 - Gain 13 LSBs"]
     #[inline(always)]
     #[must_use]
-    pub fn gain13lsb(&mut self) -> GAIN13LSB_W<18> {
+    pub fn gain13lsb(&mut self) -> GAIN13LSB_W<'_, 18> {
         GAIN13LSB_W::new(self)
     }
     #[doc = "Bit 31 - Gain 3 MSBs"]
     #[inline(always)]
     #[must_use]
-    pub fn gain3msb(&mut self) -> GAIN3MSB_W<31> {
+    pub fn gain3msb(&mut self) -> GAIN3MSB_W<'_, 31> {
         GAIN3MSB_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

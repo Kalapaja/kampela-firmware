@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 2 - MCU LDMA privileged mode"]
     #[inline(always)]
     #[must_use]
-    pub fn ldma(&mut self) -> LDMA_W<2> {
+    pub fn ldma(&mut self) -> LDMA_W<'_, 2> {
         LDMA_W::new(self)
     }
     #[doc = "Bit 5 - SEEXTDMA privileged mode"]
     #[inline(always)]
     #[must_use]
-    pub fn seextdma(&mut self) -> SEEXTDMA_W<5> {
+    pub fn seextdma(&mut self) -> SEEXTDMA_W<'_, 5> {
         SEEXTDMA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

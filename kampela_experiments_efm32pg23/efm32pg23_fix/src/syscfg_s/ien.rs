@@ -166,85 +166,85 @@ impl W {
     #[doc = "Bit 0 - Software Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sw0(&mut self) -> SW0_W<0> {
+    pub fn sw0(&mut self) -> SW0_W<'_, 0> {
         SW0_W::new(self)
     }
     #[doc = "Bit 1 - Software Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sw1(&mut self) -> SW1_W<1> {
+    pub fn sw1(&mut self) -> SW1_W<'_, 1> {
         SW1_W::new(self)
     }
     #[doc = "Bit 2 - Software Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sw2(&mut self) -> SW2_W<2> {
+    pub fn sw2(&mut self) -> SW2_W<'_, 2> {
         SW2_W::new(self)
     }
     #[doc = "Bit 3 - Software Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn sw3(&mut self) -> SW3_W<3> {
+    pub fn sw3(&mut self) -> SW3_W<'_, 3> {
         SW3_W::new(self)
     }
     #[doc = "Bit 8 - FPU Invalid Operation Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpioc(&mut self) -> FPIOC_W<8> {
+    pub fn fpioc(&mut self) -> FPIOC_W<'_, 8> {
         FPIOC_W::new(self)
     }
     #[doc = "Bit 9 - FPU Divide by zero Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpdzc(&mut self) -> FPDZC_W<9> {
+    pub fn fpdzc(&mut self) -> FPDZC_W<'_, 9> {
         FPDZC_W::new(self)
     }
     #[doc = "Bit 10 - FPU Underflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpufc(&mut self) -> FPUFC_W<10> {
+    pub fn fpufc(&mut self) -> FPUFC_W<'_, 10> {
         FPUFC_W::new(self)
     }
     #[doc = "Bit 11 - FPU Overflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpofc(&mut self) -> FPOFC_W<11> {
+    pub fn fpofc(&mut self) -> FPOFC_W<'_, 11> {
         FPOFC_W::new(self)
     }
     #[doc = "Bit 12 - FPU Input denormal Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpidc(&mut self) -> FPIDC_W<12> {
+    pub fn fpidc(&mut self) -> FPIDC_W<'_, 12> {
         FPIDC_W::new(self)
     }
     #[doc = "Bit 13 - FPU Inexact Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn fpixc(&mut self) -> FPIXC_W<13> {
+    pub fn fpixc(&mut self) -> FPIXC_W<'_, 13> {
         FPIXC_W::new(self)
     }
     #[doc = "Bit 24 - SEQRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn seqramerr1b(&mut self) -> SEQRAMERR1B_W<24> {
+    pub fn seqramerr1b(&mut self) -> SEQRAMERR1B_W<'_, 24> {
         SEQRAMERR1B_W::new(self)
     }
     #[doc = "Bit 25 - SEQRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn seqramerr2b(&mut self) -> SEQRAMERR2B_W<25> {
+    pub fn seqramerr2b(&mut self) -> SEQRAMERR2B_W<'_, 25> {
         SEQRAMERR2B_W::new(self)
     }
     #[doc = "Bit 28 - FRCRAM Error 1-bit Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn frcramerr1b(&mut self) -> FRCRAMERR1B_W<28> {
+    pub fn frcramerr1b(&mut self) -> FRCRAMERR1B_W<'_, 28> {
         FRCRAMERR1B_W::new(self)
     }
     #[doc = "Bit 29 - FRCRAM Error 2-bit Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn frcramerr2b(&mut self) -> FRCRAMERR2B_W<29> {
+    pub fn frcramerr2b(&mut self) -> FRCRAMERR2B_W<'_, 29> {
         FRCRAMERR2B_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

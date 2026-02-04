@@ -39,49 +39,49 @@ impl W {
     #[doc = "Bit 0 - Send start condition"]
     #[inline(always)]
     #[must_use]
-    pub fn start(&mut self) -> START_W<0> {
+    pub fn start(&mut self) -> START_W<'_, 0> {
         START_W::new(self)
     }
     #[doc = "Bit 1 - Send stop condition"]
     #[inline(always)]
     #[must_use]
-    pub fn stop(&mut self) -> STOP_W<1> {
+    pub fn stop(&mut self) -> STOP_W<'_, 1> {
         STOP_W::new(self)
     }
     #[doc = "Bit 2 - Send ACK"]
     #[inline(always)]
     #[must_use]
-    pub fn ack(&mut self) -> ACK_W<2> {
+    pub fn ack(&mut self) -> ACK_W<'_, 2> {
         ACK_W::new(self)
     }
     #[doc = "Bit 3 - Send NACK"]
     #[inline(always)]
     #[must_use]
-    pub fn nack(&mut self) -> NACK_W<3> {
+    pub fn nack(&mut self) -> NACK_W<'_, 3> {
         NACK_W::new(self)
     }
     #[doc = "Bit 4 - Continue transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn cont(&mut self) -> CONT_W<4> {
+    pub fn cont(&mut self) -> CONT_W<'_, 4> {
         CONT_W::new(self)
     }
     #[doc = "Bit 5 - Abort transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn abort(&mut self) -> ABORT_W<5> {
+    pub fn abort(&mut self) -> ABORT_W<'_, 5> {
         ABORT_W::new(self)
     }
     #[doc = "Bit 6 - Clear TX"]
     #[inline(always)]
     #[must_use]
-    pub fn cleartx(&mut self) -> CLEARTX_W<6> {
+    pub fn cleartx(&mut self) -> CLEARTX_W<'_, 6> {
         CLEARTX_W::new(self)
     }
     #[doc = "Bit 7 - Clear Pending Commands"]
     #[inline(always)]
     #[must_use]
-    pub fn clearpc(&mut self) -> CLEARPC_W<7> {
+    pub fn clearpc(&mut self) -> CLEARPC_W<'_, 7> {
         CLEARPC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

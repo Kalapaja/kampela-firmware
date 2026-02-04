@@ -319,187 +319,187 @@ impl W {
     #[doc = "Bit 0 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn ldma(&mut self) -> LDMA_W<0> {
+    pub fn ldma(&mut self) -> LDMA_W<'_, 0> {
         LDMA_W::new(self)
     }
     #[doc = "Bit 1 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn ldmaxbar(&mut self) -> LDMAXBAR_W<1> {
+    pub fn ldmaxbar(&mut self) -> LDMAXBAR_W<'_, 1> {
         LDMAXBAR_W::new(self)
     }
     #[doc = "Bit 3 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn gpcrc(&mut self) -> GPCRC_W<3> {
+    pub fn gpcrc(&mut self) -> GPCRC_W<'_, 3> {
         GPCRC_W::new(self)
     }
     #[doc = "Bit 4 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn timer0(&mut self) -> TIMER0_W<4> {
+    pub fn timer0(&mut self) -> TIMER0_W<'_, 4> {
         TIMER0_W::new(self)
     }
     #[doc = "Bit 5 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn timer1(&mut self) -> TIMER1_W<5> {
+    pub fn timer1(&mut self) -> TIMER1_W<'_, 5> {
         TIMER1_W::new(self)
     }
     #[doc = "Bit 6 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn timer2(&mut self) -> TIMER2_W<6> {
+    pub fn timer2(&mut self) -> TIMER2_W<'_, 6> {
         TIMER2_W::new(self)
     }
     #[doc = "Bit 7 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn timer3(&mut self) -> TIMER3_W<7> {
+    pub fn timer3(&mut self) -> TIMER3_W<'_, 7> {
         TIMER3_W::new(self)
     }
     #[doc = "Bit 8 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn timer4(&mut self) -> TIMER4_W<8> {
+    pub fn timer4(&mut self) -> TIMER4_W<'_, 8> {
         TIMER4_W::new(self)
     }
     #[doc = "Bit 9 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn usart0(&mut self) -> USART0_W<9> {
+    pub fn usart0(&mut self) -> USART0_W<'_, 9> {
         USART0_W::new(self)
     }
     #[doc = "Bit 10 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn iadc0(&mut self) -> IADC0_W<10> {
+    pub fn iadc0(&mut self) -> IADC0_W<'_, 10> {
         IADC0_W::new(self)
     }
     #[doc = "Bit 11 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn amuxcp0(&mut self) -> AMUXCP0_W<11> {
+    pub fn amuxcp0(&mut self) -> AMUXCP0_W<'_, 11> {
         AMUXCP0_W::new(self)
     }
     #[doc = "Bit 12 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn letimer0(&mut self) -> LETIMER0_W<12> {
+    pub fn letimer0(&mut self) -> LETIMER0_W<'_, 12> {
         LETIMER0_W::new(self)
     }
     #[doc = "Bit 13 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn wdog0(&mut self) -> WDOG0_W<13> {
+    pub fn wdog0(&mut self) -> WDOG0_W<'_, 13> {
         WDOG0_W::new(self)
     }
     #[doc = "Bit 14 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn i2c0(&mut self) -> I2C0_W<14> {
+    pub fn i2c0(&mut self) -> I2C0_W<'_, 14> {
         I2C0_W::new(self)
     }
     #[doc = "Bit 15 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn i2c1(&mut self) -> I2C1_W<15> {
+    pub fn i2c1(&mut self) -> I2C1_W<'_, 15> {
         I2C1_W::new(self)
     }
     #[doc = "Bit 16 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn syscfg(&mut self) -> SYSCFG_W<16> {
+    pub fn syscfg(&mut self) -> SYSCFG_W<'_, 16> {
         SYSCFG_W::new(self)
     }
     #[doc = "Bit 17 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn dpll0(&mut self) -> DPLL0_W<17> {
+    pub fn dpll0(&mut self) -> DPLL0_W<'_, 17> {
         DPLL0_W::new(self)
     }
     #[doc = "Bit 18 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn hfrco0(&mut self) -> HFRCO0_W<18> {
+    pub fn hfrco0(&mut self) -> HFRCO0_W<'_, 18> {
         HFRCO0_W::new(self)
     }
     #[doc = "Bit 19 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn hfrcoem23(&mut self) -> HFRCOEM23_W<19> {
+    pub fn hfrcoem23(&mut self) -> HFRCOEM23_W<'_, 19> {
         HFRCOEM23_W::new(self)
     }
     #[doc = "Bit 20 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn hfxo0(&mut self) -> HFXO0_W<20> {
+    pub fn hfxo0(&mut self) -> HFXO0_W<'_, 20> {
         HFXO0_W::new(self)
     }
     #[doc = "Bit 21 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn fsrco(&mut self) -> FSRCO_W<21> {
+    pub fn fsrco(&mut self) -> FSRCO_W<'_, 21> {
         FSRCO_W::new(self)
     }
     #[doc = "Bit 22 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn lfrco(&mut self) -> LFRCO_W<22> {
+    pub fn lfrco(&mut self) -> LFRCO_W<'_, 22> {
         LFRCO_W::new(self)
     }
     #[doc = "Bit 23 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn lfxo(&mut self) -> LFXO_W<23> {
+    pub fn lfxo(&mut self) -> LFXO_W<'_, 23> {
         LFXO_W::new(self)
     }
     #[doc = "Bit 24 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn ulfrco(&mut self) -> ULFRCO_W<24> {
+    pub fn ulfrco(&mut self) -> ULFRCO_W<'_, 24> {
         ULFRCO_W::new(self)
     }
     #[doc = "Bit 25 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn lesense(&mut self) -> LESENSE_W<25> {
+    pub fn lesense(&mut self) -> LESENSE_W<'_, 25> {
         LESENSE_W::new(self)
     }
     #[doc = "Bit 26 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn gpio(&mut self) -> GPIO_W<26> {
+    pub fn gpio(&mut self) -> GPIO_W<'_, 26> {
         GPIO_W::new(self)
     }
     #[doc = "Bit 27 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn prs(&mut self) -> PRS_W<27> {
+    pub fn prs(&mut self) -> PRS_W<'_, 27> {
         PRS_W::new(self)
     }
     #[doc = "Bit 28 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn buram(&mut self) -> BURAM_W<28> {
+    pub fn buram(&mut self) -> BURAM_W<'_, 28> {
         BURAM_W::new(self)
     }
     #[doc = "Bit 29 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn burtc(&mut self) -> BURTC_W<29> {
+    pub fn burtc(&mut self) -> BURTC_W<'_, 29> {
         BURTC_W::new(self)
     }
     #[doc = "Bit 30 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn sysrtc0(&mut self) -> SYSRTC0_W<30> {
+    pub fn sysrtc0(&mut self) -> SYSRTC0_W<'_, 30> {
         SYSRTC0_W::new(self)
     }
     #[doc = "Bit 31 - Enable Bus Clock"]
     #[inline(always)]
     #[must_use]
-    pub fn dcdc(&mut self) -> DCDC_W<31> {
+    pub fn dcdc(&mut self) -> DCDC_W<'_, 31> {
         DCDC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

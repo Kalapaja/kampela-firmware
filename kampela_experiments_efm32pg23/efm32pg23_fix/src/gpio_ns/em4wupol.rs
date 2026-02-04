@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 16:27 - EM4 Wake-Up Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn em4wupol(&mut self) -> EM4WUPOL_W<16> {
+    pub fn em4wupol(&mut self) -> EM4WUPOL_W<'_, 16> {
         EM4WUPOL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

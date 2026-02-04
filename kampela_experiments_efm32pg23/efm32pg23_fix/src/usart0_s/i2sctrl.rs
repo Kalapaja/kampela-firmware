@@ -267,37 +267,37 @@ impl W {
     #[doc = "Bit 0 - Enable I2S Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn en(&mut self) -> EN_W<0> {
+    pub fn en(&mut self) -> EN_W<'_, 0> {
         EN_W::new(self)
     }
     #[doc = "Bit 1 - Stero or Mono"]
     #[inline(always)]
     #[must_use]
-    pub fn mono(&mut self) -> MONO_W<1> {
+    pub fn mono(&mut self) -> MONO_W<'_, 1> {
         MONO_W::new(self)
     }
     #[doc = "Bit 2 - Justification of I2S Data"]
     #[inline(always)]
     #[must_use]
-    pub fn justify(&mut self) -> JUSTIFY_W<2> {
+    pub fn justify(&mut self) -> JUSTIFY_W<'_, 2> {
         JUSTIFY_W::new(self)
     }
     #[doc = "Bit 3 - Separate DMA Request For Left/Right Data"]
     #[inline(always)]
     #[must_use]
-    pub fn dmasplit(&mut self) -> DMASPLIT_W<3> {
+    pub fn dmasplit(&mut self) -> DMASPLIT_W<'_, 3> {
         DMASPLIT_W::new(self)
     }
     #[doc = "Bit 4 - Delay on I2S data"]
     #[inline(always)]
     #[must_use]
-    pub fn delay(&mut self) -> DELAY_W<4> {
+    pub fn delay(&mut self) -> DELAY_W<'_, 4> {
         DELAY_W::new(self)
     }
     #[doc = "Bits 8:10 - I2S Word Format"]
     #[inline(always)]
     #[must_use]
-    pub fn format(&mut self) -> FORMAT_W<8> {
+    pub fn format(&mut self) -> FORMAT_W<'_, 8> {
         FORMAT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

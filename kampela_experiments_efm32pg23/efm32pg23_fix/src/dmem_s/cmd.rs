@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bit 0 - Clear ECCERRADDR0"]
     #[inline(always)]
     #[must_use]
-    pub fn cleareccaddr0(&mut self) -> CLEARECCADDR0_W<0> {
+    pub fn cleareccaddr0(&mut self) -> CLEARECCADDR0_W<'_, 0> {
         CLEARECCADDR0_W::new(self)
     }
     #[doc = "Bit 1 - Clear ECCERRADDR1"]
     #[inline(always)]
     #[must_use]
-    pub fn cleareccaddr1(&mut self) -> CLEARECCADDR1_W<1> {
+    pub fn cleareccaddr1(&mut self) -> CLEARECCADDR1_W<'_, 1> {
         CLEARECCADDR1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

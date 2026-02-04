@@ -129,19 +129,19 @@ impl W {
     #[doc = "Bits 0:1 - EM4 entry request"]
     #[inline(always)]
     #[must_use]
-    pub fn em4entry(&mut self) -> EM4ENTRY_W<0> {
+    pub fn em4entry(&mut self) -> EM4ENTRY_W<'_, 0> {
         EM4ENTRY_W::new(self)
     }
     #[doc = "Bits 4:5 - EM4 IO retention mode"]
     #[inline(always)]
     #[must_use]
-    pub fn em4ioretmode(&mut self) -> EM4IORETMODE_W<4> {
+    pub fn em4ioretmode(&mut self) -> EM4IORETMODE_W<'_, 4> {
         EM4IORETMODE_W::new(self)
     }
     #[doc = "Bit 8 - Set BOD3SENSE as EM4 wakeup"]
     #[inline(always)]
     #[must_use]
-    pub fn bod3senseem4wu(&mut self) -> BOD3SENSEEM4WU_W<8> {
+    pub fn bod3senseem4wu(&mut self) -> BOD3SENSEEM4WU_W<'_, 8> {
         BOD3SENSEEM4WU_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

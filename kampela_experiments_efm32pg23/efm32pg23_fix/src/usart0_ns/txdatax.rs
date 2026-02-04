@@ -35,37 +35,37 @@ impl W {
     #[doc = "Bits 0:8 - TX Data"]
     #[inline(always)]
     #[must_use]
-    pub fn txdatax(&mut self) -> TXDATAX_W<0> {
+    pub fn txdatax(&mut self) -> TXDATAX_W<'_, 0> {
         TXDATAX_W::new(self)
     }
     #[doc = "Bit 11 - Unblock RX After Transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn ubrxat(&mut self) -> UBRXAT_W<11> {
+    pub fn ubrxat(&mut self) -> UBRXAT_W<'_, 11> {
         UBRXAT_W::new(self)
     }
     #[doc = "Bit 12 - Set TXTRI After Transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn txtriat(&mut self) -> TXTRIAT_W<12> {
+    pub fn txtriat(&mut self) -> TXTRIAT_W<'_, 12> {
         TXTRIAT_W::new(self)
     }
     #[doc = "Bit 13 - Transmit Data As Break"]
     #[inline(always)]
     #[must_use]
-    pub fn txbreak(&mut self) -> TXBREAK_W<13> {
+    pub fn txbreak(&mut self) -> TXBREAK_W<'_, 13> {
         TXBREAK_W::new(self)
     }
     #[doc = "Bit 14 - Clear TXEN After Transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn txdisat(&mut self) -> TXDISAT_W<14> {
+    pub fn txdisat(&mut self) -> TXDISAT_W<'_, 14> {
         TXDISAT_W::new(self)
     }
     #[doc = "Bit 15 - Enable RX After Transmission"]
     #[inline(always)]
     #[must_use]
-    pub fn rxenat(&mut self) -> RXENAT_W<15> {
+    pub fn rxenat(&mut self) -> RXENAT_W<'_, 15> {
         RXENAT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

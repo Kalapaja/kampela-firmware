@@ -752,67 +752,67 @@ impl W {
     #[doc = "Bits 0:1 - DMA Structure Type"]
     #[inline(always)]
     #[must_use]
-    pub fn structtype(&mut self) -> STRUCTTYPE_W<0> {
+    pub fn structtype(&mut self) -> STRUCTTYPE_W<'_, 0> {
         STRUCTTYPE_W::new(self)
     }
     #[doc = "Bits 4:14 - DMA Unit Data Transfer Count"]
     #[inline(always)]
     #[must_use]
-    pub fn xfercnt(&mut self) -> XFERCNT_W<4> {
+    pub fn xfercnt(&mut self) -> XFERCNT_W<'_, 4> {
         XFERCNT_W::new(self)
     }
     #[doc = "Bit 15 - Endian Byte Swap"]
     #[inline(always)]
     #[must_use]
-    pub fn byteswap(&mut self) -> BYTESWAP_W<15> {
+    pub fn byteswap(&mut self) -> BYTESWAP_W<'_, 15> {
         BYTESWAP_W::new(self)
     }
     #[doc = "Bits 16:19 - Block Transfer Size"]
     #[inline(always)]
     #[must_use]
-    pub fn blocksize(&mut self) -> BLOCKSIZE_W<16> {
+    pub fn blocksize(&mut self) -> BLOCKSIZE_W<'_, 16> {
         BLOCKSIZE_W::new(self)
     }
     #[doc = "Bit 20 - DMA Operation Done Interrupt Flag Set En"]
     #[inline(always)]
     #[must_use]
-    pub fn doneien(&mut self) -> DONEIEN_W<20> {
+    pub fn doneien(&mut self) -> DONEIEN_W<'_, 20> {
         DONEIEN_W::new(self)
     }
     #[doc = "Bit 21 - DMA Request Transfer Mode Select"]
     #[inline(always)]
     #[must_use]
-    pub fn reqmode(&mut self) -> REQMODE_W<21> {
+    pub fn reqmode(&mut self) -> REQMODE_W<'_, 21> {
         REQMODE_W::new(self)
     }
     #[doc = "Bit 22 - Decrement Loop Count"]
     #[inline(always)]
     #[must_use]
-    pub fn decloopcnt(&mut self) -> DECLOOPCNT_W<22> {
+    pub fn decloopcnt(&mut self) -> DECLOOPCNT_W<'_, 22> {
         DECLOOPCNT_W::new(self)
     }
     #[doc = "Bit 23 - Ignore Sreq"]
     #[inline(always)]
     #[must_use]
-    pub fn ignoresreq(&mut self) -> IGNORESREQ_W<23> {
+    pub fn ignoresreq(&mut self) -> IGNORESREQ_W<'_, 23> {
         IGNORESREQ_W::new(self)
     }
     #[doc = "Bits 24:25 - Source Address Increment Size"]
     #[inline(always)]
     #[must_use]
-    pub fn srcinc(&mut self) -> SRCINC_W<24> {
+    pub fn srcinc(&mut self) -> SRCINC_W<'_, 24> {
         SRCINC_W::new(self)
     }
     #[doc = "Bits 26:27 - Unit Data Transfer Size"]
     #[inline(always)]
     #[must_use]
-    pub fn size(&mut self) -> SIZE_W<26> {
+    pub fn size(&mut self) -> SIZE_W<'_, 26> {
         SIZE_W::new(self)
     }
     #[doc = "Bits 28:29 - Destination Address Increment Size"]
     #[inline(always)]
     #[must_use]
-    pub fn dstinc(&mut self) -> DSTINC_W<28> {
+    pub fn dstinc(&mut self) -> DSTINC_W<'_, 28> {
         DSTINC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

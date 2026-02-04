@@ -27,13 +27,13 @@ impl W {
     #[doc = "Bit 0 - Start Timer"]
     #[inline(always)]
     #[must_use]
-    pub fn start(&mut self) -> START_W<0> {
+    pub fn start(&mut self) -> START_W<'_, 0> {
         START_W::new(self)
     }
     #[doc = "Bit 1 - Stop Timer"]
     #[inline(always)]
     #[must_use]
-    pub fn stop(&mut self) -> STOP_W<1> {
+    pub fn stop(&mut self) -> STOP_W<'_, 1> {
         STOP_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

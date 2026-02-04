@@ -59,13 +59,13 @@ impl W {
     #[doc = "Bit 0 - VREGVDD comparator enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vregincmpen(&mut self) -> VREGINCMPEN_W<0> {
+    pub fn vregincmpen(&mut self) -> VREGINCMPEN_W<'_, 0> {
         VREGINCMPEN_W::new(self)
     }
     #[doc = "Bits 1:2 - VREGVDD comparator threshold programming"]
     #[inline(always)]
     #[must_use]
-    pub fn thressel(&mut self) -> THRESSEL_W<1> {
+    pub fn thressel(&mut self) -> THRESSEL_W<'_, 1> {
         THRESSEL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

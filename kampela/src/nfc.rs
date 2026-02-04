@@ -120,7 +120,7 @@ pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[
         Some(BufRegion::Reg2) => &nfc_buffer[2*BUF_THIRD..],
         None => return,
     };
-    let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, |frame| frame_selected(&frame));
+    let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, frame_selected);
 
     for frame in frames.into_iter() {
         if let Frame::Standard(standard_frame) = frame {
@@ -149,8 +149,7 @@ pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[
 
 fn frame_selected(frame: &Frame) -> bool {
     if let Frame::Standard(standard_frame) = frame {
-        if standard_frame.len() >= PACKET_SIZE {true}
-        else {false}
+        standard_frame.len() >= PACKET_SIZE
     }
     else {false}
 }
@@ -205,7 +204,7 @@ pub struct TransferDataReceived {
 
 pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> Result<TransferDataReceived, NfcPayloadError> {
     let psram_data = PsramAccess {
-        start_address: completed_collector.start_address.clone(),
+        start_address: completed_collector.start_address,
         total_len: completed_collector.len,
     };
 
@@ -337,7 +336,7 @@ impl <'a> NfcReceiver<'a> {
                 });
 
                 match first_byte {
-                    Some(2) => return Some(Ok(NfcResult::DisplayAddress)),
+                    Some(2) => Some(Ok(NfcResult::DisplayAddress)),
                     Some(3) => {
                         let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
                         let genesis_hash_bytes_psram_access = PsramAccess{start_address: address, total_len: 32usize};
@@ -411,15 +410,15 @@ impl <'a> NfcReceiver<'a> {
                             }
                         }
 
-                        return Some(Ok(NfcResult::Transaction(NfcTransactionPsramAccess{
+                        Some(Ok(NfcResult::Transaction(NfcTransactionPsramAccess{
                             call_psram_access: call_to_sign_psram_access,
                             extension_psram_access: extension_to_sign_psram_access,
                             metadata_psram_access,
                             genesis_hash_bytes_psram_access,
-                        })));
+                        })))
                     },
                     _ => {
-                        return Some(Ok(NfcResult::Empty))
+                        Some(Ok(NfcResult::Empty))
                     }
                 }
             },

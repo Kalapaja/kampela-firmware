@@ -426,25 +426,25 @@ impl W {
     #[doc = "Bits 0:3 - A Bus Even 0"]
     #[inline(always)]
     #[must_use]
-    pub fn aeven0(&mut self) -> AEVEN0_W<0> {
+    pub fn aeven0(&mut self) -> AEVEN0_W<'_, 0> {
         AEVEN0_W::new(self)
     }
     #[doc = "Bits 8:11 - A Bus Even 1"]
     #[inline(always)]
     #[must_use]
-    pub fn aeven1(&mut self) -> AEVEN1_W<8> {
+    pub fn aeven1(&mut self) -> AEVEN1_W<'_, 8> {
         AEVEN1_W::new(self)
     }
     #[doc = "Bits 16:19 - A Bus Odd 0"]
     #[inline(always)]
     #[must_use]
-    pub fn aodd0(&mut self) -> AODD0_W<16> {
+    pub fn aodd0(&mut self) -> AODD0_W<'_, 16> {
         AODD0_W::new(self)
     }
     #[doc = "Bits 24:27 - A Bus Odd 1"]
     #[inline(always)]
     #[must_use]
-    pub fn aodd1(&mut self) -> AODD1_W<24> {
+    pub fn aodd1(&mut self) -> AODD1_W<'_, 24> {
         AODD1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

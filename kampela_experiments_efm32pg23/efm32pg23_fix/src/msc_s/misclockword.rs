@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - Mass Erase Lock"]
     #[inline(always)]
     #[must_use]
-    pub fn melockbit(&mut self) -> MELOCKBIT_W<0> {
+    pub fn melockbit(&mut self) -> MELOCKBIT_W<'_, 0> {
         MELOCKBIT_W::new(self)
     }
     #[doc = "Bit 4 - User Data Lock"]
     #[inline(always)]
     #[must_use]
-    pub fn udlockbit(&mut self) -> UDLOCKBIT_W<4> {
+    pub fn udlockbit(&mut self) -> UDLOCKBIT_W<'_, 4> {
         UDLOCKBIT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - TXINTEN"]
     #[inline(always)]
     #[must_use]
-    pub fn txinten(&mut self) -> TXINTEN_W<0> {
+    pub fn txinten(&mut self) -> TXINTEN_W<'_, 0> {
         TXINTEN_W::new(self)
     }
     #[doc = "Bit 1 - RXINTEN"]
     #[inline(always)]
     #[must_use]
-    pub fn rxinten(&mut self) -> RXINTEN_W<1> {
+    pub fn rxinten(&mut self) -> RXINTEN_W<'_, 1> {
         RXINTEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

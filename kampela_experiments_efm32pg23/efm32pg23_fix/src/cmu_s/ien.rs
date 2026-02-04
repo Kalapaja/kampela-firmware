@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - Calibration Ready Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn calrdy(&mut self) -> CALRDY_W<0> {
+    pub fn calrdy(&mut self) -> CALRDY_W<'_, 0> {
         CALRDY_W::new(self)
     }
     #[doc = "Bit 1 - Calibration Overflow Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn calof(&mut self) -> CALOF_W<1> {
+    pub fn calof(&mut self) -> CALOF_W<'_, 1> {
         CALOF_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

@@ -130,61 +130,61 @@ impl W {
     #[doc = "Bit 0 - Bypass Switch Enabled Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn bypsw(&mut self) -> BYPSW_W<0> {
+    pub fn bypsw(&mut self) -> BYPSW_W<'_, 0> {
         BYPSW_W::new(self)
     }
     #[doc = "Bit 1 - DCDC Warmup Time Done Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn warm(&mut self) -> WARM_W<1> {
+    pub fn warm(&mut self) -> WARM_W<'_, 1> {
         WARM_W::new(self)
     }
     #[doc = "Bit 2 - DCDC Running Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn running(&mut self) -> RUNNING_W<2> {
+    pub fn running(&mut self) -> RUNNING_W<'_, 2> {
         RUNNING_W::new(self)
     }
     #[doc = "Bit 3 - VREGIN below threshold Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vreginlow(&mut self) -> VREGINLOW_W<3> {
+    pub fn vreginlow(&mut self) -> VREGINLOW_W<'_, 3> {
         VREGINLOW_W::new(self)
     }
     #[doc = "Bit 4 - VREGIN above threshold Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn vreginhigh(&mut self) -> VREGINHIGH_W<4> {
+    pub fn vreginhigh(&mut self) -> VREGINHIGH_W<'_, 4> {
         VREGINHIGH_W::new(self)
     }
     #[doc = "Bit 5 - DCDC in Regulation Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn regulation(&mut self) -> REGULATION_W<5> {
+    pub fn regulation(&mut self) -> REGULATION_W<'_, 5> {
         REGULATION_W::new(self)
     }
     #[doc = "Bit 6 - Ton_max Timeout Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn tmax(&mut self) -> TMAX_W<6> {
+    pub fn tmax(&mut self) -> TMAX_W<'_, 6> {
         TMAX_W::new(self)
     }
     #[doc = "Bit 7 - EM4 Entry Req Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn em4err(&mut self) -> EM4ERR_W<7> {
+    pub fn em4err(&mut self) -> EM4ERR_W<'_, 7> {
         EM4ERR_W::new(self)
     }
     #[doc = "Bit 8 - Pulse Pairing Mode Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppmode(&mut self) -> PPMODE_W<8> {
+    pub fn ppmode(&mut self) -> PPMODE_W<'_, 8> {
         PPMODE_W::new(self)
     }
     #[doc = "Bit 9 - PFMX Mode Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn pfmxmode(&mut self) -> PFMXMODE_W<9> {
+    pub fn pfmxmode(&mut self) -> PFMXMODE_W<'_, 9> {
         PFMXMODE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

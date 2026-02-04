@@ -156,13 +156,13 @@ impl W {
     #[doc = "Bits 0:7 - Hardware Sync Trigger Set Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn syncsetedge(&mut self) -> SYNCSETEDGE_W<0> {
+    pub fn syncsetedge(&mut self) -> SYNCSETEDGE_W<'_, 0> {
         SYNCSETEDGE_W::new(self)
     }
     #[doc = "Bits 16:23 - Hardware Sync Trigger Clear Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn syncclredge(&mut self) -> SYNCCLREDGE_W<16> {
+    pub fn syncclredge(&mut self) -> SYNCCLREDGE_W<'_, 16> {
         SYNCCLREDGE_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

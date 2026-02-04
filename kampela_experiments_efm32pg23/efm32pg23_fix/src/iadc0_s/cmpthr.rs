@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:15 - ADC Less Than or Equal to Threshold"]
     #[inline(always)]
     #[must_use]
-    pub fn adlt(&mut self) -> ADLT_W<0> {
+    pub fn adlt(&mut self) -> ADLT_W<'_, 0> {
         ADLT_W::new(self)
     }
     #[doc = "Bits 16:31 - ADC Greater Than or Equal to Threshold"]
     #[inline(always)]
     #[must_use]
-    pub fn adgt(&mut self) -> ADGT_W<16> {
+    pub fn adgt(&mut self) -> ADGT_W<'_, 16> {
         ADGT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

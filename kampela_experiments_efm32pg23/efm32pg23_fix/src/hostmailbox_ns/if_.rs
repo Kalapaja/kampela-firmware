@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Mailbox Interupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxif0(&mut self) -> MBOXIF0_W<0> {
+    pub fn mboxif0(&mut self) -> MBOXIF0_W<'_, 0> {
         MBOXIF0_W::new(self)
     }
     #[doc = "Bit 1 - Mailbox Interupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxif1(&mut self) -> MBOXIF1_W<1> {
+    pub fn mboxif1(&mut self) -> MBOXIF1_W<'_, 1> {
         MBOXIF1_W::new(self)
     }
     #[doc = "Bit 2 - Mailbox Interupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxif2(&mut self) -> MBOXIF2_W<2> {
+    pub fn mboxif2(&mut self) -> MBOXIF2_W<'_, 2> {
         MBOXIF2_W::new(self)
     }
     #[doc = "Bit 3 - Mailbox Interupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn mboxif3(&mut self) -> MBOXIF3_W<3> {
+    pub fn mboxif3(&mut self) -> MBOXIF3_W<'_, 3> {
         MBOXIF3_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

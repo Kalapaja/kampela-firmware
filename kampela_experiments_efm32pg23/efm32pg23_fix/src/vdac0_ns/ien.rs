@@ -130,61 +130,61 @@ impl W {
     #[doc = "Bit 0 - CH0 Conversion Done Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0cd(&mut self) -> CH0CD_W<0> {
+    pub fn ch0cd(&mut self) -> CH0CD_W<'_, 0> {
         CH0CD_W::new(self)
     }
     #[doc = "Bit 1 - CH1 Conversion Done Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1cd(&mut self) -> CH1CD_W<1> {
+    pub fn ch1cd(&mut self) -> CH1CD_W<'_, 1> {
         CH1CD_W::new(self)
     }
     #[doc = "Bit 4 - CH0 Data Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0of(&mut self) -> CH0OF_W<4> {
+    pub fn ch0of(&mut self) -> CH0OF_W<'_, 4> {
         CH0OF_W::new(self)
     }
     #[doc = "Bit 5 - CH1 Data Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1of(&mut self) -> CH1OF_W<5> {
+    pub fn ch1of(&mut self) -> CH1OF_W<'_, 5> {
         CH1OF_W::new(self)
     }
     #[doc = "Bit 8 - CH0 Data Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0uf(&mut self) -> CH0UF_W<8> {
+    pub fn ch0uf(&mut self) -> CH0UF_W<'_, 8> {
         CH0UF_W::new(self)
     }
     #[doc = "Bit 9 - CH1 Data Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1uf(&mut self) -> CH1UF_W<9> {
+    pub fn ch1uf(&mut self) -> CH1UF_W<'_, 9> {
         CH1UF_W::new(self)
     }
     #[doc = "Bit 18 - ABUS Allocation Error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn abusallocerr(&mut self) -> ABUSALLOCERR_W<18> {
+    pub fn abusallocerr(&mut self) -> ABUSALLOCERR_W<'_, 18> {
         ABUSALLOCERR_W::new(self)
     }
     #[doc = "Bit 20 - CH0 Data Valid Level Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch0dvl(&mut self) -> CH0DVL_W<20> {
+    pub fn ch0dvl(&mut self) -> CH0DVL_W<'_, 20> {
         CH0DVL_W::new(self)
     }
     #[doc = "Bit 21 - CH1 Data Valid Level Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ch1dvl(&mut self) -> CH1DVL_W<21> {
+    pub fn ch1dvl(&mut self) -> CH1DVL_W<'_, 21> {
         CH1DVL_W::new(self)
     }
     #[doc = "Bit 26 - ABUS Input Conflict Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn abusinputconflict(&mut self) -> ABUSINPUTCONFLICT_W<26> {
+    pub fn abusinputconflict(&mut self) -> ABUSINPUTCONFLICT_W<'_, 26> {
         ABUSINPUTCONFLICT_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

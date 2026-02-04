@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bit 0 - DTI Complementary Output Invert."]
     #[inline(always)]
     #[must_use]
-    pub fn dtcinv(&mut self) -> DTCINV_W<0> {
+    pub fn dtcinv(&mut self) -> DTCINV_W<'_, 0> {
         DTCINV_W::new(self)
     }
     #[doc = "Bit 1 - DTI Inactive Polarity"]
     #[inline(always)]
     #[must_use]
-    pub fn dtipol(&mut self) -> DTIPOL_W<1> {
+    pub fn dtipol(&mut self) -> DTIPOL_W<'_, 1> {
         DTIPOL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

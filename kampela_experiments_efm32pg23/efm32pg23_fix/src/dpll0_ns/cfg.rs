@@ -122,25 +122,25 @@ impl W {
     #[doc = "Bit 0 - Operating Mode Control"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bit 1 - Reference Edge Select"]
     #[inline(always)]
     #[must_use]
-    pub fn edgesel(&mut self) -> EDGESEL_W<1> {
+    pub fn edgesel(&mut self) -> EDGESEL_W<'_, 1> {
         EDGESEL_W::new(self)
     }
     #[doc = "Bit 2 - Automatic Recovery Control"]
     #[inline(always)]
     #[must_use]
-    pub fn autorecover(&mut self) -> AUTORECOVER_W<2> {
+    pub fn autorecover(&mut self) -> AUTORECOVER_W<'_, 2> {
         AUTORECOVER_W::new(self)
     }
     #[doc = "Bit 6 - Dither Enable Control"]
     #[inline(always)]
     #[must_use]
-    pub fn dithen(&mut self) -> DITHEN_W<6> {
+    pub fn dithen(&mut self) -> DITHEN_W<'_, 6> {
         DITHEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

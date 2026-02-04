@@ -1132,61 +1132,61 @@ impl W {
     #[doc = "Bit 0 - Debug halt"]
     #[inline(always)]
     #[must_use]
-    pub fn dbghalt(&mut self) -> DBGHALT_W<0> {
+    pub fn dbghalt(&mut self) -> DBGHALT_W<'_, 0> {
         DBGHALT_W::new(self)
     }
     #[doc = "Bit 1 - Clear-to-send Invert Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ctsinv(&mut self) -> CTSINV_W<1> {
+    pub fn ctsinv(&mut self) -> CTSINV_W<'_, 1> {
         CTSINV_W::new(self)
     }
     #[doc = "Bit 2 - Clear-to-send Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ctsen(&mut self) -> CTSEN_W<2> {
+    pub fn ctsen(&mut self) -> CTSEN_W<'_, 2> {
         CTSEN_W::new(self)
     }
     #[doc = "Bit 3 - Request-to-send Invert Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rtsinv(&mut self) -> RTSINV_W<3> {
+    pub fn rtsinv(&mut self) -> RTSINV_W<'_, 3> {
         RTSINV_W::new(self)
     }
     #[doc = "Bits 4:6 - RX Timeout"]
     #[inline(always)]
     #[must_use]
-    pub fn rxtimeout(&mut self) -> RXTIMEOUT_W<4> {
+    pub fn rxtimeout(&mut self) -> RXTIMEOUT_W<'_, 4> {
         RXTIMEOUT_W::new(self)
     }
     #[doc = "Bit 11 - Start Frame Unblock Receiver"]
     #[inline(always)]
     #[must_use]
-    pub fn sfubrx(&mut self) -> SFUBRX_W<11> {
+    pub fn sfubrx(&mut self) -> SFUBRX_W<'_, 11> {
         SFUBRX_W::new(self)
     }
     #[doc = "Bit 15 - PRS RX Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxprsen(&mut self) -> RXPRSEN_W<15> {
+    pub fn rxprsen(&mut self) -> RXPRSEN_W<'_, 15> {
         RXPRSEN_W::new(self)
     }
     #[doc = "Bits 16:19 - TX FIFO Interrupt Watermark"]
     #[inline(always)]
     #[must_use]
-    pub fn txfiw(&mut self) -> TXFIW_W<16> {
+    pub fn txfiw(&mut self) -> TXFIW_W<'_, 16> {
         TXFIW_W::new(self)
     }
     #[doc = "Bits 22:25 - Request-to-send RX FIFO Watermark"]
     #[inline(always)]
     #[must_use]
-    pub fn rtsrxfw(&mut self) -> RTSRXFW_W<22> {
+    pub fn rtsrxfw(&mut self) -> RTSRXFW_W<'_, 22> {
         RTSRXFW_W::new(self)
     }
     #[doc = "Bits 27:30 - RX FIFO Interrupt Watermark"]
     #[inline(always)]
     #[must_use]
-    pub fn rxfiw(&mut self) -> RXFIW_W<27> {
+    pub fn rxfiw(&mut self) -> RXFIW_W<'_, 27> {
         RXFIW_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

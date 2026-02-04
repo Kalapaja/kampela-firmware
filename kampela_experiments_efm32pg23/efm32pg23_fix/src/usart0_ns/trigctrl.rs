@@ -121,55 +121,55 @@ impl W {
     #[doc = "Bit 4 - Receive Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn rxten(&mut self) -> RXTEN_W<4> {
+    pub fn rxten(&mut self) -> RXTEN_W<'_, 4> {
         RXTEN_W::new(self)
     }
     #[doc = "Bit 5 - Transmit Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn txten(&mut self) -> TXTEN_W<5> {
+    pub fn txten(&mut self) -> TXTEN_W<'_, 5> {
         TXTEN_W::new(self)
     }
     #[doc = "Bit 6 - AUTOTX Trigger Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn autotxten(&mut self) -> AUTOTXTEN_W<6> {
+    pub fn autotxten(&mut self) -> AUTOTXTEN_W<'_, 6> {
         AUTOTXTEN_W::new(self)
     }
     #[doc = "Bit 7 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
     #[must_use]
-    pub fn txarx0en(&mut self) -> TXARX0EN_W<7> {
+    pub fn txarx0en(&mut self) -> TXARX0EN_W<'_, 7> {
         TXARX0EN_W::new(self)
     }
     #[doc = "Bit 8 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
     #[must_use]
-    pub fn txarx1en(&mut self) -> TXARX1EN_W<8> {
+    pub fn txarx1en(&mut self) -> TXARX1EN_W<'_, 8> {
         TXARX1EN_W::new(self)
     }
     #[doc = "Bit 9 - Enable Transmit Trigger after RX End of"]
     #[inline(always)]
     #[must_use]
-    pub fn txarx2en(&mut self) -> TXARX2EN_W<9> {
+    pub fn txarx2en(&mut self) -> TXARX2EN_W<'_, 9> {
         TXARX2EN_W::new(self)
     }
     #[doc = "Bit 10 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
     #[must_use]
-    pub fn rxatx0en(&mut self) -> RXATX0EN_W<10> {
+    pub fn rxatx0en(&mut self) -> RXATX0EN_W<'_, 10> {
         RXATX0EN_W::new(self)
     }
     #[doc = "Bit 11 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
     #[must_use]
-    pub fn rxatx1en(&mut self) -> RXATX1EN_W<11> {
+    pub fn rxatx1en(&mut self) -> RXATX1EN_W<'_, 11> {
         RXATX1EN_W::new(self)
     }
     #[doc = "Bit 12 - Enable Receive Trigger after TX end of f"]
     #[inline(always)]
     #[must_use]
-    pub fn rxatx2en(&mut self) -> RXATX2EN_W<12> {
+    pub fn rxatx2en(&mut self) -> RXATX2EN_W<'_, 12> {
         RXATX2EN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

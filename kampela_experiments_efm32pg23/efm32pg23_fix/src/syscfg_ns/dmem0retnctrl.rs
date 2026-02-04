@@ -124,7 +124,7 @@ impl W {
     #[doc = "Bits 0:2 - DMEM0 blockset retention control"]
     #[inline(always)]
     #[must_use]
-    pub fn ramretnctrl(&mut self) -> RAMRETNCTRL_W<0> {
+    pub fn ramretnctrl(&mut self) -> RAMRETNCTRL_W<'_, 0> {
         RAMRETNCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

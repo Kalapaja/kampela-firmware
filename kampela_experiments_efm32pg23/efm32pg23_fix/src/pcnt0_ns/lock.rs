@@ -46,7 +46,7 @@ impl W {
     #[doc = "Bits 0:15 - Configuration Lock Key"]
     #[inline(always)]
     #[must_use]
-    pub fn pcntlockkey(&mut self) -> PCNTLOCKKEY_W<0> {
+    pub fn pcntlockkey(&mut self) -> PCNTLOCKKEY_W<'_, 0> {
         PCNTLOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

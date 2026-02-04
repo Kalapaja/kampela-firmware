@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bit 0 - Pulse Generator/Extender Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn irlfen(&mut self) -> IRLFEN_W<0> {
+    pub fn irlfen(&mut self) -> IRLFEN_W<'_, 0> {
         IRLFEN_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

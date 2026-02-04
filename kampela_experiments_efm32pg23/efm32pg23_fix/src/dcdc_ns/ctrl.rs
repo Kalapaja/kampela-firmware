@@ -104,13 +104,13 @@ impl W {
     #[doc = "Bit 0 - DCDC/Bypass Mode Control"]
     #[inline(always)]
     #[must_use]
-    pub fn mode(&mut self) -> MODE_W<0> {
+    pub fn mode(&mut self) -> MODE_W<'_, 0> {
         MODE_W::new(self)
     }
     #[doc = "Bits 4:8 - Ton_max timeout control"]
     #[inline(always)]
     #[must_use]
-    pub fn ipktmaxctrl(&mut self) -> IPKTMAXCTRL_W<4> {
+    pub fn ipktmaxctrl(&mut self) -> IPKTMAXCTRL_W<'_, 4> {
         IPKTMAXCTRL_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

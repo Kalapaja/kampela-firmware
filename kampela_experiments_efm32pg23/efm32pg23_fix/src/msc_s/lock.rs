@@ -53,7 +53,7 @@ impl W {
     #[doc = "Bits 0:15 - Configuration Lock"]
     #[inline(always)]
     #[must_use]
-    pub fn lockkey(&mut self) -> LOCKKEY_W<0> {
+    pub fn lockkey(&mut self) -> LOCKKEY_W<'_, 0> {
         LOCKKEY_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

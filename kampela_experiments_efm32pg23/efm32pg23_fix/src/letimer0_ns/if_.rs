@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - Compare Match 0 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn comp0(&mut self) -> COMP0_W<0> {
+    pub fn comp0(&mut self) -> COMP0_W<'_, 0> {
         COMP0_W::new(self)
     }
     #[doc = "Bit 1 - Compare Match 1 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn comp1(&mut self) -> COMP1_W<1> {
+    pub fn comp1(&mut self) -> COMP1_W<'_, 1> {
         COMP1_W::new(self)
     }
     #[doc = "Bit 2 - Underflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn uf(&mut self) -> UF_W<2> {
+    pub fn uf(&mut self) -> UF_W<'_, 2> {
         UF_W::new(self)
     }
     #[doc = "Bit 3 - Repeat Counter 0 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rep0(&mut self) -> REP0_W<3> {
+    pub fn rep0(&mut self) -> REP0_W<'_, 3> {
         REP0_W::new(self)
     }
     #[doc = "Bit 4 - Repeat Counter 1 Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn rep1(&mut self) -> REP1_W<4> {
+    pub fn rep1(&mut self) -> REP1_W<'_, 4> {
         REP1_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

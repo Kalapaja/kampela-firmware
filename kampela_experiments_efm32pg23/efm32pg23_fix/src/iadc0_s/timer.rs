@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:15 - Timer Period"]
     #[inline(always)]
     #[must_use]
-    pub fn timer(&mut self) -> TIMER_W<0> {
+    pub fn timer(&mut self) -> TIMER_W<'_, 0> {
         TIMER_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

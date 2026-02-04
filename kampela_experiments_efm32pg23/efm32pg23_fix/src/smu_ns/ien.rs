@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - PPU Privilege Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppupriv(&mut self) -> PPUPRIV_W<0> {
+    pub fn ppupriv(&mut self) -> PPUPRIV_W<'_, 0> {
         PPUPRIV_W::new(self)
     }
     #[doc = "Bit 2 - PPU Instruction Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppuinst(&mut self) -> PPUINST_W<2> {
+    pub fn ppuinst(&mut self) -> PPUINST_W<'_, 2> {
         PPUINST_W::new(self)
     }
     #[doc = "Bit 16 - PPU Security Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn ppusec(&mut self) -> PPUSEC_W<16> {
+    pub fn ppusec(&mut self) -> PPUSEC_W<'_, 16> {
         PPUSEC_W::new(self)
     }
     #[doc = "Bit 17 - BMPU Security Interrupt Enable"]
     #[inline(always)]
     #[must_use]
-    pub fn bmpusec(&mut self) -> BMPUSEC_W<17> {
+    pub fn bmpusec(&mut self) -> BMPUSEC_W<'_, 17> {
         BMPUSEC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

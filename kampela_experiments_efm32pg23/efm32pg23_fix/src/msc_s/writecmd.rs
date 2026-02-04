@@ -35,37 +35,37 @@ impl W {
     #[doc = "Bit 1 - Erase Page"]
     #[inline(always)]
     #[must_use]
-    pub fn erasepage(&mut self) -> ERASEPAGE_W<1> {
+    pub fn erasepage(&mut self) -> ERASEPAGE_W<'_, 1> {
         ERASEPAGE_W::new(self)
     }
     #[doc = "Bit 2 - End Write Mode"]
     #[inline(always)]
     #[must_use]
-    pub fn writeend(&mut self) -> WRITEEND_W<2> {
+    pub fn writeend(&mut self) -> WRITEEND_W<'_, 2> {
         WRITEEND_W::new(self)
     }
     #[doc = "Bit 4 - Erase range of pages"]
     #[inline(always)]
     #[must_use]
-    pub fn eraserange(&mut self) -> ERASERANGE_W<4> {
+    pub fn eraserange(&mut self) -> ERASERANGE_W<'_, 4> {
         ERASERANGE_W::new(self)
     }
     #[doc = "Bit 5 - Abort erase sequence"]
     #[inline(always)]
     #[must_use]
-    pub fn eraseabort(&mut self) -> ERASEABORT_W<5> {
+    pub fn eraseabort(&mut self) -> ERASEABORT_W<'_, 5> {
         ERASEABORT_W::new(self)
     }
     #[doc = "Bit 8 - Mass erase region 0"]
     #[inline(always)]
     #[must_use]
-    pub fn erasemain0(&mut self) -> ERASEMAIN0_W<8> {
+    pub fn erasemain0(&mut self) -> ERASEMAIN0_W<'_, 8> {
         ERASEMAIN0_W::new(self)
     }
     #[doc = "Bit 12 - Clear WDATA state"]
     #[inline(always)]
     #[must_use]
-    pub fn clearwdata(&mut self) -> CLEARWDATA_W<12> {
+    pub fn clearwdata(&mut self) -> CLEARWDATA_W<'_, 12> {
         CLEARWDATA_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

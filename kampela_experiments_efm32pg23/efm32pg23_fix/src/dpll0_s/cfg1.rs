@@ -58,13 +58,13 @@ impl W {
     #[doc = "Bits 0:11 - Factor M"]
     #[inline(always)]
     #[must_use]
-    pub fn m(&mut self) -> M_W<0> {
+    pub fn m(&mut self) -> M_W<'_, 0> {
         M_W::new(self)
     }
     #[doc = "Bits 16:27 - Factor N"]
     #[inline(always)]
     #[must_use]
-    pub fn n(&mut self) -> N_W<16> {
+    pub fn n(&mut self) -> N_W<'_, 16> {
         N_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

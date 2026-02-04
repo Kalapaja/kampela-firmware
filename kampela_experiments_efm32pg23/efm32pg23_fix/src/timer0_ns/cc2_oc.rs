@@ -49,7 +49,7 @@ impl W {
     #[doc = "Bits 0:31 - Output Compare Value"]
     #[inline(always)]
     #[must_use]
-    pub fn oc(&mut self) -> OC_W<0> {
+    pub fn oc(&mut self) -> OC_W<'_, 0> {
         OC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

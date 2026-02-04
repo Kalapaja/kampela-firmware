@@ -76,25 +76,25 @@ impl W {
     #[doc = "Bit 0 - Hit Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn hitof(&mut self) -> HITOF_W<0> {
+    pub fn hitof(&mut self) -> HITOF_W<'_, 0> {
         HITOF_W::new(self)
     }
     #[doc = "Bit 1 - Miss Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn missof(&mut self) -> MISSOF_W<1> {
+    pub fn missof(&mut self) -> MISSOF_W<'_, 1> {
         MISSOF_W::new(self)
     }
     #[doc = "Bit 2 - Advanced Hit Overflow Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ahitof(&mut self) -> AHITOF_W<2> {
+    pub fn ahitof(&mut self) -> AHITOF_W<'_, 2> {
         AHITOF_W::new(self)
     }
     #[doc = "Bit 8 - RAM error Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn ramerror(&mut self) -> RAMERROR_W<8> {
+    pub fn ramerror(&mut self) -> RAMERROR_W<'_, 8> {
         RAMERROR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

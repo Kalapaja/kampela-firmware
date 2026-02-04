@@ -111,7 +111,7 @@ impl W {
     #[doc = "Bits 4:5 - TRACECLK Prescaler"]
     #[inline(always)]
     #[must_use]
-    pub fn presc(&mut self) -> PRESC_W<4> {
+    pub fn presc(&mut self) -> PRESC_W<'_, 4> {
         PRESC_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]

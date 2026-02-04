@@ -85,31 +85,31 @@ impl W {
     #[doc = "Bit 0 - Underflow Interrupt Read Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn uf(&mut self) -> UF_W<0> {
+    pub fn uf(&mut self) -> UF_W<'_, 0> {
         UF_W::new(self)
     }
     #[doc = "Bit 1 - Overflow Interrupt Read Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn of(&mut self) -> OF_W<1> {
+    pub fn of(&mut self) -> OF_W<'_, 1> {
         OF_W::new(self)
     }
     #[doc = "Bit 2 - Direction Change Detect Interrupt Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn dircng(&mut self) -> DIRCNG_W<2> {
+    pub fn dircng(&mut self) -> DIRCNG_W<'_, 2> {
         DIRCNG_W::new(self)
     }
     #[doc = "Bit 3 - Auxiliary Overflow Interrupt Read Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn auxof(&mut self) -> AUXOF_W<3> {
+    pub fn auxof(&mut self) -> AUXOF_W<'_, 3> {
         AUXOF_W::new(self)
     }
     #[doc = "Bit 4 - Oversampling Quad State Err Int Flag"]
     #[inline(always)]
     #[must_use]
-    pub fn oqsterr(&mut self) -> OQSTERR_W<4> {
+    pub fn oqsterr(&mut self) -> OQSTERR_W<'_, 4> {
         OQSTERR_W::new(self)
     }
     #[doc = "Writes raw bits to the register."]
