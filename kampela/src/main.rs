@@ -169,7 +169,7 @@ fn main() -> ! {
     //         .expand_to_keypair(ExpansionMode::Ed25519);
 
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.public().map(|a| a.0));
+    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.sub_public().map(|a| a.0));
     loop {
         adc.advance(());
         let nfc_state = nfc.advance(adc.read());
@@ -248,5 +248,4 @@ fn main() -> ! {
         ui.advance(adc.read());
     }
 }
-
 

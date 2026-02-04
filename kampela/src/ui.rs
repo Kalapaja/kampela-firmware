@@ -1,7 +1,7 @@
 //! Everything high-level related to interfacing with user
 
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::{collections::VecDeque, string::String, vec::Vec};
+use alloc::{collections::VecDeque, format, string::String, vec::Vec};
 use lazy_static::lazy_static;
 use substrate_crypto_light::sr25519::{Pair, Public};
 use embedded_graphics::{
@@ -21,7 +21,8 @@ use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
 use kampela_ui::{
     display_def::*,
-    platform::{PinCode, Platform},
+    eth_transaction::Eip1559Transaction,
+    platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate}
 };
 
@@ -131,7 +132,7 @@ impl UI {
     }
 
     pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
-        self.state.platform.set_transaction(transaction);
+        self.state.platform.sub_set_transaction(transaction);
         self.update_request.propagate(self.state.handle_transaction(&mut ()));
     }
 
@@ -162,6 +163,8 @@ pub struct Hardware {
     pin: PinCode,
     protected: Option<Protected>,
     address: Option<[u8; 76]>,
+    eth_address: Option<EthAddress>,
+    eth_transaction: Option<Eip1559Transaction>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
 
@@ -174,6 +177,8 @@ impl Hardware {
             pin,
             protected,
             address: None,
+            eth_address: None,
+            eth_transaction: None,
             transaction_psram_access: None,
         }
     }
@@ -185,6 +190,7 @@ impl Platform for Hardware {
     type AsWordList = FlashWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
+    type EthTransaction = Eip1559Transaction;
     fn get_wordlist() -> Self::AsWordList {
         FlashWordList::new()
     }
@@ -215,7 +221,7 @@ impl Platform for Hardware {
         self.protected = read_encoded_entropy();
     }
 
-    fn public(&self) -> Option<Public> {
+    fn sub_public(&self) -> Option<Public> {
         self.entropy().map(|e| Pair::from_entropy_and_pwd(&e, "").unwrap().public())
     }
 
@@ -223,16 +229,15 @@ impl Platform for Hardware {
         self.protected.as_ref().map(|p| decode_entropy(p))
     }
 
-    fn set_address(&mut self, addr: [u8; 76]) {
+    fn sub_set_address(&mut self, addr: [u8; 76]) {
         self.address = Some(addr);
     }
 
-    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
+    fn sub_set_transaction(&mut self, transaction: Self::NfcTransaction) {
         self.transaction_psram_access = Some(transaction);
     }
-
-
-    fn call(&mut self) -> Option<String> {
+    
+    fn sub_call(&mut self) -> Option<String> {
         let transaction_psram_access = match self.transaction_psram_access {
             Some(ref a) => a,
             None => return None
@@ -253,7 +258,7 @@ impl Platform for Hardware {
         Some(call)
     }
 
-    fn extensions(&mut self) -> Option<String> {
+    fn sub_extensions(&mut self) -> Option<String> {
         let transaction_psram_access = match self.transaction_psram_access {
             Some(ref a) => a,
             None => return None
@@ -281,7 +286,7 @@ impl Platform for Hardware {
         Some(extensions)
     }
 
-    fn signature(&mut self) -> [u8; 130] {
+    fn sub_signature(&mut self) -> [u8; 130] {
         let transaction_psram_access = match self.transaction_psram_access {
             Some(ref a) => a,
             None => panic!("qr generation failed")
@@ -295,7 +300,7 @@ impl Platform for Hardware {
         };
         let data_to_sign = read_from_psram(&data_to_sign_psram_access);
 
-        let signature = self.pair()
+        let signature = self.sub_pair()
             .expect("entropy should be stored at this point")
             .sign_external_rng(&data_to_sign, &mut Self::rng(&mut ()));
 
@@ -309,12 +314,32 @@ impl Platform for Hardware {
             .expect("static length")
     }
 
-    fn address(&mut self) -> &[u8; 76] {
-        if let Some(ref a) = self.address {
-            a
-        } else {
-            panic!("qr generation failed");
-        }
+    fn sub_address(&self) -> Option<&[u8; 76]> {
+        self.address.as_ref()
+    }
+
+    fn eth_address(&self) -> Option<EthAddress> {
+        self.eth_address
+    }
+
+    fn eth_set_address(&mut self, addr: EthAddress) {
+        self.eth_address = Some(addr);
+    }
+
+    fn eth_set_transaction(&mut self, transaction: Self::EthTransaction) {
+        self.eth_transaction = Some(transaction);
+    }
+
+    fn eth_transaction(&self) -> Option<&Self::EthTransaction> {
+        self.eth_transaction.as_ref()
+    }
+
+    fn eth_transaction_display(&self) -> Option<String> {
+        self.eth_transaction.as_ref().map(|tx| format!("{:?}", tx))
+    }
+
+    fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
+        None
     }
 
 }
@@ -349,5 +374,3 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         )
     } else { None }
 }
-
-

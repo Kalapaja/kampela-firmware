@@ -139,7 +139,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         platform.read_entropy();
         let initial_screen: Option<UnitScreen>;
         let unlocked: bool;
-        if platform.public().is_none() {
+        if platform.sub_public().is_none() {
             initial_screen = Some(UnitScreen::OnboardingRestoreOrGenerate);
             unlocked = true;
         } else {
@@ -276,7 +276,7 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     }
 
     pub fn handle_address(&mut self, addr: [u8; 76]) -> Option<UpdateRequest> {
-        self.platform.set_address(addr);
+        self.platform.sub_set_address(addr);
         self.screen = Screen::QRAddress;
         Some(UpdateRequest::Slow)
     }
@@ -361,10 +361,10 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     Box::new(|s| {
                         match s {
                             TransactionPage::Call => {
-                                self.platform.call().expect("transaction should be stored to display")
+                                self.platform.sub_call().expect("transaction should be stored to display")
                             },
                             TransactionPage::Extension => {
-                                self.platform.extensions().expect("transaction should be stored to display")
+                                self.platform.sub_extensions().expect("transaction should be stored to display")
                             },
                         }
                     })
@@ -373,10 +373,10 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 new_screen = res.state;
             },
             Screen::QRSignature => {
-                qr::draw(&self.platform.signature(), display)?
+                qr::draw(&self.platform.sub_signature(), display)?
             },
             Screen::QRAddress => {
-                let line1 = format!("substrate:0x{}", hex::encode(self.platform.public().expect("no entropy stored, no address could be shown").0));
+                let line1 = format!("substrate:0x{}", hex::encode(self.platform.sub_public().expect("no entropy stored, no address could be shown").0));
 
                 qr::draw(&line1.as_bytes(), display)?
             },
@@ -385,5 +385,4 @@ impl <P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         Ok(out)
     }
 }
-
 

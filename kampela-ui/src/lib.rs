@@ -3,6 +3,7 @@
 
 pub mod uistate;
 pub mod platform;
+pub mod eth_transaction;
 pub mod widget{
     pub mod view;
     pub mod nav_bar{

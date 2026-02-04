@@ -30,7 +30,8 @@ const MAX_TOUCH_QUEUE: usize = 2;
 use kampela_ui::{
     data_state::{AppStateInit, NFCState, DataInit, StorageState},
     display_def::*,
-    platform::{PinCode, Platform},
+    eth_transaction::Eip1559Transaction,
+    platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
 
@@ -88,6 +89,8 @@ struct DesktopSimulator {
     pin: PinCode,
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
+    eth_address: Option<EthAddress>,
+    eth_transaction: Option<Eip1559Transaction>,
     transaction: Option<NfcTransactionData>,
     stored_entropy: Option<Vec<u8>>,
 }
@@ -107,6 +110,8 @@ impl DesktopSimulator {
             pin,
             entropy: None,
             address: None,
+            eth_address: None,
+            eth_transaction: None,
             transaction: transaction,
             stored_entropy: None,
         }
@@ -117,6 +122,7 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
     type NfcTransaction = NfcTransactionData;
+    type EthTransaction = Eip1559Transaction;
     type AsWordList = InternalWordList;
 
     fn get_wordlist() -> Self::AsWordList {
@@ -145,49 +151,69 @@ impl Platform for DesktopSimulator {
         println!("entropy read from emulated storage: {:?}", &self.entropy);
     }
 
-    fn public(&self) -> Option<Public> {
-        self.pair().map(|pair| pair.public())
+    fn sub_public(&self) -> Option<Public> {
+        self.sub_pair().map(|pair| pair.public())
     }
 
     fn entropy(&self) -> Option<Vec<u8>> {
         self.entropy.clone()
     }
 
-    fn set_address(&mut self, addr: [u8; 76]) {
+    fn sub_set_address(&mut self, addr: [u8; 76]) {
         self.address = Some(addr);
     }
 
-    fn set_transaction(&mut self, transaction: Self::NfcTransaction) {
+    fn sub_set_transaction(&mut self, transaction: Self::NfcTransaction) {
         self.transaction = Some(transaction);
     }
 
-    fn call(&mut self) -> Option<String> {
+    fn sub_call(&mut self) -> Option<String> {
         match self.transaction {
             Some(ref a) => Some(a.call.to_owned()),
             None => None,
         }
     }
 
-    fn extensions(&mut self) -> Option<String> {
+    fn sub_extensions(&mut self) -> Option<String> {
         match self.transaction {
             Some(ref a) => Some(a.extension.to_owned()),
             None => None,
         }
     }
 
-    fn signature(&mut self) -> [u8; 130] {
+    fn sub_signature(&mut self) -> [u8; 130] {
         match self.transaction {
             Some(ref a) => a.signature,
             None =>  panic!("qr not ready!"),
         }
     }
 
-    fn address(&mut self) -> &[u8; 76] {
-        if let Some(ref a) = self.address {
-            a
-        } else {
-            panic!("address qr not ready!");
-        }
+    fn sub_address(&self) -> Option<&[u8; 76]> {
+        self.address.as_ref()
+    }
+
+    fn eth_address(&self) -> Option<EthAddress> {
+        self.eth_address
+    }
+
+    fn eth_set_address(&mut self, addr: EthAddress) {
+        self.eth_address = Some(addr);
+    }
+
+    fn eth_set_transaction(&mut self, transaction: Self::EthTransaction) {
+        self.eth_transaction = Some(transaction);
+    }
+
+    fn eth_transaction(&self) -> Option<&Self::EthTransaction> {
+        self.eth_transaction.as_ref()
+    }
+
+    fn eth_transaction_display(&self) -> Option<String> {
+        self.eth_transaction.as_ref().map(|tx| format!("{:?}", tx))
+    }
+
+    fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
+        None
     }
 }
 
