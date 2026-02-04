@@ -262,6 +262,7 @@ dependencies = [
 name = "app"
 version = "0.10.0"
 dependencies = [
+ "alloy-primitives",
  "cortex-m",
  "cortex-m-rt",
  "efm32pg23_fix",

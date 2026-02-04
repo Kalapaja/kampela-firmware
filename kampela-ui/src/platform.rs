@@ -9,11 +9,11 @@ use rand::{CryptoRng, Rng};
 
 use substrate_crypto_light::sr25519::{Pair, Public};
 use substrate_parser::{ShortSpecs, TransactionUnmarkedParsed};
+use alloy_primitives::Address;
 
 use mnemonic_external::AsWordList;
 
 pub type PinCode = [u8; 4];
-pub type EthAddress = [u8; 20];
 const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
 
 /// Implement this on platform to make crate work
@@ -69,9 +69,9 @@ pub trait Platform {
 
     fn sub_address(&self) -> Option<&[u8; 76]>;
 
-    fn eth_address(&self) -> Option<EthAddress>;
+    fn eth_address(&self) -> Option<Address>;
 
-    fn eth_set_address(&mut self, addr: EthAddress);
+    fn eth_set_address(&mut self, addr: Address);
 
     fn eth_set_transaction(&mut self, transaction: Self::EthTransaction);
 

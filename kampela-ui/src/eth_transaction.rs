@@ -21,8 +21,6 @@ use crate::eth_registry_data::{
     contract_list, native_token, token_list, well_known_contract_addresses, well_known_displays,
     well_known_token_addresses,
 };
-use crate::platform::EthAddress;
-
 #[derive(Clone, Debug)]
 pub struct EthTransaction {
     pub chain_id: u64,
@@ -30,7 +28,7 @@ pub struct EthTransaction {
     pub max_priority_fee_per_gas: u128,
     pub max_fee_per_gas: u128,
     pub gas_limit: u64,
-    pub to: Option<EthAddress>,
+    pub to: Option<Address>,
     pub value: U256,
     pub data: Vec<u8>,
     pub displays: Vec<Display>,
@@ -45,7 +43,7 @@ pub fn derive_eth_signing_key(entropy: &[u8]) -> Option<SigningKey> {
     SigningKey::from_bytes(&private_key).ok()
 }
 
-pub fn derive_eth_address(entropy: &[u8]) -> Option<EthAddress> {
+pub fn derive_eth_address(entropy: &[u8]) -> Option<Address> {
     let signing_key = derive_eth_signing_key(entropy)?;
     let verifying_key = signing_key.verifying_key();
     let pubkey = verifying_key.to_encoded_point(false);
@@ -54,9 +52,9 @@ pub fn derive_eth_address(entropy: &[u8]) -> Option<EthAddress> {
         return None;
     }
     let hash = keccak256(&pubkey_bytes[1..]);
-    let mut address = [0u8; 20];
-    address.copy_from_slice(&hash.as_slice()[12..]);
-    Some(address)
+    let mut address_bytes = [0u8; 20];
+    address_bytes.copy_from_slice(&hash.as_slice()[12..]);
+    Some(Address::from_slice(&address_bytes))
 }
 
 pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Option<Vec<u8>> {
@@ -73,13 +71,9 @@ pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Option<V
 
 pub fn format_eth_transaction_display(
     tx: &EthTransaction,
-    sender: EthAddress,
+    sender: Address,
 ) -> Result<String, String> {
-    let sender = Address::from_slice(&sender);
-    let to = tx
-        .to
-        .map(|addr| Address::from_slice(&addr))
-        .unwrap_or_else(|| Address::from([0u8; 20]));
+    let to = tx.to.unwrap_or_else(|| Address::from([0u8; 20]));
     let data = Bytes::from(tx.data.clone());
     let displays = if tx.displays.is_empty() {
         well_known_displays()
@@ -101,7 +95,7 @@ pub fn format_eth_transaction_display(
 
 fn build_alloy_tx(tx: &EthTransaction) -> TxEip1559 {
     let to = match tx.to {
-        Some(addr) => TxKind::Call(Address::from_slice(&addr)),
+        Some(addr) => TxKind::Call(addr),
         None => TxKind::Create,
     };
 

@@ -11,8 +11,11 @@ use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
 use rand::{rngs::ThreadRng, thread_rng};
-use std::{collections::VecDeque, thread::sleep, time::Duration};
+use std::{collections::VecDeque, thread::sleep, time::Duration, str::FromStr};
 use clap::Parser;
+use alloy_primitives::Address;
+mod sample_eth_tx;
+use sample_eth_tx::sample_eth_transaction;
 use substrate_crypto_light::sr25519::Public;
 use mnemonic_external::regular::InternalWordList;
 
@@ -33,7 +36,7 @@ use kampela_ui::{
     eth_transaction::{
         derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
     },
-    platform::{EthAddress, PinCode, Platform},
+    platform::{PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
 
@@ -52,6 +55,9 @@ struct Args {
 
     #[arg(short = 'T')]
     transaction_received: bool,
+
+    #[arg(short = 'E')]
+    eth_transaction_received: bool,
 }
 
 impl DataInit<Args> for AppStateInit {
@@ -60,7 +66,9 @@ impl DataInit<Args> for AppStateInit {
             key_created: params.key_was_created,
         };
 
-        let nfc = if params.transaction_received {
+        let nfc = if params.eth_transaction_received {
+            NFCState::EthTransaction
+        } else if params.transaction_received {
             NFCState::Transaction
         } else {
             NFCState::Empty
@@ -91,7 +99,7 @@ struct DesktopSimulator {
     pin: PinCode,
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
-    eth_address: Option<EthAddress>,
+    eth_address: Option<Address>,
     eth_transaction: Option<EthTransaction>,
     transaction: Option<NfcTransactionData>,
     stored_entropy: Option<Vec<u8>>,
@@ -107,14 +115,22 @@ impl DesktopSimulator {
                 extension: String::from("Hello, this is a transaction!"),
                 signature: [0u8; 130],
             }),
+            NFCState::EthTransaction => None,
         };
+
+        let (eth_transaction, eth_address) = if matches!(init_state.nfc, NFCState::EthTransaction) {
+            (Some(sample_eth_transaction()), Address::from_str("0x056451BBCEbbb1A764b52A7FB1E90Ac07536daC5").ok())
+        } else {
+            (None, None)
+        };
+
         Self {
             pin,
             entropy: None,
             address: None,
-            eth_address: None,
-            eth_transaction: None,
-            transaction: transaction,
+            eth_address,
+            eth_transaction,
+            transaction,
             stored_entropy: None,
         }
     }
@@ -194,7 +210,7 @@ impl Platform for DesktopSimulator {
         self.address.as_ref()
     }
 
-    fn eth_address(&self) -> Option<EthAddress> {
+    fn eth_address(&self) -> Option<Address> {
         if let Some(address) = self.eth_address {
             Some(address)
         } else {
@@ -203,7 +219,7 @@ impl Platform for DesktopSimulator {
         }
     }
 
-    fn eth_set_address(&mut self, addr: EthAddress) {
+    fn eth_set_address(&mut self, addr: Address) {
         self.eth_address = Some(addr);
     }
 
@@ -255,7 +271,7 @@ fn main() {
         .theme(BinaryColorTheme::Inverted)
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
-    
+
     let mut update = Some(UpdateRequest::Slow);
 
     let mut touches = VecDeque::new();

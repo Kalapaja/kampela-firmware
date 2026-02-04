@@ -24,9 +24,10 @@ use kampela_ui::{
     eth_transaction::{
         derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
     },
-    platform::{EthAddress, PinCode, Platform},
+    platform::{PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate}
 };
+use alloy_primitives::Address;
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
@@ -165,7 +166,7 @@ pub struct Hardware {
     pin: PinCode,
     protected: Option<Protected>,
     address: Option<[u8; 76]>,
-    eth_address: Option<EthAddress>,
+    eth_address: Option<Address>,
     eth_transaction: Option<EthTransaction>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
@@ -320,7 +321,7 @@ impl Platform for Hardware {
         self.address.as_ref()
     }
 
-    fn eth_address(&self) -> Option<EthAddress> {
+    fn eth_address(&self) -> Option<Address> {
         if let Some(address) = self.eth_address {
             Some(address)
         } else {
@@ -329,7 +330,7 @@ impl Platform for Hardware {
         }
     }
 
-    fn eth_set_address(&mut self, addr: EthAddress) {
+    fn eth_set_address(&mut self, addr: Address) {
         self.eth_address = Some(addr);
     }
 
