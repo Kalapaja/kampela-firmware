@@ -30,7 +30,9 @@ const MAX_TOUCH_QUEUE: usize = 2;
 use kampela_ui::{
     data_state::{AppStateInit, NFCState, DataInit, StorageState},
     display_def::*,
-    eth_transaction::{derive_eth_address, sign_eip1559_transaction, Eip1559Transaction},
+    eth_transaction::{
+        derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
+    },
     platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
@@ -90,7 +92,7 @@ struct DesktopSimulator {
     entropy: Option<Vec<u8>>,
     address: Option<[u8; 76]>,
     eth_address: Option<EthAddress>,
-    eth_transaction: Option<Eip1559Transaction>,
+    eth_transaction: Option<EthTransaction>,
     transaction: Option<NfcTransactionData>,
     stored_entropy: Option<Vec<u8>>,
 }
@@ -122,7 +124,7 @@ impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
     type NfcTransaction = NfcTransactionData;
-    type EthTransaction = Eip1559Transaction;
+    type EthTransaction = EthTransaction;
     type AsWordList = InternalWordList;
 
     fn get_wordlist() -> Self::AsWordList {
@@ -213,8 +215,16 @@ impl Platform for DesktopSimulator {
         self.eth_transaction.as_ref()
     }
 
-    fn eth_transaction_display(&self) -> Option<String> {
-        self.eth_transaction.as_ref().map(|tx| format!("{:?}", tx))
+    fn eth_transaction_display(&self) -> Result<String, String> {
+        let tx = self
+            .eth_transaction
+            .as_ref()
+            .ok_or_else(|| "missing eth transaction".to_string())?;
+        let sender = self
+            .eth_address()
+            .or_else(|| self.entropy.as_ref().and_then(|e| derive_eth_address(e)))
+            .ok_or_else(|| "missing eth sender address".to_string())?;
+        format_eth_transaction_display(tx, sender)
     }
 
     fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {

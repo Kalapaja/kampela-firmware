@@ -77,7 +77,7 @@ pub trait Platform {
 
     fn eth_transaction(&self) -> Option<&Self::EthTransaction>;
 
-    fn eth_transaction_display(&self) -> Option<String>;
+    fn eth_transaction_display(&self) -> Result<String, String>;
 
     fn eth_sign_transaction(&mut self) -> Option<Vec<u8>>;
 

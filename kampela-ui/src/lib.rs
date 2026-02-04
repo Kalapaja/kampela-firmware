@@ -4,6 +4,7 @@
 pub mod uistate;
 pub mod platform;
 pub mod eth_transaction;
+mod eth_registry_data;
 pub mod widget{
     pub mod view;
     pub mod nav_bar{

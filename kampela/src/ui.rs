@@ -1,7 +1,7 @@
 //! Everything high-level related to interfacing with user
 
 use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::{collections::VecDeque, format, string::String, vec::Vec};
+use alloc::{collections::VecDeque, format, string::String, vec::Vec, string::ToString};
 use lazy_static::lazy_static;
 use substrate_crypto_light::sr25519::{Pair, Public};
 use embedded_graphics::{
@@ -21,7 +21,9 @@ use kampela_system::devices::flash::*;
 use crate::nfc::NfcTransactionPsramAccess;
 use kampela_ui::{
     display_def::*,
-    eth_transaction::{derive_eth_address, sign_eip1559_transaction, Eip1559Transaction},
+    eth_transaction::{
+        derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
+    },
     platform::{EthAddress, PinCode, Platform},
     uistate::{UIState, UpdateRequest, UpdateRequestMutate}
 };
@@ -164,7 +166,7 @@ pub struct Hardware {
     protected: Option<Protected>,
     address: Option<[u8; 76]>,
     eth_address: Option<EthAddress>,
-    eth_transaction: Option<Eip1559Transaction>,
+    eth_transaction: Option<EthTransaction>,
     transaction_psram_access: Option<NfcTransactionPsramAccess>,
 }
 
@@ -190,7 +192,7 @@ impl Platform for Hardware {
     type AsWordList = FlashWordList;
 
     type NfcTransaction = NfcTransactionPsramAccess;
-    type EthTransaction = Eip1559Transaction;
+    type EthTransaction = EthTransaction;
     fn get_wordlist() -> Self::AsWordList {
         FlashWordList::new()
     }
@@ -339,8 +341,16 @@ impl Platform for Hardware {
         self.eth_transaction.as_ref()
     }
 
-    fn eth_transaction_display(&self) -> Option<String> {
-        self.eth_transaction.as_ref().map(|tx| format!("{:?}", tx))
+    fn eth_transaction_display(&self) -> Result<String, String> {
+        let tx = self
+            .eth_transaction
+            .as_ref()
+            .ok_or_else(|| "missing eth transaction".to_string())?;
+        let sender = self
+            .eth_address()
+            .or_else(|| self.entropy().and_then(|e| derive_eth_address(&e)))
+            .ok_or_else(|| "missing eth sender address".to_string())?;
+        format_eth_transaction_display(tx, sender)
     }
 
     fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
