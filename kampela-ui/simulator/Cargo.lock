@@ -868,7 +868,6 @@ dependencies = [
  "alloy-sol-types",
  "nom",
  "serde",
- "serde_json",
 ]
 
 [[package]]
