@@ -16,15 +16,15 @@ where
 {
     let len = data_to_qr.len();
 
-    let mut outbuffer = [0u8; Version::new(18).buffer_len()].to_vec();
-    let mut dataandtemp = [0u8; Version::new(18).buffer_len()].to_vec();
+    let mut outbuffer = [0u8; Version::new(40).buffer_len()].to_vec();
+    let mut dataandtemp = [0u8; Version::new(40).buffer_len()].to_vec();
     
     dataandtemp[..len].copy_from_slice(data_to_qr);
     
-    let qr_code = QrCode::encode_binary(&mut dataandtemp, len, &mut outbuffer, QrCodeEcc::Low, Version::MIN, Version::new(18), None, true).unwrap();
+    let qr_code = QrCode::encode_binary(&mut dataandtemp, len, &mut outbuffer, QrCodeEcc::Low, Version::MIN, Version::new(40), None, true).unwrap();
 
     let scaling = {
-        if qr_code.version() == Version::new(18) {2}
+        if qr_code.version() == Version::new(40) {2}
         else {SCREEN_SIZE_Y as i32/qr_code.size()}
     };
 

@@ -1,11 +1,11 @@
 //! Ethereum transaction types and helpers.
+//!
+//! Uses raw 32-byte private keys directly (no BIP39/BIP32 mnemonic derivation).
 
 #[cfg(not(feature = "std"))]
 use alloc::{string::String, vec::Vec, string::ToString};
 use alloy_consensus::{SignableTransaction, TxEip1559};
-use alloy_primitives::{keccak256, Address, Bytes, FixedBytes, Signature, TxKind, B256, U256};
-use bip32::{DerivationPath, XPrv};
-use bip39::{Language, Mnemonic};
+use alloy_primitives::{keccak256, Address, Bytes, FixedBytes, Signature, TxKind, U256};
 use clear_signing::clear_call::ClearCallContext;
 use clear_signing::display::Display;
 use clear_signing::fields::ClearCall;
@@ -13,9 +13,11 @@ use clear_signing::registry::Registry;
 use clear_signing::resolver::Message;
 use clear_signing::sol::SolFunction;
 use clear_signing_format::{format_clear_call, Contract, MetadataProvider, NativeToken, Token};
-use k256::ecdsa::SigningKey;
+use libsecp256k1::{Message as SecpMessage, PublicKey, SecretKey, RecoveryId, Signature as SecpSignature};
 #[cfg(feature = "std")]
 use std::{string::String, vec::Vec, string::ToString};
+
+use crate::error::KampelaError;
 
 use crate::eth_registry_data::{
     contract_list, native_token, token_list, well_known_contract_addresses, well_known_displays,
@@ -34,46 +36,68 @@ pub struct EthTransaction {
     pub displays: Vec<Display>,
 }
 
-pub fn derive_eth_signing_key(entropy: &[u8]) -> Option<SigningKey> {
-    let mnemonic = Mnemonic::from_entropy_in(Language::English, entropy).ok()?;
-    let seed = mnemonic.to_seed("");
-    let path: DerivationPath = "m/44'/60'/0'/0/0".parse().ok()?;
-    let child_xprv = XPrv::derive_from_path(&seed, &path).ok()?;
-    let private_key = child_xprv.private_key().to_bytes();
-    SigningKey::from_bytes(&private_key).ok()
+/// Creates a SigningKey directly from a 32-byte private key (entropy).
+///
+/// No BIP39/BIP32 derivation - the entropy IS the private key.
+pub fn signing_key_from_entropy(entropy: &[u8]) -> Result<SecretKey, KampelaError> {
+    if entropy.len() != 32 {
+        return Err(KampelaError::KeyGeneration);
+    }
+
+    let mut key = [0u8; 32];
+    key.copy_from_slice(entropy);
+    SecretKey::parse(&key).map_err(|_| KampelaError::KeyGeneration)
 }
 
-pub fn derive_eth_address(entropy: &[u8]) -> Option<Address> {
-    let signing_key = derive_eth_signing_key(entropy)?;
-    let verifying_key = signing_key.verifying_key();
-    let pubkey = verifying_key.to_encoded_point(false);
-    let pubkey_bytes = pubkey.as_bytes();
+/// Derives Ethereum address from a 32-byte private key.
+///
+/// Address is the last 20 bytes of keccak256(uncompressed_public_key).
+pub fn derive_eth_address(entropy: &[u8]) -> Result<Address, KampelaError> {
+    let signing_key = signing_key_from_entropy(entropy)?;
+    let pubkey = PublicKey::from_secret_key(&signing_key);
+    let pubkey_bytes = pubkey.serialize();
+
     if pubkey_bytes.len() < 65 {
-        return None;
+        return Err(KampelaError::KeyGeneration);
     }
+
+    // Hash the public key (skip first byte which is 0x04 for uncompressed)
     let hash = keccak256(&pubkey_bytes[1..]);
+
+    // Take last 20 bytes as address
     let mut address_bytes = [0u8; 20];
     address_bytes.copy_from_slice(&hash.as_slice()[12..]);
-    Some(Address::from_slice(&address_bytes))
+
+    Ok(Address::from_slice(&address_bytes))
 }
 
-pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Option<Vec<u8>> {
-    let signing_key = derive_eth_signing_key(entropy)?;
-    let tx = build_alloy_tx(tx);
-    let hash = tx.signature_hash();
-    let (sig, recid) = signing_key.sign_prehash_recoverable(hash.as_slice()).ok()?;
-    let signature = Signature::from((sig, recid));
-    let signed = tx.into_signed(signature);
+/// Signs an EIP-1559 transaction and returns the RLP-encoded signed transaction.
+pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Result<Vec<u8>, KampelaError> {
+    let signing_key = signing_key_from_entropy(entropy)?;
+    let tx_eip1559 = build_alloy_tx(tx);
+    let hash = tx_eip1559.signature_hash();
+
+    let message = SecpMessage::parse_slice(hash.as_slice())
+        .map_err(|_| KampelaError::SigningFailed)?;
+    let (sig, recid): (SecpSignature, RecoveryId) = libsecp256k1::sign(&message, &signing_key);
+    let sig_bytes = sig.serialize();
+    let r = U256::try_from_be_slice(&sig_bytes[0..32]).ok_or(KampelaError::SigningFailed)?;
+    let s = U256::try_from_be_slice(&sig_bytes[32..64]).ok_or(KampelaError::SigningFailed)?;
+    let y_parity = (recid.serialize() & 1) == 1;
+    let signature = Signature::new(r, s, y_parity);
+    let signed = tx_eip1559.into_signed(signature);
+
     let mut raw = Vec::with_capacity(signed.eip2718_encoded_length());
     signed.eip2718_encode(&mut raw);
-    Some(raw)
+
+    Ok(raw)
 }
 
 pub fn format_eth_transaction_display(
     tx: &EthTransaction,
     sender: Address,
 ) -> Result<String, String> {
-    let to = tx.to.unwrap_or_else(|| Address::from([0u8; 20]));
+    let to = tx.to.ok_or_else(|| "Deploy transaction not supported")?;
     let data = Bytes::from(tx.data.clone());
     let displays = if tx.displays.is_empty() {
         well_known_displays()

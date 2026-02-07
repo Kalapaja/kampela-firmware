@@ -72,6 +72,3 @@ In case of ArchLinux there is [AUR package](https://aur.archlinux.org/packages/s
 ```sh
 ./binarize.sh --segger
 ```
-
-
-

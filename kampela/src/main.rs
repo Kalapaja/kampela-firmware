@@ -15,7 +15,6 @@ use embedded_alloc::Heap;
 use lazy_static::lazy_static;
 
 use efm32pg23_fix::{interrupt, Interrupt, NVIC, Peripherals};
-use kampela_ui::platform::Platform;
 
 mod ui;
 use ui::UI;
@@ -28,10 +27,12 @@ static HEAP: Heap = Heap::empty();
 use kampela_system::{
     PERIPHERALS, CORE_PERIPHERALS,
     devices::power::ADC,
+    devices::flash::{flash_wakeup, flash_unlock, flash_erase_page, flash_wait_ready},
     debug_display::burning_tank,
     init::init_peripherals,
     parallel::Operation,
     BUF_THIRD, CH_TIM0, LINK_1, LINK_2, LINK_DESCRIPTORS, TIMER0_CC0_ICF, NfcXfer, NfcXferBlock,
+    in_free,
 };
 
 use core::cell::RefCell;
@@ -148,18 +149,20 @@ fn main() -> ! {
 
     // Development: erase seed when Pilkki can't
   
-/*
-    in_free(|peripherals| {
-            flash_wakeup(peripherals);
-
-            flash_unlock(peripherals);
-            flash_erase_page(peripherals, 0);
-            flash_wait_ready(peripherals);
-    });
-*/
+    // in_free(|peripherals| {
+    //         flash_wakeup(peripherals);
+    //
+    //         flash_unlock(peripherals);
+    //         flash_erase_page(peripherals, 0);
+    //         flash_wait_ready(peripherals);
+    // });
 
     let mut ui = UI::init();
     let mut adc = ADC::new(());
+    // Force initial render so the welcome screen appears before NFC processing.
+    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
+        adc.advance(());
+    }
 
     // hard derivation
     //let junction = DeriveJunction::hard("kampela");
@@ -169,16 +172,27 @@ fn main() -> ! {
     //         .expand_to_keypair(ExpansionMode::Ed25519);
 
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer, ui.state.platform.sub_public().map(|a| a.0));
+    let mut nfc = NfcReceiver::new(&nfc_buffer, None);
     loop {
         adc.advance(());
-        let nfc_state = nfc.advance(adc.read());
+        let voltage = adc.read();
+
+        // Always advance UI so welcome/address screens render without waiting for NFC.
+        ui.advance(voltage);
+
+        let nfc_state = nfc.advance(voltage);
         if let Some(s) = nfc_state {
             match s {
                 Err(e) => {
                     match e {
                         NfcError::InvalidAddress => {
                             ui.handle_message("Invalid sender address".to_owned())
+                        }
+                        NfcError::InvalidRequestType => {
+                            ui.handle_message("Invalid request type".to_owned())
+                        }
+                        NfcError::InvalidEthTransaction => {
+                            ui.handle_message("Invalid Ethereum transaction".to_owned())
                         }
                     }
                     while !ui.advance(adc.read()).is_some_and(|c| c == true) {
@@ -195,52 +209,24 @@ fn main() -> ! {
                             while !ui.advance(adc.read()).is_some_and(|c| c == false) {
                                 adc.advance(());
                             }
-                        },
+                        }
                         NfcStateOutput::Done(r) => {
                             match r {
                                 NfcResult::Empty => {break},
                                 NfcResult::DisplayAddress => {
-                                    ui.handle_address([0;76]);
+                                    // TODO: Display Ethereum address
+                                    ui.handle_message("Display address request received".to_owned());
                                     break
                                 },
-                                NfcResult::Transaction(transaction) => {
-                                    ui.handle_transaction(transaction);
+                                NfcResult::EthTransaction(transaction) => {
+                                    ui.handle_eth_transaction(transaction);
                                     break
-        
-        
-                /* // calculate correct hash of the payload
-                {
-                            let mut hasher = sha2::Sha256::new();
-                            in_free(|peripherals| {
-                                for shift in 0..nfc_payload.encoded_data.total_len {
-                                    let address = nfc_payload.encoded_data.start_address.try_shift(shift).unwrap();
-                                    let single_element_vec = psram_read_at_address(peripherals, address, 1usize).unwrap();
-                                    if shift == 0 {first_byte = Some(single_element_vec[0])}
-                                    hasher.update(&single_element_vec);
-                                }
-                            });
-                            let hash = hasher.finalize();
-        
-                            // transform signature and verifying key from der-encoding into usable form
-                            let signature = Signature::from_der(&nfc_payload.companion_signature).unwrap();
-                            let verifying_key = VerifyingKey::from_public_key_der(&nfc_payload.companion_public_key).unwrap();
-        
-                            // and check
-                            assert!(verifying_key
-                                .verify_prehash(&hash, &signature)
-                                .is_ok());
-        
-                }
-                */
-        
                                 },
                             }
                         }
                     }
                 }
             }
-
-
         }
     }
     loop {
@@ -248,4 +234,3 @@ fn main() -> ! {
         ui.advance(adc.read());
     }
 }
-

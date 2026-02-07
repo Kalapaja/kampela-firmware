@@ -11,8 +11,6 @@ alloy-primitives = { version = "1.5.4" }
 lazy_static = "1.4.0"
 hex = "0.4.3"
 clear-signing = { path = "../../../clear-signing/crates/clear-signing" }
-mnemonic-external = {git = "https://github.com/Alzymologist/mnemonic-external", features = ["sufficient-memory"]}
-substrate-crypto-light = {git = "https://github.com/Alzymologist/substrate-crypto-light", features = ["sr25519"]}
 
 kampela-ui = {path = "../"}
 rand = { version = "0.8.5" }

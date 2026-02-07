@@ -16,8 +16,6 @@ use clap::Parser;
 use alloy_primitives::Address;
 mod sample_eth_tx;
 use sample_eth_tx::sample_eth_transaction;
-use substrate_crypto_light::sr25519::Public;
-use mnemonic_external::regular::InternalWordList;
 
 /// Amount of time required for full screen update; debounce
 ///  should be quite large as screen takes this much to clean
@@ -33,6 +31,7 @@ const MAX_TOUCH_QUEUE: usize = 2;
 use kampela_ui::{
     data_state::{AppStateInit, NFCState, DataInit, StorageState},
     display_def::*,
+    error::KampelaError,
     eth_transaction::{
         derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
     },
@@ -40,21 +39,11 @@ use kampela_ui::{
     uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
 
-#[derive(Debug)]
-pub struct NfcTransactionData {
-    pub call: String,
-    pub extension: String,
-    pub signature: [u8; 130],
-}
-
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
     #[arg(short = 'I')]
     key_was_created: bool,
-
-    #[arg(short = 'T')]
-    transaction_received: bool,
 
     #[arg(short = 'E')]
     eth_transaction_received: bool,
@@ -68,8 +57,6 @@ impl DataInit<Args> for AppStateInit {
 
         let nfc = if params.eth_transaction_received {
             NFCState::EthTransaction
-        } else if params.transaction_received {
-            NFCState::Transaction
         } else {
             NFCState::Empty
         };
@@ -98,40 +85,35 @@ impl HALHandle {
 struct DesktopSimulator {
     pin: PinCode,
     entropy: Option<Vec<u8>>,
-    address: Option<[u8; 76]>,
     eth_address: Option<Address>,
     eth_transaction: Option<EthTransaction>,
-    transaction: Option<NfcTransactionData>,
-    stored_entropy: Option<Vec<u8>>,
+    signed_tx: Option<Vec<u8>>,
 }
 
 impl DesktopSimulator {
     pub fn new(init_state: &AppStateInit) -> Self {
         let pin = [0; 4];
-        let transaction = match init_state.nfc {
-            NFCState::Empty => None,
-            NFCState::Transaction => Some(NfcTransactionData{
-                call: String::from("Hello, this is a transaction!"),
-                extension: String::from("Hello, this is a transaction!"),
-                signature: [0u8; 130],
-            }),
-            NFCState::EthTransaction => None,
-        };
 
-        let (eth_transaction, eth_address) = if matches!(init_state.nfc, NFCState::EthTransaction) {
-            (Some(sample_eth_transaction()), Address::from_str("0x056451BBCEbbb1A764b52A7FB1E90Ac07536daC5").ok())
+        let (eth_transaction, eth_address, entropy) = if matches!(init_state.nfc, NFCState::EthTransaction) {
+            // For transaction testing, generate random entropy (same as device)
+            let mut hal_handle = HALHandle::new();
+            let random_entropy = Self::generate_entropy(&mut hal_handle);
+            let entropy_vec = random_entropy.to_vec();
+
+            // Derive address from this entropy
+            let addr = derive_eth_address(&entropy_vec).ok();
+
+            (Some(sample_eth_transaction()), addr, Some(entropy_vec))
         } else {
-            (None, None)
+            (None, None, None)
         };
 
         Self {
             pin,
-            entropy: None,
-            address: None,
+            entropy,
             eth_address,
             eth_transaction,
-            transaction,
-            stored_entropy: None,
+            signed_tx: None,
         }
     }
 }
@@ -139,13 +121,7 @@ impl DesktopSimulator {
 impl Platform for DesktopSimulator {
     type HAL = HALHandle;
     type Rng<'a> = &'a mut ThreadRng;
-    type NfcTransaction = NfcTransactionData;
     type EthTransaction = EthTransaction;
-    type AsWordList = InternalWordList;
-
-    fn get_wordlist() -> Self::AsWordList {
-        InternalWordList
-    }
 
     fn rng<'a>(h: &'a mut Self::HAL) -> Self::Rng<'a> {
         &mut h.rng
@@ -159,64 +135,40 @@ impl Platform for DesktopSimulator {
         &mut self.pin
     }
 
-    fn store_entropy(&mut self, e: &[u8]) {
+    fn store_entropy(&mut self, e: &[u8]) -> Result<(), KampelaError> {
+        println!("Entropy stored (simulator - not persisted)");
         self.entropy = Some(e.to_vec());
-        println!("entropy stored (not really, this is emulator)");
+
+        // Derive and cache Ethereum address
+        let address = derive_eth_address(e)?;
+        self.eth_address = Some(address);
+
+        Ok(())
     }
 
-    fn read_entropy(&mut self) {
-        self.entropy = self.stored_entropy.clone();
-        println!("entropy read from emulated storage: {:?}", &self.entropy);
-    }
+    fn read_entropy(&mut self) -> Result<(), KampelaError> {
+        if self.entropy.is_some() {
+            println!("Entropy read from memory");
 
-    fn sub_public(&self) -> Option<Public> {
-        self.sub_pair().map(|pair| pair.public())
-    }
-
-    fn entropy(&self) -> Option<Vec<u8>> {
-        self.entropy.clone()
-    }
-
-    fn sub_set_address(&mut self, addr: [u8; 76]) {
-        self.address = Some(addr);
-    }
-
-    fn sub_set_transaction(&mut self, transaction: Self::NfcTransaction) {
-        self.transaction = Some(transaction);
-    }
-
-    fn sub_call(&mut self) -> Option<String> {
-        match self.transaction {
-            Some(ref a) => Some(a.call.to_owned()),
-            None => None,
-        }
-    }
-
-    fn sub_extensions(&mut self) -> Option<String> {
-        match self.transaction {
-            Some(ref a) => Some(a.extension.to_owned()),
-            None => None,
-        }
-    }
-
-    fn sub_signature(&mut self) -> [u8; 130] {
-        match self.transaction {
-            Some(ref a) => a.signature,
-            None =>  panic!("qr not ready!"),
-        }
-    }
-
-    fn sub_address(&self) -> Option<&[u8; 76]> {
-        self.address.as_ref()
-    }
-
-    fn eth_address(&self) -> Option<Address> {
-        if let Some(address) = self.eth_address {
-            Some(address)
+            // Derive and cache Ethereum address if we have entropy
+            if let Some(ref e) = self.entropy {
+                if let Ok(address) = derive_eth_address(e) {
+                    self.eth_address = Some(address);
+                }
+            }
+            Ok(())
         } else {
-            let entropy = self.entropy.as_ref()?;
-            derive_eth_address(entropy)
+            println!("No entropy found in memory");
+            Err(KampelaError::FlashRead)
         }
+    }
+
+    fn entropy(&self) -> Result<Vec<u8>, KampelaError> {
+        self.entropy.clone().ok_or(KampelaError::FlashRead)
+    }
+
+    fn eth_address(&self) -> Result<Address, KampelaError> {
+        self.eth_address.ok_or(KampelaError::KeyGeneration)
     }
 
     fn eth_set_address(&mut self, addr: Address) {
@@ -227,27 +179,31 @@ impl Platform for DesktopSimulator {
         self.eth_transaction = Some(transaction);
     }
 
-    fn eth_transaction(&self) -> Option<&Self::EthTransaction> {
+    fn eth_transaction(&self) -> Result<&Self::EthTransaction, KampelaError> {
         self.eth_transaction.as_ref()
+            .ok_or_else(|| KampelaError::TransactionInvalid("No transaction".to_string()))
     }
 
-    fn eth_transaction_display(&self) -> Result<String, String> {
-        let tx = self
-            .eth_transaction
-            .as_ref()
-            .ok_or_else(|| "missing eth transaction".to_string())?;
-        let sender = self
-            .eth_address()
-            .or_else(|| self.entropy.as_ref().and_then(|e| derive_eth_address(e)))
-            .ok_or_else(|| "missing eth sender address".to_string())?;
+    fn eth_transaction_display(&self) -> Result<String, KampelaError> {
+        let tx = self.eth_transaction()?;
+        let sender = self.eth_address()?;
+
         format_eth_transaction_display(tx, sender)
+            .map_err(|e| KampelaError::TransactionInvalid(e.to_string()))
     }
 
-    fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
-        let transaction = self.eth_transaction.as_ref()?;
-        let entropy = self.entropy.as_ref()?;
-        sign_eip1559_transaction(transaction, entropy)
+    fn eth_sign_transaction(&mut self) -> Result<Vec<u8>, KampelaError> {
+        let tx = self.eth_transaction.as_ref()
+            .ok_or_else(|| KampelaError::TransactionInvalid("No transaction".to_string()))?;
+        let entropy = self.entropy()?;
+
+        let signed_tx = sign_eip1559_transaction(tx, &entropy)?;
+        self.signed_tx = Some(signed_tx.clone());
+
+        println!("Transaction signed (simulator)");
+        Ok(signed_tx)
     }
+
 }
 
 
@@ -266,13 +222,19 @@ fn main() {
     let display = SimulatorDisplay::new(SCREEN_SIZE);
     let mut state = UIState::new(desktop, display, &mut h);
 
+    // If transaction was received via NFC, switch to transaction screen
+    let mut update = if matches!(init_data_state.nfc, NFCState::EthTransaction) {
+        println!("Eth transaction received - showing transaction screen");
+        state.handle_transaction(&mut h)
+    } else {
+        Some(UpdateRequest::Slow)
+    };
+
     // Draw
     let output_settings = OutputSettingsBuilder::new()
         .theme(BinaryColorTheme::Inverted)
         .build();
     let mut window = Window::new("Hello world", &output_settings); //.show_static(&display);
-
-    let mut update = Some(UpdateRequest::Slow);
 
     let mut touches = VecDeque::new();
 

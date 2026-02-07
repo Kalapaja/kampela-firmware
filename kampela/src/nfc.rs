@@ -16,6 +16,8 @@ use substrate_parser::compacts::find_compact;
 
 use core::ops::DerefMut;
 
+use kampela_ui::eth_transaction::EthTransaction;
+
 pub const FREQ: u16 = 22;
 const NFC_MIN_VOLTAGE: i32 = 6000; //Affects initiation time, but lower values result in unreliable nfc reception
 
@@ -269,19 +271,14 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 */
 }
 
-pub struct NfcTransactionPsramAccess {
-    pub call_psram_access: PsramAccess,
-    pub extension_psram_access: PsramAccess,
-    pub metadata_psram_access: PsramAccess,
-    pub genesis_hash_bytes_psram_access: PsramAccess,
-}
-
 pub enum NfcError {
     InvalidAddress,
+    InvalidRequestType,
+    InvalidEthTransaction,
 }
 
 pub enum NfcResult {
-    Transaction(NfcTransactionPsramAccess),
+    EthTransaction(EthTransaction),
     DisplayAddress,
     Empty,
 }
@@ -336,88 +333,34 @@ impl <'a> NfcReceiver<'a> {
                 });
 
                 match first_byte {
-                    Some(2) => Some(Ok(NfcResult::DisplayAddress)),
-                    Some(3) => {
-                        let address = payload.encoded_data.start_address.try_shift(1usize).unwrap();
-                        let genesis_hash_bytes_psram_access = PsramAccess{start_address: address, total_len: 32usize};
-
-                        let mut metadata_psram_access_option = None;
-                        let mut position = 1usize + 32usize;
+                    Some(1) => {
+                        // Display address request
+                        Some(Ok(NfcResult::DisplayAddress))
+                    },
+                    Some(4) => {
+                        // Ethereum transaction request
+                        // Read the entire transaction data from PSRAM
+                        let mut eth_tx_data: Option<Vec<u8>> = None;
                         in_free(|peripherals| {
-                            let mut external_psram = ExternalPsram{peripherals};
-                            let compact_meta = find_compact::<u32, PsramAccess, ExternalPsram>(&payload.encoded_data, &mut external_psram, position).unwrap();
-                            let start_address = payload.encoded_data.start_address.try_shift(compact_meta.start_next_unit).unwrap();
-                            metadata_psram_access_option = Some(PsramAccess{start_address, total_len: compact_meta.compact as usize});
-                            position = compact_meta.start_next_unit + compact_meta.compact as usize;
+                            // Skip the first byte (request type) and read the rest
+                            let data_start = payload.encoded_data.start_address.try_shift(1usize).unwrap();
+                            let data_len = payload.encoded_data.total_len - 1;
+                            eth_tx_data = Some(psram_read_at_address(peripherals, data_start, data_len).unwrap());
                         });
-                        let metadata_psram_access = metadata_psram_access_option.unwrap();
 
-                        let mut data_to_sign_psram_access = None;
-                        in_free(|peripherals| {
-                            let mut external_psram = ExternalPsram{peripherals};
-                            let compact_transaction_1 = find_compact::<u32, PsramAccess, ExternalPsram>(
-                                &payload.encoded_data,
-                                &mut external_psram,
-                                position
-                            ).unwrap(); // fix this madness maybe later
-                            position = compact_transaction_1.start_next_unit;
-                            
-                            let compact_transaction_2 = find_compact::<u32, PsramAccess, ExternalPsram>(
-                                &payload.encoded_data,
-                                &mut external_psram,
-                                position
-                            ).unwrap();
-                            position = compact_transaction_2.start_next_unit;
-
-                            let compact_call = find_compact::<u32, PsramAccess, ExternalPsram>(&
-                                payload.encoded_data,
-                                &mut external_psram,
-                                position
-                            ).unwrap();
-
-                            let call_address_to_sign = payload.encoded_data.start_address
-                                .try_shift(compact_call.start_next_unit)
-                                .unwrap();
-
-                            let extension_address_to_sign = payload.encoded_data.start_address
-                                .try_shift(compact_call.start_next_unit + compact_call.compact as usize)
-                                .unwrap();
-                            let extension_len_to_sign = compact_transaction_2.compact as usize - compact_call.start_next_unit - compact_call.compact as usize + position;
-
-                            let call_to_sign_psram_access = PsramAccess{start_address: call_address_to_sign, total_len: compact_call.compact as usize};
-                            let extension_to_sign_psram_access = PsramAccess{start_address: extension_address_to_sign, total_len: extension_len_to_sign};
-                            data_to_sign_psram_access = Some((call_to_sign_psram_access, extension_to_sign_psram_access));
-
-                            position = compact_transaction_2.start_next_unit + compact_transaction_2.compact as usize;
-                        });
-                        let (call_to_sign_psram_access, extension_to_sign_psram_access) = data_to_sign_psram_access.unwrap();
-
-                        let mut public_key: Option<Vec<u8>> = None;
-                        in_free(|peripherals| {
-                            let start_address = payload.encoded_data.start_address.try_shift(position).unwrap();
-                            let k = psram_read_at_address(peripherals, start_address, 32usize).unwrap();
-                            public_key = Some(k);
-                        });
-                        // TODO: check address differently
-                        match public_key {
-                            None => {
-                                return Some(Err(NfcError::InvalidAddress))
+                        // TODO: Parse Ethereum transaction from RLP-encoded bytes
+                        // For now, return an error as the parsing logic needs to be implemented
+                        match eth_tx_data {
+                            Some(_data) => {
+                                // Placeholder: actual RLP decoding needs to be implemented
+                                // This would decode the transaction fields and create an EthTransaction
+                                Some(Err(NfcError::InvalidEthTransaction))
                             },
-                            Some(k) => {
-                                if k != self.public_memory {
-                                    return Some(Err(NfcError::InvalidAddress))
-                                }
-                            }
+                            None => Some(Err(NfcError::InvalidEthTransaction)),
                         }
-
-                        Some(Ok(NfcResult::Transaction(NfcTransactionPsramAccess{
-                            call_psram_access: call_to_sign_psram_access,
-                            extension_psram_access: extension_to_sign_psram_access,
-                            metadata_psram_access,
-                            genesis_hash_bytes_psram_access,
-                        })))
                     },
                     _ => {
+                        // Unknown request type
                         Some(Ok(NfcResult::Empty))
                     }
                 }

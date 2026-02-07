@@ -1,33 +1,31 @@
 //! Everything high-level related to interfacing with user
 
-use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
-use alloc::{collections::VecDeque, format, string::String, vec::Vec, string::ToString};
+use alloc::{collections::VecDeque, string::String, vec::Vec};
+use embedded_graphics::{geometry::Dimensions, prelude::Point};
 use lazy_static::lazy_static;
-use substrate_crypto_light::sr25519::{Pair, Public};
-use embedded_graphics::{
-    prelude::Point,
-    geometry::Dimensions,
-};
+use nalgebra::{Affine2, OMatrix, Point2, RowVector3};
 
+use alloy_primitives::Address;
+use kampela_system::devices::flash::*;
 use kampela_system::{
     devices::{
-        psram::{psram_decode_call, psram_decode_extension, read_from_psram, PsramAccess},
         se_aes_gcm::{decode_entropy, encode_entropy, Protected},
         se_rng,
-        touch::{touch_detected, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES}
-    }, draw::FrameBuffer, flash_mnemonic::FlashWordList, parallel::Operation
+        touch::{touch_detected, Read, FT6X36_REG_NUM_TOUCHES, LEN_NUM_TOUCHES},
+    },
+    draw::FrameBuffer,
+    parallel::Operation,
 };
-use kampela_system::devices::flash::*;
-use crate::nfc::NfcTransactionPsramAccess;
 use kampela_ui::{
     display_def::*,
+    error::KampelaError,
     eth_transaction::{
-        derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction, EthTransaction,
+        derive_eth_address, format_eth_transaction_display, sign_eip1559_transaction,
+        EthTransaction,
     },
     platform::{PinCode, Platform},
-    uistate::{UIState, UpdateRequest, UpdateRequestMutate}
+    uistate::{UIState, UpdateRequest, UpdateRequestMutate},
 };
-use alloy_primitives::Address;
 
 const MAX_TOUCH_QUEUE: usize = 2;
 
@@ -61,10 +59,16 @@ impl UI {
             UIStatus::DisplayOrListen(ref mut status) => {
                 // read input if possible
                 if touch_detected().unwrap_or(false) {
-                    if !self.touched && !matches!(status, UIStatusDisplay::DisplayOperation(UpdateRequest::Slow)) {
+                    if !self.touched
+                        && !matches!(
+                            status,
+                            UIStatusDisplay::DisplayOperation(UpdateRequest::Slow)
+                        )
+                    {
                         self.touched = true;
-                        self.status = UIStatus::TouchOperation(Read::new(()), core::mem::take( status));
-                        return None
+                        self.status =
+                            UIStatus::TouchOperation(Read::new(()), core::mem::take(status));
+                        return None;
                     }
                 } else {
                     self.touched = false;
@@ -73,46 +77,50 @@ impl UI {
                     UIStatusDisplay::Listen => {
                         self.listen();
                         Some(true) // done operations
-                    },
+                    }
                     UIStatusDisplay::DisplayOperation(_) => {
                         match self.state.display.advance(voltage) {
                             Some(c) => {
                                 if c {
-                                    self.status = UIStatus::DisplayOrListen(UIStatusDisplay::Listen);
+                                    self.status =
+                                        UIStatus::DisplayOrListen(UIStatusDisplay::Listen);
                                 }
                                 Some(false)
-                            },
+                            }
                             None => None, // not enough energy to start screen update
                         }
-                    },
+                    }
                 }
             }
-            UIStatus::TouchOperation(ref mut touch, ref mut next) => {
-                match touch.advance(()) {
-                    Ok(Some(touch)) => {
-                        if self.touches.len() < MAX_TOUCH_QUEUE {
-                            if let Some(point) = convert(touch) {
-                                self.touches.push_back(point);
-                            }
+            UIStatus::TouchOperation(ref mut touch, ref mut next) => match touch.advance(()) {
+                Ok(Some(touch)) => {
+                    if self.touches.len() < MAX_TOUCH_QUEUE {
+                        if let Some(point) = convert(touch) {
+                            self.touches.push_back(point);
                         }
-                        self.status = UIStatus::DisplayOrListen(core::mem::take(next));
-                        None
-                    },
-                    Ok(None) => {None},
-                    Err(e) => panic!("{:?}", e),
+                    }
+                    self.status = UIStatus::DisplayOrListen(core::mem::take(next));
+                    None
                 }
+                Ok(None) => None,
+                Err(e) => panic!("{:?}", e),
             },
         }
     }
 
     fn listen(&mut self) {
         if let Some(point) = self.touches.pop_front() {
-            self.update_request.propagate(self.state.handle_tap(point, &mut ()));
+            self.update_request
+                .propagate(self.state.handle_tap(point, &mut ()));
         }
         // update ui if needed
         if let Some(u) = self.update_request.take() {
-            let is_clear_update = matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
-            self.update_request.propagate(self.state.render(is_clear_update, &mut ()).expect("guaranteed to work, no errors implemented"));
+            let is_clear_update =
+                matches!(u, UpdateRequest::Slow) || matches!(u, UpdateRequest::Fast);
+            // Handle render errors gracefully - errors are already displayed via ErrorDialog
+            if let Ok(result) = self.state.render(is_clear_update, &mut ()) {
+                self.update_request.propagate(result);
+            }
 
             match u {
                 UpdateRequest::Hidden => (),
@@ -121,7 +129,7 @@ impl UI {
                 UpdateRequest::UltraFast => {
                     let a = self.state.display.bounding_box();
                     self.state.display.request_part(a);
-                },
+                }
                 UpdateRequest::Part(a) => self.state.display.request_part(a),
             }
             if !matches!(u, UpdateRequest::Hidden) {
@@ -131,16 +139,19 @@ impl UI {
     }
 
     pub fn handle_message(&mut self, message: String) {
-        self.update_request.propagate(self.state.handle_message(message, &mut ()));
+        let error = KampelaError::TransactionInvalid(message);
+        self.update_request
+            .propagate(self.state.handle_error(error, &mut ()));
     }
 
-    pub fn handle_transaction(&mut self, transaction: NfcTransactionPsramAccess) {
-        self.state.platform.sub_set_transaction(transaction);
-        self.update_request.propagate(self.state.handle_transaction(&mut ()));
+    pub fn handle_eth_transaction(&mut self, transaction: EthTransaction) {
+        self.state.platform.eth_set_transaction(transaction);
+        self.update_request
+            .propagate(self.state.handle_transaction(&mut ()));
     }
 
-    pub fn handle_address(&mut self, addr: [u8; 76]) {
-        self.update_request.propagate(self.state.handle_address(addr));
+    pub fn handle_eth_address(&mut self, addr: Address) {
+        self.state.platform.eth_set_address(addr);
     }
 }
 
@@ -160,29 +171,29 @@ enum UIStatusDisplay {
 enum UIStatus {
     DisplayOrListen(UIStatusDisplay),
     /// Touch event processing
-    TouchOperation(Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>, UIStatusDisplay),
+    TouchOperation(
+        Read<LEN_NUM_TOUCHES, FT6X36_REG_NUM_TOUCHES>,
+        UIStatusDisplay,
+    ),
 }
 pub struct Hardware {
     pin: PinCode,
     protected: Option<Protected>,
-    address: Option<[u8; 76]>,
     eth_address: Option<Address>,
     eth_transaction: Option<EthTransaction>,
-    transaction_psram_access: Option<NfcTransactionPsramAccess>,
+    eth_transaction_signed: Option<Vec<u8>>,
 }
 
 impl Hardware {
     pub fn new() -> Self {
-        let protected = None;
         let _pin_set = false; // TODO query storage
         let pin = [0; 4];
         Self {
             pin,
-            protected,
-            address: None,
+            protected: None,
             eth_address: None,
             eth_transaction: None,
-            transaction_psram_access: None,
+            eth_transaction_signed: None,
         }
     }
 }
@@ -190,16 +201,10 @@ impl Hardware {
 impl Platform for Hardware {
     type HAL = ();
     type Rng<'c> = se_rng::SeRng;
-    type AsWordList = FlashWordList;
-
-    type NfcTransaction = NfcTransactionPsramAccess;
     type EthTransaction = EthTransaction;
-    fn get_wordlist() -> Self::AsWordList {
-        FlashWordList::new()
-    }
 
     fn rng(_: &mut ()) -> Self::Rng<'static> {
-        se_rng::SeRng{}
+        se_rng::SeRng {}
     }
 
     fn pin(&self) -> &PinCode {
@@ -210,124 +215,36 @@ impl Platform for Hardware {
         &mut self.pin
     }
 
-    fn store_entropy(&mut self, e: &[u8]) {
-        self.protected = if !e.is_empty() {
-            let protected = encode_entropy(e);
-            store_encoded_entopy(&protected);
-            Some(protected)
+    fn store_entropy(&mut self, e: &[u8]) -> Result<(), KampelaError> {
+        let protected = encode_entropy(e);
+        store_encoded_entopy(&protected);
+        self.protected = Some(protected);
+
+        Ok(())
+    }
+
+    fn read_entropy(&mut self) -> Result<(), KampelaError> {
+        if let Some(protected) = read_encoded_entropy() {
+            self.protected = Some(protected);
+            Ok(())
         } else {
-            None
+            Err(KampelaError::FlashRead)
         }
     }
 
-    fn read_entropy(&mut self) {
-        self.protected = read_encoded_entropy();
+    fn entropy(&self) -> Result<Vec<u8>, KampelaError> {
+        let protected = self.protected.as_ref().ok_or(KampelaError::FlashRead)?;
+
+        Ok(decode_entropy(protected))
     }
 
-    fn sub_public(&self) -> Option<Public> {
-        self.entropy().map(|e| Pair::from_entropy_and_pwd(&e, "").unwrap().public())
-    }
-
-    fn entropy(&self) -> Option<Vec<u8>> {
-        self.protected.as_ref().map(|p| decode_entropy(p))
-    }
-
-    fn sub_set_address(&mut self, addr: [u8; 76]) {
-        self.address = Some(addr);
-    }
-
-    fn sub_set_transaction(&mut self, transaction: Self::NfcTransaction) {
-        self.transaction_psram_access = Some(transaction);
-    }
-    
-    fn sub_call(&mut self) -> Option<String> {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => return None
-        };
-
-        let (decoded_call, specs, spec_name) = psram_decode_call(
-            &transaction_psram_access.call_psram_access,
-            &transaction_psram_access.metadata_psram_access,
-        );
-
-        let carded = decoded_call.card(0, &specs, &spec_name);
-        let call = carded
-            .into_iter()
-            .map(|card| card.show())
-            .collect::<Vec<String>>()
-            .join("\n");
-
-        Some(call)
-    }
-
-    fn sub_extensions(&mut self) -> Option<String> {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => return None
-        };
-        
-        let (decoded_extension, specs, spec_name) = psram_decode_extension(
-            &transaction_psram_access.extension_psram_access,
-            &transaction_psram_access.metadata_psram_access,
-            &transaction_psram_access.genesis_hash_bytes_psram_access
-        );
-
-        let mut carded = Vec::new();
-        for ext in decoded_extension.iter() {
-            let addition_set = ext.card(0, true, &specs, &spec_name);
-            if !addition_set.is_empty() {
-                carded.extend_from_slice(&addition_set)
-            }
+    fn eth_address(&self) -> Result<Address, KampelaError> {
+        if let Some(addr) = self.eth_address {
+            return Ok(addr);
         }
-        let extensions = carded
-            .into_iter()
-            .map(|card| card.show())
-            .collect::<Vec<String>>()
-            .join("\n");
-
-        Some(extensions)
-    }
-
-    fn sub_signature(&mut self) -> [u8; 130] {
-        let transaction_psram_access = match self.transaction_psram_access {
-            Some(ref a) => a,
-            None => panic!("qr generation failed")
-        };
-        
-        let data_to_sign_psram_access = PsramAccess {
-            start_address: transaction_psram_access.call_psram_access.start_address,
-            total_len:
-                transaction_psram_access.call_psram_access.total_len
-                + transaction_psram_access.extension_psram_access.total_len
-        };
-        let data_to_sign = read_from_psram(&data_to_sign_psram_access);
-
-        let signature = self.sub_pair()
-            .expect("entropy should be stored at this point")
-            .sign_external_rng(&data_to_sign, &mut Self::rng(&mut ()));
-
-        let mut signature_with_id: [u8; 65] = [1; 65];
-        signature_with_id[1..].copy_from_slice(&signature.0);
-        
-
-        hex::encode(signature_with_id)
-            .into_bytes()
-            .try_into()
-            .expect("static length")
-    }
-
-    fn sub_address(&self) -> Option<&[u8; 76]> {
-        self.address.as_ref()
-    }
-
-    fn eth_address(&self) -> Option<Address> {
-        if let Some(address) = self.eth_address {
-            Some(address)
-        } else {
-            let entropy = self.entropy()?;
-            derive_eth_address(&entropy)
-        }
+        let entropy = self.entropy()?;
+        let addr = derive_eth_address(&entropy)?;
+        Ok(addr)
     }
 
     fn eth_set_address(&mut self, addr: Address) {
@@ -338,28 +255,37 @@ impl Platform for Hardware {
         self.eth_transaction = Some(transaction);
     }
 
-    fn eth_transaction(&self) -> Option<&Self::EthTransaction> {
-        self.eth_transaction.as_ref()
+    fn eth_transaction(&self) -> Result<&Self::EthTransaction, KampelaError> {
+        self.eth_transaction.as_ref().ok_or_else(|| {
+            use kampela_ui::error::kampela_error;
+            kampela_error!(TransactionInvalid, "No transaction")
+        })
     }
 
-    fn eth_transaction_display(&self) -> Result<String, String> {
-        let tx = self
-            .eth_transaction
-            .as_ref()
-            .ok_or_else(|| "missing eth transaction".to_string())?;
-        let sender = self
-            .eth_address()
-            .or_else(|| self.entropy().and_then(|e| derive_eth_address(&e)))
-            .ok_or_else(|| "missing eth sender address".to_string())?;
-        format_eth_transaction_display(tx, sender)
+    fn eth_transaction_display(&self) -> Result<String, KampelaError> {
+        let tx = self.eth_transaction.as_ref().ok_or_else(|| {
+            use kampela_ui::error::kampela_error;
+            kampela_error!(TransactionInvalid, "No transaction")
+        })?;
+        let sender = self.eth_address()?;
+
+        format_eth_transaction_display(tx, sender).map_err(|e| {
+            use kampela_ui::error::kampela_error;
+            kampela_error!(TransactionInvalid, "{}", e)
+        })
     }
 
-    fn eth_sign_transaction(&mut self) -> Option<Vec<u8>> {
+    fn eth_sign_transaction(&mut self) -> Result<Vec<u8>, KampelaError> {
+        let tx = self.eth_transaction.as_ref().ok_or_else(|| {
+            use kampela_ui::error::kampela_error;
+            kampela_error!(TransactionInvalid, "No transaction")
+        })?;
         let entropy = self.entropy()?;
-        let transaction = self.eth_transaction.as_ref()?;
-        sign_eip1559_transaction(transaction, &entropy)
-    }
 
+        let signed_tx = sign_eip1559_transaction(tx, &entropy)?;
+        self.eth_transaction_signed = Some(signed_tx.clone());
+        Ok(signed_tx)
+    }
 }
 
 lazy_static! {
@@ -373,8 +299,6 @@ lazy_static! {
     );
 }
 
-
-
 pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
     if touch_data[0] == 1 {
         let detected_y = (((touch_data[1] as u16 & 0b00001111) << 8) | touch_data[2] as u16) as i32;
@@ -384,11 +308,11 @@ pub fn convert(touch_data: [u8; LEN_NUM_TOUCHES]) -> Option<Point> {
         let touch_as_point2 = Point2::new(touch.x as f32, touch.y as f32);
         let display_as_point2 = AFFINE_MATRIX.transform_point(&touch_as_point2);
 
-        Some(
-            Point {
-                x: display_as_point2.coords[0] as i32,
-                y: display_as_point2.coords[1] as i32,
-            }
-        )
-    } else { None }
+        Some(Point {
+            x: display_as_point2.coords[0] as i32,
+            y: display_as_point2.coords[1] as i32,
+        })
+    } else {
+        None
+    }
 }

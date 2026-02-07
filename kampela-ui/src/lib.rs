@@ -5,6 +5,12 @@ pub mod uistate;
 pub mod platform;
 pub mod eth_transaction;
 mod eth_registry_data;
+pub mod eth_transaction_screen;
+pub mod eth_transaction_viewer;
+pub mod error_dialog;
+pub mod error;
+pub mod welcome_screen;
+
 pub mod widget{
     pub mod view;
     pub mod nav_bar{
@@ -21,21 +27,8 @@ pub mod pin{
     pub mod pinbutton;
 }
 
-pub mod seed_entry{
-    pub mod seed_entry;
-    pub mod entry;
-    pub mod proposal;
-    pub mod phrase;
-    pub mod keyboard;
-    pub mod key;
-}
-
-pub mod backup;
-mod message;
-mod dialog;
-
-pub mod transaction;
 pub mod qr;
+pub mod message;
 
 #[macro_use]
 extern crate lazy_static;

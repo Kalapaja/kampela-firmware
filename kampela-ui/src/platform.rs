@@ -1,4 +1,6 @@
 //! Platform definitions
+//!
+//! Simplified for Ethereum-only functionality with Result-based error handling.
 
 #[cfg(not(feature="std"))]
 use alloc::{string::String, vec::Vec};
@@ -6,100 +8,80 @@ use alloc::{string::String, vec::Vec};
 use std::{string::String, vec::Vec};
 
 use rand::{CryptoRng, Rng};
-
-use substrate_crypto_light::sr25519::{Pair, Public};
-use substrate_parser::{ShortSpecs, TransactionUnmarkedParsed};
 use alloy_primitives::Address;
 
-use mnemonic_external::AsWordList;
+use crate::error::KampelaError;
 
 pub type PinCode = [u8; 4];
-const ENTROPY_LEN: usize = 32; //TODO: move to appropriate place
 
-/// Implement this on platform to make crate work
+/// Length of entropy (32 bytes = 256 bits for Ethereum private key)
+pub const ENTROPY_LEN: usize = 32;
+
+/// Platform abstraction trait for Kampela firmware.
+///
+/// Implement this on your platform (device or simulator) to provide
+/// hardware access, cryptographic RNG, and persistent storage.
 pub trait Platform {
-    /// Peripherals access should be external to this type since it is used elsewhere in general;
-    /// Thus an external object HAL would be passed to all operations. Generally it should happen
-    /// within mutex lock, so make sure to set up some kind of critical section aroung this object.
+    /// Hardware abstraction layer handle.
+    ///
+    /// Passed to operations requiring hardware access. Should be used within
+    /// critical sections/mutex locks.
     type HAL;
 
-    /// Sufficiently good random source used everywhere
+    /// Cryptographically secure random number generator.
     type Rng<'a>: Rng + Sized + CryptoRng;
 
-    /// Transaction data or addresses for transaction data in psram
-    type NfcTransaction;
-
+    /// Ethereum transaction type (platform-specific representation).
     type EthTransaction;
 
-    /// List-set of mnemonic words 
-    type AsWordList: AsWordList;
-    // Device-specific wordlist implementation
-    fn get_wordlist() -> Self::AsWordList;
-
-    /// RNG getter
+    /// Get a cryptographic RNG instance from the HAL.
     fn rng(h: &mut Self::HAL) -> Self::Rng<'_>;
 
-    /// Device-specific "global" storage and management of pincode state RO
+    /// Get immutable reference to PIN code.
     fn pin(&self) -> &PinCode;
 
-    /// Device-specific "global" storage and management of pincode state RW
+    /// Get mutable reference to PIN code.
     fn pin_mut(&mut self) -> &mut PinCode;
 
-    /// Put entropy in flash
-    fn store_entropy(&mut self, e: &[u8]);
+    /// Store entropy (32-byte private key) to persistent storage (flash).
+    ///
+    /// On device: encrypts with AES-GCM and writes to flash.
+    /// On simulator: stores in memory.
+    fn store_entropy(&mut self, e: &[u8]) -> Result<(), KampelaError>;
 
-    /// Read entropy from flash
-    fn read_entropy(&mut self);
+    /// Read entropy from persistent storage into memory.
+    ///
+    /// On device: reads from flash and decrypts.
+    /// On simulator: reads from memory.
+    fn read_entropy(&mut self) -> Result<(), KampelaError>;
 
-    /// Getter for public address
-    fn sub_public(&self) -> Option<Public>;
+    /// Get the raw 32-byte private key (entropy).
+    fn entropy(&self) -> Result<Vec<u8>, KampelaError>;
 
-    /// Getter for seed
-    fn entropy(&self) -> Option<Vec<u8>>;
+    /// Get the Ethereum address derived from entropy.
+    fn eth_address(&self) -> Result<Address, KampelaError>;
 
-    fn sub_set_address(&mut self, addr: [u8; 76]);
-
-    fn sub_set_transaction(&mut self, transaction: Self::NfcTransaction);
-
-    fn sub_call(&mut self) -> Option<String>;
-
-    fn sub_extensions(&mut self) -> Option<String>;
-
-    fn sub_signature(&mut self) -> [u8; 130];
-
-    fn sub_address(&self) -> Option<&[u8; 76]>;
-
-    fn eth_address(&self) -> Option<Address>;
-
+    /// Set the Ethereum address (caches derived address).
     fn eth_set_address(&mut self, addr: Address);
 
+    /// Set the current Ethereum transaction to be signed.
     fn eth_set_transaction(&mut self, transaction: Self::EthTransaction);
 
-    fn eth_transaction(&self) -> Option<&Self::EthTransaction>;
+    /// Get reference to the current Ethereum transaction.
+    fn eth_transaction(&self) -> Result<&Self::EthTransaction, KampelaError>;
 
-    fn eth_transaction_display(&self) -> Result<String, String>;
+    /// Get formatted display string for the current transaction (clear-signing).
+    fn eth_transaction_display(&self) -> Result<String, KampelaError>;
 
-    fn eth_sign_transaction(&mut self) -> Option<Vec<u8>>;
+    /// Sign the current Ethereum transaction and return signed raw transaction bytes.
+    fn eth_sign_transaction(&mut self) -> Result<Vec<u8>, KampelaError>;
 
-    //----derivatives----
-
-    fn generate_seed_entropy(h: &mut Self::HAL) -> [u8; ENTROPY_LEN] {
-        let mut entropy: [u8; ENTROPY_LEN]= [0; ENTROPY_LEN];
+    /// Generate a new random 32-byte entropy (private key).
+    ///
+    /// Uses the platform's cryptographic RNG.
+    fn generate_entropy(h: &mut Self::HAL) -> [u8; ENTROPY_LEN] {
+        let mut entropy: [u8; ENTROPY_LEN] = [0; ENTROPY_LEN];
         Self::rng(h).fill(&mut entropy);
         entropy
     }
-
-    fn sub_pair(&self) -> Option<Pair> {
-        let e = self.entropy()?;
-        if e.is_empty() { None } else {
-            Pair::from_entropy_and_pwd(&e, "").ok()
-        }
-    }
-}
-
-pub struct NfcTransaction {
-    pub decoded_transaction: TransactionUnmarkedParsed,
-    pub data_to_sign: Vec<u8>,
-    pub specs: ShortSpecs,
-    pub spec_name: String,
 }
