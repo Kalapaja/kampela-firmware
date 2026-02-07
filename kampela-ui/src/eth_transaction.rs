@@ -5,7 +5,7 @@
 #[cfg(not(feature = "std"))]
 use alloc::{string::String, vec::Vec, string::ToString};
 use alloy_consensus::{SignableTransaction, TxEip1559};
-use alloy_primitives::{keccak256, Address, Bytes, FixedBytes, Signature, TxKind, U256};
+use alloy_primitives::{keccak256, Address, FixedBytes, Signature, TxKind, U256};
 use clear_signing::clear_call::ClearCallContext;
 use clear_signing::display::Display;
 use clear_signing::fields::ClearCall;
@@ -14,6 +14,7 @@ use clear_signing::resolver::Message;
 use clear_signing::sol::SolFunction;
 use clear_signing_format::{format_clear_call, Contract, MetadataProvider, NativeToken, Token};
 use libsecp256k1::{Message as SecpMessage, PublicKey, SecretKey, RecoveryId, Signature as SecpSignature};
+use serde::{Deserialize, Serialize};
 #[cfg(feature = "std")]
 use std::{string::String, vec::Vec, string::ToString};
 
@@ -23,16 +24,14 @@ use crate::eth_registry_data::{
     contract_list, native_token, token_list, well_known_contract_addresses, well_known_displays,
     well_known_token_addresses,
 };
-#[derive(Clone, Debug)]
+/// Ethereum transaction with clear-signing display specifications.
+///
+/// Uses alloy's canonical TxEip1559 type for transaction fields,
+/// plus Kampela-specific clear-signing displays.
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct EthTransaction {
-    pub chain_id: u64,
-    pub nonce: u64,
-    pub max_priority_fee_per_gas: u128,
-    pub max_fee_per_gas: u128,
-    pub gas_limit: u64,
-    pub to: Option<Address>,
-    pub value: U256,
-    pub data: Vec<u8>,
+    #[serde(flatten)]
+    pub tx: TxEip1559,
     pub displays: Vec<Display>,
 }
 
@@ -74,8 +73,9 @@ pub fn derive_eth_address(entropy: &[u8]) -> Result<Address, KampelaError> {
 /// Signs an EIP-1559 transaction and returns the RLP-encoded signed transaction.
 pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Result<Vec<u8>, KampelaError> {
     let signing_key = signing_key_from_entropy(entropy)?;
-    let tx_eip1559 = build_alloy_tx(tx);
-    let hash = tx_eip1559.signature_hash();
+
+    // Use TxEip1559 directly (no conversion needed)
+    let hash = tx.tx.signature_hash();
 
     let message = SecpMessage::parse_slice(hash.as_slice())
         .map_err(|_| KampelaError::SigningFailed)?;
@@ -85,7 +85,9 @@ pub fn sign_eip1559_transaction(tx: &EthTransaction, entropy: &[u8]) -> Result<V
     let s = U256::try_from_be_slice(&sig_bytes[32..64]).ok_or(KampelaError::SigningFailed)?;
     let y_parity = (recid.serialize() & 1) == 1;
     let signature = Signature::new(r, s, y_parity);
-    let signed = tx_eip1559.into_signed(signature);
+
+    // Clone tx.tx to convert into signed transaction
+    let signed = tx.tx.clone().into_signed(signature);
 
     let mut raw = Vec::with_capacity(signed.eip2718_encoded_length());
     signed.eip2718_encode(&mut raw);
@@ -97,15 +99,23 @@ pub fn format_eth_transaction_display(
     tx: &EthTransaction,
     sender: Address,
 ) -> Result<String, String> {
-    let to = tx.to.ok_or_else(|| "Deploy transaction not supported")?;
-    let data = Bytes::from(tx.data.clone());
+    // Extract recipient address from TxKind
+    let to = match tx.tx.to {
+        TxKind::Call(addr) => addr,
+        TxKind::Create => return Err("Deploy transaction not supported".to_string()),
+    };
+
+    // Use input bytes directly (already Bytes type)
+    let data = tx.tx.input.clone();
+
+    // Use provided displays or fall back to well-known
     let displays = if tx.displays.is_empty() {
         well_known_displays()
     } else {
         tx.displays.clone()
     };
 
-    let message = Message::new(sender, to, tx.value, data);
+    let message = Message::new(sender, to, tx.tx.value, data);
     let context = ClearCallContext::new(displays);
     let registry = StaticRegistry::new().map_err(|e| e.to_string())?;
 
@@ -115,25 +125,6 @@ pub fn format_eth_transaction_display(
 
     let provider = StaticMetadataProvider::new();
     Ok(format_clear_call(&clear_call, &provider, 0, false, None))
-}
-
-fn build_alloy_tx(tx: &EthTransaction) -> TxEip1559 {
-    let to = match tx.to {
-        Some(addr) => TxKind::Call(addr),
-        None => TxKind::Create,
-    };
-
-    TxEip1559 {
-        chain_id: tx.chain_id,
-        nonce: tx.nonce,
-        gas_limit: tx.gas_limit,
-        max_fee_per_gas: tx.max_fee_per_gas,
-        max_priority_fee_per_gas: tx.max_priority_fee_per_gas,
-        to,
-        value: tx.value,
-        access_list: Default::default(),
-        input: Bytes::from(tx.data.clone()),
-    }
 }
 
 struct StaticMetadataProvider {

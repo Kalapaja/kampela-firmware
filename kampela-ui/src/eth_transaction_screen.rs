@@ -3,11 +3,6 @@
 //! Shows transaction details using clear-signing format and allows
 //! the user to approve (right button) or reject (left button).
 
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(feature = "std")]
-use std::string::String;
-
 use embedded_graphics::{
     draw_target::DrawTarget,
     pixelcolor::BinaryColor,

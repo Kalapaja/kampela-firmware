@@ -348,13 +348,14 @@ impl <'a> NfcReceiver<'a> {
                             eth_tx_data = Some(psram_read_at_address(peripherals, data_start, data_len).unwrap());
                         });
 
-                        // TODO: Parse Ethereum transaction from RLP-encoded bytes
-                        // For now, return an error as the parsing logic needs to be implemented
+                        // Deserialize Ethereum transaction from postcard-encoded bytes
                         match eth_tx_data {
-                            Some(_data) => {
-                                // Placeholder: actual RLP decoding needs to be implemented
-                                // This would decode the transaction fields and create an EthTransaction
-                                Some(Err(NfcError::InvalidEthTransaction))
+                            Some(data) => {
+                                // Deserialize using postcard
+                                match postcard::from_bytes::<EthTransaction>(&data) {
+                                    Ok(tx) => Some(Ok(NfcResult::EthTransaction(tx))),
+                                    Err(_) => Some(Err(NfcError::InvalidEthTransaction)),
+                                }
                             },
                             None => Some(Err(NfcError::InvalidEthTransaction)),
                         }

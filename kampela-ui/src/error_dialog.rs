@@ -3,11 +3,6 @@
 //! Displays error messages to the user.
 //! Since the device has no USB/USART for logs, all errors must be shown on screen.
 
-#[cfg(not(feature = "std"))]
-use alloc::string::String;
-#[cfg(feature = "std")]
-use std::string::String;
-
 use embedded_graphics::{
     draw_target::DrawTarget,
     pixelcolor::BinaryColor,

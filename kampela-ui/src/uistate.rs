@@ -4,19 +4,13 @@
 
 #[cfg(not(feature = "std"))]
 mod stdwrap {
-    pub use alloc::borrow::ToOwned;
-    pub use alloc::boxed::Box;
     pub use alloc::format;
     pub use alloc::string::String;
-    pub use alloc::vec::Vec;
 }
 #[cfg(feature = "std")]
 mod stdwrap {
-    pub use std::borrow::ToOwned;
-    pub use std::boxed::Box;
     pub use std::format;
     pub use std::string::String;
-    pub use std::vec::Vec;
 }
 
 use stdwrap::*;
@@ -126,7 +120,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     /// On first boot: generates entropy, stores to flash, shows Welcome screen.
     /// On subsequent boots: reads entropy from flash, shows Welcome screen.
     /// Always requires PIN (unlocked = false).
-    pub fn new(mut platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self {
+    pub fn new(platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self {
         let mut state = UIState {
             screen: Screen::Welcome,
             platform,

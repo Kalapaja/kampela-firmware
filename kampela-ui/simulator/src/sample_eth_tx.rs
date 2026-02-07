@@ -1,4 +1,5 @@
-use alloy_primitives::{Address, U256};
+use alloy_consensus::TxEip1559;
+use alloy_primitives::{Address, Bytes, TxKind, U256};
 use clear_signing::display::{Display, Entry, Field, Labels};
 use core::str::FromStr;
 use lazy_static::lazy_static;
@@ -6,15 +7,18 @@ use lazy_static::lazy_static;
 use kampela_ui::eth_transaction::EthTransaction;
 
 lazy_static! {
-    static ref SAMPLE_ETH_TX_JSON: EthTransaction = EthTransaction {
-        chain_id: 1,
-        nonce: 0,
-        max_priority_fee_per_gas: 1_500_000_000,
-        max_fee_per_gas: 50_000_000_000,
-        gas_limit: 21_000,
-        to: Some(address_from_str("0xec5ab17cc35221cdf54eaeb0868ea82d4d75d9bf")),
-        value: U256::from(0u64),
-        data: hex_to_bytes("0xb4a28e959e653efaceb1d170641a41fda59def0f499b671eaa2ffe332520816269e0bd000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000010438ed17390000000000000000000000000000000000000000000000056bc75e2d6310000000000000000000000000000000000000000000000000000000700501e120f1a900000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000056451bbcebbb1a764b52a7fb1e90ac07536dac5000000000000000000000000000000000000000000000000000000006966512600000000000000000000000000000000000000000000000000000000000000020000000000000000000000006b175474e89094c44da98b954eedeac495271d0f000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000000000000000000000000000000000000"),
+    static ref SAMPLE_ETH_TX: EthTransaction = EthTransaction {
+        tx: TxEip1559 {
+            chain_id: 1,
+            nonce: 0,
+            max_priority_fee_per_gas: 1_500_000_000,
+            max_fee_per_gas: 50_000_000_000,
+            gas_limit: 21_000,
+            to: TxKind::Call(address_from_str("0xec5ab17cc35221cdf54eaeb0868ea82d4d75d9bf")),
+            value: U256::from(0u64),
+            access_list: Default::default(),
+            input: Bytes::from(hex_to_bytes("0xb4a28e959e653efaceb1d170641a41fda59def0f499b671eaa2ffe332520816269e0bd000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000010438ed17390000000000000000000000000000000000000000000000056bc75e2d6310000000000000000000000000000000000000000000000000000000700501e120f1a900000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000056451bbcebbb1a764b52a7fb1e90ac07536dac5000000000000000000000000000000000000000000000000000000006966512600000000000000000000000000000000000000000000000000000000000000020000000000000000000000006b175474e89094c44da98b954eedeac495271d0f000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc200000000000000000000000000000000000000000000000000000000")),
+        },
         displays: vec![Display {
             address: address_from_str("0xec5ab17cc35221cdf54eaeb0868ea82d4d75d9bf"),
             abi: "function swapExactTokensForTokens(uint256 amountIn, uint256 amountOutMin, address[] path, address to, uint256 deadline)".to_string(),
@@ -69,7 +73,7 @@ lazy_static! {
 }
 
 pub fn sample_eth_transaction() -> EthTransaction {
-    SAMPLE_ETH_TX_JSON.clone()
+    SAMPLE_ETH_TX.clone()
 }
 
 fn address_from_str(hex: &str) -> Address {
@@ -107,4 +111,25 @@ fn field(title: &str, description: &str, format: &str, params: Vec<Entry>) -> Fi
         checks: Vec::new(),
         params,
     }
+}
+
+/// Serializes the sample Ethereum transaction to postcard bytes for NFC transmission.
+///
+/// Wire format: [0x04 discriminator][postcard-encoded EthTransaction]
+///
+/// This demonstrates the expected NFC payload format that the device will receive.
+pub fn serialize_sample_tx_to_postcard() -> Vec<u8> {
+    let mut payload = vec![0x04]; // Discriminator byte for Ethereum transaction
+
+    // Serialize the transaction using postcard
+    let tx_bytes = postcard::to_allocvec(&*SAMPLE_ETH_TX)
+        .expect("Failed to serialize sample transaction");
+
+    payload.extend_from_slice(&tx_bytes);
+    payload
+}
+
+/// Returns a reference to the sample Ethereum transaction for testing
+pub fn sample_eth_tx() -> &'static EthTransaction {
+    &SAMPLE_ETH_TX
 }

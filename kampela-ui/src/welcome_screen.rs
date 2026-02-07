@@ -4,7 +4,7 @@ use embedded_graphics::{
     mono_font::{ascii::FONT_9X18_BOLD, MonoTextStyle},
     pixelcolor::BinaryColor,
     prelude::*,
-    primitives::{PrimitiveStyle, Rectangle},
+    primitives::PrimitiveStyle,
     text::{Alignment, Text},
     Drawable,
 };
