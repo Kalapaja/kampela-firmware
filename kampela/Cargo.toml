@@ -18,7 +18,6 @@ lt-codes = {git = "https://github.com/Alzymologist/LT-codes", default-features =
 nalgebra = { version = "0.32.2", default-features = false, features = ["libm"] }
 nfca-parser = { git = "https://github.com/Alzymologist/NfcA-parser", default-features = false }
 postcard = { version = "1.0", default-features = false, features = ["alloc"] }
-substrate_parser = {git = "https://github.com/Alzymologist/substrate-parser", default-features = false, rev = "65de6a4fe207a64f9857247af4e9f7509fa6de4f"}
 
 [profile.release]
 codegen-units = 1

@@ -5,8 +5,6 @@ use core::ptr::addr_of;
 
 use efm32pg23_fix::Peripherals;
 
-use substrate_crypto_light::sr25519::Public;
-
 use crate::peripherals::se_command::{
     se_command_aes_gsm_decrypt, DataTransfer, RxError, SeCommand, SE_COMMAND_AES_GCM_ENCRYPT,
     SE_COMMAND_CREATE_KEY, SE_DATATRANSFER_REALIGN, SE_DATATRANSFER_STOP,
@@ -34,11 +32,6 @@ pub const TAG_LEN: usize = 16;
 pub const ENCODED_LEN: usize = 1 + SECRET_MAX_LEN + TAG_LEN + KEY_BUFFER_LEN;
 
 pub struct Protected(pub [u8; ENCODED_LEN]);
-
-pub struct ProtectedPair {
-    pub protected: Protected, 
-    pub public: Public,
-}
 
 pub fn encode_entropy(e: &[u8]) -> Protected {
     let mut protected = [0u8; ENCODED_LEN];

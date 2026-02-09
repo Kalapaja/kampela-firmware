@@ -12,7 +12,6 @@ use efm32pg23_fix::{NVIC,Interrupt};
 
 use kampela_system::devices::psram::{AddressPsram, ExternalPsram, PsramAccess, psram_read_at_address};
 use lt_codes::{decoder_metal::ExternalData, mock_worst_case::DecoderMetal, packet::{Packet, PACKET_SIZE}};
-use substrate_parser::compacts::find_compact;
 
 use core::ops::DerefMut;
 
@@ -212,21 +211,31 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 
     let mut position = 0usize; // *relative* position in PsramAccess!
 
+    // Read u32 length prefix (4 bytes, big-endian)
     let mut try_encoded_data = None;
     in_free(|peripherals| {
-        let mut external_psram = ExternalPsram{peripherals};
-        let found_compact = find_compact::<u32, PsramAccess, ExternalPsram>(&psram_data, &mut external_psram, position).unwrap(); //.map_err(|_| NfcPayloadError::NoCompactPayload)?;
-        let start_address = completed_collector.start_address.try_shift(found_compact.start_next_unit).unwrap();
+        // Read 4 bytes for u32 length prefix
+        let length_bytes = psram_read_at_address(peripherals, completed_collector.start_address, 4).unwrap();
+        let data_len = u32::from_be_bytes([length_bytes[0], length_bytes[1], length_bytes[2], length_bytes[3]]) as usize;
+
+        // Data starts after the 4-byte length prefix
+        let start_address = completed_collector.start_address.try_shift(4).unwrap();
         try_encoded_data = Some(PsramAccess {
             start_address,
-            total_len: found_compact.compact as usize,
+            total_len: data_len,
         });
-        position = found_compact.start_next_unit + found_compact.compact as usize;
+        position = 4 + data_len;
     });
     let encoded_data = match try_encoded_data {
         Some(a) => a,
         None => return Err(NfcPayloadError::AccessOnPayload),
     };
+
+    // Validate that we've consumed exactly the expected amount of data
+    if position != psram_data.total_len {
+        return Err(NfcPayloadError::AccessOnPayload);
+    }
+
     Ok(TransferDataReceived{
         encoded_data,
     })
