@@ -16,6 +16,7 @@ pub enum NFCState {
     Empty,
     Transaction,
     EthTransaction,
+    TestMessage,
 }
 
 /// State of Kampela on boot

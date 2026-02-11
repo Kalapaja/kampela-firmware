@@ -6,7 +6,7 @@
 extern crate alloc;
 extern crate core;
 
-use alloc::{borrow::ToOwned, format};
+use alloc::{borrow::ToOwned, format, string::String};
 use core::{alloc::Layout, panic::PanicInfo};
 use core::ptr::addr_of;
 use cortex_m::asm::delay;
@@ -128,6 +128,13 @@ fn main() -> ! {
 
     delay(1000);
 
+    // Make peripherals available before enabling LDMA interrupts.
+    free(|cs| {
+        PERIPHERALS.borrow(cs).replace(Some(peripherals));
+    });
+
+    delay(1000);
+
     free(|cs| {
         let mut core_periph = CORE_PERIPHERALS.borrow(cs).borrow_mut();
         NVIC::unpend(Interrupt::LDMA);
@@ -136,13 +143,6 @@ fn main() -> ! {
             core_periph.NVIC.set_priority(Interrupt::LDMA, 3);
             NVIC::unmask(Interrupt::LDMA);
         }
-    });
-
-    delay(1000);
-
-
-    free(|cs| {
-        PERIPHERALS.borrow(cs).replace(Some(peripherals));
     });
 
     //let pair_derived = Keypair::from_bytes(ALICE_KAMPELA_KEY).unwrap();
@@ -159,10 +159,6 @@ fn main() -> ! {
 
     let mut ui = UI::init();
     let mut adc = ADC::new(());
-    // Force initial render so the welcome screen appears before NFC processing.
-    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
-        adc.advance(());
-    }
 
     // hard derivation
     //let junction = DeriveJunction::hard("kampela");
@@ -172,29 +168,15 @@ fn main() -> ! {
     //         .expand_to_keypair(ExpansionMode::Ed25519);
 
 
-    let mut nfc = NfcReceiver::new(&nfc_buffer, None);
+    let mut nfc = NfcReceiver::new(&nfc_buffer);
     loop {
         adc.advance(());
         let voltage = adc.read();
-
-        // Always advance UI so welcome/address screens render without waiting for NFC.
-        ui.advance(voltage);
-
         let nfc_state = nfc.advance(voltage);
         if let Some(s) = nfc_state {
             match s {
                 Err(e) => {
-                    match e {
-                        NfcError::InvalidAddress => {
-                            ui.handle_message("Invalid sender address".to_owned())
-                        }
-                        NfcError::InvalidRequestType => {
-                            ui.handle_message("Invalid request type".to_owned())
-                        }
-                        NfcError::InvalidEthTransaction => {
-                            ui.handle_message("Invalid Ethereum transaction".to_owned())
-                        }
-                    }
+                    ui.handle_error_message(format!("NFC Error: {}", e).to_owned());
                     while !ui.advance(adc.read()).is_some_and(|c| c == true) {
                         adc.advance(());
                     }
@@ -204,7 +186,7 @@ fn main() -> ! {
                     match s {
                         NfcStateOutput::Operational(i) => {
                             if i == 1 {
-                                ui.handle_message("Receiving NFC packets...".to_owned());
+                                ui.handle_error_message("Receiving NFC packets...".to_owned());
                             }
                             while !ui.advance(adc.read()).is_some_and(|c| c == false) {
                                 adc.advance(());
@@ -212,20 +194,62 @@ fn main() -> ! {
                         }
                         NfcStateOutput::Done(r) => {
                             match r {
-                                NfcResult::Empty => {break},
+                                NfcResult::Empty(msg) => {
+                                    ui.handle_error_message(format!("NFC Empty: {}", msg).to_owned());
+                                    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
+                                        adc.advance(());
+                                    }
+                                    break
+                                },
                                 NfcResult::DisplayAddress => {
-                                    // TODO: Display Ethereum address
-                                    ui.handle_message("Display address request received".to_owned());
+                                    ui.handle_error_message("Display address request received".to_owned());
+                                    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
+                                        adc.advance(());
+                                    }
                                     break
                                 },
                                 NfcResult::EthTransaction(transaction) => {
+                                    ui.handle_error_message("Decoding Ethereum transaction...".to_owned());
+                                    while !ui.advance(adc.read()).is_some_and(|c| c == false) {
+                                        adc.advance(());
+                                    }
                                     ui.handle_eth_transaction(transaction);
+                                    break
+                                },
+                                NfcResult::TestMessage(data) => {
+                                    ui.handle_error_message(format!("Test message received: {} bytes", data.len()).to_owned());
+                                    while !ui.advance(adc.read()).is_some_and(|c| c == false) {
+                                        adc.advance(());
+                                    }
+                                    ui.handle_test_message(data);
+                                    break
+                                },
+                                NfcResult::RawBytes(bytes) => {
+                                    // Format bytes as hex string for display
+                                    let mut hex_str = String::from("Raw NFC frame:\n");
+                                    for (i, byte) in bytes.iter().enumerate() {
+                                        if i > 0 && i % 16 == 0 {
+                                            hex_str.push('\n');
+                                        }
+                                        hex_str.push_str(&format!("{:02X}", byte));
+                                    }
+
+                                    ui.handle_error_message(format!("Received {} bytes", bytes.len()).to_owned());
+                                    while !ui.advance(adc.read()).is_some_and(|c| c == false) {
+                                        adc.advance(());
+                                    }
+                                    ui.handle_test_message(hex_str);
                                     break
                                 },
                             }
                         }
                     }
                 }
+            }
+        } else {
+            ui.handle_error_message(format!("Voltage: {}", voltage).to_owned());
+            while !ui.advance(adc.read()).is_some_and(|c| c == true) {
+                adc.advance(());
             }
         }
     }

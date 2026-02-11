@@ -76,6 +76,7 @@ pub enum UnitScreen {
     QRAddress,
     EthTransaction,
     QRSignature,
+    TestMessage(String),
     ErrorDialog(String),
 }
 
@@ -92,6 +93,7 @@ pub enum Screen<P: Platform> {
     QRAddress,
     EthTransaction(EthTransactionViewer),
     QRSignature,
+    TestMessage(String),
     ErrorDialog(String),
 }
 
@@ -102,6 +104,7 @@ impl<P: Platform> Screen<P> {
             Screen::QRAddress => Some(UnitScreen::QRAddress),
             Screen::EthTransaction(_) => Some(UnitScreen::EthTransaction),
             Screen::QRSignature => Some(UnitScreen::QRSignature),
+            Screen::TestMessage(msg) => Some(UnitScreen::TestMessage(msg.clone())),
             Screen::ErrorDialog(msg) => Some(UnitScreen::ErrorDialog(msg.clone())),
             _ => None,
         }
@@ -176,6 +179,9 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                         self.screen = Screen::PinEntry(Pincode::new(h), UnitScreen::QRSignature);
                     }
                 }
+                UnitScreen::TestMessage(msg) => {
+                    self.screen = Screen::TestMessage(msg);
+                }
                 UnitScreen::ErrorDialog(msg) => {
                     self.screen = Screen::ErrorDialog(msg);
                 }
@@ -239,11 +245,20 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     }
                 }
             }
-            Screen::ErrorDialog(_) => {
+            Screen::TestMessage(_) => {
                 // Right button = dismiss (go back to address)
                 if point.y > SCREEN_SIZE_Y as i32 - 40 {
                     if point.x >= SCREEN_SIZE_X as i32 / 2 {
                         new_screen = Some(UnitScreen::QRAddress);
+                        out = Some(UpdateRequest::Fast);
+                    }
+                }
+            }
+            Screen::ErrorDialog(_) => {
+                // Right button = dismiss (go back to welcome)
+                if point.y > SCREEN_SIZE_Y as i32 - 40 {
+                    if point.x >= SCREEN_SIZE_X as i32 / 2 {
+                        new_screen = Some(UnitScreen::Welcome);
                         out = Some(UpdateRequest::Fast);
                     }
                 }
@@ -278,6 +293,16 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     ) -> Option<UpdateRequest> {
         let error_msg = format!("{}", error);
         self.switch_screen(Some(UnitScreen::ErrorDialog(error_msg)), h);
+        Some(UpdateRequest::Fast)
+    }
+
+    /// Handle test message display.
+    pub fn handle_test_message(
+        &mut self,
+        message: String,
+        h: &mut <P as Platform>::HAL,
+    ) -> Option<UpdateRequest> {
+        self.switch_screen(Some(UnitScreen::TestMessage(message)), h);
         Some(UpdateRequest::Fast)
     }
 
@@ -355,6 +380,10 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                         out = Some(UpdateRequest::Fast);
                     }
                 }
+            }
+            Screen::TestMessage(ref message) => {
+                let display = &mut self.display;
+                crate::test_message_screen::draw(display, message, false)?;
             }
             Screen::ErrorDialog(ref error_msg) => {
                 let display = &mut self.display;

@@ -10,6 +10,7 @@ pub mod eth_transaction_viewer;
 pub mod error_dialog;
 pub mod error;
 pub mod welcome_screen;
+pub mod test_message_screen;
 
 pub mod widget{
     pub mod view;

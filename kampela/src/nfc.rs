@@ -1,7 +1,9 @@
 //! NFC packet collector and decoder
 
+use alloc::format;
 use nfca_parser::frame::Frame;
 use alloc::vec::Vec;
+use alloc::string::String;
 
 use kampela_system::{
     PERIPHERALS, in_free, BUF_THIRD, CH_TIM0,
@@ -119,21 +121,28 @@ pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[
         Some(BufRegion::Reg0) => &nfc_buffer[..BUF_THIRD],
         Some(BufRegion::Reg1) => &nfc_buffer[BUF_THIRD..2*BUF_THIRD],
         Some(BufRegion::Reg2) => &nfc_buffer[2*BUF_THIRD..],
-        None => return,
+        None => {
+            collector.add_msg("No buffer region selected");
+            return
+        },
     };
     let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, frame_selected);
 
     for frame in frames.into_iter() {
         if let Frame::Standard(standard_frame) = frame {
+            collector.add_msg("frame");
             let serialized_packet = standard_frame[standard_frame.len() - PACKET_SIZE..].try_into().expect("static length, always fits");
             in_free(|peripherals| {
                 let mut external_psram = ExternalPsram{peripherals};
                 let packet = Packet::deserialize(serialized_packet);
                 collector.add_packet(&mut external_psram, packet);
+                collector.add_msg("frame");
             });
         }
         else {unreachable!()}
     }
+
+    collector.add_msg("No frames received");
 
     free(|cs| {
         let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
@@ -156,18 +165,29 @@ fn frame_selected(frame: &Frame) -> bool {
 }
 
 pub enum NfcCollector {
-    Empty,
+    Empty(String),
+    RawBytes(Vec<u8>),
     InProgress(DecoderMetal<AddressPsram>),
     Done(ExternalData<AddressPsram>)
 }
 
 impl NfcCollector {
     pub fn new() -> Self {
-        Self::Empty
+        Self::Empty("".to_string())
     }
+
+    pub fn add_msg(&mut self, msg: &str) {
+        match self {
+            NfcCollector::Empty(current_msg) => *self = Self::Empty(format!("{}: {}", current_msg, msg)),
+            NfcCollector::RawBytes(_) => {}
+            NfcCollector::InProgress(_) => {}
+            NfcCollector::Done(_) => {}
+        }
+    }
+
     pub fn add_packet(&mut self, external_psram: &mut ExternalPsram, nfc_packet: Packet) {
         match self {
-            NfcCollector::Empty => {
+            NfcCollector::Empty(_) => {
                 let decoder_metal = DecoderMetal::init(external_psram, nfc_packet).unwrap();
                 match decoder_metal.try_read(external_psram) {
                     None => *self = NfcCollector::InProgress(decoder_metal),
@@ -179,6 +199,9 @@ impl NfcCollector {
                 if let Some(a) = decoder_metal.try_read(external_psram) {
                     *self = NfcCollector::Done(a);
                 }
+            },
+            NfcCollector::RawBytes(_) => {
+                // Already captured raw bytes, ignore subsequent packets
             },
             NfcCollector::Done(_) => {},
         }
@@ -280,16 +303,32 @@ pub fn process_nfc_payload(completed_collector: &ExternalData<AddressPsram>) -> 
 */
 }
 
+use alloc::string::ToString;
+
 pub enum NfcError {
     InvalidAddress,
     InvalidRequestType,
     InvalidEthTransaction,
+    InvalidUtf8,
+}
+
+impl core::fmt::Display for NfcError {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        match self {
+            NfcError::InvalidAddress => write!(f, "Invalid sender address"),
+            NfcError::InvalidRequestType => write!(f, "Invalid NFC request type"),
+            NfcError::InvalidEthTransaction => write!(f, "Invalid Ethereum transaction format"),
+            NfcError::InvalidUtf8 => write!(f, "Invalid UTF-8 in test message"),
+        }
+    }
 }
 
 pub enum NfcResult {
     EthTransaction(EthTransaction),
     DisplayAddress,
-    Empty,
+    TestMessage(String),
+    RawBytes(Vec<u8>),
+    Empty(String),
 }
 
 enum NfcState {
@@ -306,32 +345,25 @@ pub struct NfcReceiver <'a> {
     buffer: &'a [u16; 3*BUF_THIRD],
     collector: NfcCollector,
     state: NfcState,
-    public_memory: [u8; 32],
 }
 
 impl <'a> NfcReceiver<'a> {
-    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD], public_memory: Option<[u8; 32]>) -> Self {
-        match public_memory {
-            Some(a) => Self {
-                buffer: nfc_buffer,
-                collector: NfcCollector::new(),
-                state: NfcState::Operational(0),
-                public_memory: a,
-            },
-            None => 
-                Self {
-                    buffer: nfc_buffer,
-                    collector: NfcCollector::new(),
-                    state: NfcState::Done,
-                    public_memory: [0u8; 32],
-            },
+    pub fn new(nfc_buffer: &'a [u16; 3*BUF_THIRD]) -> Self {
+        Self {
+            buffer: nfc_buffer,
+            collector: NfcCollector::new(),
+            state: NfcState::Operational(0),
         }
     }
 
     fn process(&mut self) -> Option<Result<NfcResult, NfcError>> {
         turn_nfc_collector_correctly(&mut self.collector, self.buffer);
 
-        match self.collector {
+        match &self.collector {
+            NfcCollector::RawBytes(ref bytes) => {
+                NVIC::mask(Interrupt::LDMA);
+                Some(Ok(NfcResult::RawBytes(bytes.clone())))
+            },
             NfcCollector::Done(ref a) => {
                 NVIC::mask(Interrupt::LDMA);
                 let payload = process_nfc_payload(a).unwrap();
@@ -369,13 +401,31 @@ impl <'a> NfcReceiver<'a> {
                             None => Some(Err(NfcError::InvalidEthTransaction)),
                         }
                     },
+                    Some(5) => {
+                        // Test message with variable-length string payload
+                        let mut test_string: Option<String> = None;
+                        in_free(|peripherals| {
+                            // Skip the first byte (request type) and read the rest
+                            let data_start = payload.encoded_data.start_address.try_shift(1usize).unwrap();
+                            let data_len = payload.encoded_data.total_len - 1;
+                            let data = psram_read_at_address(peripherals, data_start, data_len).unwrap();
+
+                            // Convert bytes to UTF-8 string
+                            test_string = String::from_utf8(data).ok();
+                        });
+
+                        match test_string {
+                            Some(s) => Some(Ok(NfcResult::TestMessage(s))),
+                            None => Some(Err(NfcError::InvalidUtf8)),
+                        }
+                    },
                     _ => {
                         // Unknown request type
-                        Some(Ok(NfcResult::Empty))
+                        Some(Ok(NfcResult::Empty("Unknown request type".to_string())))
                     }
                 }
             },
-            NfcCollector::Empty => Some(Ok(NfcResult::Empty)),
+            NfcCollector::Empty(msg) => Some(Ok(NfcResult::Empty(format!("Empty collector: {}", msg)))),
             NfcCollector::InProgress(_) => None,
         }
     }
@@ -401,7 +451,7 @@ impl <'a> NfcReceiver<'a> {
                     },
                 }
             },
-            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty))) }
+            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty("Done state".to_string())))) }
         }
     }
 }

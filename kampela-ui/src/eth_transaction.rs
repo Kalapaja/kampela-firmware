@@ -30,7 +30,6 @@ use crate::eth_registry_data::{
 /// plus Kampela-specific clear-signing displays.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct EthTransaction {
-    #[serde(flatten)]
     pub tx: TxEip1559,
     pub displays: Vec<Display>,
 }

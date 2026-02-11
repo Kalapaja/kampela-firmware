@@ -47,6 +47,9 @@ struct Args {
 
     #[arg(short = 'E')]
     eth_transaction_received: bool,
+
+    #[arg(short = 'T')]
+    test_message_received: bool,
 }
 
 impl DataInit<Args> for AppStateInit {
@@ -55,7 +58,9 @@ impl DataInit<Args> for AppStateInit {
             key_created: params.key_was_created,
         };
 
-        let nfc = if params.eth_transaction_received {
+        let nfc = if params.test_message_received {
+            NFCState::TestMessage
+        } else if params.eth_transaction_received {
             NFCState::EthTransaction
         } else {
             NFCState::Empty
@@ -88,6 +93,7 @@ struct DesktopSimulator {
     eth_address: Option<Address>,
     eth_transaction: Option<EthTransaction>,
     signed_tx: Option<Vec<u8>>,
+    test_message: Option<String>,
 }
 
 impl DesktopSimulator {
@@ -108,12 +114,19 @@ impl DesktopSimulator {
             (None, None, None)
         };
 
+        let test_message = if matches!(init_state.nfc, NFCState::TestMessage) {
+            Some("Hello from NFC simulator!\n\nThis is a test message to demonstrate the dynamic text display feature.\n\nYou can send messages of any length!".to_string())
+        } else {
+            None
+        };
+
         Self {
             pin,
             entropy,
             eth_address,
             eth_transaction,
             signed_tx: None,
+            test_message,
         }
     }
 }
@@ -223,7 +236,12 @@ fn main() {
     let mut state = UIState::new(desktop, display, &mut h);
 
     // If transaction was received via NFC, switch to transaction screen
-    let mut update = if matches!(init_data_state.nfc, NFCState::EthTransaction) {
+    // If test message was received via NFC, switch to test message screen
+    let mut update = if matches!(init_data_state.nfc, NFCState::TestMessage) {
+        println!("Test message received - showing test message screen");
+        let message = state.platform.test_message.clone().unwrap_or_default();
+        state.handle_test_message(message, &mut h)
+    } else if matches!(init_data_state.nfc, NFCState::EthTransaction) {
         println!("Eth transaction received - showing transaction screen");
         state.handle_transaction(&mut h)
     } else {

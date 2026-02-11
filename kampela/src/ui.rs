@@ -138,8 +138,8 @@ impl UI {
         }
     }
 
-    pub fn handle_message(&mut self, message: String) {
-        let error = KampelaError::TransactionInvalid(message);
+    pub fn handle_error_message(&mut self, message: String) {
+        let error = KampelaError::Other(message);
         self.update_request
             .propagate(self.state.handle_error(error, &mut ()));
     }
@@ -150,8 +150,11 @@ impl UI {
             .propagate(self.state.handle_transaction(&mut ()));
     }
 
-    pub fn handle_eth_address(&mut self, addr: Address) {
-        self.state.platform.eth_set_address(addr);
+    pub fn handle_test_message(&mut self, message: String) {
+        // Display the string message directly on the test message screen
+        self.update_request.propagate(
+            self.state.handle_test_message(message, &mut ())
+        );
     }
 }
 

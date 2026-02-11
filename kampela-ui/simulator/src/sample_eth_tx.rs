@@ -133,3 +133,15 @@ pub fn serialize_sample_tx_to_postcard() -> Vec<u8> {
 pub fn sample_eth_tx() -> &'static EthTransaction {
     &SAMPLE_ETH_TX
 }
+
+/// Serializes a string test message for NFC transmission.
+///
+/// Wire format: [0x05 discriminator][UTF-8 string bytes]
+///
+/// This is used for testing the test message display feature.
+/// Example: serialize_test_message("Hello, Kampela!")
+pub fn serialize_test_message(text: &str) -> Vec<u8> {
+    let mut data = vec![0x05]; // Discriminator byte for test message
+    data.extend_from_slice(text.as_bytes());
+    data
+}
