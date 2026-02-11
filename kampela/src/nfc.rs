@@ -121,28 +121,21 @@ pub fn turn_nfc_collector_correctly(collector: &mut NfcCollector, nfc_buffer: &[
         Some(BufRegion::Reg0) => &nfc_buffer[..BUF_THIRD],
         Some(BufRegion::Reg1) => &nfc_buffer[BUF_THIRD..2*BUF_THIRD],
         Some(BufRegion::Reg2) => &nfc_buffer[2*BUF_THIRD..],
-        None => {
-            collector.add_msg("No buffer region selected");
-            return
-        },
+        None => return,
     };
     let frames = Frame::process_buffer_miller_skip_tails::<_, FREQ>(decoder_input, frame_selected);
 
     for frame in frames.into_iter() {
         if let Frame::Standard(standard_frame) = frame {
-            collector.add_msg("frame");
             let serialized_packet = standard_frame[standard_frame.len() - PACKET_SIZE..].try_into().expect("static length, always fits");
             in_free(|peripherals| {
                 let mut external_psram = ExternalPsram{peripherals};
                 let packet = Packet::deserialize(serialized_packet);
                 collector.add_packet(&mut external_psram, packet);
-                collector.add_msg("frame");
             });
         }
         else {unreachable!()}
     }
-
-    collector.add_msg("No frames received");
 
     free(|cs| {
         let mut buffer_status = BUFFER_STATUS.borrow(cs).borrow_mut();
@@ -166,7 +159,6 @@ fn frame_selected(frame: &Frame) -> bool {
 
 pub enum NfcCollector {
     Empty(String),
-    RawBytes(Vec<u8>),
     InProgress(DecoderMetal<AddressPsram>),
     Done(ExternalData<AddressPsram>)
 }
@@ -174,15 +166,6 @@ pub enum NfcCollector {
 impl NfcCollector {
     pub fn new() -> Self {
         Self::Empty("".to_string())
-    }
-
-    pub fn add_msg(&mut self, msg: &str) {
-        match self {
-            NfcCollector::Empty(current_msg) => *self = Self::Empty(format!("{}: {}", current_msg, msg)),
-            NfcCollector::RawBytes(_) => {}
-            NfcCollector::InProgress(_) => {}
-            NfcCollector::Done(_) => {}
-        }
     }
 
     pub fn add_packet(&mut self, external_psram: &mut ExternalPsram, nfc_packet: Packet) {
@@ -199,9 +182,6 @@ impl NfcCollector {
                 if let Some(a) = decoder_metal.try_read(external_psram) {
                     *self = NfcCollector::Done(a);
                 }
-            },
-            NfcCollector::RawBytes(_) => {
-                // Already captured raw bytes, ignore subsequent packets
             },
             NfcCollector::Done(_) => {},
         }
@@ -327,8 +307,7 @@ pub enum NfcResult {
     EthTransaction(EthTransaction),
     DisplayAddress,
     TestMessage(String),
-    RawBytes(Vec<u8>),
-    Empty(String),
+    Empty,
 }
 
 enum NfcState {
@@ -360,10 +339,6 @@ impl <'a> NfcReceiver<'a> {
         turn_nfc_collector_correctly(&mut self.collector, self.buffer);
 
         match &self.collector {
-            NfcCollector::RawBytes(ref bytes) => {
-                NVIC::mask(Interrupt::LDMA);
-                Some(Ok(NfcResult::RawBytes(bytes.clone())))
-            },
             NfcCollector::Done(ref a) => {
                 NVIC::mask(Interrupt::LDMA);
                 let payload = process_nfc_payload(a).unwrap();
@@ -421,11 +396,11 @@ impl <'a> NfcReceiver<'a> {
                     },
                     _ => {
                         // Unknown request type
-                        Some(Ok(NfcResult::Empty("Unknown request type".to_string())))
+                        Some(Ok(NfcResult::Empty))
                     }
                 }
             },
-            NfcCollector::Empty(msg) => Some(Ok(NfcResult::Empty(format!("Empty collector: {}", msg)))),
+            NfcCollector::Empty(_) => Some(Ok(NfcResult::Empty)),
             NfcCollector::InProgress(_) => None,
         }
     }
@@ -451,7 +426,7 @@ impl <'a> NfcReceiver<'a> {
                     },
                 }
             },
-            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty("Done state".to_string())))) }
+            NfcState::Done => { Some(Ok(NfcStateOutput::Done(NfcResult::Empty))) }
         }
     }
 }

@@ -17,7 +17,6 @@ use libsecp256k1::{Message as SecpMessage, PublicKey, SecretKey, RecoveryId, Sig
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "std")]
 use std::{string::String, vec::Vec, string::ToString};
-
 use crate::error::KampelaError;
 
 use crate::eth_registry_data::{
@@ -107,22 +106,15 @@ pub fn format_eth_transaction_display(
     // Use input bytes directly (already Bytes type)
     let data = tx.tx.input.clone();
 
-    // Use provided displays or fall back to well-known
-    let displays = if tx.displays.is_empty() {
-        well_known_displays()
-    } else {
-        tx.displays.clone()
-    };
-
     let message = Message::new(sender, to, tx.tx.value, data);
-    let context = ClearCallContext::new(displays);
+    let context = ClearCallContext::new(tx.displays.clone());
     let registry = StaticRegistry::new().map_err(|e| e.to_string())?;
 
     let clear_call: ClearCall = context
         .parse_clear_call(message, &registry, 0)
         .map_err(|e| e.to_string())?;
 
-    let provider = StaticMetadataProvider::new();
+    let provider = StaticMetadataProvider::new(sender);
     Ok(format_clear_call(&clear_call, &provider, 0, false, None))
 }
 
@@ -130,10 +122,11 @@ struct StaticMetadataProvider {
     tokens: Vec<Token>,
     contracts: Vec<Contract>,
     native_token: NativeToken,
+    user_address: Address,
 }
 
 impl StaticMetadataProvider {
-    fn new() -> Self {
+    fn new(user_address: Address) -> Self {
         let tokens = token_list().tokens;
         let contracts = contract_list().contracts;
         let native_token = native_token();
@@ -141,6 +134,7 @@ impl StaticMetadataProvider {
             tokens,
             contracts,
             native_token,
+            user_address,
         }
     }
 }
@@ -155,6 +149,13 @@ impl MetadataProvider for StaticMetadataProvider {
             .iter()
             .find(|c| c.address == address)
             .cloned()
+            .or_else(|| {
+                self.get_token(address).map(|t| Contract {
+                    chain_id: t.chain_id,
+                    address: t.address,
+                    name: t.name.clone(),
+                })
+            })
     }
 
     fn get_native_token(&self) -> NativeToken {
@@ -162,6 +163,11 @@ impl MetadataProvider for StaticMetadataProvider {
     }
 
     fn get_address_name(&self, address: Address) -> Option<String> {
+        // Check if this is the user's address first
+        if address == self.user_address {
+            return Some("User".to_string());
+        }
+        // Otherwise, look up in contract list
         self.get_contract(address).map(|c| c.name)
     }
 }

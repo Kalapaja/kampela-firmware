@@ -6,11 +6,13 @@
 mod stdwrap {
     pub use alloc::format;
     pub use alloc::string::String;
+    pub use alloc::string::ToString;
 }
 #[cfg(feature = "std")]
 mod stdwrap {
     pub use std::format;
     pub use std::string::String;
+    pub use std::string::ToString;
 }
 
 use stdwrap::*;
@@ -77,7 +79,7 @@ pub enum UnitScreen {
     EthTransaction,
     QRSignature,
     TestMessage(String),
-    ErrorDialog(String),
+    Text(String, String),
 }
 
 impl Default for UnitScreen {
@@ -94,7 +96,7 @@ pub enum Screen<P: Platform> {
     EthTransaction(EthTransactionViewer),
     QRSignature,
     TestMessage(String),
-    ErrorDialog(String),
+    Text(String, String),
 }
 
 impl<P: Platform> Screen<P> {
@@ -105,7 +107,7 @@ impl<P: Platform> Screen<P> {
             Screen::EthTransaction(_) => Some(UnitScreen::EthTransaction),
             Screen::QRSignature => Some(UnitScreen::QRSignature),
             Screen::TestMessage(msg) => Some(UnitScreen::TestMessage(msg.clone())),
-            Screen::ErrorDialog(msg) => Some(UnitScreen::ErrorDialog(msg.clone())),
+            Screen::Text(title, msg) => Some(UnitScreen::Text(title.clone(), msg.clone())),
             _ => None,
         }
     }
@@ -122,17 +124,22 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
     ///
     /// On first boot: generates entropy, stores to flash, shows Welcome screen.
     /// On subsequent boots: reads entropy from flash, shows Welcome screen.
-    /// Always requires PIN (unlocked = false).
     pub fn new(platform: P, display: D, h: &mut <P as Platform>::HAL) -> Self {
         let mut state = UIState {
             screen: Screen::Welcome,
             platform,
             display,
-            unlocked: false, // Always require PIN
+            unlocked: true, // Skip PIN entry for now
         };
 
-        // Switch to welcome screen - simple screen that should always work
-        state.switch_screen(Some(UnitScreen::Welcome), h);
+        // Ensure key is loaded/generated before showing any screen
+        // This prevents FlashRead errors when NFC transactions arrive
+        if let Err(e) = state.ensure_key(h) {
+            state.switch_screen(Some(UnitScreen::Text("Error".to_string(), format!("Key init failed: {}", e))), h);
+        } else {
+            // Switch to welcome screen - simple screen that should always work
+            state.switch_screen(Some(UnitScreen::Welcome), h);
+        }
         state
     }
 
@@ -168,7 +175,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                         Err(e) => {
                             // If we can't get transaction display, show error
                             let error_msg = format!("{}", e);
-                            self.screen = Screen::ErrorDialog(error_msg);
+                            self.screen = Screen::Text("Error".to_string(), error_msg);
                         }
                     }
                 }
@@ -182,8 +189,8 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 UnitScreen::TestMessage(msg) => {
                     self.screen = Screen::TestMessage(msg);
                 }
-                UnitScreen::ErrorDialog(msg) => {
-                    self.screen = Screen::ErrorDialog(msg);
+                UnitScreen::Text(title, msg) => {
+                    self.screen = Screen::Text(title, msg);
                 }
             }
         }
@@ -209,7 +216,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 if point.y > SCREEN_SIZE_Y as i32 - 40 {
                     if point.x >= SCREEN_SIZE_X as i32 / 2 {
                         if let Err(e) = self.ensure_key(h) {
-                            new_screen = Some(UnitScreen::ErrorDialog(format!("Key generation failed: {}", e)));
+                            new_screen = Some(UnitScreen::Text("Error".to_string(), format!("Key generation failed: {}", e)));
                         } else {
                             new_screen = Some(UnitScreen::QRAddress);
                         }
@@ -254,7 +261,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     }
                 }
             }
-            Screen::ErrorDialog(_) => {
+            Screen::Text(_, _) => {
                 // Right button = dismiss (go back to welcome)
                 if point.y > SCREEN_SIZE_Y as i32 - 40 {
                     if point.x >= SCREEN_SIZE_X as i32 / 2 {
@@ -292,7 +299,17 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
         h: &mut <P as Platform>::HAL,
     ) -> Option<UpdateRequest> {
         let error_msg = format!("{}", error);
-        self.switch_screen(Some(UnitScreen::ErrorDialog(error_msg)), h);
+        self.switch_screen(Some(UnitScreen::Text("Error".to_string(), error_msg)), h);
+        Some(UpdateRequest::Fast)
+    }
+
+    pub fn handle_message(
+        &mut self,
+        title: &str,
+        message: &str,
+        h: &mut <P as Platform>::HAL,
+    ) -> Option<UpdateRequest> {
+        self.switch_screen(Some(UnitScreen::Text(title.to_string(), message.to_string())), h);
         Some(UpdateRequest::Fast)
     }
 
@@ -354,7 +371,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     }
                     Err(e) => {
                         // Error getting address - show error
-                        new_screen = Some(UnitScreen::ErrorDialog(format!("{}", e)));
+                        new_screen = Some(UnitScreen::Text("Error".to_string(), format!("{}", e)));
                         out = Some(UpdateRequest::Fast);
                     }
                 }
@@ -376,7 +393,7 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                     }
                     Err(e) => {
                         // Error signing - show error
-                        new_screen = Some(UnitScreen::ErrorDialog(format!("{}", e)));
+                        new_screen = Some(UnitScreen::Text("Error".to_string(), format!("{}", e)));
                         out = Some(UpdateRequest::Fast);
                     }
                 }
@@ -385,9 +402,9 @@ impl<P: Platform, D: DrawTarget<Color = BinaryColor>> UIState<P, D> {
                 let display = &mut self.display;
                 crate::test_message_screen::draw(display, message, false)?;
             }
-            Screen::ErrorDialog(ref error_msg) => {
+            Screen::Text(ref title, ref msg) => {
                 let display = &mut self.display;
-                crate::error_dialog::draw(display, error_msg, false)?;
+                crate::text_screen::draw(display, title, msg, false)?;
             }
         }
 

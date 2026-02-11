@@ -1,19 +1,20 @@
 //! This is simulator to develop Kampela UI mocks
 #![deny(unused_crate_dependencies)]
 use embedded_graphics_core::{
+    pixelcolor::BinaryColor,
     primitives::PointsIter,
     Drawable,
-    pixelcolor::BinaryColor,
     Pixel,
 };
 
+use alloy_primitives::Address;
+use clap::Parser;
 use embedded_graphics_simulator::{
     BinaryColorTheme, OutputSettingsBuilder, SimulatorDisplay, SimulatorEvent, Window,
 };
 use rand::{rngs::ThreadRng, thread_rng};
-use std::{collections::VecDeque, thread::sleep, time::Duration, str::FromStr};
-use clap::Parser;
-use alloy_primitives::Address;
+use std::ops::Add;
+use std::{collections::VecDeque, str::FromStr, thread::sleep, time::Duration};
 mod sample_eth_tx;
 use sample_eth_tx::sample_eth_transaction;
 
@@ -29,7 +30,7 @@ const UPDATE_DELAY_TIME: Duration = Duration::new(0, 500000000);
 const MAX_TOUCH_QUEUE: usize = 2;
 
 use kampela_ui::{
-    data_state::{AppStateInit, NFCState, DataInit, StorageState},
+    data_state::{AppStateInit, DataInit, NFCState, StorageState},
     display_def::*,
     error::KampelaError,
     eth_transaction::{

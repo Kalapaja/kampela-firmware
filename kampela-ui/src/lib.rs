@@ -7,7 +7,7 @@ pub mod eth_transaction;
 mod eth_registry_data;
 pub mod eth_transaction_screen;
 pub mod eth_transaction_viewer;
-pub mod error_dialog;
+pub mod text_screen;
 pub mod error;
 pub mod welcome_screen;
 pub mod test_message_screen;

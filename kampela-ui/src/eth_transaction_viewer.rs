@@ -4,8 +4,12 @@
 
 #[cfg(not(feature = "std"))]
 use alloc::string::String;
+#[cfg(not(feature = "std"))]
+use alloc::vec::Vec;
 #[cfg(feature = "std")]
 use std::string::String;
+#[cfg(feature = "std")]
+use std::vec::Vec;
 
 use embedded_graphics::{
     draw_target::DrawTarget,
@@ -26,51 +30,62 @@ use crate::widget::view::{View, ViewScreen};
 use crate::uistate::{EventResult, UpdateRequest};
 use crate::display_def::*;
 
-const LINE_HEIGHT: i32 = 12; // Height of FONT_6X10 + spacing
-const VISIBLE_LINES: i32 = 16; // Approximate lines visible in content area
+const LINE_HEIGHT: i32 = FONT_6X10.character_size.height as i32;
+const FONT_CHAR_WIDTH: u32 = FONT_6X10.character_size.width;
+const TITLE_HEIGHT: i32 = 25;
+const CONTENT_TOP: i32 = 30;
+const CONTENT_LEFT_PADDING: i32 = 5;
+const CONTENT_RIGHT_PADDING: i32 = 5;
+const CONTENT_BOTTOM_PADDING: i32 = 0;
+const SCROLL_BUTTON_WIDTH: i32 = 24;
+const SCROLL_BUTTON_HEIGHT: i32 = 40;
+const SCROLL_BUTTON_MARGIN: i32 = 3;
+const SCROLL_BUTTON_RESERVE: i32 = SCROLL_BUTTON_WIDTH + SCROLL_BUTTON_MARGIN + 5;
+const NAV_BAR_HEIGHT: i32 = 32;
 
 /// Scrollable transaction viewer widget
 pub struct EthTransactionViewer {
     scroll_offset: i32, // Current scroll position in lines
     total_lines: i32,   // Total lines in the content
-    content: String,    // Transaction display text
+    wrapped_lines: Vec<String>,
 }
 
 impl EthTransactionViewer {
     pub fn new(content: String) -> Self {
-        // Estimate total lines based on content length and screen width
-        // This is approximate - actual line count depends on text wrapping
-        let chars_per_line = 28; // Approximate for FONT_6X10 at screen width
-
-        // Integer division with ceiling: (a + b - 1) / b
-        let estimated_lines = ((content.len() + chars_per_line - 1) / chars_per_line) as i32;
+        let reserved = (CONTENT_LEFT_PADDING + CONTENT_RIGHT_PADDING + SCROLL_BUTTON_RESERVE) as u32;
+        let content_width = SCREEN_SIZE_X.saturating_sub(reserved);
+        let chars_per_line = (content_width / FONT_CHAR_WIDTH).max(1) as usize;
+        let wrapped_lines = Self::wrap_content(&content, chars_per_line);
+        let total_lines = wrapped_lines.len() as i32;
 
         Self {
             scroll_offset: 0,
-            total_lines: estimated_lines.max(VISIBLE_LINES),
-            content,
+            total_lines,
+            wrapped_lines,
         }
     }
 
     /// Scroll up by one line
     pub fn scroll_up(&mut self) -> bool {
-        if self.scroll_offset > 0 {
-            self.scroll_offset -= 1;
-            true
-        } else {
-            false
+        let step = self.scroll_step_lines();
+        let next_offset = (self.scroll_offset - step).max(0);
+        if next_offset != self.scroll_offset {
+            self.scroll_offset = next_offset;
+            return true;
         }
+        false
     }
 
     /// Scroll down by one line
     pub fn scroll_down(&mut self) -> bool {
-        let max_scroll = (self.total_lines - VISIBLE_LINES).max(0);
-        if self.scroll_offset < max_scroll {
-            self.scroll_offset += 1;
-            true
-        } else {
-            false
+        let max_scroll = self.max_scroll();
+        let step = self.scroll_step_lines();
+        let next_offset = (self.scroll_offset + step).min(max_scroll);
+        if next_offset != self.scroll_offset {
+            self.scroll_offset = next_offset;
+            return true;
         }
+        false
     }
 
     /// Check if content can scroll up
@@ -80,8 +95,7 @@ impl EthTransactionViewer {
 
     /// Check if content can scroll down
     pub fn can_scroll_down(&self) -> bool {
-        let max_scroll = (self.total_lines - VISIBLE_LINES).max(0);
-        self.scroll_offset < max_scroll
+        self.scroll_offset < self.max_scroll()
     }
 
     /// Draw the transaction viewer
@@ -109,7 +123,7 @@ impl EthTransactionViewer {
 
         let title_bounds = Rectangle::new(
             bounds.top_left,
-            embedded_graphics::prelude::Size::new(bounds.size.width, 25),
+            embedded_graphics::prelude::Size::new(bounds.size.width, TITLE_HEIGHT as u32),
         );
 
         TextBox::with_textbox_style(
@@ -127,36 +141,30 @@ impl EthTransactionViewer {
             .vertical_alignment(VerticalAlignment::Top)
             .build();
 
-        // Adjust content bounds to account for scroll offset and leave space for scroll buttons
-        // Reserve 25px on the right for scroll buttons (18px button + 3px margin + 4px padding)
-        const SCROLL_BUTTON_RESERVE: u32 = 25;
-        let y_offset = 30 - (self.scroll_offset * LINE_HEIGHT);
+        // Keep the viewport fixed and scroll by rendering only the visible lines.
         let content_bounds = Rectangle::new(
-            embedded_graphics::prelude::Point::new(5, y_offset),
+            embedded_graphics::prelude::Point::new(CONTENT_LEFT_PADDING, CONTENT_TOP),
             embedded_graphics::prelude::Size::new(
-                bounds.size.width - 10 - SCROLL_BUTTON_RESERVE,
-                bounds.size.height - 60
+                bounds
+                    .size
+                    .width
+                    .saturating_sub((CONTENT_LEFT_PADDING + CONTENT_RIGHT_PADDING + SCROLL_BUTTON_RESERVE) as u32),
+                self.content_height().max(0) as u32,
             ),
         );
 
+        let visible_text = self.visible_text();
         TextBox::with_textbox_style(
-            &self.content,
+            &visible_text,
             content_bounds,
             content_style,
             content_textbox_style,
         )
         .draw(display)?;
 
-        // Draw scroll buttons on the edges if needed
-        if self.can_scroll_up() {
-            // Draw up button on left edge
-            self.draw_scroll_button(display, true, on)?;
-        }
-
-        if self.can_scroll_down() {
-            // Draw down button on right edge
-            self.draw_scroll_button(display, false, on)?;
-        }
+        // Draw scroll buttons on the right edge (always visible).
+        self.draw_scroll_button(display, true, on)?;
+        self.draw_scroll_button(display, false, on)?;
 
         // Draw navigation bar (left = reject, right = approve)
         let mut nav = NavBar::new(("Reject", "Approve"));
@@ -178,9 +186,9 @@ impl EthTransactionViewer {
     {
         use embedded_graphics::primitives::{Line, PrimitiveStyleBuilder};
 
-        const BUTTON_WIDTH: u32 = 18;
-        const BUTTON_HEIGHT: u32 = 30;
-        const BUTTON_MARGIN: i32 = 3;
+        const BUTTON_WIDTH: u32 = SCROLL_BUTTON_WIDTH as u32;
+        const BUTTON_HEIGHT: u32 = SCROLL_BUTTON_HEIGHT as u32;
+        const BUTTON_MARGIN: i32 = SCROLL_BUTTON_MARGIN;
 
         let style = PrimitiveStyleBuilder::new()
             .stroke_color(color)
@@ -197,9 +205,9 @@ impl EthTransactionViewer {
         // Up button at top, down button at bottom (above nav bar)
         let button_x = SCREEN_SIZE_X as i32 - BUTTON_WIDTH as i32 - BUTTON_MARGIN;
         let button_y = if is_up {
-            30 + BUTTON_MARGIN // Just below title
+            CONTENT_TOP + BUTTON_MARGIN // Just below title
         } else {
-            SCREEN_SIZE_Y as i32 - 40 - BUTTON_HEIGHT as i32 - BUTTON_MARGIN // Above nav bar
+            SCREEN_SIZE_Y as i32 - NAV_BAR_HEIGHT - BUTTON_HEIGHT as i32 - BUTTON_MARGIN // Above nav bar
         };
 
         // Draw button background (simple rectangle)
@@ -245,6 +253,69 @@ impl EthTransactionViewer {
 
         Ok(())
     }
+
+    fn content_height(&self) -> i32 {
+        SCREEN_SIZE_Y as i32 - CONTENT_TOP - NAV_BAR_HEIGHT - CONTENT_BOTTOM_PADDING
+    }
+
+    fn visible_lines(&self) -> i32 {
+        (self.content_height() / LINE_HEIGHT).max(1)
+    }
+
+    fn scroll_step_lines(&self) -> i32 {
+        (self.visible_lines() / 2).max(1)
+    }
+
+    fn max_scroll(&self) -> i32 {
+        (self.total_lines - self.visible_lines()).max(0)
+    }
+
+    fn visible_text(&self) -> String {
+        let len = self.wrapped_lines.len();
+        let start = self.scroll_offset.max(0) as usize;
+        if start >= len {
+            return String::new();
+        }
+        let end = (start + self.visible_lines() as usize).min(len);
+        let mut out = String::new();
+        for (idx, line) in self.wrapped_lines[start..end].iter().enumerate() {
+            if idx > 0 {
+                out.push('\n');
+            }
+            out.push_str(line);
+        }
+        out
+    }
+
+    fn wrap_content(content: &str, chars_per_line: usize) -> Vec<String> {
+        let mut lines = Vec::new();
+        let mut current = String::new();
+        let mut count = 0usize;
+
+        for ch in content.chars() {
+            if ch == '\n' {
+                lines.push(current);
+                current = String::new();
+                count = 0;
+                continue;
+            }
+
+            current.push(ch);
+            count += 1;
+
+            if count >= chars_per_line {
+                lines.push(current);
+                current = String::new();
+                count = 0;
+            }
+        }
+
+        if !current.is_empty() || lines.is_empty() {
+            lines.push(current);
+        }
+
+        lines
+    }
 }
 
 impl ViewScreen for EthTransactionViewer {
@@ -282,34 +353,32 @@ impl ViewScreen for EthTransactionViewer {
     {
         let mut request = None;
 
-        const BUTTON_WIDTH: i32 = 18;
-        const BUTTON_HEIGHT: i32 = 30;
-        const BUTTON_MARGIN: i32 = 3;
+        const BUTTON_WIDTH: i32 = SCROLL_BUTTON_WIDTH;
+        const BUTTON_HEIGHT: i32 = SCROLL_BUTTON_HEIGHT;
+        const BUTTON_MARGIN: i32 = SCROLL_BUTTON_MARGIN;
 
         // Calculate button positions (right edge)
         let button_x = SCREEN_SIZE_X as i32 - BUTTON_WIDTH - BUTTON_MARGIN;
-        let up_button_y = 30 + BUTTON_MARGIN;
-        let down_button_y = SCREEN_SIZE_Y as i32 - 40 - BUTTON_HEIGHT - BUTTON_MARGIN;
+        let up_button_y = CONTENT_TOP + BUTTON_MARGIN;
+        let down_button_y = SCREEN_SIZE_Y as i32 - NAV_BAR_HEIGHT - BUTTON_HEIGHT - BUTTON_MARGIN;
 
         // Check if tap is on scroll up button (top right)
-        if self.can_scroll_up()
-            && point.x >= button_x
+        if point.x >= button_x
             && point.x <= button_x + BUTTON_WIDTH
             && point.y >= up_button_y
             && point.y <= up_button_y + BUTTON_HEIGHT
         {
-            if self.scroll_up() {
+            if self.can_scroll_up() && self.scroll_up() {
                 request = Some(UpdateRequest::Fast);
             }
         }
         // Check if tap is on scroll down button (bottom right)
-        else if self.can_scroll_down()
-            && point.x >= button_x
+        else if point.x >= button_x
             && point.x <= button_x + BUTTON_WIDTH
             && point.y >= down_button_y
             && point.y <= down_button_y + BUTTON_HEIGHT
         {
-            if self.scroll_down() {
+            if self.can_scroll_down() && self.scroll_down() {
                 request = Some(UpdateRequest::Fast);
             }
         }

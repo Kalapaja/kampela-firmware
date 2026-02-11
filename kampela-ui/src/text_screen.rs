@@ -22,7 +22,7 @@ use crate::widget::view::View;
 /// Draw an error dialog with error message.
 ///
 /// User can tap right button to dismiss and return to address screen.
-pub fn draw<D>(display: &mut D, error_message: &str, n: bool) -> Result<(), D::Error>
+pub fn draw<D>(display: &mut D, title: &str, error_message: &str, n: bool) -> Result<(), D::Error>
 where
     D: DrawTarget<Color = BinaryColor>,
 {
@@ -50,7 +50,7 @@ where
     );
 
     TextBox::with_textbox_style(
-        "ERROR",
+        title,
         title_bounds,
         title_style,
         title_textbox_style,

@@ -186,7 +186,7 @@ fn main() -> ! {
                     match s {
                         NfcStateOutput::Operational(i) => {
                             if i == 1 {
-                                ui.handle_error_message("Receiving NFC packets...".to_owned());
+                                ui.handle_message("Loading...", "Receiving NFC packets...");
                             }
                             while !ui.advance(adc.read()).is_some_and(|c| c == false) {
                                 adc.advance(());
@@ -194,13 +194,7 @@ fn main() -> ! {
                         }
                         NfcStateOutput::Done(r) => {
                             match r {
-                                NfcResult::Empty(msg) => {
-                                    ui.handle_error_message(format!("NFC Empty: {}", msg).to_owned());
-                                    while !ui.advance(adc.read()).is_some_and(|c| c == true) {
-                                        adc.advance(());
-                                    }
-                                    break
-                                },
+                                NfcResult::Empty => {break},
                                 NfcResult::DisplayAddress => {
                                     ui.handle_error_message("Display address request received".to_owned());
                                     while !ui.advance(adc.read()).is_some_and(|c| c == true) {
@@ -224,32 +218,10 @@ fn main() -> ! {
                                     ui.handle_test_message(data);
                                     break
                                 },
-                                NfcResult::RawBytes(bytes) => {
-                                    // Format bytes as hex string for display
-                                    let mut hex_str = String::from("Raw NFC frame:\n");
-                                    for (i, byte) in bytes.iter().enumerate() {
-                                        if i > 0 && i % 16 == 0 {
-                                            hex_str.push('\n');
-                                        }
-                                        hex_str.push_str(&format!("{:02X}", byte));
-                                    }
-
-                                    ui.handle_error_message(format!("Received {} bytes", bytes.len()).to_owned());
-                                    while !ui.advance(adc.read()).is_some_and(|c| c == false) {
-                                        adc.advance(());
-                                    }
-                                    ui.handle_test_message(hex_str);
-                                    break
-                                },
                             }
                         }
                     }
                 }
-            }
-        } else {
-            ui.handle_error_message(format!("Voltage: {}", voltage).to_owned());
-            while !ui.advance(adc.read()).is_some_and(|c| c == true) {
-                adc.advance(());
             }
         }
     }

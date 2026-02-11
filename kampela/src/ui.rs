@@ -144,6 +144,11 @@ impl UI {
             .propagate(self.state.handle_error(error, &mut ()));
     }
 
+    pub fn handle_message(&mut self, title: &str, message: &str) {
+        self.update_request
+            .propagate(self.state.handle_message(title, message, &mut ()));
+    }
+
     pub fn handle_eth_transaction(&mut self, transaction: EthTransaction) {
         self.state.platform.eth_set_transaction(transaction);
         self.update_request
