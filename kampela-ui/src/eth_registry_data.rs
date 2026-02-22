@@ -84,7 +84,7 @@ pub fn contract_list() -> ContractList {
         },
         contracts: vec![Contract {
             chain_id: 31337,
-            address: address("0xec5ab17cc35221cdf54eaeb0868ea82d4d75d9bf"),
+            address: address("0xd512108c249cC5ec5370491AD916Be31bb88Dad2"),
             name: "Clear Call Router".to_string(),
         }],
     }
@@ -99,7 +99,7 @@ pub fn well_known_token_addresses() -> Vec<Address> {
 }
 
 pub fn well_known_contract_addresses() -> Vec<Address> {
-    vec![address("0xec5ab17cc35221cdf54eaeb0868ea82d4d75d9bf")]
+    vec![address("0xd512108c249cC5ec5370491AD916Be31bb88Dad2")]
 }
 
 pub fn well_known_displays() -> Vec<Display> {
@@ -134,14 +134,14 @@ fn field(title: &str, description: &str, format: &str, params: Vec<Entry>) -> Fi
         title: title.to_string(),
         description: description.to_string(),
         format: format.to_string(),
-        checks: Vec::new(),
+        checks: vec![],
+        fields: vec![],
         params,
     }
 }
 
 fn display_approve() -> Display {
     Display {
-        address: address("0x0000000000000000000000000000000000000000"),
         abi: "function approve(address spender, uint256 amount)".to_string(),
         title: "$labels.approve".to_string(),
         description: "$labels.approve_description".to_string(),
@@ -181,7 +181,6 @@ fn display_approve() -> Display {
 
 fn display_transfer() -> Display {
     Display {
-        address: address("0x0000000000000000000000000000000000000000"),
         abi: "function transfer(address to, uint256 amount)".to_string(),
         title: "$labels.transfer".to_string(),
         description: "$labels.transfer_description".to_string(),
@@ -215,7 +214,6 @@ fn display_transfer() -> Display {
 
 fn display_deposit() -> Display {
     Display {
-        address: address("0x0000000000000000000000000000000000000000"),
         abi: "function deposit() payable".to_string(),
         title: "$labels.deposit".to_string(),
         description: "$labels.deposit_description".to_string(),
@@ -252,7 +250,6 @@ fn display_deposit() -> Display {
 
 fn display_withdraw() -> Display {
     Display {
-        address: address("0x0000000000000000000000000000000000000000"),
         abi: "function withdraw(uint256 wad)".to_string(),
         title: "$labels.withdraw".to_string(),
         description: "$labels.withdraw_description".to_string(),

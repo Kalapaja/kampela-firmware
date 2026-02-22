@@ -7,8 +7,8 @@ edition = "2021"
 alloy-consensus = { version = "1.6.1", default-features = false, features = ["serde"] }
 alloy-primitives = { version = "1.5.4", default-features = false, features = ["serde"] }
 libsecp256k1 = { version = "0.7.1", default-features = false, features = ["static-context", "hmac"] }
-clear-signing = { path = "../../clear-signing/crates/clear-signing", default-features = false, features = ["serde"] }
-clear-signing-format = { path = "../../clear-signing/crates/clear-signing-format", default-features = false, features = ["serde"] }
+clear-signing = { git = "ssh://git@github.com/Kalapaja/clear-signing.git", default-features = false, features = ["serde"] }
+clear-signing-format = { git = "ssh://git@github.com/Kalapaja/clear-signing.git", default-features = false, features = ["serde"] }
 embedded-graphics = "0.7.1"
 embedded-text = {version = "0.5.0", default-features = false}
 hex = {version = "0.4.3", default-features = false, features = ["alloc"]}

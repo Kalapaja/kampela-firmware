@@ -11,7 +11,7 @@ alloy-primitives = { version = "1.5.4" }
 alloy-consensus = { version = "1.5.4" }
 lazy_static = "1.4.0"
 hex = "0.4.3"
-clear-signing = { path = "../../../clear-signing/crates/clear-signing", default-features = false, features = ["serde"] }
+clear-signing = { git = "ssh://git@github.com/Kalapaja/clear-signing.git", default-features = false, features = ["serde"] }
 postcard = { version = "1.0", features = ["alloc"] }
 
 kampela-ui = {path = "../"}

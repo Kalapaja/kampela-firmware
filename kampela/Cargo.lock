@@ -506,6 +506,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "clear-signing"
 version = "0.1.0"
+source = "git+ssh://git@github.com/Kalapaja/clear-signing.git#c576eb0f2d104cae886e58b29927a41793d28eae"
 dependencies = [
  "alloy-dyn-abi",
  "alloy-primitives",
@@ -517,6 +518,7 @@ dependencies = [
 [[package]]
 name = "clear-signing-format"
 version = "0.1.0"
+source = "git+ssh://git@github.com/Kalapaja/clear-signing.git#c576eb0f2d104cae886e58b29927a41793d28eae"
 dependencies = [
  "alloy-primitives",
  "clear-signing",
