@@ -4,7 +4,7 @@ use alloc::{string::ToString, vec, vec::Vec};
 use std::{string::ToString, vec, vec::Vec};
 
 use alloy_primitives::Address;
-use clear_signing::display::{Display, Entry, Field, Labels};
+use clear_signing::{Display, Entry, Field, Labels};
 use clear_signing_format::{Contract, ContractList, NativeToken, Token, TokenList, Version};
 use core::str::FromStr;
 
@@ -38,6 +38,7 @@ pub fn token_list() -> TokenList {
             Token {
                 chain_id: 31337,
                 address: address("0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"),
+                token_id: None,
                 name: "Ether".to_string(),
                 symbol: "ETH".to_string(),
                 decimals: 18,
@@ -49,6 +50,7 @@ pub fn token_list() -> TokenList {
             Token {
                 chain_id: 31337,
                 address: address("0x6B175474E89094C44Da98b954EedeAC495271d0F"),
+                token_id: None,
                 name: "Dai Stablecoin".to_string(),
                 symbol: "DAI".to_string(),
                 decimals: 18,
@@ -60,6 +62,7 @@ pub fn token_list() -> TokenList {
             Token {
                 chain_id: 31337,
                 address: address("0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"),
+                token_id: None,
                 name: "Wrapped Ether".to_string(),
                 symbol: "WETH".to_string(),
                 decimals: 18,
@@ -84,7 +87,7 @@ pub fn contract_list() -> ContractList {
         },
         contracts: vec![Contract {
             chain_id: 31337,
-            address: address("0xd512108c249cC5ec5370491AD916Be31bb88Dad2"),
+            address: address("0xadf4acf92f0a1398d50402db551feb92b1125dab"),
             name: "Clear Call Router".to_string(),
         }],
     }
@@ -99,7 +102,7 @@ pub fn well_known_token_addresses() -> Vec<Address> {
 }
 
 pub fn well_known_contract_addresses() -> Vec<Address> {
-    vec![address("0xd512108c249cC5ec5370491AD916Be31bb88Dad2")]
+    vec![address("0xadf4acf92f0a1398d50402db551feb92b1125dab")]
 }
 
 pub fn well_known_displays() -> Vec<Display> {
@@ -134,9 +137,9 @@ fn field(title: &str, description: &str, format: &str, params: Vec<Entry>) -> Fi
         title: title.to_string(),
         description: description.to_string(),
         format: format.to_string(),
-        checks: vec![],
-        fields: vec![],
+        case: vec![],
         params,
+        fields: vec![],
     }
 }
 

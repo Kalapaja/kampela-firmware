@@ -7,12 +7,7 @@ use crate::error::KampelaError;
 use alloc::{string::String, string::ToString, vec::Vec};
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_primitives::{keccak256, Address, FixedBytes, Signature, TxKind, U256};
-use clear_signing::clear_call::ClearCallContext;
-use clear_signing::display::Display;
-use clear_signing::fields::ClearCall;
-use clear_signing::registry::Registry;
-use clear_signing::resolver::Message;
-use clear_signing::sol::SolFunction;
+use clear_signing::{parse_clear_call, ClearCall, Display, Message, Registry, SolFunction};
 use clear_signing_format::{format_clear_call, Contract, MetadataProvider, NativeToken, Token};
 use libsecp256k1::{
     Message as SecpMessage, PublicKey, RecoveryId, SecretKey, Signature as SecpSignature,
@@ -112,11 +107,9 @@ pub fn format_eth_transaction_display(
     let data = tx.tx.input.clone();
 
     let message = Message::new(sender, to, tx.tx.value, data);
-    let context = ClearCallContext::new(tx.displays.clone());
     let registry = StaticRegistry::new().map_err(|e| e.to_string())?;
 
-    let clear_call: ClearCall = context
-        .parse_clear_call(message, &registry, 0)
+    let clear_call: ClearCall = parse_clear_call(message, tx.displays.clone(), &registry)
         .map_err(|e| e.to_string())?;
 
     let provider = StaticMetadataProvider::new(sender);
@@ -145,7 +138,7 @@ impl StaticMetadataProvider {
 }
 
 impl MetadataProvider for StaticMetadataProvider {
-    fn get_token(&self, address: Address) -> Option<Token> {
+    fn get_token(&self, address: Address, _chain_id: Option<U256>) -> Option<Token> {
         self.tokens.iter().find(|t| t.address == address).cloned()
     }
 
@@ -155,7 +148,7 @@ impl MetadataProvider for StaticMetadataProvider {
             .find(|c| c.address == address)
             .cloned()
             .or_else(|| {
-                self.get_token(address).map(|t| Contract {
+                self.get_token(address, None).map(|t| Contract {
                     chain_id: t.chain_id,
                     address: t.address,
                     name: t.name.clone(),
